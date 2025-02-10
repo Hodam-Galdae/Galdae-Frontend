@@ -9,14 +9,7 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
-    "moduleResolution": "node",
-    "isolatedModules": true,
-    "baseUrl": "./src",
-    "paths": {
-      "@components/*": ["components/*"],
-      "@screens/*": ["screens/*"],
-      "@utils/*": ["utils/*"]
-    }
+    "isolatedModules": true
   },
   "exclude": [
     "node_modules",
