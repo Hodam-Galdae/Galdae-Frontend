@@ -1,17 +1,17 @@
-// Home.tsx 테스트
+// Chat.tsx 테스트
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-const Home: React.FC = () => {
+const Chat: React.FC = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>홈 화면</Text>
-      <Text style={styles.subtitle}>환영합니다! 여기는 메인 스크린입니다.1</Text>
+      <Text style={styles.title}>채팅 화면</Text>
+      <Text style={styles.subtitle}>환영합니다! 여기는 채팅입니다.</Text>
     </View>
   );
 };
 
-export default Home;
+export default Chat;
 
 const styles = StyleSheet.create({
   container: {

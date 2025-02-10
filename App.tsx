@@ -3,8 +3,14 @@ import React, {useEffect} from "react";
 import {DefaultTheme, NavigationContainer} from "@react-navigation/native";
 import {SafeAreaProvider} from "react-native-safe-area-context";
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from './src/screens/Home';
+import MainTab from './src/components/MainTab'
+import Login from './src/screens/Login'
+import SignUp from './src/screens/SignUp'
 import Onboarding from './src/screens/Onboarding';
+import MyInfo from './src/screens/MyInfo';
+import Chat from './src/screens/Chat';
 import axios, {AxiosResponse, InternalAxiosRequestConfig} from "axios";
 import {errorLogger, requestLogger, responseLogger} from "axios-logger";
 
@@ -25,6 +31,7 @@ function App(): React.JSX.Element {
 
     const Stack = createNativeStackNavigator();
 
+    const Tab = createBottomTabNavigator();
     const theme = {
         ...DefaultTheme,
         colors: {
@@ -67,10 +74,26 @@ function App(): React.JSX.Element {
                       headerShown: false,
                   }}
               >
-                  <Stack.Screen name="Home" component={Home} />
+                  
                   <Stack.Screen name="Onboarding" component={Onboarding} />
+                  <Stack.Screen name="Login" component={Login} />
+                  <Stack.Screen name="SignUp" component={SignUp} />
+                  <Stack.Screen name="MainTab" component={MainTab} />
                
               </Stack.Navigator>
+              {/* <Tab.Navigator
+                initialRouteName="Home"
+                screenOptions={{
+                  // 탭 아이콘, 스타일 등을 여기에 설정할 수 있습니다.
+                  headerShown: false,
+                  tabBarActiveTintColor: '#007AFF',
+                  tabBarInactiveTintColor: 'gray',
+                }}
+              >
+                <Tab.Screen name="MyInfo" component={MyInfo} />
+                <Tab.Screen name="Home" component={Home} />
+                <Tab.Screen name="Chat" component={Chat} />
+              </Tab.Navigator> */}
           </NavigationContainer>   
         </SafeAreaProvider>
         

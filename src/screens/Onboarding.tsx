@@ -1,4 +1,4 @@
-// Onboarding.tsx 임시
+// Onboarding.tsx 임시 테스트
 import React from 'react';
 import { Image } from 'react-native';
 import Onboarding from 'react-native-onboarding-swiper';
@@ -11,7 +11,7 @@ const OnboardingScreen: React.FC<OnboardingProps> = ({ navigation }) => {
     const onboardingPath = '../assets/test.jpg';
     // 온보딩 완료 또는 건너뛰었을 때 호출할 함수
     const handleFinish = () => {
-      navigation.replace('Home'); // 'Home' 스크린으로 전환
+      navigation.replace('Login'); // 'Home' 스크린으로 전환
     };
 
     return (

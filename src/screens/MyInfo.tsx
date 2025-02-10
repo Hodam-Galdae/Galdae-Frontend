@@ -1,17 +1,17 @@
-// Home.tsx 테스트
+// MyInfo.tsx 테스트
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-const Home: React.FC = () => {
+const MyInfo: React.FC = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>홈 화면</Text>
-      <Text style={styles.subtitle}>환영합니다! 여기는 메인 스크린입니다.1</Text>
+      <Text style={styles.title}>내 정보 화면</Text>
+      <Text style={styles.subtitle}>환영합니다! 여기는 내 정보입니다.</Text>
     </View>
   );
 };
 
-export default Home;
+export default MyInfo;
 
 const styles = StyleSheet.create({
   container: {
