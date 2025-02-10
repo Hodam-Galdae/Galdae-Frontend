@@ -6,7 +6,7 @@ const Home: React.FC = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>홈 화면</Text>
-      <Text style={styles.subtitle}>환영합니다! 여기는 메인 스크린입니다.</Text>
+      <Text style={styles.subtitle}>환영합니다! 여기는 메인 스크린입니다.1</Text>
     </View>
   );
 };
