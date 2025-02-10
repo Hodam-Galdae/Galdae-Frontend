@@ -8,7 +8,7 @@ type OnboardingProps = {
 };
 
 const OnboardingScreen: React.FC<OnboardingProps> = ({ navigation }) => {
-    const onboardingPath = '../assets/test.jpg';
+    //const onboardingPath = '../assets/test.jpg';
     // 온보딩 완료 또는 건너뛰었을 때 호출할 함수
     const handleFinish = () => {
       navigation.replace('Login'); // 'Home' 스크린으로 전환
@@ -21,19 +21,19 @@ const OnboardingScreen: React.FC<OnboardingProps> = ({ navigation }) => {
         pages={[
           {
             backgroundColor: '#fff',
-            image: <Image source={require(onboardingPath)} style={{ width: 200, height: 200 }} />,
+            image: <Image source={require('../assets/test.jpg')} style={{ width: 200, height: 200 }} />,
             title: '환영합니다!',
             subtitle: '첫 번째 온보딩 화면입니다.',
           },
           {
             backgroundColor: '#fdeb93',
-            image: <Image source={require(onboardingPath)} style={{ width: 200, height: 200 }} />,
+            image: <Image source={require('../assets/test.jpg')} style={{ width: 200, height: 200 }} />,
             title: '앱 소개',
             subtitle: '앱의 주요 기능을 소개합니다.',
           },
           {
             backgroundColor: '#e9bcbe',
-            image: <Image source={require(onboardingPath)} style={{ width: 200, height: 200 }} />,
+            image: <Image source={require('../assets/test.jpg')} style={{ width: 200, height: 200 }} />,
             title: '시작하기',
             subtitle: '지금 바로 사용해보세요!',
           },
