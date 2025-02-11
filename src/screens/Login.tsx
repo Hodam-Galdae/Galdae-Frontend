@@ -7,6 +7,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 // 네비게이션 파라미터 타입 정의
 type RootStackParamList = {
   Onboarding: undefined;
+  CreateGaldae: undefined;
   Login: undefined;
   SignUp: undefined;
   MainTab: undefined; // 메인 탭 네비게이터 화면
@@ -21,7 +22,7 @@ const Login: React.FC = () => {
 
   const handleGoToMainTab = () => {
     // 로그인 로직 수행 후 메인 탭 네비게이터로 이동 (replace 메서드 사용 가능)
-    navigation.replace('MainTab');
+    navigation.navigate('MainTab');
   };
 
   return (

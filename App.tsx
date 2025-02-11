@@ -6,6 +6,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import MainTab from './src/components/MainTab';
 import Login from './src/screens/Login';
 import SignUp from './src/screens/SignUp';
+import CreateGaldae from './src/screens/CreateGaldae';
 import Onboarding from './src/screens/Onboarding';
 import axios, {AxiosResponse, InternalAxiosRequestConfig} from 'axios';
 import {errorLogger, requestLogger, responseLogger} from 'axios-logger';
@@ -72,6 +73,7 @@ function App(): React.JSX.Element {
 
                   <Stack.Screen name="Onboarding" component={Onboarding} />
                   <Stack.Screen name="Login" component={Login} />
+                  <Stack.Screen name="CreateGaldae" component={CreateGaldae} />
                   <Stack.Screen name="SignUp" component={SignUp} />
                   <Stack.Screen name="MainTab" component={MainTab} />
 
