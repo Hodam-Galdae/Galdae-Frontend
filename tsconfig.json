@@ -15,7 +15,7 @@
   "include": [
     "src",
     "svg.d.ts" // 또는 declaration.d.ts 파일의 경로
-  ],
+, "assetsTransformer.js"  ],
   "exclude": [
     "node_modules",
     "babel.config.js",

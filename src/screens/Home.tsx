@@ -44,9 +44,9 @@ const Home: React.FC = () => {
         //   borderColor: '#D3D3D3',
         // }}
         // 추가 스타일 (필요에 따라 조정)
-        // buttonStyle={styles.button}
+        buttonStyle={styles.button}
         // textStyle={styles.text}
-        //accessibilityLabel="Example Button"
+        // accessibilityLabel="Example Button"
       />
 
       <BasicInput

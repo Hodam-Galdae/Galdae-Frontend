@@ -17,4 +17,8 @@ export default StyleSheet.create({
         fontSize: moderateScale(18),
         color: '#333',
       },
+      button: {
+        width: moderateScale(50),
+        height: moderateScale(36)
+      }
 });
