@@ -24,8 +24,4 @@ export default StyleSheet.create({
         fontWeight: '500',
         color:theme.colors.gray1,
       },
-      button: {
-        width: moderateScale(50),
-        height: moderateScale(36)
-      }
 });

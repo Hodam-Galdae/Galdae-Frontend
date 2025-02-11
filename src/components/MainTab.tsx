@@ -68,7 +68,7 @@ function App(): React.JSX.Element {
                 },
               }}
             />
-            
+
         </Tab.Navigator>
     );
 }

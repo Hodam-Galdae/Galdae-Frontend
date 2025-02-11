@@ -11,7 +11,7 @@ import Onboarding from './src/screens/Onboarding';
 import axios, {AxiosResponse, InternalAxiosRequestConfig} from 'axios';
 import {errorLogger, requestLogger, responseLogger} from 'axios-logger';
 
-function App(): React.JSX.Element {
+function App() {
     useEffect(() => {
         if (Platform.OS === 'android') {
             // StatusBar.setBackgroundColor('transparent');
