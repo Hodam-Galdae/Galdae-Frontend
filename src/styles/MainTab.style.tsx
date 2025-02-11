@@ -9,7 +9,11 @@ export default StyleSheet.create({
     },
     container: {
         flex: 1,
-        justifyContent: 'center',
+        justifyContent: 'flex-end',
+        marginBottom:moderateScale(14),
         alignItems: 'center',
+    },
+    notification:{
+        marginRight: moderateScale(20),
     },
 });

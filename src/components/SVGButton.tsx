@@ -3,6 +3,7 @@ import { StyleProp, TouchableOpacity, View, ViewStyle, ActivityIndicator } from 
 import stylesheet from '../styles/stylesheet';
 import { theme } from '../styles/theme';
 import styles from '../styles/BasicButton.style';
+import { moderateScale } from '../utils/ScreenScaler';
 import SVG from '../components/SVG';
 import * as svgIcons from '../assets/svg';
 
@@ -15,6 +16,7 @@ export interface ButtonColors {
 
 export interface SVGButtonProps {
   buttonStyle?: StyleProp<ViewStyle>;
+  SVGStyle?:StyleProp<ViewStyle>;
   // iconName는 ../assets/svg/index.ts 에서 export하는 아이콘 이름이어야 합니다.
   iconName: keyof typeof svgIcons;
   onPress?: () => void;
@@ -29,6 +31,7 @@ export interface SVGButtonProps {
  */
 const SVGButton: React.FC<SVGButtonProps> = React.memo(({
   buttonStyle,
+  SVGStyle,
   iconName,
   onPress,
   disabled,
@@ -72,9 +75,10 @@ const SVGButton: React.FC<SVGButtonProps> = React.memo(({
         ) : (
           <SVG
             name={iconName}
-            width={24}
-            height={24}
+            width={moderateScale(50)}
+            height={moderateScale(50)}
             fill={colors.textColor}
+            style={SVGStyle}
           />
         )}
       </View>

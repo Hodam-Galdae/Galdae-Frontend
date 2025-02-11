@@ -25,7 +25,7 @@ const Home: React.FC = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>홈 화면</Text>
-      <Text style={styles.subtitle}>환영합니다! 여기는 메인 스크린입니다.1</Text>
+      <Text style={styles.subtitle}>환영합니다! 여기는 메인 스크린입니다.</Text>
       <BasicButton
         text="버튼 텍스트"
         onPress={handlePress}
@@ -55,7 +55,7 @@ const Home: React.FC = () => {
         onChangeText={setName}
       />
 
-    <BasicText text="text prop을 사용한 예시입니다." />
+    <BasicText text="text prop을 사용한 예시입니다.22" />
 
     <SVGButton
         iconName="Notification" // ../assets/svg/index.ts 에서 export한 아이콘 이름

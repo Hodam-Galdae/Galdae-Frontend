@@ -13,7 +13,7 @@ import {errorLogger, requestLogger, responseLogger} from 'axios-logger';
 function App(): React.JSX.Element {
     useEffect(() => {
         if (Platform.OS === 'android') {
-            StatusBar.setBackgroundColor('transparent');
+            // StatusBar.setBackgroundColor('transparent');
             StatusBar.setTranslucent(true);
         }
         StatusBar.setBarStyle('dark-content');

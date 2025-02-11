@@ -3,7 +3,11 @@
  */
 export const theme = {
     colors: {
-      primary: '#75F488',
+      brandColor: '#73F45A',
+      headerBg:'#FFFFFF',
+      tabDisabledText:'#9C9C9C',
+      tabText:'#121212',
+      tabIcon:'#D7D7D7',
       secondary: '#121212',
       background: '#f5f5f5',
       text: '#333',
