@@ -22,8 +22,8 @@ function App(): React.JSX.Element {
             screenOptions={{
               // 탭 아이콘, 스타일 등을 여기에 설정할 수 있습니다.
               header: () => <Header />,
-              tabBarActiveTintColor: theme.colors.tabText,
-              tabBarInactiveTintColor: theme.colors.tabDisabledText,
+              tabBarActiveTintColor: theme.colors.black,
+              tabBarInactiveTintColor: theme.colors.gray1,
               tabBarStyle: {
                 height: moderateScale(106),
               },
