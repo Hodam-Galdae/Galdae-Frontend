@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-// import {moderateScale} from '../utils/ScreenScaler';
+import {moderateScale} from '../utils/ScreenScaler';
 import {theme} from '../styles/theme';
 
 export default StyleSheet.create({
@@ -8,10 +8,12 @@ export default StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'flex-start',
         backgroundColor: '#f0f0f0',
+        paddingLeft: 15,
     },
     title: {
         fontSize: 18,
         fontWeight: 'bold',
         color: theme.colors.text,
+        paddingBottom: moderateScale(12),
     }
 });
