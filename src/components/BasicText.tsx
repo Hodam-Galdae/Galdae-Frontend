@@ -40,8 +40,8 @@ const BasicText: React.FC<RNTextProps> = ({ text, children, style, ...props }) =
   const platformStyle = useMemo(() => {
     return Platform.select({
       // iOS와 Android 모두 동일하게 적용 (필요하다면 각 플랫폼에 맞게 분리 가능)
-      ios: { fontFamily: fontMapping[weight] || fontMapping['400'] },
-      android: { fontFamily: fontMapping[weight] || fontMapping['400'] },
+      ios: { fontFamily: fontMapping[weight] || fontMapping['500'] },
+      android: { fontFamily: fontMapping[weight] || fontMapping['500'] },
     }) as TextStyle;
   }, [weight]);
 

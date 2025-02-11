@@ -1,20 +1,27 @@
 import { StyleSheet } from 'react-native';
 import {moderateScale} from '../utils/ScreenScaler';
+import { theme } from './theme';
 
 export default StyleSheet.create({
     container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#f0f0f0',
+
       },
-      title: {
-        fontSize: moderateScale(28),
-        fontWeight: 'bold',
-        marginBottom: moderateScale(16),
+      notiButton:{
+        width:'100%',
+        borderRadius:0,
+        height: moderateScale(26),
       },
-      subtitle: {
-        fontSize: moderateScale(18),
-        color: '#333',
+      notiText:{
+        fontSize:14,
+        fontWeight: '500',
+      },
+      startGaldae:{
+        fontSize:18,
+        fontWeight: '700',
+      },
+      startGaldaeEx:{
+        fontSize:12,
+        fontWeight: '500',
+        color:theme.colors.gray1,
       },
 });

@@ -6,7 +6,7 @@ export default StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'flex-end',
         height: moderateScale(102),
-        backgroundColor: theme.colors.headerBg,
+        backgroundColor: theme.colors.white,
       },
       logoContainer: {
         flex: 1,
