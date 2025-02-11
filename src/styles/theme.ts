@@ -1,5 +1,5 @@
 /**
- * 테마
+ * 색상
  */
 export const theme = {
     colors: {
@@ -7,22 +7,14 @@ export const theme = {
       secondary: '#121212',
       background: '#f5f5f5',
       text: '#333',
+      enabledBg:'#121212',
+      enabledText:'#FFFFFF',
+      enabledBorder:'transparent',
+      disabledBg:'#D7D7D7',
+      disabledText:'#9C9C9C',
+      disabledBorder:'transparent',
     },
-    spacing: {
-      small: 8,
-      medium: 16,
-      large: 24,
-    },
+
   };
 
-  /**
-   * 사용 예시
-   * import { theme } from '@constants/theme';
 
-const styles = StyleSheet.create({
-  button: {
-    backgroundColor: theme.colors.primary,
-    padding: theme.spacing.medium,
-  },
-});
-   */
