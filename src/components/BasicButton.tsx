@@ -42,14 +42,14 @@ const BasicButton: React.FC<BasicButtonProps> = React.memo(({ //리렌더링 방
   disabled,
   loading,
   enabledColors = {
-    backgroundColor: theme.colors.enabledBg,
-    textColor: theme.colors.enabledText,
-    borderColor: theme.colors.enabledBorder,
+    backgroundColor: theme.colors.brandColor,
+    textColor: theme.colors.white,
+    borderColor: theme.colors.transparent,
   },
   disabledColors = {
-    backgroundColor: theme.colors.disabledBg,
-    textColor:  theme.colors.disabledText,
-    borderColor: theme.colors.disabledBorder,
+    backgroundColor: theme.colors.gray0,
+    textColor:  theme.colors.gray1,
+    borderColor: theme.colors.transparent,
   },
   //시각 장애인이나 다른 보조 기술(예: 스크린 리더)을 사용하는 사용자가 앱을 더 쉽게 이용할 수 있도록 버튼이나 다른 UI 요소에 설명을 제공하는 역할
   accessibilityLabel,

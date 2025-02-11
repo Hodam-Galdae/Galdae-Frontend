@@ -9,7 +9,8 @@ export default StyleSheet.create({
         // height: moderateScale(42),
       },
     buttonText:{
-        fontSize:moderateScale(14),
+        fontSize:14,
+        fontWeight: '500',
     },
     contentContainer:{
         flexDirection: 'row',
