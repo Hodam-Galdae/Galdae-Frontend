@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
 
 } from 'react-native';
-import { moderateScale } from '../utils/ScreenScaler';
+//import { moderateScale } from '../utils/ScreenScaler';
 import stylesheet from '../styles/stylesheet';
 import { theme } from '../styles/theme';
 import SVG from '../components/SVG';
@@ -22,12 +22,17 @@ export interface ButtonColors {
   borderColor?: string;
 }
 
+export type IconPosition = 'left' | 'right';
+
 export interface SVGTextButtonProps {
   buttonStyle?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
+  SVGStyle?:StyleProp<ViewStyle>;
   text: string;
   // 아이콘 이름은 '../assets/svg/index.ts'에서 export한 키(key)여야 합니다.
   iconName: keyof typeof svgIcons;
+  // 아이콘이 텍스트의 어느 위치에 올지 결정 (기본값 'left')
+  iconPosition?: IconPosition;
   onPress?: () => void;
   disabled?: boolean;
   loading?: boolean;
@@ -39,8 +44,10 @@ export interface SVGTextButtonProps {
 const SVGTextButton: React.FC<SVGTextButtonProps> = React.memo(({
   buttonStyle,
   textStyle,
+  SVGStyle,
   text,
   iconName,
+  iconPosition = 'left',  // 기본값을 'left'로 지정
   onPress,
   disabled,
   loading,
@@ -63,6 +70,41 @@ const SVGTextButton: React.FC<SVGTextButtonProps> = React.memo(({
     return isDisabled ? disabledColors : enabledColors;
   }, [isDisabled, disabledColors, enabledColors]);
 
+  // 아이콘과 텍스트의 순서를 결정하는 함수
+  const renderContent = () => {
+    if (iconPosition === 'left') {
+      return (
+        <>
+          <SVG
+            name={iconName}
+            // width={moderateScale(24)}
+            // height={moderateScale(24)}
+            fill={colors.textColor}
+            style={SVGStyle}
+          />
+          <BasicText style={[styles.buttonText, { color: colors.textColor }, textStyle]}>
+            {text}
+          </BasicText>
+        </>
+      );
+    } else {
+      return (
+        <>
+          <BasicText style={[styles.buttonText, { color: colors.textColor }, textStyle]}>
+            {text}
+          </BasicText>
+          <SVG
+            name={iconName}
+            // width={moderateScale(24)}
+            // height={moderateScale(24)}
+            fill={colors.textColor}
+            style={SVGStyle}
+          />
+        </>
+      );
+    }
+  };
+
   return (
     <TouchableOpacity
       onPress={!isDisabled ? onPress : undefined}
@@ -82,24 +124,12 @@ const SVGTextButton: React.FC<SVGTextButtonProps> = React.memo(({
           <ActivityIndicator size="small" color={colors.textColor} />
         ) : (
           <View style={styles.contentContainer}>
-            {/* SVG 아이콘 */}
-            <SVG
-              name={iconName}
-              width={moderateScale(24)}
-              height={moderateScale(24)}
-              fill={colors.textColor}
-            />
-            {/* 텍스트 */}
-            <BasicText style={[styles.buttonText, { color: colors.textColor }, textStyle]}>
-              {text}
-            </BasicText>
+            {renderContent()}
           </View>
         )}
       </View>
     </TouchableOpacity>
   );
 });
-
-
 
 export default SVGTextButton;

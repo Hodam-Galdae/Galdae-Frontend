@@ -15,5 +15,6 @@ export default StyleSheet.create({
     contentContainer:{
         flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'center', // 필요에 따라 가운데 정렬
     },
 });

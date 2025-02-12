@@ -3,7 +3,7 @@ import { StyleProp, TouchableOpacity, View, ViewStyle, ActivityIndicator } from 
 import stylesheet from '../styles/stylesheet';
 import { theme } from '../styles/theme';
 import styles from '../styles/BasicButton.style';
-import { moderateScale } from '../utils/ScreenScaler';
+//import { moderateScale } from '../utils/ScreenScaler';
 import SVG from '../components/SVG';
 import * as svgIcons from '../assets/svg';
 
@@ -75,8 +75,8 @@ const SVGButton: React.FC<SVGButtonProps> = React.memo(({
         ) : (
           <SVG
             name={iconName}
-            width={moderateScale(50)}
-            height={moderateScale(50)}
+            // width={moderateScale(50)}
+            // height={moderateScale(50)}
             fill={colors.textColor}
             style={SVGStyle}
           />

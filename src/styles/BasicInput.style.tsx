@@ -6,10 +6,11 @@ export default StyleSheet.create({
     input: {
         //width: '90%',
         height: moderateScale(40),
-        borderWidth: moderateScale(1),
-        borderColor: theme.colors.gray0,
-        paddingHorizontal:moderateScale(10) ,
+        borderWidth: moderateScale(2),
+        borderColor: theme.colors.lightGray,
+        paddingHorizontal:moderateScale(12) ,
         borderRadius: moderateScale(10),
         fontSize: moderateScale(14),
+        fontWeight:'500',
       },
 });

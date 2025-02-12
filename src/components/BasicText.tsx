@@ -1,10 +1,10 @@
 import React, { useMemo } from 'react';
-import { Text, Platform, TextStyle, TextProps, StyleSheet } from 'react-native';
+import { Text, TextProps, TextStyle } from 'react-native';
 
 // 기본 폰트 이름 (Noto Sans CJK KR)
 const fontName = 'NotoSansKR';
 
-// iOS와 Android에서 공용으로 사용할 폰트 매핑 객체
+// 폰트 매핑: 각 폰트 굵기에 따른 폰트 패밀리 이름
 const fontMapping: { [key: string]: string } = {
   '100': `${fontName}-Thin`,
   '200': `${fontName}-ExtraLight`,
@@ -17,36 +17,44 @@ const fontMapping: { [key: string]: string } = {
   '900': `${fontName}-Black`,
 };
 
-interface RNTextProps extends TextProps {
+export interface BasicTextProps extends TextProps {
   children?: React.ReactNode;
   text?: string;
+  fontWeight?: string | number;
+  fontSize?: number;
+  color?: string;
 }
 
-const BasicText: React.FC<RNTextProps> = ({ text, children, style, ...props }) => {
-  // 전달된 스타일을 평탄화하여 사용
-  const flatStyle: TextStyle | undefined = StyleSheet.flatten(style);
+const BasicText: React.FC<BasicTextProps> = ({
+  children,
+  text,
+  fontWeight,
+  fontSize,
+  color,
+  style,
+  ...props
+}) => {
+  // 기본적으로 fontWeight가 없으면 '400'
+  const weight: string = fontWeight
+    ? typeof fontWeight === 'number'
+      ? fontWeight.toString()
+      : fontWeight
+    : '400';
 
-  // flatStyle.fontWeight의 타입은 string | number | undefined 이므로, 기본값 '400'을 할당하고,
-  // 값이 있을 경우 문자열로 변환합니다.
-  let weight: string = '400';
-  if (flatStyle && flatStyle.fontWeight !== undefined) {
-    weight =
-      typeof flatStyle.fontWeight === 'number'
-        ? flatStyle.fontWeight.toString()
-        : flatStyle.fontWeight;
-  }
+  // 폰트 매핑 객체를 통해 fontFamily 결정 (없으면 '400' 사용)
+  const fontFamily = fontMapping[weight] || fontMapping['400'];
 
-  // useMemo를 사용하여 플랫폼별 폰트 스타일 계산 (폰트 굵기가 변경될 때만 재계산)
-  const platformStyle = useMemo(() => {
-    return Platform.select({
-      // iOS와 Android 모두 동일하게 적용 (필요하다면 각 플랫폼에 맞게 분리 가능)
-      ios: { fontFamily: fontMapping[weight] || fontMapping['500'] },
-      android: { fontFamily: fontMapping[weight] || fontMapping['500'] },
-    }) as TextStyle;
-  }, [weight]);
+  // useMemo를 사용하여 computedStyle 계산: fontFamily, fontSize, color
+  const computedStyle: TextStyle = useMemo(() => {
+    return {
+      fontFamily,
+      ...(fontSize ? { fontSize } : {}),
+      ...(color ? { color } : {}),
+    };
+  }, [fontFamily, fontSize, color]);
 
   return (
-    <Text {...props} style={[style, platformStyle]}>
+    <Text {...props} style={[style, computedStyle]}>
       {children ?? text}
     </Text>
   );
