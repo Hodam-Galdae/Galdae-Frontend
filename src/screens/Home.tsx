@@ -13,7 +13,7 @@ import FilterButton from '../components/FilterButton';
 import GrayBorderTextButton from '../components/GrayBorderTextButton';
 import SVG from '../components/SVG';
 import TextTag from '../components/TextTag';
-
+import SVGTextTag from '../components/SVGTextTag';
 
 const Home: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -75,8 +75,8 @@ const Home: React.FC = () => {
                 text="출발지"
                 viewStyle={styles.start}
               />
-              <BasicText text="학교" style={styles.mainPosName}/>
-              <BasicText text="중원도서관" style={styles.subPosName}/>
+              <BasicText text="학교ㅁㄴㄹㅇ" style={styles.mainPosName}/>
+              <BasicText text="중원도서관ㄹㄴㅁㅇㄹ" style={styles.subPosName}/>
             </View>
 
             <SVGButton
@@ -90,8 +90,8 @@ const Home: React.FC = () => {
                 text="도착지"
                 viewStyle={styles.start}
               />
-              <BasicText text="충주 터미널" style={styles.mainPosName}/>
-              <BasicText text="하이마트앞" style={styles.subPosName}/>
+              <BasicText text="충주 터미널ㄴㅇㄹㅁㅁ" style={styles.mainPosName}/>
+              <BasicText text="하이마트앞ㄴㅇㄹ" style={styles.subPosName}/>
             </View>
 
           </View>
@@ -193,13 +193,31 @@ const Home: React.FC = () => {
                 <SVG name="User"/>
                 <SVG name="DisabledUser"/>
                 <SVG name="DisabledUser"/>
-                <BasicText text="(2/4)" fontWeight={500} fontSize={14} color={theme.colors.gray1}/>
+                <BasicText text="(2/4)" fontWeight={500} fontSize={theme.fontSize.size16} color={theme.colors.gray1}/>
               </View>
 
               <View style={styles.toContainer}>
                 <SVG name="Location"/>
                 <BasicText text="던킨도너츠" style={styles.fromMainLocation}/>
                 <BasicText text="충주 터미널" style={styles.fromSubLocation}/>
+              </View>
+
+              <View style={styles.timeContainer}>
+                <SVG name="Clock"/>
+                <View>
+                  <BasicText text="시간 협의가능" style={styles.fromMainLocation} color={theme.colors.gray2} fontSize={theme.fontSize.size10}/>
+                  <BasicText text="2025년 00월 00일 (0) 00 : 00" style={styles.fromSubLocation} color={theme.colors.black} fontSize={theme.fontSize.size14}/>
+                </View>
+              </View>
+
+              <View style={styles.tags}>
+                <TextTag
+                  text="성별무관"
+                />
+                <SVGTextTag
+                  text="캐리어"
+                  iconName="GreenCarrier"
+                />
               </View>
           </View>
         </View>

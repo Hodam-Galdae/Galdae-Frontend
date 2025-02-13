@@ -9,8 +9,8 @@ export default StyleSheet.create({
         borderWidth: moderateScale(2),
         borderColor: theme.colors.lightGray,
         paddingHorizontal:moderateScale(12) ,
-        borderRadius: moderateScale(10),
-        fontSize: moderateScale(14),
+        borderRadius:theme.borderRadius.size10,
+        fontSize: theme.fontSize.size16,
         fontWeight:'500',
       },
 });

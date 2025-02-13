@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import {moderateScale} from '../utils/ScreenScaler';
+import { theme } from './theme';
 
 export default StyleSheet.create({
     container: {
@@ -7,7 +8,7 @@ export default StyleSheet.create({
         borderWidth: moderateScale(1),
       },
       text: {
-        fontSize: 12,
+        fontSize:theme.fontSize.size14,
         fontWeight: '500',
       },
 });

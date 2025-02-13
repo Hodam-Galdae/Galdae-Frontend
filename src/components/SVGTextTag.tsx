@@ -49,7 +49,7 @@ const SVGTextTag: React.FC<BasicDisplayProps> = ({
     <View
       style={[
         stylesheet.rowAndCentered,
-        stylesheet.smallBorderTextBtn,
+        stylesheet.smallBorderTextTag,
         { backgroundColor: colors.backgroundColor, borderColor: colors.borderColor },
         styles.container,
         viewStyle,

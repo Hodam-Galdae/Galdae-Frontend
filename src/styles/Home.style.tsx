@@ -12,17 +12,17 @@ export default StyleSheet.create({
       height: moderateScale(26),
     },
     notiText:{
-      fontSize:14,
+      fontSize:theme.fontSize.size16,
       fontWeight: '500',
     },
     startGaldae:{
       marginTop:moderateScale(5),
-      fontSize:18,
+      fontSize:theme.fontSize.size20,
       fontWeight: '700',
     },
     startGaldaeEx:{
       marginTop:moderateScale(2),
-      fontSize:12,
+      fontSize:theme.fontSize.size14,
       fontWeight: '500',
       color:theme.colors.gray2,
       marginBottom:moderateScale(14),
@@ -32,36 +32,39 @@ export default StyleSheet.create({
       height:moderateScale(174),
       justifyContent:'center',
       borderColor:theme.colors.gray0,
-      borderRadius:10,
+      borderRadius:theme.borderRadius.size10,
       borderWidth:2,
-      paddingHorizontal:moderateScale(40),
+      paddingHorizontal:moderateScale(35),
 
     },
     startAndEnd:{
-      alignItems:'flex-end',
+      backgroundColor:theme.colors.gray0,
+      alignItems:'flex-start',
       justifyContent:'center',
       flexDirection:'row',
-      gap:moderateScale(40),
+      //gap:moderateScale(40),
       marginBottom:moderateScale(16),
     },
-    startContain:{
+    startContain:{ //고정 width 설정해야할듯
       alignItems:'center',
-    },
-    mainPosName:{
-      fontSize:16,
-      fontWeight:'700',
-    },
-    subPosName:{
-      fontSize:14,
-      fontWeight:'500',
-      color:theme.colors.gray1,
+      backgroundColor:theme.colors.brandColor,
     },
     start:{
       height:moderateScale(18),
-      marginBottom:moderateScale(14),
+      marginBottom:moderateScale(12),
+    },
+    mainPosName:{
+      fontSize:theme.fontSize.size18,
+      marginBottom:moderateScale(4),
+      fontWeight:'700',
+    },
+    subPosName:{
+      fontSize:theme.fontSize.size16,
+      fontWeight:'500',
+      color:theme.colors.gray1,
     },
     switchBtn:{
-      marginBottom:moderateScale(4),
+      marginTop:moderateScale(40),
     },
     switchIcon:{
       width:moderateScale(24),
@@ -70,7 +73,7 @@ export default StyleSheet.create({
     startDateTime:{
       alignSelf:'center',
       marginTop:moderateScale(15),
-      fontSize:16,
+      fontSize:theme.fontSize.size16,
       fontWeight:'700',
     },
     line:{
@@ -80,17 +83,17 @@ export default StyleSheet.create({
     generateButton:{
       width:'100%',
       marginTop:moderateScale(10),
-      borderRadius:10,
+      borderRadius:theme.borderRadius.size10,
       height: moderateScale(42),
     },
     generateText:{
-      fontSize:14,
+      fontSize:theme.fontSize.size16,
       fontWeight: '700',
     },
     advertiseBox:{
       width:'100%',
       height:moderateScale(80),
-      borderRadius:10,
+      borderRadius:theme.borderRadius.size10,
       backgroundColor:theme.colors.red,
       marginTop:moderateScale(20),
     },
@@ -101,7 +104,7 @@ export default StyleSheet.create({
       justifyContent:'space-between',
     },
     nowGaldae:{
-      fontSize:18,
+      fontSize:theme.fontSize.size20,
       fontWeight: '700',
     },
     search:{
@@ -111,9 +114,9 @@ export default StyleSheet.create({
     searchInput:{
       width:'100%',
       height:moderateScale(40),
-      borderRadius:10,
+      borderRadius:theme.borderRadius.size10,
       borderWidth:2,
-      fontSize:12,
+      fontSize:theme.fontSize.size14,
       fontWeight: '500',
       color:theme.colors.gray2,
     },
@@ -140,13 +143,13 @@ export default StyleSheet.create({
       width:'100%',
       height:moderateScale(195),
       borderColor:theme.colors.gray0,
-      borderRadius:10,
+      borderRadius:theme.borderRadius.size10,
       borderWidth:1,
       paddingStart:moderateScale(24),
-      paddingTop:moderateScale(14),
+      paddingTop:moderateScale(18),
     },
     galdaeOwner:{
-      fontSize:10,
+      fontSize:theme.fontSize.size12,
       fontWeight:'700',
     },
     fromContainer:{
@@ -155,21 +158,33 @@ export default StyleSheet.create({
       gap:moderateScale(8),
     },
     fromMainLocation:{
-      fontSize:14,
+      fontSize:theme.fontSize.size16,
       fontWeight:'700',
     },
     fromSubLocation:{
-      fontSize:14,
+      fontSize:theme.fontSize.size16,
       fontWeight:'500',
     },
     toContainer:{
       flexDirection:'row',
       gap:moderateScale(8),
-      marginTop:moderateScale(3),
+      marginTop:moderateScale(6),
+      alignItems:'center',
+    },
+    timeContainer:{
+      flexDirection:'row',
+      gap:moderateScale(8),
+      marginTop:moderateScale(10),
       alignItems:'center',
     },
     fromToLine:{
       width:moderateScale(20),
+      alignItems:'center',
+    },
+    tags:{
+      flexDirection:'row',
+      gap:moderateScale(4),
+      marginTop:moderateScale(16),
       alignItems:'center',
     },
 });

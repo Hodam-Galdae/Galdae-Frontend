@@ -34,7 +34,7 @@ const TextTag: React.FC<BasicDisplayProps> = ({
   return (
     <View
       style={[
-        stylesheet.rowAndCentered,stylesheet.smallBorderTextBtn,
+        stylesheet.rowAndCentered,stylesheet.smallBorderTextTag,
         { backgroundColor: colors.backgroundColor, borderColor: colors.borderColor },
         styles.container,
         viewStyle,

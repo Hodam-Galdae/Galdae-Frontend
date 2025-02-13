@@ -16,7 +16,26 @@ export const theme = {
       transparent:'transparent',
       enabledBorder:'transparent',
     },
-
+    fontSize:{
+      size10: 10,
+      size12: 12,
+      size13: 13,
+      size14: 14,
+      size15: 15,
+      size16: 16,
+      size17: 17,
+      size18: 18,
+      size19: 19,
+      size20: 20,
+      size21: 21,
+      size22: 22,
+      size23: 23,
+      size24: 24,
+    },
+    borderRadius: {
+      size10: 10,
+      size30: 30,
+    },
   };
 
 

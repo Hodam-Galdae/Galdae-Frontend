@@ -1,15 +1,16 @@
 import { StyleSheet } from 'react-native';
 import {moderateScale} from '../utils/ScreenScaler';
+import { theme } from './theme';
 
 export default StyleSheet.create({
     buttonContainer: {
-        borderRadius: moderateScale(10),
+        borderRadius:theme.borderRadius.size10,
         borderWidth: moderateScale(0),
         // width: moderateScale(345),
         // height: moderateScale(42),
       },
     buttonText:{
-        fontSize:14,
+        fontSize:theme.fontSize.size16,
         fontWeight: '500',
     },
     contentContainer:{

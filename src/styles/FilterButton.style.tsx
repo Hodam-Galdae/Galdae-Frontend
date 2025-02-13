@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import {moderateScale} from '../utils/ScreenScaler';
+import { theme } from './theme';
 
 export default StyleSheet.create({
     filterBtn:{
@@ -13,7 +14,7 @@ export default StyleSheet.create({
       filterText:{
         marginBottom:moderateScale(3),
         fontWeight:'700',
-        fontSize:12,
+        fontSize:theme.fontSize.size14,
       },
       filterIcon:{
         width:moderateScale(12),

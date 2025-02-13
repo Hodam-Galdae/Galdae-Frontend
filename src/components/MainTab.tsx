@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Platform } from 'react-native';
 import Home from '../screens/Home';
 import MyInfo from '../screens/MyInfo';
 import Chat from '../screens/Chat';
@@ -24,9 +25,16 @@ function App(): React.JSX.Element {
               header: () => <Header />,
               tabBarActiveTintColor: theme.colors.black,
               tabBarInactiveTintColor: theme.colors.gray1,
-              tabBarStyle: {
-                height: moderateScale(106),
-              },
+              tabBarStyle: Platform.select({
+                ios: {
+                  height: moderateScale(80),
+                  // iOS 전용 스타일 추가
+                },
+                android: {
+                  height: moderateScale(50),
+                  // Android 전용 스타일 추가
+                },
+              }),
               // 각 탭 항목 내부 컨테이너를 중앙 정렬
               tabBarItemStyle: {
                 justifyContent: 'center',
