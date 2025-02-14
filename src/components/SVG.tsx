@@ -7,7 +7,7 @@ export type SVGIconProps = SvgProps & {
 };
 
 const SVG = ({ name, ...props }: SVGIconProps) => {
-    const Icon = svg[name] || svg.GaldaeLogoTest; // 기본 아이콘 사용
+    const Icon = svg[name] || svg.GaldaeLogo; // 기본 아이콘 사용
     return <Icon {...props} />;
 };
 

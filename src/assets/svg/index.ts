@@ -19,3 +19,5 @@ export {default as Clock} from './Clock.svg';
 export {default as User} from './User.svg';
 export {default as DisabledUser} from './DisabledUser.svg';
 export {default as FromToLine} from './FromToLine.svg';
+export {default as Add} from './Add.svg';
+export {default as Cancel} from './Cancel.svg';

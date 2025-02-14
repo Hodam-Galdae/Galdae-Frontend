@@ -9,12 +9,12 @@ import {
 
 } from 'react-native';
 //import { moderateScale } from '../utils/ScreenScaler';
-import stylesheet from '../styles/stylesheet';
-import { theme } from '../styles/theme';
-import SVG from '../components/SVG';
-import BasicText from './BasicText';
-import * as svgIcons from '../assets/svg'; // SVG 아이콘들이 export된 객체
-import styles from '../styles/BasicButton.style';
+import stylesheet from '../../styles/stylesheet';
+import { theme } from '../../styles/theme';
+import SVG from '../../components/SVG';
+import BasicText from './../BasicText';
+import * as svgIcons from '../../assets/svg'; // SVG 아이콘들이 export된 객체
+import styles from '../../styles/BasicButton.style';
 
 export interface ButtonColors {
   backgroundColor?: string;

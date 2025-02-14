@@ -1,11 +1,11 @@
 import React, { useMemo } from 'react';
 import { StyleProp, View, ViewStyle, TextStyle } from 'react-native';
-import stylesheet from '../styles/stylesheet';
-import { theme } from '../styles/theme';
-import BasicText from './BasicText';
-import styles from '../styles/TextTag.style';
-import SVG from '../components/SVG';
-import * as svgIcons from '../assets/svg';
+import stylesheet from '../../styles/stylesheet';
+import { theme } from '../../styles/theme';
+import BasicText from './../BasicText';
+import styles from '../../styles/TextTag.style';
+import SVG from '../../components/SVG';
+import * as svgIcons from '../../assets/svg';
 //import { moderateScale } from '../utils/ScreenScaler';
 
 export interface DisplayColors {

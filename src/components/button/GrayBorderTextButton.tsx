@@ -1,8 +1,8 @@
 import React from 'react';
 import { StyleProp, ViewStyle, TextStyle } from 'react-native';
 import BasicButton, { BasicButtonProps } from './BasicButton';
-import { theme } from '../styles/theme';
-import stylesheet from '../styles/stylesheet';
+import { theme } from '../../styles/theme';
+import stylesheet from '../../styles/stylesheet';
 
 export interface SmallBorderTextButtonProps
   extends Omit<BasicButtonProps, 'text' | 'buttonStyle' | 'textStyle' | 'enabledColors' | 'disabledColors'> {

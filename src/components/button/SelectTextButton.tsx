@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import BasicButton, { BasicButtonProps } from '../components/BasicButton';
-import { theme } from '../styles/theme';
-import stylesheet from '../styles/stylesheet';
+import BasicButton, { BasicButtonProps } from './BasicButton';
+import { theme } from '../../styles/theme';
+import stylesheet from '../../styles/stylesheet';
 
 export interface SelectableButtonProps extends BasicButtonProps {
   // 이 컴포넌트에서는 text, onPress, disabled, loading 등 기본 버튼 prop들을 그대로 사용합니다.

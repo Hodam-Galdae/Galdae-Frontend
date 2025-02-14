@@ -61,6 +61,24 @@ const stylesheet = StyleSheet.create({
         paddingVertical:moderateScale(1),
         height:moderateScale(20),
     },
+    floatingBtn:{
+        width:moderateScale(62),
+        height:moderateScale(62),
+        backgroundColor:theme.colors.brandColor,
+        borderRadius: '50%',
+        justifyContent:'center',
+        alignItems:'center',
+        position:'absolute',
+        bottom:moderateScale(50),
+        right:moderateScale(20),
+
+        //그림자효과...
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 3,
+        elevation: 5,
+    },
 });
 
 export default stylesheet;

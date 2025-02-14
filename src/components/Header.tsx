@@ -4,7 +4,7 @@ import { View } from 'react-native';
 import SVG from '../components/SVG';
 import { moderateScale } from '../utils/ScreenScaler';
 import styles from '../styles/Header.style';
-import SVGButton from './SVGButton';
+import SVGButton from '../components/button/SVGButton';
 
 const Header: React.FC = () => {
   return (

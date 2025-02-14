@@ -9,10 +9,10 @@ import {
   ActivityIndicator,
 } from "react-native";
 
-import stylesheet from "../styles/stylesheet";
-import { theme } from "../styles/theme";
-import styles from '../styles/BasicButton.style';
-import BasicText from "./BasicText";
+import stylesheet from "../../styles/stylesheet";
+import { theme } from "../../styles/theme";
+import styles from '../../styles/BasicButton.style';
+import BasicText from "../BasicText";
 
 export interface ButtonColors {
   backgroundColor?: string;

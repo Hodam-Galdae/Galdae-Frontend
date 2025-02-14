@@ -1,11 +1,11 @@
 import React, { useMemo } from 'react';
 import { StyleProp, TouchableOpacity, View, ViewStyle, ActivityIndicator } from 'react-native';
-import stylesheet from '../styles/stylesheet';
-import { theme } from '../styles/theme';
-import styles from '../styles/BasicButton.style';
+import stylesheet from '../../styles/stylesheet';
+import { theme } from '../../styles/theme';
+import styles from '../../styles/BasicButton.style';
 //import { moderateScale } from '../utils/ScreenScaler';
-import SVG from '../components/SVG';
-import * as svgIcons from '../assets/svg';
+import SVG from '../../components/SVG';
+import * as svgIcons from '../../assets/svg';
 
 
 export interface ButtonColors {

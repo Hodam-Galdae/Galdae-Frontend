@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import SVGTextButton, { SVGTextButtonProps } from './SVGTextButton';
-import { theme } from '../styles/theme';
-import stylesheet from '../styles/stylesheet';
+import { theme } from '../../styles/theme';
+import stylesheet from '../../styles/stylesheet';
 
 // 헬퍼 함수: 전달받은 baseName에 대해, 선택 상태에 따라 variant 아이콘 이름을 반환
 const getVariantIconName = (baseName: string, selected: boolean): string => {

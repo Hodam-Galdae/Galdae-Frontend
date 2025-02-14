@@ -5,6 +5,7 @@ import { theme } from './theme';
 export default StyleSheet.create({
     container: {
       padding: moderateScale(15),
+      position:'relative',
     },
     notiButton:{
       width:'100%',
@@ -38,30 +39,31 @@ export default StyleSheet.create({
 
     },
     startAndEnd:{
-      backgroundColor:theme.colors.gray0,
       alignItems:'flex-start',
       justifyContent:'center',
       flexDirection:'row',
-      //gap:moderateScale(40),
+      gap:moderateScale(20),
       marginBottom:moderateScale(16),
     },
     startContain:{ //고정 width 설정해야할듯
       alignItems:'center',
-      backgroundColor:theme.colors.brandColor,
+      width:moderateScale(78),
     },
     start:{
       height:moderateScale(18),
       marginBottom:moderateScale(12),
     },
-    mainPosName:{
-      fontSize:theme.fontSize.size18,
-      marginBottom:moderateScale(4),
-      fontWeight:'700',
+    mainPosName: {
+      fontSize: theme.fontSize.size18,
+      //marginBottom: moderateScale(4),
+      fontWeight: '700',
+      lineHeight: moderateScale(22), // 예시 값
     },
-    subPosName:{
-      fontSize:theme.fontSize.size16,
-      fontWeight:'500',
-      color:theme.colors.gray1,
+    subPosName: {
+      fontSize: theme.fontSize.size16,
+      fontWeight: '500',
+      color: theme.colors.gray1,
+      lineHeight: moderateScale(22), // mainPosName과 동일하게 지정
     },
     switchBtn:{
       marginTop:moderateScale(40),
@@ -107,28 +109,7 @@ export default StyleSheet.create({
       fontSize:theme.fontSize.size20,
       fontWeight: '700',
     },
-    search:{
-      position:'relative',
-      marginTop:moderateScale(10),
-    },
-    searchInput:{
-      width:'100%',
-      height:moderateScale(40),
-      borderRadius:theme.borderRadius.size10,
-      borderWidth:2,
-      fontSize:theme.fontSize.size14,
-      fontWeight: '500',
-      color:theme.colors.gray2,
-    },
-    searchBtn:{
-      position: 'absolute',
-      right: moderateScale(20),
-      bottom: moderateScale(10),
-    },
-    searchIcon:{
-      width:moderateScale(18),
-      height:moderateScale(18),
-    },
+
     filters:{
       flexDirection:'row',
       marginTop:moderateScale(18),
@@ -186,6 +167,36 @@ export default StyleSheet.create({
       gap:moderateScale(4),
       marginTop:moderateScale(16),
       alignItems:'center',
+    },
+    textPopUp:{
+      width:moderateScale(250),
+      height:moderateScale(152),
+      position:'relative',
+      backgroundColor:theme.colors.brandColor,
+      borderRadius:theme.borderRadius.size10,
+      justifyContent:'center',
+      alignItems:'center',
+    },
+    textPopUpcontent:{
+      justifyContent:'center',
+      alignItems:'center',
+      marginTop:moderateScale(25),
+    },
+    cancelIcon:{
+      position:'absolute',
+      top:moderateScale(20),
+      right:moderateScale(20),
+    },
+    cancelBtn:{
+      width:moderateScale(220),
+      height:moderateScale(32),
+    },
+    cancelBtnText:{
+      fontSize:theme.fontSize.size16,
+      fontWeight: '700',
+    },
+    textPopUpText:{
+      marginBottom:moderateScale(20),
     },
 });
 

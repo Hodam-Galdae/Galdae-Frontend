@@ -1,25 +1,27 @@
 // Home.tsx 테스트
 import React,{useState} from 'react';
-import { ScrollView, View } from 'react-native';
+import { ScrollView, View,Pressable } from 'react-native';
 //import stylesheet from '../styles/stylesheet';
 import styles from '../styles/Home.style';
-import BasicButton from '../components/BasicButton';
+import BasicButton from '../components/button/BasicButton';
 import BasicText from '../components/BasicText';
-import SVGTextButton from '../components/SVGTextButton';
+import SVGTextButton from '../components/button/SVGTextButton';
 import { theme } from '../styles/theme';
-import BasicInput from '../components/BasicInput';
-import SVGButton from '../components/SVGButton';
-import FilterButton from '../components/FilterButton';
-import GrayBorderTextButton from '../components/GrayBorderTextButton';
+import SVGButton from '../components/button/SVGButton';
+import FilterButton from '../components/button/FilterButton';
+import GrayBorderTextButton from '../components/button/GrayBorderTextButton';
 import SVG from '../components/SVG';
-import TextTag from '../components/TextTag';
-import SVGTextTag from '../components/SVGTextTag';
+import TextTag from '../components/tag/TextTag';
+import SVGTextTag from '../components/tag/SVGTextTag';
+import Search from '../components/Search';
+import FloatingButton from '../components/button/FloatingButton';
+import DeletePopup from '../components/popup/DeletePopup';
 
 const Home: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [generateLoading, setgenerateLoading] = useState<boolean>(false);
   const [destination, setDestination] = useState<string>('');
-
+  const [deletePopupVisible, setDeletePopupVisible] = useState<boolean>(false);
   const handlePress = () => {
     setLoading(true);
     // 버튼 클릭 시 원하는 로직을 수행하고, 완료 후 로딩 상태를 false로 전환합니다.
@@ -51,6 +53,14 @@ const Home: React.FC = () => {
   const handlePressGenderFilterBtn = () =>{
 
   };
+// DeletePopup 관련 핸들러
+const openDeletePopup = () => setDeletePopupVisible(true);
+const closeDeletePopup = () => setDeletePopupVisible(false);
+const handleDeleteConfirm = () => {
+  // 삭제 로직 실행
+  console.log('삭제 confirmed');
+  closeDeletePopup();
+};
 
   return (
     <View>
@@ -75,8 +85,8 @@ const Home: React.FC = () => {
                 text="출발지"
                 viewStyle={styles.start}
               />
-              <BasicText text="학교ㅁㄴㄹㅇ" style={styles.mainPosName}/>
-              <BasicText text="중원도서관ㄹㄴㅁㅇㄹ" style={styles.subPosName}/>
+              <BasicText text="학교" style={styles.mainPosName}/>
+              <BasicText text="중원도서관" style={styles.subPosName}/>
             </View>
 
             <SVGButton
@@ -90,8 +100,8 @@ const Home: React.FC = () => {
                 text="도착지"
                 viewStyle={styles.start}
               />
-              <BasicText text="충주 터미널ㄴㅇㄹㅁㅁ" style={styles.mainPosName}/>
-              <BasicText text="하이마트앞ㄴㅇㄹ" style={styles.subPosName}/>
+              <BasicText text="충주 터미널" style={styles.mainPosName}/>
+              <BasicText text="하이마트앞임" style={styles.subPosName}/>
             </View>
 
           </View>
@@ -131,19 +141,13 @@ const Home: React.FC = () => {
           />
         </View>
 
-        <View style={styles.search}>
-          <BasicInput
-            text="목적지를 검색해주세요."  // placeholder로 사용됨
-            style={styles.searchInput}
-            value={destination}
-            onChangeText={setDestination}
-          />
-          <SVGButton
-                iconName="Search"
-                buttonStyle={styles.searchBtn}
-                SVGStyle={styles.searchIcon}
-            />
-        </View>
+        <Search
+        value={destination}
+        onChangeText={setDestination}
+        // 필요한 경우, placeholder나 스타일, 아이콘 클릭 핸들러를 오버라이드할 수 있습니다.
+        placeholder="목적지를 검색해주세요."
+        onPressIcon={() => console.log('Search icon pressed')}
+        />
 
         <View style={styles.filters}>
           <FilterButton onPress={handleFilterPress} />
@@ -175,7 +179,8 @@ const Home: React.FC = () => {
 
 
         <View style={styles.nowGaldaeList}>
-          <View style={styles.borderedListBox}>
+        <Pressable onLongPress={openDeletePopup}>
+          <View style={styles.borderedListBox}  >
 
               <BasicText text="하재연님의 갈대" style={styles.galdaeOwner}/>
 
@@ -220,9 +225,21 @@ const Home: React.FC = () => {
                 />
               </View>
           </View>
+        </Pressable>
         </View>
-
       </ScrollView>
+      <DeletePopup
+          visible={deletePopupVisible}
+          onCancel={closeDeletePopup}
+          onConfirm={() => {
+            console.log('삭제 confirmed');
+            closeDeletePopup();
+            handleDeleteConfirm();
+          }}
+          title="선택하신 갈대를"
+          message="삭제하시겠습니까?"
+        />
+      <FloatingButton onPress={handlePress} />
     </View>
   );
 };

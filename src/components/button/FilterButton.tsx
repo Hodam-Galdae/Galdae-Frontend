@@ -1,11 +1,11 @@
 import React from 'react';
 import SVGTextButton from './SVGTextButton';
-import { theme } from '../styles/theme';
+import { theme } from '../../styles/theme';
 //import { moderateScale } from '../utils/ScreenScaler';
 import { StyleProp, ViewStyle, TextStyle } from 'react-native';
-import styles from '../styles/FilterButton.style';
-import * as svgIcons from '../assets/svg'; // SVG 아이콘들이 export된 객체
-import stylesheet from '../styles/stylesheet';
+import styles from '../../styles/FilterButton.style';
+import * as svgIcons from '../../assets/svg'; // SVG 아이콘들이 export된 객체
+import stylesheet from '../../styles/stylesheet';
 
 export interface FilterButtonProps {
   onPress?: () => void;

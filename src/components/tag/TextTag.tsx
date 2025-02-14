@@ -1,9 +1,9 @@
 import React, { useMemo } from 'react';
 import { StyleProp, View, ViewStyle, TextStyle } from 'react-native';
-import stylesheet from '../styles/stylesheet';
-import { theme } from '../styles/theme';
-import BasicText from './BasicText';
-import styles from '../styles/TextTag.style';
+import stylesheet from '../../styles/stylesheet';
+import { theme } from '../../styles/theme';
+import BasicText from './../BasicText';
+import styles from '../../styles/TextTag.style';
 export interface DisplayColors {
   backgroundColor?: string;
   textColor?: string;
