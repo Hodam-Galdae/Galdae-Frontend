@@ -1,6 +1,6 @@
 /* eslint-disable comma-dangle */
 /* eslint-disable quotes */
-import {moderateScale} from "../utils/ScreenScaler";
+import {} from "../utils/ScreenScaler";
 import {Platform, StyleSheet} from 'react-native';
 import { theme } from "./theme";
 
@@ -25,9 +25,9 @@ const stylesheet = StyleSheet.create({
     //작은 텍스트 버튼
     smallBorderTextBtn:{
         borderWidth:1,
-        height:moderateScale(30),
-        paddingHorizontal:moderateScale(10),
-        paddingVertical:moderateScale(1),
+        height:(30),
+        paddingHorizontal:(10),
+        paddingVertical:(1),
         alignItems:'center',
         justifyContent:'center',
         borderRadius:theme.borderRadius.size30,
@@ -43,41 +43,41 @@ const stylesheet = StyleSheet.create({
     ...Platform.select({
         android: {
             textAlignVertical: 'center', // 텍스트를 수직 중앙 정렬
-            //paddingTop: moderateScale(1), // 미세 조정: 필요 시 수정
-            paddingBottom: moderateScale(2),
+            //paddingTop: (1), // 미세 조정: 필요 시 수정
+            //paddingBottom: (1),
         },
         ios: {
-          //lineHeight: moderateScale(10),
+          //lineHeight: (10),
         },
     }),
     },
     smallBorderTextTag:{
-       // marginBottom:moderateScale(3),
+       // marginBottom:(3),
         borderRadius:theme.borderRadius.size10,
         borderWidth:1,
         alignItems:'center',
         justifyContent:'center',
-        paddingHorizontal:moderateScale(8),
-        paddingVertical:moderateScale(1),
-        height:moderateScale(20),
+        paddingHorizontal:(8),
+        paddingVertical:(1),
+        height:(20),
     },
     floatingBtn:{
-        width:moderateScale(62),
-        height:moderateScale(62),
+        width:(62),
+        height:(62),
         backgroundColor:theme.colors.brandColor,
         borderRadius: '50%',
         justifyContent:'center',
         alignItems:'center',
         position:'absolute',
-        bottom:moderateScale(50),
-        right:moderateScale(20),
+        bottom:(50),
+        right:(20),
 
         //그림자효과...
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.3,
-        shadowRadius: 3,
-        elevation: 5,
+        // shadowColor: '#000',
+        // shadowOffset: { width: 0, height: 2 },
+        // shadowOpacity: 0.3,
+        // shadowRadius: 3,
+        // elevation: 5,
     },
 });
 

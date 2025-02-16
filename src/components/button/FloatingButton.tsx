@@ -1,7 +1,7 @@
 import React from 'react';
 import { TouchableOpacity, StyleProp, ViewStyle } from 'react-native';
 import SVG from '../../components/SVG';
-import { moderateScale } from '../../utils/ScreenScaler';
+//import {  } from '../../utils/ScreenScaler';
 import { theme } from '../../styles/theme';
 import stylesheet from '../../styles/stylesheet';
 export interface FloatingButtonProps {
@@ -13,7 +13,7 @@ export interface FloatingButtonProps {
 const FloatingButton: React.FC<FloatingButtonProps> = ({ onPress, style }) => {
   return (
     <TouchableOpacity onPress={onPress} style={[stylesheet.floatingBtn, style]}>
-      <SVG name="Add" width={moderateScale(24)} height={moderateScale(24)} fill={theme.colors.white} />
+      <SVG name="Add" width={24} height={24} fill={theme.colors.white} />
     </TouchableOpacity>
   );
 };

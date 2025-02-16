@@ -1,3 +1,4 @@
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import {Platform, StatusBar} from 'react-native';
 import React, {useEffect} from 'react';
 import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
@@ -62,25 +63,26 @@ function App() {
     };
 
     return (
-        <SafeAreaProvider>
-          <NavigationContainer theme={theme}>
-              <Stack.Navigator
-                  initialRouteName="Onboarding"
-                  screenOptions={{
-                      headerShown: false,
-                  }}
-              >
+        <GestureHandlerRootView>
+            <SafeAreaProvider>
+                <NavigationContainer theme={theme}>
+                    <Stack.Navigator
+                        initialRouteName="Onboarding"
+                        screenOptions={{
+                            headerShown: false,
+                        }}
+                    >
 
-                  <Stack.Screen name="Onboarding" component={Onboarding} />
-                  <Stack.Screen name="Login" component={Login} />
-                  <Stack.Screen name="CreateGaldae" component={CreateGaldae} />
-                  <Stack.Screen name="SignUp" component={SignUp} />
-                  <Stack.Screen name="MainTab" component={MainTab} />
+                        <Stack.Screen name="Onboarding" component={Onboarding} />
+                        <Stack.Screen name="Login" component={Login} />
+                        <Stack.Screen name="CreateGaldae" component={CreateGaldae} />
+                        <Stack.Screen name="SignUp" component={SignUp} />
+                        <Stack.Screen name="MainTab" component={MainTab} />
 
-              </Stack.Navigator>
-          </NavigationContainer>
-        </SafeAreaProvider>
-
+                    </Stack.Navigator>
+                </NavigationContainer>
+            </SafeAreaProvider>
+        </GestureHandlerRootView>
     );
 }
 

@@ -1,6 +1,6 @@
 // Home.tsx 테스트
-import React,{useState} from 'react';
-import { ScrollView, View,Pressable } from 'react-native';
+import React,{useState,useRef} from 'react';
+import { ScrollView, View, TouchableOpacity} from 'react-native';
 //import stylesheet from '../styles/stylesheet';
 import styles from '../styles/Home.style';
 import BasicButton from '../components/button/BasicButton';
@@ -8,20 +8,29 @@ import BasicText from '../components/BasicText';
 import SVGTextButton from '../components/button/SVGTextButton';
 import { theme } from '../styles/theme';
 import SVGButton from '../components/button/SVGButton';
-import FilterButton from '../components/button/FilterButton';
-import GrayBorderTextButton from '../components/button/GrayBorderTextButton';
+//import FilterButton from '../components/button/FilterButton';
+//import GrayBorderTextButton from '../components/button/GrayBorderTextButton';
 import SVG from '../components/SVG';
 import TextTag from '../components/tag/TextTag';
 import SVGTextTag from '../components/tag/SVGTextTag';
-import Search from '../components/Search';
+//import Search from '../components/Search';
 import FloatingButton from '../components/button/FloatingButton';
 import DeletePopup from '../components/popup/DeletePopup';
+import FastGaldaePopup, { FastGaldaePopupRef } from '../components/popup/FastGaldaePopup';
+//import SelectSVGTextButton from '../components/button/SelectSVGTextButton';
+//import SelectTextButton from '../components/button/SelectTextButton';
 
-const Home: React.FC = () => {
+type HomeProps = {
+  navigation: any; // 실제 프로젝트에서는 proper type 사용 권장 (예: StackNavigationProp)
+};
+
+const Home: React.FC<HomeProps> = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [generateLoading, setgenerateLoading] = useState<boolean>(false);
-  const [destination, setDestination] = useState<string>('');
+  //const [destination, setDestination] = useState<string>('');
   const [deletePopupVisible, setDeletePopupVisible] = useState<boolean>(false);
+ // const [fastGaldaePopupVisible, setFastGaldaePopupVisible] = useState<boolean>(false);
+  const fastGaldaePopupRef = useRef<FastGaldaePopupRef>(null);
   const handlePress = () => {
     setLoading(true);
     // 버튼 클릭 시 원하는 로직을 수행하고, 완료 후 로딩 상태를 false로 전환합니다.
@@ -42,29 +51,34 @@ const Home: React.FC = () => {
 
   };
 
-  const handleFilterPress = ()=>{
+  // const handleFilterPress = ()=>{
 
+  // };
+
+  // const handlePressTimeFilterBtn = () =>{
+
+  // };
+
+  // const handlePressGenderFilterBtn = () =>{
+
+  // };
+  const toggleFastGaldaePopup = () =>{
+    //setFastGaldaePopupVisible((prev) => !prev);
+    fastGaldaePopupRef.current?.open();
   };
-
-  const handlePressTimeFilterBtn = () =>{
-
+  // DeletePopup 관련 핸들러
+  //const openDeletePopup = () => setDeletePopupVisible(true);
+  const closeDeletePopup = () => setDeletePopupVisible(false);
+  const handleDeleteConfirm = () => {
+    // 삭제 로직 실행
+    console.log('삭제 confirmed');
+    closeDeletePopup();
   };
-
-  const handlePressGenderFilterBtn = () =>{
-
-  };
-// DeletePopup 관련 핸들러
-const openDeletePopup = () => setDeletePopupVisible(true);
-const closeDeletePopup = () => setDeletePopupVisible(false);
-const handleDeleteConfirm = () => {
-  // 삭제 로직 실행
-  console.log('삭제 confirmed');
-  closeDeletePopup();
-};
 
   return (
     <View>
-      <BasicButton
+      <ScrollView>
+       <BasicButton
         text="어플 공지사항/안내"
         onPress={handlePress}
         loading={loading}
@@ -72,11 +86,10 @@ const handleDeleteConfirm = () => {
         textStyle={styles.notiText}
       />
       <ScrollView style={styles.container}>
-
         <BasicText text="갈대 시작하기" style={styles.startGaldae}/>
         <BasicText text="목적지 설정 후 동승자를 구하세요!" style={styles.startGaldaeEx}/>
 
-        <View style={styles.borderedBox}>
+        <TouchableOpacity style={styles.borderedBox} onPress={toggleFastGaldaePopup}>
 
           <View style={styles.startAndEnd}>
 
@@ -110,7 +123,7 @@ const handleDeleteConfirm = () => {
 
           <BasicText text="출발일시 : 2025년 11일 12일 (수) 2 : 30" style={styles.startDateTime}/>
 
-        </View>
+        </TouchableOpacity>
 
         <BasicButton
           text="생성하기"
@@ -141,15 +154,14 @@ const handleDeleteConfirm = () => {
           />
         </View>
 
-        <Search
+        {/* <Search
         value={destination}
         onChangeText={setDestination}
-        // 필요한 경우, placeholder나 스타일, 아이콘 클릭 핸들러를 오버라이드할 수 있습니다.
         placeholder="목적지를 검색해주세요."
         onPressIcon={() => console.log('Search icon pressed')}
-        />
+        /> */}
 
-        <View style={styles.filters}>
+        {/* <View style={styles.filters}>
           <FilterButton onPress={handleFilterPress} />
           <GrayBorderTextButton
             text="시간협의가능"
@@ -159,7 +171,7 @@ const handleDeleteConfirm = () => {
             text="성별무관"
             onPress={handlePressGenderFilterBtn}
           />
-          {/* <SelectTextButton
+          <SelectTextButton
             text="성별무관"
             onPress={handlePress}
           />
@@ -174,12 +186,12 @@ const handleDeleteConfirm = () => {
           <SVGTextTag
             text="캐리어"
             iconName="GreenCarrier"
-          /> */}
-        </View>
+          />
+        </View> */}
 
 
         <View style={styles.nowGaldaeList}>
-        <Pressable onLongPress={openDeletePopup}>
+
           <View style={styles.borderedListBox}  >
 
               <BasicText text="하재연님의 갈대" style={styles.galdaeOwner}/>
@@ -225,9 +237,101 @@ const handleDeleteConfirm = () => {
                 />
               </View>
           </View>
-        </Pressable>
+          <View style={styles.borderedListBox}  >
+
+            <BasicText text="하재연님의 갈대" style={styles.galdaeOwner}/>
+
+            <View style={styles.fromContainer}>
+              <SVG name="Car"/>
+              <BasicText text="정문" style={styles.fromMainLocation}/>
+              <BasicText text="학교" style={styles.fromSubLocation}/>
+            </View>
+
+            <View style={styles.toContainer}>
+              <View style={styles.fromToLine}>
+                <SVG name="FromToLine" />
+              </View>
+              <SVG name="User"/>
+              <SVG name="User"/>
+              <SVG name="DisabledUser"/>
+              <SVG name="DisabledUser"/>
+              <BasicText text="(2/4)" fontWeight={500} fontSize={theme.fontSize.size16} color={theme.colors.gray1}/>
+            </View>
+
+            <View style={styles.toContainer}>
+              <SVG name="Location"/>
+              <BasicText text="던킨도너츠" style={styles.fromMainLocation}/>
+              <BasicText text="충주 터미널" style={styles.fromSubLocation}/>
+            </View>
+
+            <View style={styles.timeContainer}>
+              <SVG name="Clock"/>
+              <View>
+                <BasicText text="시간 협의가능" style={styles.fromMainLocation} color={theme.colors.gray2} fontSize={theme.fontSize.size10}/>
+                <BasicText text="2025년 00월 00일 (0) 00 : 00" style={styles.fromSubLocation} color={theme.colors.black} fontSize={theme.fontSize.size14}/>
+              </View>
+            </View>
+
+            <View style={styles.tags}>
+              <TextTag
+                text="성별무관"
+              />
+              <SVGTextTag
+                text="캐리어"
+                iconName="GreenCarrier"
+              />
+            </View>
+            </View>
+            <View style={styles.borderedListBox}  >
+
+            <BasicText text="하재연님의 갈대" style={styles.galdaeOwner}/>
+
+            <View style={styles.fromContainer}>
+              <SVG name="Car"/>
+              <BasicText text="정문" style={styles.fromMainLocation}/>
+              <BasicText text="학교" style={styles.fromSubLocation}/>
+            </View>
+
+            <View style={styles.toContainer}>
+              <View style={styles.fromToLine}>
+                <SVG name="FromToLine" />
+              </View>
+              <SVG name="User"/>
+              <SVG name="User"/>
+              <SVG name="DisabledUser"/>
+              <SVG name="DisabledUser"/>
+              <BasicText text="(2/4)" fontWeight={500} fontSize={theme.fontSize.size16} color={theme.colors.gray1}/>
+            </View>
+
+            <View style={styles.toContainer}>
+              <SVG name="Location"/>
+              <BasicText text="던킨도너츠" style={styles.fromMainLocation}/>
+              <BasicText text="충주 터미널" style={styles.fromSubLocation}/>
+            </View>
+
+            <View style={styles.timeContainer}>
+              <SVG name="Clock"/>
+              <View>
+                <BasicText text="시간 협의가능" style={styles.fromMainLocation} color={theme.colors.gray2} fontSize={theme.fontSize.size10}/>
+                <BasicText text="2025년 00월 00일 (0) 00 : 00" style={styles.fromSubLocation} color={theme.colors.black} fontSize={theme.fontSize.size14}/>
+              </View>
+            </View>
+
+            <View style={styles.tags}>
+              <TextTag
+                text="성별무관"
+              />
+              <SVGTextTag
+                text="캐리어"
+                iconName="GreenCarrier"
+              />
+            </View>
+            </View>
         </View>
       </ScrollView>
+
+    </ScrollView>
+    <FastGaldaePopup ref={fastGaldaePopupRef} onClose={() => console.log('팝업 닫힘')} />
       <DeletePopup
           visible={deletePopupVisible}
           onCancel={closeDeletePopup}
