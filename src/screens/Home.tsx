@@ -16,7 +16,8 @@ import SVGTextTag from '../components/tag/SVGTextTag';
 //import Search from '../components/Search';
 import FloatingButton from '../components/button/FloatingButton';
 import DeletePopup from '../components/popup/DeletePopup';
-import FastGaldaePopup, { FastGaldaePopupRef } from '../components/popup/FastGaldaePopup';
+import FastGaldaeStartPopup, { FastGaldaeStartPopupRef } from '../components/popup/FastGaldaeStartPopup';
+import FastGaldaeEndPopup, { FastGaldaeEndPopupRef } from '../components/popup/FastGaldaeEndPopup';
 //import SelectSVGTextButton from '../components/button/SelectSVGTextButton';
 //import SelectTextButton from '../components/button/SelectTextButton';
 
@@ -30,7 +31,8 @@ const Home: React.FC<HomeProps> = () => {
   //const [destination, setDestination] = useState<string>('');
   const [deletePopupVisible, setDeletePopupVisible] = useState<boolean>(false);
  // const [fastGaldaePopupVisible, setFastGaldaePopupVisible] = useState<boolean>(false);
-  const fastGaldaePopupRef = useRef<FastGaldaePopupRef>(null);
+  const fastGaldaeStartPopupRef = useRef<FastGaldaeStartPopupRef>(null);
+  const fastGaldaeEndPopupRef = useRef<FastGaldaeEndPopupRef>(null);
   const handlePress = () => {
     setLoading(true);
     // 버튼 클릭 시 원하는 로직을 수행하고, 완료 후 로딩 상태를 false로 전환합니다.
@@ -62,9 +64,14 @@ const Home: React.FC<HomeProps> = () => {
   // const handlePressGenderFilterBtn = () =>{
 
   // };
-  const toggleFastGaldaePopup = () =>{
+  const toggleFastGaldaeStartPopup = () =>{
     //setFastGaldaePopupVisible((prev) => !prev);
-    fastGaldaePopupRef.current?.open();
+    fastGaldaeStartPopupRef.current?.open();
+  };
+
+  const toggleFastGaldaeEndPopup = () =>{
+    //setFastGaldaePopupVisible((prev) => !prev);
+    fastGaldaeEndPopupRef.current?.open();
   };
   // DeletePopup 관련 핸들러
   //const openDeletePopup = () => setDeletePopupVisible(true);
@@ -89,18 +96,18 @@ const Home: React.FC<HomeProps> = () => {
         <BasicText text="갈대 시작하기" style={styles.startGaldae}/>
         <BasicText text="목적지 설정 후 동승자를 구하세요!" style={styles.startGaldaeEx}/>
 
-        <TouchableOpacity style={styles.borderedBox} onPress={toggleFastGaldaePopup}>
+        <View style={styles.borderedBox}>
 
           <View style={styles.startAndEnd}>
 
-            <View style={styles.startContain}>
+            <TouchableOpacity style={styles.startContain}  onPress={toggleFastGaldaeStartPopup}>
               <TextTag
                 text="출발지"
                 viewStyle={styles.start}
               />
               <BasicText text="학교" style={styles.mainPosName}/>
               <BasicText text="중원도서관" style={styles.subPosName}/>
-            </View>
+            </TouchableOpacity>
 
             <SVGButton
                 iconName="Switch"
@@ -108,14 +115,14 @@ const Home: React.FC<HomeProps> = () => {
                 SVGStyle={styles.switchIcon}
             />
 
-            <View style={styles.startContain}>
+            <TouchableOpacity style={styles.startContain} onPress={toggleFastGaldaeEndPopup}>
               <TextTag
                 text="도착지"
                 viewStyle={styles.start}
               />
               <BasicText text="충주 터미널" style={styles.mainPosName}/>
               <BasicText text="하이마트앞임" style={styles.subPosName}/>
-            </View>
+            </TouchableOpacity>
 
           </View>
 
@@ -123,7 +130,7 @@ const Home: React.FC<HomeProps> = () => {
 
           <BasicText text="출발일시 : 2025년 11일 12일 (수) 2 : 30" style={styles.startDateTime}/>
 
-        </TouchableOpacity>
+        </View>
 
         <BasicButton
           text="생성하기"
@@ -331,7 +338,8 @@ const Home: React.FC<HomeProps> = () => {
       </ScrollView>
 
     </ScrollView>
-    <FastGaldaePopup ref={fastGaldaePopupRef} onClose={() => console.log('팝업 닫힘')} />
+    <FastGaldaeStartPopup ref={fastGaldaeStartPopupRef} onClose={() => console.log('팝업 닫힘')} />
+    <FastGaldaeEndPopup ref={fastGaldaeEndPopupRef} onClose={() => console.log('팝업 닫힘')} />
       <DeletePopup
           visible={deletePopupVisible}
           onCancel={closeDeletePopup}

@@ -71,13 +71,6 @@ const stylesheet = StyleSheet.create({
         position:'absolute',
         bottom:(50),
         right:(20),
-
-        //그림자효과...
-        // shadowColor: '#000',
-        // shadowOffset: { width: 0, height: 2 },
-        // shadowOpacity: 0.3,
-        // shadowRadius: 3,
-        // elevation: 5,
     },
 });
 
