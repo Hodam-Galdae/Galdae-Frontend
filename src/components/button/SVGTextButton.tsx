@@ -20,6 +20,7 @@ export interface ButtonColors {
   backgroundColor?: string;
   textColor?: string;
   borderColor?: string;
+  borderWidth?: number;
 }
 
 export type IconPosition = 'left' | 'right';

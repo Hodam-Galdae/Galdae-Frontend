@@ -16,12 +16,22 @@ import SVGTextTag from '../components/tag/SVGTextTag';
 import Search from '../components/Search';
 import FloatingButton from '../components/button/FloatingButton';
 import DeletePopup from '../components/popup/DeletePopup';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+
+type RootStackParamList = {
+  CreateGaldae: undefined;
+};
+
+type LoginScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 const Home: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [generateLoading, setgenerateLoading] = useState<boolean>(false);
   const [destination, setDestination] = useState<string>('');
   const [deletePopupVisible, setDeletePopupVisible] = useState<boolean>(false);
+  const navigation = useNavigation<LoginScreenNavigationProp>();
+  
   const handlePress = () => {
     setLoading(true);
     // 버튼 클릭 시 원하는 로직을 수행하고, 완료 후 로딩 상태를 false로 전환합니다.
@@ -239,7 +249,7 @@ const handleDeleteConfirm = () => {
           title="선택하신 갈대를"
           message="삭제하시겠습니까?"
         />
-      <FloatingButton onPress={handlePress} />
+      <FloatingButton onPress={() => navigation.navigate('CreateGaldae')} />
     </View>
   );
 };

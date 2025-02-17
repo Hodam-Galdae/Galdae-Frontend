@@ -10,6 +10,7 @@ import CreateGaldae from './src/screens/CreateGaldae';
 import Onboarding from './src/screens/Onboarding';
 import axios, {AxiosResponse, InternalAxiosRequestConfig} from 'axios';
 import {errorLogger, requestLogger, responseLogger} from 'axios-logger';
+import SVGButton from './src/components/button/SVGButton';
 
 function App() {
     useEffect(() => {
@@ -66,16 +67,23 @@ function App() {
           <NavigationContainer theme={theme}>
               <Stack.Navigator
                   initialRouteName="Onboarding"
-                  screenOptions={{
-                      headerShown: false,
-                  }}
               >
 
-                  <Stack.Screen name="Onboarding" component={Onboarding} />
-                  <Stack.Screen name="Login" component={Login} />
-                  <Stack.Screen name="CreateGaldae" component={CreateGaldae} />
-                  <Stack.Screen name="SignUp" component={SignUp} />
-                  <Stack.Screen name="MainTab" component={MainTab} />
+                  <Stack.Screen name="Onboarding" component={Onboarding} options={{ headerShown: false }}/>
+                  <Stack.Screen name="Login" component={Login} options={{ headerShown: false }}/>
+                  <Stack.Screen name="CreateGaldae" component={CreateGaldae} options={({ navigation }) => ({
+                            headerTitle: '갈대 생성하기',
+                            headerTitleStyle: {
+                                fontSize: 20,
+                                fontWeight: 'bold',
+                                color: 'black',
+                            },
+                            headerTitleAlign: 'center',
+                            headerLeft: () => (<SVGButton iconName="LeftArrow" onPress={() => navigation.goBack()}/>),
+                            })}
+                    />
+                  <Stack.Screen name="SignUp" component={SignUp} options={{ headerShown: false }}/>
+                  <Stack.Screen name="MainTab" component={MainTab} options={{ headerShown: false }}/>
 
               </Stack.Navigator>
           </NavigationContainer>
