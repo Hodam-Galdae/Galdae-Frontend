@@ -1,9 +1,13 @@
 // Login.tsx
 import React from 'react';
-import { View, Text, StyleSheet, Button } from 'react-native';
+import { View, Button, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-
+import Swiper from 'react-native-web-swiper';
+import styles from '../styles/Login.style';
+import { theme } from '../styles/theme';
+import BasicText from '../components/BasicText';
+import SVG from '../components/SVG';
 // 네비게이션 파라미터 타입 정의
 type RootStackParamList = {
   Onboarding: undefined;
@@ -25,31 +29,39 @@ const Login: React.FC = () => {
     navigation.navigate('MainTab');
   };
 
+  const images = [
+    require('../assets/test.jpg'),
+    require('../assets/test.jpg'),
+    require('../assets/test.jpg'),
+  ];
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>로그인 화면</Text>
-      <Text style={styles.subtitle}>환영합니다! 여기는 로그인입니다.</Text>
+      <View style={styles.allImagesImage}>
+        <Swiper 
+          controlsProps={{
+            dotActiveStyle: { backgroundColor: theme.colors.white },
+            
+            nextTitle: '',
+            prevTitle: '',
+          }}
+          containerStyle={styles.allImagesImage}>
+          {images.map((item,i)=>
+              <View>
+                  <Image key={i} source={item} style={styles.allImagesImage}/>
+              </View>
+          )}
+        </Swiper>
+      </View>
+      <BasicText text="안녕하세요" style={{...styles.title, marginTop: 98}}/>
+      <BasicText text="같이 갈 그대," style={{...styles.title, color: theme.colors.brandColor, marginBottom: 39}}/>
+      <View style={styles.textWrapper}>
+        <SVG name="Logo"/>
+        <BasicText text="입니다." style={{...styles.title, marginLeft: 10}}/>
+      </View>
       <Button title="로그인" onPress={handleGoToMainTab} />
     </View>
   );
 };
 
 export default Login;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f0f0f0',
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginBottom: 16,
-  },
-  subtitle: {
-    fontSize: 18,
-    color: '#333',
-  },
-});
