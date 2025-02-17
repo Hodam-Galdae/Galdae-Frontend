@@ -27,3 +27,6 @@ export {default as Bag} from './Bag.svg';
 export {default as Check} from './Check.svg';
 export {default as CheckSelected} from './CheckSelected.svg';
 export {default as LeftArrow} from './LeftArrow.svg';
+export {default as Minus} from './Minus.svg';
+export {default as Plus} from './Plus.svg';
+

@@ -156,6 +156,8 @@ export default StyleSheet.create({
         backgroundColor: theme.colors.lightGray,
         borderRadius: 10,
         marginBottom: 30,
+        borderWidth: 2,
+        borderColor: 'transparent',
     },
     checkBtn: {
         marginLeft: 16,
