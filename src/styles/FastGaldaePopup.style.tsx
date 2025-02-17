@@ -7,9 +7,9 @@ export default StyleSheet.create({
         backgroundColor: theme.colors.popupBackGround,
     },
     container: {
-      shadowColor: 'rgba(156, 156, 156, 0.05)',
-      shadowOffset: { width: 0, height: 10 },
-      shadowOpacity: 0.05,
+      shadowColor: 'rgba(156, 156, 156, 10)',
+      shadowOffset: { width: 10, height: 10 },
+      shadowOpacity:0.5,
       shadowRadius: 20,
       elevation: 5,
 
@@ -107,5 +107,35 @@ export default StyleSheet.create({
     },
     confirmText:{
 
+    },
+    modalOverlay: {
+      flex: 1,
+      position:'relative',
+      backgroundColor: 'rgba(0, 0, 0, 0.7)',
+      justifyContent: 'center',
+      alignItems: 'center',
+      paddingHorizontal:15,
+
+    },
+    modalContent: {
+      width: '100%',
+      height:506,
+      backgroundColor: theme.colors.gray0,
+      borderRadius: 10,
+      alignItems: 'center',
+    },
+    closeButton: {
+      position: 'absolute',
+      top: 15,   // 원하는 위치로 조정 (예: 모달 컨텐츠 상단 바깥쪽)
+      left:160, // 원하는 위치로 조정 (예: 모달 컨텐츠 우측 바깥쪽)
+    },
+    closeButtonIcon: {
+      width: 30,
+      height: 30,
+    },
+    fullScreenImage: {
+      width: '100%',
+      height: '100%',
+      borderRadius: 10,
     },
   });

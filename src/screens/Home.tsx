@@ -18,6 +18,7 @@ import FloatingButton from '../components/button/FloatingButton';
 import DeletePopup from '../components/popup/DeletePopup';
 import FastGaldaeStartPopup, { FastGaldaeStartPopupRef } from '../components/popup/FastGaldaeStartPopup';
 import FastGaldaeEndPopup, { FastGaldaeEndPopupRef } from '../components/popup/FastGaldaeEndPopup';
+import FastGaldaeTimePopup, { FastGaldaeTimePopupRef } from '../components/popup/FastGaldaeTimePopup';
 //import SelectSVGTextButton from '../components/button/SelectSVGTextButton';
 //import SelectTextButton from '../components/button/SelectTextButton';
 
@@ -33,6 +34,7 @@ const Home: React.FC<HomeProps> = () => {
  // const [fastGaldaePopupVisible, setFastGaldaePopupVisible] = useState<boolean>(false);
   const fastGaldaeStartPopupRef = useRef<FastGaldaeStartPopupRef>(null);
   const fastGaldaeEndPopupRef = useRef<FastGaldaeEndPopupRef>(null);
+  const fastGaldaeTimePopupRef = useRef<FastGaldaeTimePopupRef>(null);
   const handlePress = () => {
     setLoading(true);
     // 버튼 클릭 시 원하는 로직을 수행하고, 완료 후 로딩 상태를 false로 전환합니다.
@@ -72,6 +74,11 @@ const Home: React.FC<HomeProps> = () => {
   const toggleFastGaldaeEndPopup = () =>{
     //setFastGaldaePopupVisible((prev) => !prev);
     fastGaldaeEndPopupRef.current?.open();
+  };
+
+  const toggleFastGaldaeTimePopup = () =>{
+    //setFastGaldaePopupVisible((prev) => !prev);
+    fastGaldaeTimePopupRef.current?.open();
   };
   // DeletePopup 관련 핸들러
   //const openDeletePopup = () => setDeletePopupVisible(true);
@@ -128,7 +135,9 @@ const Home: React.FC<HomeProps> = () => {
 
           <View style={styles.line}/>
 
-          <BasicText text="출발일시 : 2025년 11일 12일 (수) 2 : 30" style={styles.startDateTime}/>
+          <TouchableOpacity onPress={toggleFastGaldaeTimePopup}>
+            <BasicText text="출발일시 : 2025년 11일 12일 (수) 2 : 30" style={styles.startDateTime}/>
+          </TouchableOpacity>
 
         </View>
 
@@ -338,8 +347,10 @@ const Home: React.FC<HomeProps> = () => {
       </ScrollView>
 
     </ScrollView>
-    <FastGaldaeStartPopup ref={fastGaldaeStartPopupRef} onClose={() => console.log('팝업 닫힘')} />
-    <FastGaldaeEndPopup ref={fastGaldaeEndPopupRef} onClose={() => console.log('팝업 닫힘')} />
+      <FastGaldaeStartPopup ref={fastGaldaeStartPopupRef} onClose={() => console.log('팝업 닫힘')} />
+      <FastGaldaeEndPopup ref={fastGaldaeEndPopupRef} onClose={() => console.log('팝업 닫힘')} />
+      <FastGaldaeTimePopup ref={fastGaldaeTimePopupRef} onClose={() => console.log('팝업 닫힘')}/>
+
       <DeletePopup
           visible={deletePopupVisible}
           onCancel={closeDeletePopup}

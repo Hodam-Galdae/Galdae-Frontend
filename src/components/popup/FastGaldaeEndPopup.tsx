@@ -9,7 +9,7 @@ import TextTag from '../tag/TextTag';
 import { ScrollView } from 'react-native-gesture-handler';
 import BasicButton from '../button/BasicButton';
 import SelectTextButton from '../button/SelectTextButton';
-
+import BigPictureModal from './BigPictureModal';
 
 export interface FastGaldaeEndPopupRef {
   open: () => void;
@@ -23,6 +23,7 @@ export interface FastGaldaePopupProps {
 const FastGaldaePopup = forwardRef<FastGaldaeEndPopupRef, FastGaldaePopupProps>(
   ({ onClose }, ref) => {
     const modalizeRef = useRef<Modalize>(null);
+    const pictureModalRef = useRef<Modalize>(null);
     // 대분류와 소분류 선택 상태 (더미 데이터)
     const [largeCategory, setLargeCategory] = useState<string>('');
     const [smallCategory, setSmallCategory] = useState<string>('');
@@ -34,6 +35,10 @@ const FastGaldaePopup = forwardRef<FastGaldaeEndPopupRef, FastGaldaePopupProps>(
     const toggleLargeCategory = (name: string) =>{
      setLargeCategory(name);
 
+    };
+    const handlePicturePress = () => {
+      // SVGButton 클릭 시 큰 사진 팝업 열기
+      pictureModalRef.current?.open();
     };
     // 외부에서 open/close 함수를 사용할 수 있도록 함
     useImperativeHandle(ref, () => ({
@@ -73,6 +78,7 @@ const FastGaldaePopup = forwardRef<FastGaldaeEndPopupRef, FastGaldaePopupProps>(
             <View style={styles.picture}>
               <SVGButton
                 iconName="ToBigPic"
+                onPress={handlePicturePress}
                 buttonStyle={styles.toBigPicIcon}
               />
             </View>
@@ -179,7 +185,7 @@ const FastGaldaePopup = forwardRef<FastGaldaeEndPopupRef, FastGaldaePopupProps>(
 
           <BasicButton
             text="완료"
-            disabled={!(largeCategory && smallCategory)} 
+            disabled={!(largeCategory && smallCategory)}
             onPress={handleSelectConfirm}
             buttonStyle={styles.confirmButton}
             textStyle={styles.confirmText}
@@ -195,6 +201,10 @@ const FastGaldaePopup = forwardRef<FastGaldaeEndPopupRef, FastGaldaePopupProps>(
             }}
           />
         </View>
+        <BigPictureModal
+        ref={pictureModalRef}
+        imageSource={require('../../assets/test.jpg')}
+      />
       </Modalize>
     );
   }

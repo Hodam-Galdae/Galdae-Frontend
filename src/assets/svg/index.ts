@@ -22,3 +22,4 @@ export {default as FromToLine} from './FromToLine.svg';
 export {default as Add} from './Add.svg';
 export {default as Cancel} from './Cancel.svg';
 export {default as ToBigPic} from './fullscreen_line.svg';
+export {default as ClosePic} from './fullscreen_exit_line.svg';
