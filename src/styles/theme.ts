@@ -31,6 +31,8 @@ export const theme = {
       size22: 22,
       size23: 23,
       size24: 24,
+      size25: 25,
+      size26: 26,
     },
     borderRadius: {
       size10: 10,

@@ -1,5 +1,4 @@
 import { StyleSheet, Dimensions } from 'react-native';
-import {moderateScale} from '../utils/ScreenScaler';
 import {theme} from '../styles/theme';
 
 const screenWidth = Dimensions.get('window').width;
@@ -27,10 +26,11 @@ export default StyleSheet.create({
         color: theme.colors.red,
         fontSize: theme.fontSize.size12,
         marginTop: 10,
+        fontWeight: 500,
     },
     title: {
-        fontSize: theme.fontSize.size18,
-        fontWeight: 'bold',
+        fontSize: theme.fontSize.size20,
+        fontWeight: '700',
         color: theme.colors.black,
         marginBottom: 12,
     },
@@ -52,9 +52,9 @@ export default StyleSheet.create({
     },
     buttonStyle: {
         borderWidth:1,
-        height:moderateScale(30),
-        paddingHorizontal:moderateScale(10),
-        paddingVertical:moderateScale(1),
+        height: 30,
+        paddingHorizontal: 10,
+        paddingVertical: 1,
         alignItems:'center',
         justifyContent:'center',
         borderRadius:theme.borderRadius.size30,
@@ -81,10 +81,12 @@ export default StyleSheet.create({
     timeText: {
         fontSize: theme.fontSize.size18,
         color: theme.colors.black,
+        fontWeight: '500',
     },
     subTitle: {
         color: theme.colors.gray1,
         fontSize: theme.fontSize.size14,
+        fontWeight: '500',
         marginBottom: 8,
     },
     additionalButton: {
@@ -95,6 +97,7 @@ export default StyleSheet.create({
     },
     additionalButtonText: {
         fontSize: theme.fontSize.size14,
+        fontWeight: '500',
         color: theme.colors.gray1,
     },
     buttonWrapper: {
@@ -123,12 +126,14 @@ export default StyleSheet.create({
         alignItems: 'center',
     },
     personText: {
-        fontSize: theme.fontSize.size18,
+        fontWeight: '700',
+        fontSize: theme.fontSize.size20,
         color: theme.colors.black,
         marginRight: 4,
     },
     personSubText: {
-        fontSize: theme.fontSize.size14,
+        fontSize: theme.fontSize.size16,
+        fontWeight: '500',
         color: theme.colors.gray1,
     },
     plusBtn: {
@@ -142,8 +147,9 @@ export default StyleSheet.create({
         height: 16,
     },
     numberText: {
-        fontSize: theme.fontSize.size24,
+        fontSize: theme.fontSize.size26,
         color: theme.colors.black,
+        fontWeight: '700',
         marginHorizontal: 10,
     },
     oftenBox: {
@@ -165,6 +171,7 @@ export default StyleSheet.create({
     },
     checkText: {
         fontSize: theme.fontSize.size16,
+        fontWeight: '500',
         color: theme.colors.gray1,
-    }
+    },
 });

@@ -12,14 +12,14 @@ import SVG from '../components/SVG';
 const CreateGaldae: React.FC = () => {
   const [selectedGender, setSelectedGender] = useState<number>(0);
   const [selectedTimeDiscuss, setSelectedTimeDiscuss] = useState<number>(0);
-  const [passengerNumber, setPassengerNumber] = useState<number>(0);
+  const [passengerNumber, setPassengerNumber] = useState<number>(1);
   const [selectedChannel, setSelectedChannel] = useState<boolean>(false);
 
   const passengerNumberHandler = (type: String) => {
     if(type === 'PLUS' && passengerNumber < 4){
       setPassengerNumber(passengerNumber + 1);
     }
-    else if(type === 'MINUS' && passengerNumber > 0){
+    else if(type === 'MINUS' && passengerNumber > 1){
       setPassengerNumber(passengerNumber - 1);
     }
   };
