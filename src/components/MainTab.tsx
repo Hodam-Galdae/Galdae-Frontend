@@ -9,7 +9,7 @@ import Chat from '../screens/Chat';
 import SVG from '../components/SVG';
 import Header from './Header';
 import { theme } from '../styles/theme';
-import { moderateScale } from '../utils/ScreenScaler';
+//import {  } from '../utils/ScreenScaler';
 
 function App(): React.JSX.Element {
 
@@ -27,11 +27,11 @@ function App(): React.JSX.Element {
               tabBarInactiveTintColor: theme.colors.gray1,
               tabBarStyle: Platform.select({
                 ios: {
-                  height: moderateScale(80),
+                  height: 80,
                   // iOS 전용 스타일 추가
                 },
                 android: {
-                  height: moderateScale(50),
+                  height: 70,
                   // Android 전용 스타일 추가
                 },
               }),

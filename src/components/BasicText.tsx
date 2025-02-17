@@ -47,14 +47,14 @@ const BasicText: React.FC<BasicTextProps> = ({
   // useMemo를 사용하여 computedStyle 계산: fontFamily, fontSize, color
   const computedStyle: TextStyle = useMemo(() => {
     return {
-      fontFamily,
       ...(fontSize ? { fontSize } : {}),
       ...(color ? { color } : {}),
+      fontFamily,
     };
   }, [fontFamily, fontSize, color]);
 
   return (
-    <Text {...props} style={[style, computedStyle]}>
+    <Text {...props} style={[ style,computedStyle]}>
       {children ?? text}
     </Text>
   );

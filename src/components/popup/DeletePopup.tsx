@@ -4,7 +4,7 @@ import SVG from '../../components/SVG';
 import BasicText from '../../components/BasicText';
 import BasicButton from '../../components/button/BasicButton';
 import { theme } from '../../styles/theme';
-//import { moderateScale } from '../utils/ScreenScaler';
+//import {  } from '../utils/ScreenScaler';
 import styles from '../../styles/DeletePopup.style';
 
 export interface DeletePopupProps {

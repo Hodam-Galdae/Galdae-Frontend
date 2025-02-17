@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
 
 } from 'react-native';
-//import { moderateScale } from '../utils/ScreenScaler';
+//import {  } from '../utils/ScreenScaler';
 import stylesheet from '../../styles/stylesheet';
 import { theme } from '../../styles/theme';
 import SVG from '../../components/SVG';
@@ -78,8 +78,8 @@ const SVGTextButton: React.FC<SVGTextButtonProps> = React.memo(({
         <>
           <SVG
             name={iconName}
-            // width={moderateScale(24)}
-            // height={moderateScale(24)}
+            // width={(24)}
+            // height={(24)}
             fill={colors.textColor}
             style={SVGStyle}
           />
@@ -96,8 +96,8 @@ const SVGTextButton: React.FC<SVGTextButtonProps> = React.memo(({
           </BasicText>
           <SVG
             name={iconName}
-            // width={moderateScale(24)}
-            // height={moderateScale(24)}
+            // width={(24)}
+            // height={(24)}
             fill={colors.textColor}
             style={SVGStyle}
           />

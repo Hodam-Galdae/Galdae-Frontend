@@ -15,6 +15,7 @@ export const theme = {
       sub2:'#FDFD94',
       transparent:'transparent',
       enabledBorder:'transparent',
+      popupBackGround:'rgba(255, 255, 255, 0)',
     },
     fontSize:{
       size10: 10,

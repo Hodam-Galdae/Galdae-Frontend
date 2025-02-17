@@ -1,5 +1,8 @@
+
 import { StyleSheet, Dimensions } from 'react-native';
 import {moderateScale} from '../utils/ScreenScaler';
+// import {} from '../utils/ScreenScaler';
+
 import {theme} from '../styles/theme';
 
 const screenWidth = Dimensions.get('window').width;

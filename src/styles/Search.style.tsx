@@ -1,16 +1,16 @@
 import { StyleSheet } from 'react-native';
-import {moderateScale} from '../utils/ScreenScaler';
+import {} from '../utils/ScreenScaler';
 import { theme } from '../styles/theme';
 
 export default StyleSheet.create({
     container: {
         position: 'relative',
-        marginTop: moderateScale(10),
+        marginTop: (10),
         width: '100%',
       },
       input: {
         width: '100%',
-        height: moderateScale(40),
+        height: (40),
         borderRadius: theme.borderRadius.size10,
         borderWidth: 2,
         fontSize: theme.fontSize.size14,
@@ -19,11 +19,11 @@ export default StyleSheet.create({
       },
       button: {
         position: 'absolute',
-        right: moderateScale(20),
-        bottom: moderateScale(10),
+        right: (20),
+        bottom: (10),
       },
       icon: {
-        width: moderateScale(18),
-        height: moderateScale(18),
+        width: (18),
+        height: (18),
       },
 });

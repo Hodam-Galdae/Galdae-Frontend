@@ -29,4 +29,6 @@ export {default as CheckSelected} from './CheckSelected.svg';
 export {default as LeftArrow} from './LeftArrow.svg';
 export {default as Minus} from './Minus.svg';
 export {default as Plus} from './Plus.svg';
+export {default as ToBigPic} from './fullscreen_line.svg';
+export {default as ClosePic} from './fullscreen_exit_line.svg';
 

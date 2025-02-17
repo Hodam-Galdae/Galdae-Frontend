@@ -4,8 +4,16 @@ import { theme } from '../../styles/theme';
 import stylesheet from '../../styles/stylesheet';
 
 export interface SelectableButtonProps extends BasicButtonProps {
-  // 이 컴포넌트에서는 text, onPress, disabled, loading 등 기본 버튼 prop들을 그대로 사용합니다.
-  // 필요한 경우, 추가적인 prop들을 확장할 수 있습니다.
+  selectedColors?: {
+    backgroundColor?: string;
+    textColor?: string;
+    borderColor?: string;
+  };
+  unselectedColors?: {
+    backgroundColor?: string;
+    textColor?: string;
+    borderColor?: string;
+  };
 }
 
 const SelectTextButton: React.FC<SelectableButtonProps> = ({
@@ -16,30 +24,36 @@ const SelectTextButton: React.FC<SelectableButtonProps> = ({
   disabled,
   loading,
   accessibilityLabel,
+  selectedColors,
+  unselectedColors,
   ...restProps
 }) => {
   const [selected, setSelected] = useState<boolean>(false);
 
   const handlePress = () => {
-    // 버튼을 누를 때마다 선택 상태를 토글
     setSelected(!selected);
     if (onPress) {
       onPress();
     }
   };
 
-  // 선택 상태에 따른 색상 결정 (여기서 선택 시: 배경색은 brandColor, 텍스트 색상은 white)
-  const defaultEnabledColors = selected
-    ? {
-        backgroundColor: theme.colors.brandColor,
-        textColor: theme.colors.white,
-        borderColor: 'transparent',
-      }
-    : {
-        backgroundColor: theme.colors.lightGray,
-        textColor: theme.colors.gray1,
-        borderColor: 'transparent',
-      };
+  // 기본 선택된 상태 색상 (선택된 경우)
+  const defaultSelectedColors = {
+    backgroundColor: theme.colors.brandColor,
+    textColor: theme.colors.white,
+    borderColor: 'transparent',
+    ...selectedColors, // 전달된 값으로 덮어쓰기
+  };
+
+  // 기본 선택되지 않은 상태 색상
+  const defaultUnselectedColors = {
+    backgroundColor: theme.colors.lightGray,
+    textColor: theme.colors.gray1,
+    borderColor: 'transparent',
+    ...unselectedColors, // 전달된 값으로 덮어쓰기
+  };
+
+  const enabledColors = selected ? defaultSelectedColors : defaultUnselectedColors;
 
   return (
     <BasicButton
@@ -47,8 +61,7 @@ const SelectTextButton: React.FC<SelectableButtonProps> = ({
       onPress={handlePress}
       disabled={disabled}
       loading={loading}
-      enabledColors={defaultEnabledColors}
-      // 기본 스타일과 전달받은 스타일을 병합하여 적용
+      enabledColors={enabledColors}
       buttonStyle={[stylesheet.smallBorderTextBtn, buttonStyle]}
       textStyle={[stylesheet.smallBorderBtnText, textStyle]}
       accessibilityLabel={accessibilityLabel}

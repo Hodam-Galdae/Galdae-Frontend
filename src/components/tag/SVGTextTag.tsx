@@ -6,7 +6,7 @@ import BasicText from './../BasicText';
 import styles from '../../styles/TextTag.style';
 import SVG from '../../components/SVG';
 import * as svgIcons from '../../assets/svg';
-//import { moderateScale } from '../utils/ScreenScaler';
+//import {  } from '../utils/ScreenScaler';
 
 export interface DisplayColors {
   backgroundColor?: string;
@@ -60,8 +60,8 @@ const SVGTextTag: React.FC<BasicDisplayProps> = ({
         <SVG
           name={iconName}
           style={iconStyle}
-        //   width={moderateScale(18)}
-        //   height={moderateScale(18)}
+        //   width={(18)}
+        //   height={(18)}
           fill={colors.textColor}
         />
       )}
@@ -73,8 +73,8 @@ const SVGTextTag: React.FC<BasicDisplayProps> = ({
         <SVG
           name={iconName}
           style={iconStyle}
-        //   width={moderateScale(18)}
-        //   height={moderateScale(18)}
+        //   width={(18)}
+        //   height={(18)}
           fill={colors.textColor}
         />
       )}
