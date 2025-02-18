@@ -35,5 +35,5 @@ export default StyleSheet.create({
         fontSize: 14,
         fontWeight: '600',
         color: theme.colors.gray1,
-    }
+    },
 });

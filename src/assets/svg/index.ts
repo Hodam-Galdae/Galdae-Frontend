@@ -31,4 +31,6 @@ export {default as Minus} from './Minus.svg';
 export {default as Plus} from './Plus.svg';
 export {default as ToBigPic} from './fullscreen_line.svg';
 export {default as ClosePic} from './fullscreen_exit_line.svg';
-
+export {default as down_line} from './down_line 6.svg';
+export {default as Separate} from './Separate.svg';
+export {default as up_line} from './up_line 1.svg';

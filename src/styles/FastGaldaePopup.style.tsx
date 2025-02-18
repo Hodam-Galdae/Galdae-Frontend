@@ -12,8 +12,7 @@ export default StyleSheet.create({
       shadowOpacity:0.5,
       shadowRadius: 20,
       elevation: 5,
-
-
+      height:586,
       backgroundColor: theme.colors.white,
       paddingHorizontal: (30),
       borderTopLeftRadius: (20),
@@ -31,7 +30,8 @@ export default StyleSheet.create({
         backgroundColor: theme.colors.gray0,
     },
     content: {
-
+      height:500,
+      position:'relative',
     },
     start:{
       fontWeight:700,
@@ -137,5 +137,31 @@ export default StyleSheet.create({
       width: '100%',
       height: '100%',
       borderRadius: 10,
+    },
+    datePicker:{
+      marginTop:22,
+      marginBottom:40,
+    },
+    timePicker:{
+
+    },
+    amPm:{
+      flexDirection:'row',
+      marginTop:22,
+      gap:8,
+    },
+    amPmBtn:{
+      paddingVertical:6,
+      paddingHorizontal:22,
+    },
+    amPmText:{
+      fontWeight:'500',
+      fontSize:theme.fontSize.size14,
+    },
+    confirmBtnContainer:{
+      alignSelf:'flex-end',
+      justifyContent:'flex-end',
+      bottom:0,
+      position:'absolute',
     },
   });

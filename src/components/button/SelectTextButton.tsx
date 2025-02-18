@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import BasicButton, { BasicButtonProps } from './BasicButton';
 import { theme } from '../../styles/theme';
 import stylesheet from '../../styles/stylesheet';
 
 export interface SelectableButtonProps extends BasicButtonProps {
+  selected: boolean; // 외부에서 제어하는 선택 상태
   selectedColors?: {
     backgroundColor?: string;
     textColor?: string;
@@ -17,6 +18,7 @@ export interface SelectableButtonProps extends BasicButtonProps {
 }
 
 const SelectTextButton: React.FC<SelectableButtonProps> = ({
+  selected,
   buttonStyle,
   textStyle,
   text,
@@ -28,15 +30,6 @@ const SelectTextButton: React.FC<SelectableButtonProps> = ({
   unselectedColors,
   ...restProps
 }) => {
-  const [selected, setSelected] = useState<boolean>(false);
-
-  const handlePress = () => {
-    setSelected(!selected);
-    if (onPress) {
-      onPress();
-    }
-  };
-
   // 기본 선택된 상태 색상 (선택된 경우)
   const defaultSelectedColors = {
     backgroundColor: theme.colors.brandColor,
@@ -58,7 +51,7 @@ const SelectTextButton: React.FC<SelectableButtonProps> = ({
   return (
     <BasicButton
       text={text}
-      onPress={handlePress}
+      onPress={onPress}
       disabled={disabled}
       loading={loading}
       enabledColors={enabledColors}

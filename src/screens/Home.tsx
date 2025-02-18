@@ -17,6 +17,7 @@ import SVGTextTag from '../components/tag/SVGTextTag';
 import FloatingButton from '../components/button/FloatingButton';
 import DeletePopup from '../components/popup/DeletePopup';
 import { useNavigation } from '@react-navigation/native';
+import moment from 'moment';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 type RootStackParamList = {
@@ -41,6 +42,10 @@ const Home: React.FC<HomeProps> = () => {
   const [deletePopupVisible, setDeletePopupVisible] = useState<boolean>(false);
   const navigation = useNavigation<LoginScreenNavigationProp>();
  // const [fastGaldaePopupVisible, setFastGaldaePopupVisible] = useState<boolean>(false);
+  const [departureDate, setDepartureDate] = useState<string | null>(null); // "YYYY-MM-DD" 형식
+  const [departureAmPm, setDepartureAmPm] = useState<'오전' | '오후'>('오전');
+  const [departureHour, setDepartureHour] = useState<number>(0);
+  const [departureMinute, setDepartureMinute] = useState<number>(0);
   const fastGaldaeStartPopupRef = useRef<FastGaldaeStartPopupRef>(null);
   const fastGaldaeEndPopupRef = useRef<FastGaldaeEndPopupRef>(null);
   const fastGaldaeTimePopupRef = useRef<FastGaldaeTimePopupRef>(null);
@@ -63,6 +68,37 @@ const Home: React.FC<HomeProps> = () => {
 
   const handleMorePress = () => {
 
+  };
+  const handleTimePopupConfirm = (
+    selectedDate: string,
+    amPm: '오전' | '오후',
+    hour: number,
+    minute: number
+  ) => {
+    setDepartureDate(selectedDate);
+    setDepartureAmPm(amPm);
+    setDepartureHour(hour);
+    setDepartureMinute(minute);
+  };
+  // 출발일시 문자열 포맷 함수
+  const formatDepartureDateTime = () => {
+    if (!departureDate) {
+      const now = moment();
+      const formattedDate = now.format('YYYY년 M월 D일 (ddd)'); // 예: 2025년 11월 12일 (수)
+      const hour = now.hour();
+      const minute = now.minute();
+      const amPm = hour < 12 ? '오전' : '오후';
+      let hour12 = hour % 12;
+      if (hour12 === 0) {hour12 = 12;}
+      const formattedTime = `${amPm} ${hour12} : ${minute < 10 ? '0' + minute : minute}`;
+      return `출발일시 : ${formattedDate} ${formattedTime}`;
+    }
+    const dateObj = moment(departureDate, 'YYYY-MM-DD');
+    // 예: "2025년 11월 12일 (수)"
+    const formattedDate = dateObj.format('YYYY년 M월 D일 (ddd)');
+    // 예: "오전 2 : 30" (분이 10 미만일 경우 앞에 0 추가)
+    const formattedTime = `${departureAmPm} ${departureHour} : ${departureMinute < 10 ? '0' + departureMinute : departureMinute}`;
+    return `출발일시 : ${formattedDate} ${formattedTime}`;
   };
 
   // const handleFilterPress = ()=>{
@@ -146,7 +182,7 @@ const Home: React.FC<HomeProps> = () => {
           <View style={styles.line}/>
 
           <TouchableOpacity onPress={toggleFastGaldaeTimePopup}>
-            <BasicText text="출발일시 : 2025년 11일 12일 (수) 2 : 30" style={styles.startDateTime}/>
+            <BasicText text={formatDepartureDateTime()} style={styles.startDateTime}/>
           </TouchableOpacity>
 
         </View>
@@ -359,7 +395,7 @@ const Home: React.FC<HomeProps> = () => {
     </ScrollView>
       <FastGaldaeStartPopup ref={fastGaldaeStartPopupRef} onClose={() => console.log('팝업 닫힘')} />
       <FastGaldaeEndPopup ref={fastGaldaeEndPopupRef} onClose={() => console.log('팝업 닫힘')} />
-      <FastGaldaeTimePopup ref={fastGaldaeTimePopupRef} onClose={() => console.log('팝업 닫힘')}/>
+      <FastGaldaeTimePopup ref={fastGaldaeTimePopupRef} onConfirm={handleTimePopupConfirm} onClose={() => console.log('팝업 닫힘')}/>
 
       <DeletePopup
           visible={deletePopupVisible}
