@@ -35,4 +35,5 @@ export {default as LocationBlack} from './LocationBlack.svg';
 export {default as RightArrow} from './RightArrow.svg';
 export {default as UserFill} from './UserFill.svg';
 export {default as UserFillLight} from './UserFillLight.svg';
+export {default as DefaultProfile} from './DefaultProfile.svg';
 

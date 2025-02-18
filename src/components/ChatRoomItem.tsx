@@ -6,17 +6,19 @@ import BasicText from './BasicText';
 import SVG from './SVG';
 
 interface Props {
+    id: number,
     time: string,
     from: string,
     to: string,
     currentPerson: number,
     maxPerson: number,
-    message: number
+    message: number,
+    onPress: (id: number) => void,
 }
 
 const ChatRoomItem = (props : Props) => {
   return (
-    <TouchableOpacity>
+    <TouchableOpacity onPress={() => props.onPress(props.id)}>
       <View style={styles.container}>
         <View style={styles.wrapper}>
           <BasicText text={props.time} style={styles.timeText}/>
@@ -41,7 +43,6 @@ const ChatRoomItem = (props : Props) => {
         </View>
       </View>
     </TouchableOpacity>
-    
   );
 };
 

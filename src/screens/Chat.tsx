@@ -2,8 +2,16 @@
 import React, {useState, useEffect} from 'react';
 import { View } from 'react-native';
 import Tabs from '../components/Tabs';
-import stlyes from '../styles/Chat.style';
+import styles from '../styles/Chat.style';
 import ChatRoomItem from '../components/ChatRoomItem';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useNavigation } from '@react-navigation/native';
+
+type RootStackParamList = {
+  ChatRoom: undefined,
+};
+
+type ChatScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'ChatRoom'>;
 
 type ChatRoomType = {
   id: number,
@@ -16,7 +24,8 @@ type ChatRoomType = {
 };
 
 const Chat: React.FC = () => {
-  const [chatRoomData, setChatRoomData] = useState<ChatRoomType[]>([]); 
+  const navigation = useNavigation<ChatScreenNavigationProp>();
+  const [chatRoomData, setChatRoomData] = useState<ChatRoomType[]>([]);
   const [tab, setTab] = useState(0);
 
   useEffect(()=> {
@@ -42,15 +51,19 @@ const Chat: React.FC = () => {
     ]);
   }, [tab]);
 
+  const navigate = (id: number) => {
+    navigation.navigate('ChatRoom');
+  };
+
   return (
-    <View style={stlyes.container}>
+    <View style={styles.container}>
       <Tabs
         menus={['참여중인 갈대', '완료된 갈대']}
         onSelectHandler={(index) => setTab(index)}
         selectedIndex={tab}
       />
       {chatRoomData.map((e) => {
-        return <ChatRoomItem key={e.id} time={e.time} from={e.from} to={e.to} currentPerson={e.currentPerson} maxPerson={e.maxPerson} message={e.message}/>
+        return <ChatRoomItem onPress={navigate} id={e.id} key={e.id} time={e.time} from={e.from} to={e.to} currentPerson={e.currentPerson} maxPerson={e.maxPerson} message={e.message}/>
       })};
     </View>
   );
