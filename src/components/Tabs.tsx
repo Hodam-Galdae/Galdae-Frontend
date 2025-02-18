@@ -72,6 +72,7 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         backgroundColor: theme.colors.white,
+        marginBottom: 20,
     },
     slider: {
         width: '100%',

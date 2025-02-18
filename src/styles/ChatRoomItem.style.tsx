@@ -13,6 +13,8 @@ export default StyleSheet.create({
         alignItems: 'flex-start',
         justifyContent: 'center',
         height: 87,
+        marginBottom: 10,
+        
     },
     wrapper: {
         width: '100%',
