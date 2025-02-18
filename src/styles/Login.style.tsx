@@ -10,7 +10,7 @@ export default StyleSheet.create({
         flex: 1,
         justifyContent: 'flex-start',
         alignItems: 'center',
-        backgroundColor: '#f0f0f0',
+        backgroundColor: theme.colors.white,
     },
     title: {
         fontSize: 22,
@@ -21,5 +21,5 @@ export default StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-    }
+    },
 });

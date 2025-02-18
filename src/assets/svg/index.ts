@@ -30,4 +30,5 @@ export {default as LeftArrow} from './LeftArrow.svg';
 export {default as Minus} from './Minus.svg';
 export {default as Plus} from './Plus.svg';
 export {default as Logo} from './Logo.svg';
+export {default as CheckLine} from './CheckLine.svg';
 

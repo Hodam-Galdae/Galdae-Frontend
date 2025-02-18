@@ -26,7 +26,7 @@ const Login: React.FC = () => {
 
   const handleGoToMainTab = () => {
     // 로그인 로직 수행 후 메인 탭 네비게이터로 이동 (replace 메서드 사용 가능)
-    navigation.navigate('MainTab');
+    navigation.navigate('SignUp');
   };
 
   const images = [
@@ -41,7 +41,6 @@ const Login: React.FC = () => {
         <Swiper 
           controlsProps={{
             dotActiveStyle: { backgroundColor: theme.colors.white },
-            
             nextTitle: '',
             prevTitle: '',
           }}

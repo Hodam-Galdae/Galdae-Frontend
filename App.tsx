@@ -11,6 +11,7 @@ import Onboarding from './src/screens/Onboarding';
 import axios, {AxiosResponse, InternalAxiosRequestConfig} from 'axios';
 import {errorLogger, requestLogger, responseLogger} from 'axios-logger';
 import SVGButton from './src/components/button/SVGButton';
+import SVG from './src/components/SVG';
 
 function App() {
     useEffect(() => {
@@ -82,7 +83,11 @@ function App() {
                             headerLeft: () => (<SVGButton iconName="LeftArrow" onPress={() => navigation.goBack()}/>),
                             })}
                     />
-                  <Stack.Screen name="SignUp" component={SignUp} options={{ headerShown: false }}/>
+                  <Stack.Screen name="SignUp" component={SignUp} options={({ navigation }) => ({
+                            headerTitle: () => <SVG name="Logo" style={{width: 81, height: 33}}/>,
+                            headerTitleAlign: 'center',
+                            headerLeft: () => (<SVGButton iconName="LeftArrow" onPress={() => navigation.goBack()}/>),
+                            })}/>
                   <Stack.Screen name="MainTab" component={MainTab} options={{ headerShown: false }}/>
 
               </Stack.Navigator>
