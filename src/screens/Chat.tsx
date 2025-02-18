@@ -1,32 +1,31 @@
 // Chat.tsx 테스트
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React, {useState} from 'react';
+import { View, Text, useWindowDimensions } from 'react-native';
+import { theme } from '../styles/theme';
+import BasicText from '../components/BasicText';
+import Tabs from '../components/Tabs';
+
+const FirstRoute = () => (
+  <View style={{ flex: 1, backgroundColor: "#ff4081" }} />
+);
+
+const SecondRoute = () => (
+  <View style={{ flex: 1, backgroundColor: "#673ab7" }} />
+);
 
 const Chat: React.FC = () => {
+  const [tab, setTab] = useState(0);
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>채팅 화면</Text>
-      <Text style={styles.subtitle}>환영합니다! 여기는 채팅입니다.</Text>
+    <View style={{ flex: 1 }}>
+      <Tabs
+        menus={['메뉴1', '메뉴2']}
+        onSelectHandler={(index) => {
+          setTab(index);
+        }}
+        selectedIndex={tab}
+      />
     </View>
   );
 };
 
 export default Chat;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f0f0f0',
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginBottom: 16,
-  },
-  subtitle: {
-    fontSize: 18,
-    color: '#333',
-  },
-});
