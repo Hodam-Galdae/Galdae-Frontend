@@ -53,7 +53,9 @@ const Tabs = ({ selectedIndex, onSelectHandler, menus }: Props) => {
           <Text
             style={{
               fontSize: theme.fontSize.size18,
+              fontWeight: '700',
               color: selectedIndex === i ? theme.colors.brandColor : theme.colors.gray1,
+              marginBottom: 10,
             }}
           >
             {v}
