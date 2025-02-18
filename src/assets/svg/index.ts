@@ -31,4 +31,8 @@ export {default as Minus} from './Minus.svg';
 export {default as Plus} from './Plus.svg';
 export {default as ToBigPic} from './fullscreen_line.svg';
 export {default as ClosePic} from './fullscreen_exit_line.svg';
+export {default as LocationBlack} from './LocationBlack.svg';
+export {default as RightArrow} from './RightArrow.svg';
+export {default as UserFill} from './UserFill.svg';
+export {default as UserFillLight} from './UserFillLight.svg';
 

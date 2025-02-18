@@ -1,29 +1,21 @@
 // Chat.tsx 테스트
 import React, {useState} from 'react';
-import { View, Text, useWindowDimensions } from 'react-native';
-import { theme } from '../styles/theme';
-import BasicText from '../components/BasicText';
+import { View } from 'react-native';
 import Tabs from '../components/Tabs';
-
-const FirstRoute = () => (
-  <View style={{ flex: 1, backgroundColor: "#ff4081" }} />
-);
-
-const SecondRoute = () => (
-  <View style={{ flex: 1, backgroundColor: "#673ab7" }} />
-);
+import stlyes from '../styles/Chat.style';
+import ChatRoomItem from '../components/ChatRoomItem';
 
 const Chat: React.FC = () => {
   const [tab, setTab] = useState(0);
+
   return (
-    <View style={{ flex: 1 }}>
+    <View style={stlyes.container}>
       <Tabs
-        menus={['메뉴1', '메뉴2']}
-        onSelectHandler={(index) => {
-          setTab(index);
-        }}
+        menus={['참여중인 갈대', '완료된 갈대']}
+        onSelectHandler={(index) => setTab(index)}
         selectedIndex={tab}
       />
+      <ChatRoomItem time="2025년 00월 00일 (0) 00:00" from="학교" to="호암동" currentPerson={1} maxPerson={4} message={5}/>
     </View>
   );
 };

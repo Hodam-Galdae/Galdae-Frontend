@@ -9,7 +9,7 @@ interface Props {
 }
 
 const Tabs = ({ selectedIndex, onSelectHandler, menus }: Props) => {
-  const width = Dimensions.get('window').width / menus.length;
+  const width = (Dimensions.get('window').width - 30) / menus.length;
   const animatedValue = React.useRef(
     new Animated.Value(selectedIndex * width)
   ).current;
