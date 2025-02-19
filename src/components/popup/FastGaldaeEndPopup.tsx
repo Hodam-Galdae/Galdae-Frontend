@@ -18,10 +18,11 @@ export interface FastGaldaeEndPopupRef {
 
 export interface FastGaldaePopupProps {
   onClose?: () => void;
+  onConfirm?: (largeCategory: string, smallCategory: string) => void;
 }
 
 const FastGaldaePopup = forwardRef<FastGaldaeEndPopupRef, FastGaldaePopupProps>(
-  ({ onClose }, ref) => {
+  ({ onClose,onConfirm }, ref) => {
     const modalizeRef = useRef<Modalize>(null);
     const pictureModalRef = useRef<Modalize>(null);
     // 대분류와 소분류 선택 상태 (더미 데이터)
@@ -29,6 +30,7 @@ const FastGaldaePopup = forwardRef<FastGaldaeEndPopupRef, FastGaldaePopupProps>(
     const [smallCategory, setSmallCategory] = useState<string>('');
 
     const handleSelectConfirm = () =>{
+      onConfirm && onConfirm(largeCategory, smallCategory);
       modalizeRef.current?.close();
     };
 

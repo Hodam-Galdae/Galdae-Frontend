@@ -7,7 +7,12 @@ export default StyleSheet.create({
         alignItems: 'flex-end',
         height: 102,
         backgroundColor: theme.colors.white,
+        shadowColor: '#9C9C9C',
+        shadowOpacity: 0.05,
+        shadowRadius: 10,
+        elevation: 4,
       },
+
       logoContainer: {
         flex: 1,
         alignItems: 'center',

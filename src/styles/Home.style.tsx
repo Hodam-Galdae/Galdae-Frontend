@@ -16,10 +16,47 @@ export default StyleSheet.create({
       fontSize:theme.fontSize.size16,
       fontWeight: '500',
     },
-    startGaldae:{
-      marginTop:(5),
+    madeGaldaeContainer:{
+      marginBottom:20,
+    },
+    madeGaldae:{
       fontSize:theme.fontSize.size20,
       fontWeight: '700',
+      marginBottom:10,
+    },
+    startGaldae:{
+      fontSize:theme.fontSize.size20,
+      fontWeight: '700',
+    },
+    newGaldaeList:{
+      marginRight: 8,
+      padding:8,
+      alignItems:'center',
+
+      backgroundColor: theme.colors.white,
+      borderRadius: theme.borderRadius.size10,
+      borderColor:theme.colors.brandColor,
+      borderWidth:1,
+      width:86,
+      height:84,
+
+    },
+    newGaldaeTimeText:{
+      fontSize: theme.fontSize.size10,
+      marginBottom: 6,
+      color:theme.colors.gray2,
+    },
+    newGaldaeDepartText:{
+      fontSize:theme.fontSize.size14,
+      fontWeight:'500',
+      marginBottom:5,
+    },
+    newGaldaeDestText:{
+      fontSize:theme.fontSize.size14,
+      fontWeight:'500',
+    },
+    newGaldaeArrowIcon:{
+      marginBottom:5,
     },
     startGaldaeEx:{
       marginTop:(2),
@@ -42,7 +79,7 @@ export default StyleSheet.create({
       alignItems:'flex-start',
       justifyContent:'center',
       flexDirection:'row',
-      gap:(20),
+      gap:(30),
       marginBottom:(16),
     },
     startContain:{ //고정 width 설정해야할듯
@@ -72,9 +109,17 @@ export default StyleSheet.create({
       width:(24),
       height:(24),
     },
-    startDateTime:{
+    startContainer:{
       alignSelf:'center',
-      marginTop:(15),
+    },
+    startTime:{
+      fontSize:theme.fontSize.size14,
+      color:theme.colors.brandColor,
+      fontWeight:'500',
+      marginTop:(8),
+    },
+    startDateTime:{
+      marginTop:(4),
       fontSize:theme.fontSize.size16,
       fontWeight:'700',
     },
@@ -167,6 +212,20 @@ export default StyleSheet.create({
       gap:(4),
       marginTop:(16),
       alignItems:'center',
+    },
+    toastPopup:{
+        paddingVertical:9,
+        paddingHorizontal:26,
+        borderRadius:theme.borderRadius.size30,
+        backgroundColor:theme.colors.brandColor,
+        justifyContent:'center',
+        alignItems:'center',
+        alignSelf: 'center', // 가로 중앙 정렬
+        position:'absolute',
+        bottom:(20),
+        color:theme.colors.white,
+        fontSize:theme.fontSize.size14,
+        fontWeight:'500',
     },
 });
 

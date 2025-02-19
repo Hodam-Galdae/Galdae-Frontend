@@ -10,6 +10,19 @@ export default StyleSheet.create({
         marginVertical: 16,
         gap:12,
       },
+      amPm:{
+        flexDirection:'row',
+        marginTop:22,
+        gap:8,
+      },
+      amPmBtn:{
+        paddingVertical:6,
+        paddingHorizontal:22,
+      },
+      amPmText:{
+        fontWeight:'500',
+        fontSize:theme.fontSize.size14,
+      },
       pickContainer:{
         flex: 1,
       },

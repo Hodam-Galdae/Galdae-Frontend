@@ -14,7 +14,7 @@ export default StyleSheet.create({
         fontSize:theme.fontSize.size16,
       },
       medium: {
-        fontSize:theme.fontSize.size16,
+        fontSize:theme.fontSize.size14,
       },
       circle:{
         marginBottom:7,
@@ -32,7 +32,7 @@ export default StyleSheet.create({
       },
       clickedDate:{
         color: theme.colors.white,
-        fontSize: theme.fontSize.size18,
+        fontSize: theme.fontSize.size14,
         justifyContent: 'center',
         alignItems: 'center',
       },

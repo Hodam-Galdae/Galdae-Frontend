@@ -6,7 +6,7 @@ import { theme } from '../../styles/theme';
 import styles from '../../styles/FastGaldaePopup.style';
 import BasicButton from '../button/BasicButton';
 import Calendar from '../Calendar';
-import SelectTextButton from '../button/SelectTextButton';
+import moment from 'moment';
 import TimePicker from '../TimePicker';
 export interface FastGaldaeTimePopupRef {
   open: () => void;
@@ -24,8 +24,26 @@ const FastGaldaeTimePopup = forwardRef<FastGaldaeTimePopupRef, FastGaldaePopupPr
     const [selectedAmPm, setSelectedAmPm] = useState<'오전' | '오후'>('오전');
     const [selectedHour, setSelectedHour] = useState<number>(0);
     const [selectedMinute, setSelectedMinute] = useState<number>(0);
-
     const modalizeRef = useRef<Modalize>(null);
+
+    // 팝업이 열릴 때 기본값을 현재 시간(다음 15분 단위)으로 설정하는 onOpened 콜백
+    const handleOnOpened = () => {
+      const now = moment();
+      let nextMinute = Math.ceil(now.minute() / 15) * 15;
+      let hour = now.hour();
+      if (nextMinute >= 60) {
+        nextMinute = 0;
+        hour += 1;
+      }
+      setSelectedDate(now.format('YYYY-MM-DD'));
+      // setSelectedHour(hour);
+      // setSelectedMinute(nextMinute);
+      setSelectedAmPm(hour < 12 ? '오전' : '오후');
+
+
+
+      console.log(hour ,nextMinute );
+    };
 
     const handleSelectConfirm = () =>{
       // 선택한 날짜, 오전/오후, 시간 정보를 활용
@@ -51,6 +69,7 @@ const FastGaldaeTimePopup = forwardRef<FastGaldaeTimePopupRef, FastGaldaePopupPr
         ref={modalizeRef}
         modalHeight={586} // 고정 높이 설정
         onClosed={onClose}
+        onOpened={handleOnOpened} // 팝업 열릴 때 기본값 자동 매핑
         overlayStyle={styles.background}
         modalStyle={styles.container}
         withHandle={false}  // 기본 핸들을 비활성화
@@ -80,33 +99,15 @@ const FastGaldaeTimePopup = forwardRef<FastGaldaeTimePopupRef, FastGaldaePopupPr
             style={styles.start}
           />
 
-          <View style={styles.timePicker}>
-            <View style={styles.amPm}>
-              <SelectTextButton
-                text="오전"
-                selected={selectedAmPm === '오전'}
-                unselectedColors={{ textColor: theme.colors.black }}
-                buttonStyle={styles.amPmBtn}
-                textStyle={styles.amPmText}
-                onPress={() => setSelectedAmPm('오전')}
-              />
-              <SelectTextButton
-                text="오후"
-                selected={selectedAmPm === '오후'}
-                unselectedColors={{ textColor: theme.colors.black }}
-                buttonStyle={styles.amPmBtn}
-                textStyle={styles.amPmText}
-                onPress={() => setSelectedAmPm('오후')}
-              />
-            </View>
-            {/* 시간 선택 컴포넌트 추가 */}
-            <TimePicker
-              onTimeChange={(hour, minute) => {
+          {/* 시간 선택 컴포넌트 추가 */}
+          <TimePicker
+              onTimeChange={(amPm, hour, minute) => {
+                setSelectedAmPm(amPm);
                 setSelectedHour(hour);
                 setSelectedMinute(minute);
               }}
+              isToday={true}
             />
-          </View>
 
           <View style={styles.confirmBtnContainer}>
             <BasicButton
