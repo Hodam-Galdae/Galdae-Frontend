@@ -1,9 +1,10 @@
 // Chat.tsx 테스트
 import React, {useState, useEffect, useRef, useCallback} from 'react';
-import { View, FlatList, TextInput } from 'react-native';
+import { View, FlatList, TextInput, Keyboard, KeyboardEvent, TouchableWithoutFeedback } from 'react-native';
 import styles from '../styles/ChatRoom.style';
 import ChatItem from '../components/ChatItem';
 import SVGButton from '../components/button/SVGButton';
+import BasicText from '../components/BasicText';
 
 enum Type {
     MESSAGE,
@@ -32,6 +33,8 @@ type RenderItem = {
 const Chat: React.FC = () => {
     const [data, setData] = useState<Chat[]>([]);
     const [message, setMessage] = useState<string>('');
+    const [showExtraView, setShowExtraView] = useState<boolean>(false);
+    const [keyboardHeight, setKeyboardHeight] = useState<number>(0);
     const chatListRef = useRef<FlatList>(null);
 
     //임시 데이터
@@ -105,12 +108,34 @@ const Chat: React.FC = () => {
         );
     }, []);
 
+    //키보드 이벤트 리스너너
+    useEffect(() => {
+        const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', (event: KeyboardEvent) => {
+            setKeyboardHeight(event.endCoordinates.height);
+        });
+
+        return () => {
+            keyboardDidShowListener.remove();
+        };
+    }, [keyboardHeight]);
+
     //채팅 추가될 때 마다 자동 스크롤
     useEffect(()=> {
         if(chatListRef.current){
             setTimeout(() => chatListRef.current?.scrollToEnd({ animated: false }), 100);
         }
     }, [data]);
+
+    const closeAll = () => {
+        setShowExtraView(false);
+        Keyboard.dismiss;
+    };
+
+    const toggleExtraView = () => {
+        setShowExtraView(!showExtraView);
+        setTimeout(() => chatListRef.current?.scrollToEnd({ animated: false }), 100);
+        Keyboard.dismiss;
+    };
 
     //메시지 보내는 메서드
     const sendMessage = () => {
@@ -127,28 +152,48 @@ const Chat: React.FC = () => {
     }, [data]);
 
     return (
-        <View style={styles.container}>
-            <FlatList
-                ref={chatListRef}
-                style={styles.list}
-                data={data}
-                extraData={data}
-                keyExtractor={(item) => item.id}
-                renderItem={renderItem}
-                onContentSizeChange={() => chatListRef.current?.scrollToEnd({ animated: false })}
-            />
-            <View style={styles.inputContainer}>
-                <SVGButton iconName="AddFill" onPress={()=> {}} buttonStyle={styles.addBtn}/>
-                <TextInput
-                style={styles.input}
-                value={message}
-                onChangeText={setMessage}
-                placeholder="메시지를 입력하세요."
-                multiline={true}
+        <TouchableWithoutFeedback onPress={closeAll}>
+            <View style={styles.container}>
+                <FlatList
+                    ref={chatListRef}
+                    style={styles.list}
+                    data={data}
+                    extraData={data}
+                    keyExtractor={(item) => item.id}
+                    renderItem={renderItem}
+                    onContentSizeChange={() => chatListRef.current?.scrollToEnd({ animated: false })}
                 />
-                <SVGButton iconName="Send" onPress={sendMessage} buttonStyle={styles.sendBtn}/>
+                <View style={styles.inputContainer}>
+                    <SVGButton iconName={showExtraView ? 'CloseFill' : 'AddFill'} onPress={()=>toggleExtraView()} buttonStyle={styles.addBtn}/>
+                    <TextInput
+                    style={styles.input}
+                    value={message}
+                    onChangeText={setMessage}
+                    placeholder="메시지를 입력하세요."
+                    multiline={true}
+                    />
+                    <SVGButton iconName="Send" onPress={sendMessage} buttonStyle={styles.sendBtn}/>
+                </View>
+                {
+                    showExtraView && (
+                    <View style={[styles.extraView, { height:  300 }]}>
+                        <View style={styles.extraViewContainer}>
+                            <SVGButton iconName="Picture" SVGStyle={styles.extraViewItemIcon} buttonStyle={styles.extraViewItem}/>
+                            <BasicText text="앨범" style={styles.extraViewItemText}/>
+                        </View>
+                        <View style={styles.extraViewContainer}>
+                            <SVGButton iconName="Camera" SVGStyle={styles.extraViewItemIcon} buttonStyle={styles.extraViewItem}/>
+                            <BasicText text="카메라" style={styles.extraViewItemText}/>
+                        </View>
+                        <View style={styles.extraViewContainer}>
+                            <SVGButton iconName="Money" SVGStyle={styles.extraViewItemIcon} buttonStyle={styles.extraViewItem}/>
+                            <BasicText text="정산 요청" style={styles.extraViewItemText}/>
+                        </View>
+                    </View>
+                    )
+                }
             </View>
-        </View>
+        </TouchableWithoutFeedback>
     );
 };
 

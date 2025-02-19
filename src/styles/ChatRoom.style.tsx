@@ -46,4 +46,37 @@ export default StyleSheet.create({
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
     },
+    extraView: {
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'flex-start',
+        backgroundColor: theme.colors.white,
+    },
+    extraViewContainer: {
+        paddingTop: 15,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingLeft: 15,
+        marginRight: 12,
+    },
+    extraViewItem: {
+        borderRadius: 999,
+        width: 70,
+        height: 70,
+        backgroundColor: theme.colors.lightGray,
+    },
+    extraViewItemIcon: {
+        width: 28,
+        height: 28,
+    },
+    extraViewItemText: {
+        marginTop: 6,
+        fontSize: 14,
+        color: theme.colors.gray2,
+        fontWeight: '500',
+    },
+    inputWrapper: {
+        width: '100%',
+    },
 });

@@ -38,4 +38,8 @@ export {default as UserFillLight} from './UserFillLight.svg';
 export {default as DefaultProfile} from './DefaultProfile.svg';
 export {default as Send} from './Send.svg';
 export {default as AddFill} from './AddFill.svg';
+export {default as Picture} from './Picture.svg';
+export {default as Camera} from './Camera.svg';
+export {default as Money} from './Money.svg';
+export {default as CloseFill} from './CloseFill.svg';
 
