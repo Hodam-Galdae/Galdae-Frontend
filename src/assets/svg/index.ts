@@ -36,4 +36,6 @@ export {default as RightArrow} from './RightArrow.svg';
 export {default as UserFill} from './UserFill.svg';
 export {default as UserFillLight} from './UserFillLight.svg';
 export {default as DefaultProfile} from './DefaultProfile.svg';
+export {default as Send} from './Send.svg';
+export {default as AddFill} from './AddFill.svg';
 
