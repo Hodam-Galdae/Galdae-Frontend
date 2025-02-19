@@ -1,4 +1,3 @@
-// Chat.tsx 테스트
 import React from 'react';
 import { Image, View } from 'react-native';
 import styles from '../styles/ChatItem.style';
@@ -50,7 +49,9 @@ const ChatItem: React.FC<{item: Chat}> = React.memo(({item}) => {
                     ) : null}
                 </View>
             </View>
-        ) : null}
+        ) : (item.type === Type.ENTER || item.type === Type.EXIT ? (
+            <BasicText text={item.content} style={styles.enterBox}/>
+        ) : null)}
     </View>
     );
 });

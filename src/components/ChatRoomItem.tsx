@@ -1,4 +1,3 @@
-// Chat.tsx 테스트
 import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import styles from '../styles/ChatRoomItem.style';

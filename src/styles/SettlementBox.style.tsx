@@ -1,25 +1,41 @@
 import { StyleSheet } from 'react-native';
-import {theme} from '../styles/theme';
+import { theme } from '../styles/theme';
 
 export default StyleSheet.create({
     container: {
         marginVertical: 5,
         paddingRight: 15,
     },
-    messageContainer: {
-        maxWidth: '80%',
+    box: {
+        width: 225,
         borderRadius: 10,
-        padding: 15,
         backgroundColor: theme.colors.white,
+        paddingBottom: 14,
     },
-    messageWrapper: {
-        flexDirection: 'row',
-        alignItems: 'flex-end',
+    backImage: {
+        height: 84,
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10,
+        backgroundColor: theme.colors.brandColor,
+        justifyContent: 'center',
+        marginBottom: 14,
     },
-    messageText: {
-        fontSize: 16,
-        fontWeight: '400',
+    text: {
         color: theme.colors.black,
+        fontSize: theme.fontSize.size16,
+        fontWeight: 400,
+        marginBottom: 20,
+        paddingLeft: 16,
+    },
+    button: {
+        borderRadius: 10,
+        backgroundColor: theme.colors.gray0,
+        paddingVertical: 10,
+        marginHorizontal: 16,
+    },
+    buttonText: {
+        color: theme.colors.gray2,
+        fontSize: theme.fontSize.size16,
     },
     userWrapper: {
         flexDirection: 'row',
@@ -43,12 +59,8 @@ export default StyleSheet.create({
         fontWeight: '500',
         marginHorizontal: 6,
     },
-    enterBox: {
-        backgroundColor: theme.colors.gray0,
-        borderRadius: 20,
-        paddingVertical: 5,
-        paddingHorizontal: 26,
-        alignSelf: 'center',
-        color: theme.colors.gray2,
+    boxWrapper: {
+        flexDirection: 'row',
+        alignItems: 'flex-end',
     },
 });

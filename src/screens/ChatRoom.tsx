@@ -5,6 +5,7 @@ import styles from '../styles/ChatRoom.style';
 import ChatItem from '../components/ChatItem';
 import SVGButton from '../components/button/SVGButton';
 import BasicText from '../components/BasicText';
+import SettlementBox from '../components/SettlementBox';
 
 enum Type {
     MESSAGE,
@@ -57,10 +58,17 @@ const Chat: React.FC = () => {
                 },
                 {
                     id: '2',
-                    content: '안녕',
-                    sender: 'ass',
+                    content: '홍길동님이 들어왔습니다.',
+                    sender: 'abs',
                     time: new Date(2025, 2, 18, 17, 23, 35),
-                    type: Type.MESSAGE,
+                    type: Type.ENTER,
+                },
+                {
+                    id: '50',
+                    content: '철수님이 들어왔습니다.',
+                    sender: 'abs',
+                    time: new Date(2025, 2, 18, 17, 23, 35),
+                    type: Type.ENTER,
                 },
                 {
                     id: '6',
@@ -104,11 +112,18 @@ const Chat: React.FC = () => {
                     time: new Date(2025, 2, 18, 17, 51, 35),
                     type: Type.MESSAGE,
                 },
+                {
+                    id: '14',
+                    content: '호우샷샷',
+                    sender: 'donghyun',
+                    time: new Date(2025, 2, 18, 17, 51, 35),
+                    type: Type.MONEY,
+                },
             ]
         );
     }, []);
 
-    //키보드 이벤트 리스너너
+    //키보드 이벤트 리스너
     useEffect(() => {
         const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', (event: KeyboardEvent) => {
             setKeyboardHeight(event.endCoordinates.height);
@@ -148,7 +163,7 @@ const Chat: React.FC = () => {
     const renderItem = useCallback(({item, index}: RenderItem) => {
         const isShowTime = !(data[index + 1]?.time.getMinutes() === item.time.getMinutes() && data[index + 1]?.time.getHours() === item.time.getHours()) || data[index + 1]?.sender !== item.sender;
         const isShowProfile = data[index - 1]?.sender !== item.sender || !(data[index - 1]?.time.getMinutes() === item.time.getMinutes() && data[index - 1]?.time.getHours() === item.time.getHours());
-        return <ChatItem item={{...item, isShowProfile, isShowTime}}/>;
+        return item.type !== Type.MONEY ? <ChatItem item={{...item, isShowProfile, isShowTime}}/> : <SettlementBox settlement={{id: item.id, currentUser: 4, cost: 10000, sender: item.sender, time: item.time, isShowProfile, isShowTime}}/>;
     }, [data]);
 
     return (
