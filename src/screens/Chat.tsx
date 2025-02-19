@@ -6,15 +6,16 @@ import styles from '../styles/Chat.style';
 import ChatRoomItem from '../components/ChatRoomItem';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
+import { FlatList } from 'react-native-gesture-handler';
 
 type RootStackParamList = {
-  ChatRoom: undefined,
+  ChatRoom: { data : Readonly<ChatRoomType> },
 };
 
 type ChatScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'ChatRoom'>;
 
 type ChatRoomType = {
-  id: number,
+  id: string,
   time: string;
   from: string;
   to: string;
@@ -31,7 +32,7 @@ const Chat: React.FC = () => {
   useEffect(()=> {
     setChatRoomData([
       {
-        id: 1,
+        id: '1',
         time: '2025년 00월 00일 (0) 00:00',
         from: '학교',
         to: '호암동',
@@ -40,19 +41,27 @@ const Chat: React.FC = () => {
         message: 5,
       },
       {
-        id: 2,
+        id: '2',
         time: '2025년 00월 00일 (0) 00:00',
         from: '서울역',
         to: '호암동',
-        currentPerson: 1,
+        currentPerson: 4,
         maxPerson: 4,
         message: 5,
       },
     ]);
   }, [tab]);
 
-  const navigate = (id: number) => {
-    navigation.navigate('ChatRoom');
+  const navigate = (id: string) => {
+    const tagetRoom = chatRoomData.find(item => item.id === id);
+
+    if(tagetRoom){
+      navigation.navigate('ChatRoom', { data: Object.freeze(tagetRoom)});
+    }
+    else{
+      console.log('error');
+      return;
+    }
   };
 
   return (
@@ -62,9 +71,11 @@ const Chat: React.FC = () => {
         onSelectHandler={(index) => setTab(index)}
         selectedIndex={tab}
       />
-      {chatRoomData.map((e) => {
-        return <ChatRoomItem onPress={navigate} id={e.id} key={e.id} time={e.time} from={e.from} to={e.to} currentPerson={e.currentPerson} maxPerson={e.maxPerson} message={e.message}/>
-      })};
+      <FlatList
+        data={chatRoomData}
+        keyExtractor={(item) => item.id}
+        renderItem={({item}) => <ChatRoomItem onPress={navigate} id={item.id} key={item.id} time={item.time} from={item.from} to={item.to} currentPerson={item.currentPerson} maxPerson={item.maxPerson} message={item.message}/>}
+      />
     </View>
   );
 };

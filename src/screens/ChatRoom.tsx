@@ -1,11 +1,14 @@
 // Chat.tsx 테스트
 import React, {useState, useEffect, useRef, useCallback} from 'react';
 import { View, FlatList, TextInput, Keyboard, KeyboardEvent, TouchableWithoutFeedback } from 'react-native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RouteProp } from '@react-navigation/native';
 import styles from '../styles/ChatRoom.style';
 import ChatItem from '../components/ChatItem';
 import SVGButton from '../components/button/SVGButton';
 import BasicText from '../components/BasicText';
 import SettlementBox from '../components/SettlementBox';
+import useImagePicker from '../hooks/useImagePicker';
 
 enum Type {
     MESSAGE,
@@ -31,12 +34,30 @@ type RenderItem = {
     index: number,
 }
 
-const Chat: React.FC = () => {
+type RootStackParamList = {
+    ChatRoom: { data : Readonly<ChatRoomType> },
+};
+
+type ChatRoomType = {
+    id: string,
+    time: string;
+    from: string;
+    to: string;
+    currentPerson: number;
+    maxPerson: number;
+    message: number;
+};
+
+type TargetScreenRouteProp = RouteProp<RootStackParamList, 'ChatRoom'>;
+
+const Chat = ({ route }: { route: TargetScreenRouteProp }) => {
     const [data, setData] = useState<Chat[]>([]);
     const [message, setMessage] = useState<string>('');
     const [showExtraView, setShowExtraView] = useState<boolean>(false);
     const [keyboardHeight, setKeyboardHeight] = useState<number>(0);
     const chatListRef = useRef<FlatList>(null);
+    const { imageUri, getImageByCamera, getImageByGallery } = useImagePicker();
+    const chatRoomData = route.params.data;
 
     //임시 데이터
     useEffect(()=>{
@@ -114,7 +135,7 @@ const Chat: React.FC = () => {
                 },
                 {
                     id: '14',
-                    content: '호우샷샷',
+                    content: '12000',
                     sender: 'donghyun',
                     time: new Date(2025, 2, 18, 17, 51, 35),
                     type: Type.MONEY,
@@ -148,6 +169,14 @@ const Chat: React.FC = () => {
         }
     }, [data]);
 
+    useEffect(() => {
+        if(imageUri === undefined) {
+            return;
+        }
+        //서버에 이미지 올리고 url 가져와서 content에 넣기
+        setData([...data, {id: data[data.length - 1].id + 1, content: '', sender: 'donghyun', time: new Date(), type: Type.IMAGE}]);
+    }, [imageUri]);
+
     const closeAll = () => {
         setShowExtraView(false);
         Keyboard.dismiss;
@@ -170,7 +199,7 @@ const Chat: React.FC = () => {
     const renderItem = useCallback(({item, index}: RenderItem) => {
         const isShowTime = !(data[index + 1]?.time.getMinutes() === item.time.getMinutes() && data[index + 1]?.time.getHours() === item.time.getHours()) || data[index + 1]?.sender !== item.sender;
         const isShowProfile = data[index - 1]?.sender !== item.sender || !(data[index - 1]?.time.getMinutes() === item.time.getMinutes() && data[index - 1]?.time.getHours() === item.time.getHours());
-        return item.type !== Type.MONEY ? <ChatItem item={{...item, isShowProfile, isShowTime}}/> : <SettlementBox settlement={{id: item.id, currentUser: 4, cost: 10000, sender: item.sender, time: item.time, isShowProfile, isShowTime}}/>;
+        return item.type !== Type.MONEY ? <ChatItem item={{...item, isShowProfile, isShowTime}}/> : <SettlementBox settlement={{id: item.id, currentUser: chatRoomData.currentPerson, cost: parseInt(item.content), sender: item.sender, time: item.time, isShowProfile, isShowTime}}/>;
     }, [data]);
 
     return (
@@ -200,15 +229,15 @@ const Chat: React.FC = () => {
                     showExtraView && (
                     <View style={[styles.extraView, { height:  300 }]}>
                         <View style={styles.extraViewContainer}>
-                            <SVGButton iconName="Picture" SVGStyle={styles.extraViewItemIcon} buttonStyle={styles.extraViewItem}/>
+                            <SVGButton onPress={()=>getImageByGallery()} iconName="Picture" SVGStyle={styles.extraViewItemIcon} buttonStyle={styles.extraViewItem}/>
                             <BasicText text="앨범" style={styles.extraViewItemText}/>
                         </View>
                         <View style={styles.extraViewContainer}>
-                            <SVGButton iconName="Camera" SVGStyle={styles.extraViewItemIcon} buttonStyle={styles.extraViewItem}/>
+                            <SVGButton onPress={getImageByCamera} iconName="Camera" SVGStyle={styles.extraViewItemIcon} buttonStyle={styles.extraViewItem}/>
                             <BasicText text="카메라" style={styles.extraViewItemText}/>
                         </View>
                         <View style={styles.extraViewContainer}>
-                            <SVGButton iconName="Money" SVGStyle={styles.extraViewItemIcon} buttonStyle={styles.extraViewItem}/>
+                            <SVGButton onPress={()=>{}} iconName="Money" SVGStyle={styles.extraViewItemIcon} buttonStyle={styles.extraViewItem}/>
                             <BasicText text="정산 요청" style={styles.extraViewItemText}/>
                         </View>
                     </View>

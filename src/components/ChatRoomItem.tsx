@@ -5,14 +5,14 @@ import BasicText from './BasicText';
 import SVG from './SVG';
 
 interface Props {
-    id: number,
+    id: string,
     time: string,
     from: string,
     to: string,
     currentPerson: number,
     maxPerson: number,
     message: number,
-    onPress: (id: number) => void,
+    onPress: (id: string) => void,
 }
 
 const ChatRoomItem = (props : Props) => {
