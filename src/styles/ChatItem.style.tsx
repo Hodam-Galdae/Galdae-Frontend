@@ -51,4 +51,10 @@ export default StyleSheet.create({
         alignSelf: 'center',
         color: theme.colors.gray2,
     },
+    image: {
+        width: 230,
+        height: 306,
+        borderRadius: 10,
+        resizeMode: 'cover',
+    },
 });

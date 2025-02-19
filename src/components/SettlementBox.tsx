@@ -41,7 +41,6 @@ const ChatItem: React.FC<{settlement: Settlement}> = React.memo(({settlement}) =
                     <BasicText style={styles.timeText} text={settlement.time.getHours() + ':' + settlement.time.getMinutes()}/>
                 ) : null}
             </View>
-            
         </View>
     );
 });

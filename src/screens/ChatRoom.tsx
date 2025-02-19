@@ -119,6 +119,13 @@ const Chat: React.FC = () => {
                     time: new Date(2025, 2, 18, 17, 51, 35),
                     type: Type.MONEY,
                 },
+                {
+                    id: '15',
+                    content: '호우샷샷',
+                    sender: 'lee',
+                    time: new Date(2025, 2, 18, 17, 51, 35),
+                    type: Type.IMAGE,
+                },
             ]
         );
     }, []);

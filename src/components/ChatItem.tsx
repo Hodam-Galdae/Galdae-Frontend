@@ -29,7 +29,9 @@ const ChatItem: React.FC<{item: Chat}> = React.memo(({item}) => {
     const tempUser: string = 'donghyun';
     return (
     <View style={styles.container}>
-        {item.type === Type.MESSAGE ? (
+        {(item.type === Type.ENTER || item.type === Type.EXIT ? (
+            <BasicText text={item.content} style={styles.enterBox}/>
+        ) : (
             <View>
                 {item.sender !== tempUser && item.isShowProfile ? (
                     <View style={styles.userWrapper}>
@@ -41,17 +43,21 @@ const ChatItem: React.FC<{item: Chat}> = React.memo(({item}) => {
                     {item.isShowTime && item.sender === tempUser ? (
                         <BasicText style={styles.timeText} text={item.time.getHours() + ':' + item.time.getMinutes()}/>
                     ) : null}
-                    <View style={[styles.messageContainer, {alignSelf: item.sender === tempUser ? 'flex-end' : 'flex-start', backgroundColor: item.sender === tempUser ? theme.colors.brandSubColor : theme.colors.white}]}>
-                        <BasicText style={styles.messageText} text={item.content}/>
-                    </View>
+                    {item.type === Type.MESSAGE ? (
+                        <View style={[styles.messageContainer, {alignSelf: item.sender === tempUser ? 'flex-end' : 'flex-start', backgroundColor: item.sender === tempUser ? theme.colors.brandSubColor : theme.colors.white}]}>
+                            <BasicText style={styles.messageText} text={item.content}/>
+                        </View>
+                    ) : item.type === Type.IMAGE ? (
+                        //TODO: item.content로 변경
+                        <Image style={styles.image} source={require('../assets/test.jpg')}/>
+                    ) : null}
                     {item.isShowTime && item.sender !== tempUser ? (
                         <BasicText style={styles.timeText} text={item.time.getHours() + ':' + item.time.getMinutes()}/>
                     ) : null}
                 </View>
             </View>
-        ) : (item.type === Type.ENTER || item.type === Type.EXIT ? (
-            <BasicText text={item.content} style={styles.enterBox}/>
-        ) : null)}
+            )
+        )}
     </View>
     );
 });
