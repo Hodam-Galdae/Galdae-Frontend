@@ -10,6 +10,8 @@ import SettlementBox from '../components/SettlementBox';
 import useImagePicker from '../hooks/useImagePicker';
 import SVG from '../components/SVG';
 import BasicButton from '../components/button/BasicButton';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 enum Type {
     MESSAGE,
@@ -37,6 +39,7 @@ type RenderItem = {
 
 type RootStackParamList = {
     ChatRoom: { data : Readonly<ChatRoomType> },
+    Settlement: undefined,
 };
 
 type ChatRoomType = {
@@ -49,19 +52,18 @@ type ChatRoomType = {
     message: number;
 };
 
-type TargetScreenRouteProp = RouteProp<RootStackParamList, 'ChatRoom'>;
-
-const Chat = ({ route }: { route: TargetScreenRouteProp }) => {
+const Chat = ({ route }: { route: RouteProp<RootStackParamList, 'ChatRoom'> }) => {
     const [data, setData] = useState<Chat[]>([]);
     const [message, setMessage] = useState<string>('');
     const [showExtraView, setShowExtraView] = useState<boolean>(false);
     const [keyboardHeight, setKeyboardHeight] = useState<number>(0);
+    const [sideMenuOpen, setSideMenuOpen] = useState(false);
     const chatListRef = useRef<FlatList>(null);
     const { imageUri, getImageByCamera, getImageByGallery } = useImagePicker();
+    const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList, 'Settlement'>>();
     const chatRoomData = route.params.data;
     const MENU_WIDTH = Dimensions.get('window').width * 0.7;
     const translateX = useRef(new Animated.Value(MENU_WIDTH)).current;
-    const [sideMenuOpen, setSideMenuOpen] = useState(false);
 
     //임시 데이터
     useEffect(()=>{
@@ -182,7 +184,7 @@ const Chat = ({ route }: { route: TargetScreenRouteProp }) => {
     }, [imageUri]);
 
     const closeAll = () => {
-        closeDrawer();
+        closeSideMenu();
         setSideMenuOpen(false);
         setShowExtraView(false);
         Keyboard.dismiss;
@@ -214,15 +216,15 @@ const Chat = ({ route }: { route: TargetScreenRouteProp }) => {
           },
           onPanResponderRelease: (_, gestureState) => {
             if (gestureState.dx < -50) {
-              openDrawer(); // 🔹 -50px 이상 이동하면 열기
+                openSideMenu(); // 🔹 -50px 이상 이동하면 열기
             } else {
-              closeDrawer(); // 🔹 닫기
+                closeSideMenu(); // 🔹 닫기
             }
           },
         })
     ).current;
 
-    const openDrawer = () => {
+    const openSideMenu = () => {
         Animated.timing(translateX, {
           toValue: 0,
           duration: 300,
@@ -230,7 +232,7 @@ const Chat = ({ route }: { route: TargetScreenRouteProp }) => {
         }).start();
     };
 
-    const closeDrawer = () => {
+    const closeSideMenu = () => {
         Animated.timing(translateX, {
             toValue: MENU_WIDTH,
             duration: 300,
@@ -249,8 +251,8 @@ const Chat = ({ route }: { route: TargetScreenRouteProp }) => {
     const renderItem = useCallback(({item, index}: RenderItem) => {
         const isShowTime = !(data[index + 1]?.time.getMinutes() === item.time.getMinutes() && data[index + 1]?.time.getHours() === item.time.getHours()) || data[index + 1]?.sender !== item.sender;
         const isShowProfile = data[index - 1]?.sender !== item.sender || !(data[index - 1]?.time.getMinutes() === item.time.getMinutes() && data[index - 1]?.time.getHours() === item.time.getHours());
-        return item.type !== Type.MONEY ? <ChatItem item={{...item, isShowProfile, isShowTime}}/> : <SettlementBox settlement={{id: item.id, currentUser: chatRoomData.currentPerson, cost: parseInt(item.content), sender: item.sender, time: item.time, isShowProfile, isShowTime}}/>;
-    }, [data, chatRoomData]);
+        return item.type !== Type.MONEY ? <ChatItem item={{...item, isShowProfile, isShowTime}}/> : <SettlementBox settlement={{id: item.id, currentUser: chatRoomData.currentPerson, cost: parseInt(item.content), sender: item.sender, time: item.time, onPress: ()=>navigation.navigate('Settlement'), isShowProfile, isShowTime}}/>;
+    }, [data, chatRoomData, navigation]);
 
     return (
         <TouchableWithoutFeedback {...panResponder.panHandlers} onPress={closeAll}>

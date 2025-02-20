@@ -14,6 +14,7 @@ type Settlement = {
     time: Date,
     isShowProfile?: boolean,
     isShowTime?: boolean
+    onPress: ()=>void
 }
 
 const ChatItem: React.FC<{settlement: Settlement}> = React.memo(({settlement}) => {
@@ -35,7 +36,7 @@ const ChatItem: React.FC<{settlement: Settlement}> = React.memo(({settlement}) =
 
                     </View>
                     <BasicText style={styles.text}>{'갈대 정산을 요청합니다.\n\n' + '정산 인원 : ' + settlement.currentUser.toString() + '명\n' + '총 금액 : ' + settlement.cost.toString() + '원\n\n' + '정산 요청 금액 (1/N)\n1인 : ' + settlement.cost / settlement.currentUser + '원\n\n' + '계좌 확인 후 송금해주세요.'}</BasicText>
-                    <BasicButton text="정산 상세" buttonStyle={styles.button} textStyle={styles.buttonText}/>
+                    <BasicButton text="정산 상세" buttonStyle={styles.button} textStyle={styles.buttonText} onPress={settlement.onPress}/>
                 </View>
                 {settlement.isShowTime && settlement.sender !== tempUser ? (
                     <BasicText style={styles.timeText} text={settlement.time.getHours() + ':' + settlement.time.getMinutes()}/>

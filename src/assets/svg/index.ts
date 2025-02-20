@@ -44,4 +44,6 @@ export {default as Money} from './Money.svg';
 export {default as CloseFill} from './CloseFill.svg';
 export {default as Kebab} from './Kebab.svg';
 export {default as Exit} from './Exit.svg';
+export {default as Bank} from './Bank.svg';
+export {default as GalleryBlack} from './GalleryBlack.svg';
 
