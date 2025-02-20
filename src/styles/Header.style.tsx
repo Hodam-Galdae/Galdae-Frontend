@@ -7,24 +7,29 @@ export default StyleSheet.create({
         alignItems: 'flex-end',
         height: 102,
         backgroundColor: theme.colors.white,
-        shadowColor: '#9C9C9C',
-        shadowOpacity: 0.05,
+        shadowColor: theme.colors.gray1,
+        shadowOpacity: 0.25,
         shadowRadius: 10,
         elevation: 4,
       },
-
+      backContainer:{
+        position: 'absolute',  // 절대 위치로 설정
+        left: 20,
+        bottom: 16,
+      },
       logoContainer: {
-        flex: 1,
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        bottom: 16,
         alignItems: 'center',
-        marginBottom:14,
+        justifyContent: 'center',
       },
       notificationContainer: {
         position: 'absolute',  // 절대 위치로 설정
-        right: 10,
-        bottom: 6,
+        right: 20,
+        bottom: 16,
       },
-      test:{
 
-      },
 
 });

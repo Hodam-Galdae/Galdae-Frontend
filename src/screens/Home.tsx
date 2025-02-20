@@ -98,7 +98,7 @@ const Home: React.FC<HomeProps> = () => {
  
 
   const handleMorePress = () => {
-
+    //navigation.navigate('nowGaldae');
   };
   const handleTimePopupConfirm = (
     selectedDate: string,
@@ -184,6 +184,12 @@ const Home: React.FC<HomeProps> = () => {
     setToastVisible(true);
   };
 
+  const handleSwitch = () =>{
+    setDepartureLarge(destinationLarge);
+    setDepartureSmall(destinationSmall);
+    setDestinationLarge(departureLarge);
+    setDestinationSmall(departureSmall);
+  };
   return (
     <View>
       <ScrollView>
@@ -233,6 +239,7 @@ const Home: React.FC<HomeProps> = () => {
                 iconName="Switch"
                 buttonStyle={styles.switchBtn}
                 SVGStyle={styles.switchIcon}
+                onPress={handleSwitch}
             />
 
             <TouchableOpacity style={styles.startContain} onPress={toggleFastGaldaeEndPopup}>
