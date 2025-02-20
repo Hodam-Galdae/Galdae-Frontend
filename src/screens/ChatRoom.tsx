@@ -1,7 +1,7 @@
 // Chat.tsx 테스트
 import React, {useState, useEffect, useRef, useCallback} from 'react';
 import { View, PanResponder, FlatList, TextInput, Keyboard, KeyboardEvent, TouchableWithoutFeedback, Animated, Dimensions } from 'react-native';
-import { RouteProp } from '@react-navigation/native';
+import { RouteProp, useRoute } from '@react-navigation/native';
 import styles from '../styles/ChatRoom.style';
 import ChatItem from '../components/ChatItem';
 import SVGButton from '../components/button/SVGButton';
@@ -32,6 +32,19 @@ type Chat = {
     isShowTime?: boolean,
 }
 
+type Member = {
+    image: string,
+    name: string,
+}
+
+type SettlementType = {
+    accountNumber: String,
+    accountBank: String,
+    cost: number,
+    time: Date;
+    members: Member[];
+};
+
 type RenderItem = {
     item: Chat,
     index: number,
@@ -39,7 +52,7 @@ type RenderItem = {
 
 type RootStackParamList = {
     ChatRoom: { data : Readonly<ChatRoomType> },
-    Settlement: undefined,
+    Settlement: { data : Readonly<SettlementType>},
 };
 
 type ChatRoomType = {
@@ -52,7 +65,8 @@ type ChatRoomType = {
     message: number;
 };
 
-const Chat = ({ route }: { route: RouteProp<RootStackParamList, 'ChatRoom'> }) => {
+
+const ChatRoom: React.FC = () => {
     const [data, setData] = useState<Chat[]>([]);
     const [message, setMessage] = useState<string>('');
     const [showExtraView, setShowExtraView] = useState<boolean>(false);
@@ -61,9 +75,10 @@ const Chat = ({ route }: { route: RouteProp<RootStackParamList, 'ChatRoom'> }) =
     const chatListRef = useRef<FlatList>(null);
     const { imageUri, getImageByCamera, getImageByGallery } = useImagePicker();
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList, 'Settlement'>>();
-    const chatRoomData = route.params.data;
     const MENU_WIDTH = Dimensions.get('window').width * 0.7;
     const translateX = useRef(new Animated.Value(MENU_WIDTH)).current;
+    const {params} = useRoute<RouteProp<RootStackParamList, 'ChatRoom'>>();
+    const chatRoomData = params.data;
 
     //임시 데이터
     useEffect(()=>{
@@ -181,7 +196,7 @@ const Chat = ({ route }: { route: RouteProp<RootStackParamList, 'ChatRoom'> }) =
         }
         //서버에 이미지 올리고 url 가져와서 content에 넣기
         setData([...data, {id: data[data.length - 1].id + 1, content: '', sender: 'donghyun', time: new Date(), type: Type.IMAGE}]);
-    }, [imageUri]);
+    }, [data, imageUri]);
 
     const closeAll = () => {
         closeSideMenu();
@@ -251,7 +266,7 @@ const Chat = ({ route }: { route: RouteProp<RootStackParamList, 'ChatRoom'> }) =
     const renderItem = useCallback(({item, index}: RenderItem) => {
         const isShowTime = !(data[index + 1]?.time.getMinutes() === item.time.getMinutes() && data[index + 1]?.time.getHours() === item.time.getHours()) || data[index + 1]?.sender !== item.sender;
         const isShowProfile = data[index - 1]?.sender !== item.sender || !(data[index - 1]?.time.getMinutes() === item.time.getMinutes() && data[index - 1]?.time.getHours() === item.time.getHours());
-        return item.type !== Type.MONEY ? <ChatItem item={{...item, isShowProfile, isShowTime}}/> : <SettlementBox settlement={{id: item.id, currentUser: chatRoomData.currentPerson, cost: parseInt(item.content), sender: item.sender, time: item.time, onPress: ()=>navigation.navigate('Settlement'), isShowProfile, isShowTime}}/>;
+        return item.type !== Type.MONEY ? <ChatItem item={{...item, isShowProfile, isShowTime}}/> : <SettlementBox settlement={{id: item.id, currentUser: chatRoomData.currentPerson, cost: parseInt(item.content), sender: item.sender, time: item.time, onPress: ()=>navigation.navigate('Settlement', { data: Object.freeze({accountNumber: '0000-0000',accountBank: '우리은행', cost: Number.parseInt(item.content), time: item.time, members: []})}), isShowProfile, isShowTime}}/>;
     }, [data, chatRoomData, navigation]);
 
     return (
@@ -324,4 +339,4 @@ const Chat = ({ route }: { route: RouteProp<RootStackParamList, 'ChatRoom'> }) =
     );
 };
 
-export default Chat;
+export default ChatRoom;
