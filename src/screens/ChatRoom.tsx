@@ -1,7 +1,6 @@
 // Chat.tsx 테스트
 import React, {useState, useEffect, useRef, useCallback} from 'react';
-import { View, FlatList, TextInput, Keyboard, KeyboardEvent, TouchableWithoutFeedback } from 'react-native';
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { View, PanResponder, FlatList, TextInput, Keyboard, KeyboardEvent, TouchableWithoutFeedback, Animated, Dimensions } from 'react-native';
 import { RouteProp } from '@react-navigation/native';
 import styles from '../styles/ChatRoom.style';
 import ChatItem from '../components/ChatItem';
@@ -9,6 +8,8 @@ import SVGButton from '../components/button/SVGButton';
 import BasicText from '../components/BasicText';
 import SettlementBox from '../components/SettlementBox';
 import useImagePicker from '../hooks/useImagePicker';
+import SVG from '../components/SVG';
+import BasicButton from '../components/button/BasicButton';
 
 enum Type {
     MESSAGE,
@@ -58,6 +59,9 @@ const Chat = ({ route }: { route: TargetScreenRouteProp }) => {
     const chatListRef = useRef<FlatList>(null);
     const { imageUri, getImageByCamera, getImageByGallery } = useImagePicker();
     const chatRoomData = route.params.data;
+    const MENU_WIDTH = Dimensions.get('window').width * 0.7;
+    const translateX = useRef(new Animated.Value(MENU_WIDTH)).current;
+    const [sideMenuOpen, setSideMenuOpen] = useState(false);
 
     //임시 데이터
     useEffect(()=>{
@@ -178,14 +182,60 @@ const Chat = ({ route }: { route: TargetScreenRouteProp }) => {
     }, [imageUri]);
 
     const closeAll = () => {
+        closeDrawer();
+        setSideMenuOpen(false);
         setShowExtraView(false);
         Keyboard.dismiss;
+    };
+
+    const toggleSideMenu = () => {
+        Animated.timing(translateX, {
+            toValue: sideMenuOpen ? MENU_WIDTH : 0, // 열고 닫기 애니메이션
+            duration: 300,
+            useNativeDriver: true,
+        }).start();
+        setSideMenuOpen(!sideMenuOpen);
     };
 
     const toggleExtraView = () => {
         setShowExtraView(!showExtraView);
         setTimeout(() => chatListRef.current?.scrollToEnd({ animated: false }), 100);
         Keyboard.dismiss;
+    };
+
+    const panResponder = useRef(
+        PanResponder.create({
+          onMoveShouldSetPanResponder: (_, gestureState) => Math.abs(gestureState.dx) > 10, // 손가락이 이동했을 때 감지
+          onPanResponderMove: (_, gestureState) => {
+            if (gestureState.dx < 0) {
+              // 🔹 왼쪽으로 스와이프 → 드로어 열기
+              translateX.setValue(MENU_WIDTH + gestureState.dx);
+            }
+          },
+          onPanResponderRelease: (_, gestureState) => {
+            if (gestureState.dx < -50) {
+              openDrawer(); // 🔹 -50px 이상 이동하면 열기
+            } else {
+              closeDrawer(); // 🔹 닫기
+            }
+          },
+        })
+    ).current;
+
+    const openDrawer = () => {
+        Animated.timing(translateX, {
+          toValue: 0,
+          duration: 300,
+          useNativeDriver: true,
+        }).start();
+    };
+
+    const closeDrawer = () => {
+        Animated.timing(translateX, {
+            toValue: MENU_WIDTH,
+            duration: 300,
+            useNativeDriver: true,
+        }).start();
     };
 
     //메시지 보내는 메서드
@@ -200,11 +250,35 @@ const Chat = ({ route }: { route: TargetScreenRouteProp }) => {
         const isShowTime = !(data[index + 1]?.time.getMinutes() === item.time.getMinutes() && data[index + 1]?.time.getHours() === item.time.getHours()) || data[index + 1]?.sender !== item.sender;
         const isShowProfile = data[index - 1]?.sender !== item.sender || !(data[index - 1]?.time.getMinutes() === item.time.getMinutes() && data[index - 1]?.time.getHours() === item.time.getHours());
         return item.type !== Type.MONEY ? <ChatItem item={{...item, isShowProfile, isShowTime}}/> : <SettlementBox settlement={{id: item.id, currentUser: chatRoomData.currentPerson, cost: parseInt(item.content), sender: item.sender, time: item.time, isShowProfile, isShowTime}}/>;
-    }, [data]);
+    }, [data, chatRoomData]);
 
     return (
-        <TouchableWithoutFeedback onPress={closeAll}>
+        <TouchableWithoutFeedback {...panResponder.panHandlers} onPress={closeAll}>
             <View style={styles.container}>
+                <SVGButton iconName="Kebab" onPress={toggleSideMenu}/>
+                <Animated.View
+                    style={[styles.sideMenu, { transform: [{ translateX }], width: MENU_WIDTH}]}
+                >
+                    <BasicText style={styles.menuText}>{'참여자 목록 ( ' + chatRoomData.currentPerson + '/' + chatRoomData.maxPerson + ' )'}</BasicText>
+                    <View style={styles.menuUserList}>
+                    <View style={styles.menuUserContainer}>
+                        <View style={styles.menuUserWrapper}>
+                            <SVG width={46} height={46} name="DefaultProfile" style={styles.menuUserIcon}/>
+                            <BasicText style={styles.menuUserText} text="김동현"/>
+                            <BasicText style={styles.menuUserMe} text="나"/>
+                        </View>
+                        <BasicButton textStyle={styles.menuUserBtnText} buttonStyle={styles.menuUserBtn} text="신고하기"/>
+                    </View>
+                    <View style={styles.menuUserContainer}>
+                        <View style={styles.menuUserWrapper}>
+                            <SVG width={46} height={46} name="DefaultProfile" style={styles.menuUserIcon}/>
+                            <BasicText style={styles.menuUserText} text="김동현"/>
+                        </View>
+                        <BasicButton textStyle={styles.menuUserBtnText} buttonStyle={styles.menuUserBtn} text="신고하기"/>
+                    </View>
+                    </View>
+                    <SVGButton iconName="Exit" buttonStyle={styles.exitIcon}/>
+                </Animated.View>
                 <FlatList
                     ref={chatListRef}
                     style={styles.list}

@@ -79,4 +79,73 @@ export default StyleSheet.create({
     inputWrapper: {
         width: '100%',
     },
+    sideMenu: {
+        backgroundColor: theme.colors.white,
+        position: 'absolute',
+        right: 0,
+        top: 0,
+        bottom: 0,
+        flex: 1,
+        justifyContent: 'space-between',
+        zIndex: 999,
+    },
+    menuUserList: {
+        justifyContent: 'flex-start',
+        flex:1,
+    },
+    menuText: {
+        color: theme.colors.black,
+        fontSize: theme.fontSize.size20,
+        fontWeight: '700',
+        marginTop: 57,
+        marginBottom: 36,
+        paddingLeft: 20,
+    },
+    menuUserIcon: {
+        marginRight: 15,
+    },
+    menuUserText: {
+        fontSize: theme.fontSize.size18,
+        fontWeight: '500',
+        color: theme.colors.black,
+        marginRight: 10,
+    },
+    menuUserMe: {
+        backgroundColor: theme.colors.brandSubColor,
+        width: 18,
+        height: 18,
+        color: theme.colors.brandColor,
+        fontSize: theme.fontSize.size12,
+        fontWeight: '700',
+        borderRadius: 999,
+        textAlign: 'center',
+    },
+    menuUserWrapper: {
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+    },
+    menuUserContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingHorizontal: 20,
+        marginBottom: 16,
+    },
+    menuUserBtn: {
+        backgroundColor: theme.colors.brandColor,
+        paddingHorizontal: 7,
+        paddingVertical: 5,
+        borderRadius: 10,
+    },
+    menuUserBtnText: {
+        fontSize: theme.fontSize.size14,
+        fontWeight: '500',
+        color: theme.colors.white,
+    },
+    exitIcon: {
+        position: 'absolute',
+        right: 20,
+        bottom: 30,
+    },
 });

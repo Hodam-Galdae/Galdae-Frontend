@@ -42,4 +42,6 @@ export {default as Picture} from './Picture.svg';
 export {default as Camera} from './Camera.svg';
 export {default as Money} from './Money.svg';
 export {default as CloseFill} from './CloseFill.svg';
+export {default as Kebab} from './Kebab.svg';
+export {default as Exit} from './Exit.svg';
 
