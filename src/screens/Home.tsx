@@ -12,7 +12,6 @@ import SVGButton from '../components/button/SVGButton';
 //import GrayBorderTextButton from '../components/button/GrayBorderTextButton';
 import SVG from '../components/SVG';
 import TextTag from '../components/tag/TextTag';
-import SVGTextTag from '../components/tag/SVGTextTag';
 //import Search from '../components/Search';
 import FloatingButton from '../components/button/FloatingButton';
 //import DeletePopup from '../components/popup/DeletePopup';
@@ -24,6 +23,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 type RootStackParamList = {
   CreateGaldae: undefined;
+  NowGaldae:undefined;
 };
 
 type LoginScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -54,6 +54,41 @@ const Home: React.FC<HomeProps> = () => {
     { time: '12일전', dest: '박물관', depart: '정문' },
     { time: '13일전', dest: '호텔', depart: '학교' },
     { time: '14일전', dest: '극장', depart: '정문' },
+  ];
+  const dummyGaldaeData = [
+    {
+      id: 1,
+      owner: '하재연님의 갈대',
+      from: { main: '정문', sub: '학교' },
+      users: 2,
+      capacity: 4,
+      destination: { main: '던킨도너츠', sub: '충주 터미널' },
+      time: '2025년 00월 00일 (0) 00 : 00',
+      timeAgreement: true,
+      tags: ['성별무관'],
+    },
+    {
+      id: 2,
+      owner: '김철수의 갈대',
+      from: { main: '후문', sub: '대학' },
+      users: 1,
+      capacity: 3,
+      destination: { main: '스타벅스', sub: '시내' },
+      time: '2025년 01월 01일 (목) 10 : 30',
+      timeAgreement: false,
+      tags: ['남자만'],
+    },
+    {
+      id: 3,
+      owner: '이영희의 갈대',
+      from: { main: '정문', sub: '회사' },
+      users: 1,
+      capacity: 2,
+      destination: { main: '공원', sub: '주변' },
+      time: '2025년 02월 02일 (일) 14 : 00',
+      timeAgreement: true,
+      tags: ['성별무관'],
+    },
   ];
   const [loading, setLoading] = useState<boolean>(false);
   //const [scrollPosition, setScrollPosition] = useState<number>(0);
@@ -95,10 +130,10 @@ const Home: React.FC<HomeProps> = () => {
   //   }, 2000);
   // };
   // 예를 들어, 갈대 생성 완료 시 토스트 팝업을 띄우고 3초 후에 사라지도록 함.
- 
+
 
   const handleMorePress = () => {
-    //navigation.navigate('nowGaldae');
+    navigation.navigate('NowGaldae');
   };
   const handleTimePopupConfirm = (
     selectedDate: string,
@@ -291,180 +326,67 @@ const Home: React.FC<HomeProps> = () => {
           />
         </View>
 
-        {/* <Search
-        value={destination}
-        onChangeText={setDestination}
-        placeholder="목적지를 검색해주세요."
-        onPressIcon={() => console.log('Search icon pressed')}
-        /> */}
-
-        {/* <View style={styles.filters}>
-          <FilterButton onPress={handleFilterPress} />
-          <GrayBorderTextButton
-            text="시간협의가능"
-            onPress={handlePressTimeFilterBtn}
-          />
-          <GrayBorderTextButton
-            text="성별무관"
-            onPress={handlePressGenderFilterBtn}
-          />
-          <SelectTextButton
-            text="성별무관"
-            onPress={handlePress}
-          />
-          <SelectSVGTextButton
-            iconName="Bag"
-            text="가방"
-            onPress={handlePress}
-          />
-          <TextTag
-            text="성별무관"
-          />
-          <SVGTextTag
-            text="캐리어"
-            iconName="GreenCarrier"
-          />
-        </View> */}
-
 
         <View style={styles.nowGaldaeList}>
-
-          <View style={styles.borderedListBox}  >
-
-              <BasicText text="하재연님의 갈대" style={styles.galdaeOwner}/>
-
-              <View style={styles.fromContainer}>
-                <SVG name="Car"/>
-                <BasicText text="정문" style={styles.fromMainLocation}/>
-                <BasicText text="학교" style={styles.fromSubLocation}/>
+        {dummyGaldaeData.map(item => (
+          <View key={item.id} style={styles.borderedListBox}>
+            <BasicText text={item.owner} style={styles.galdaeOwner} />
+            <View style={styles.fromContainer}>
+              <SVG name="Car" />
+              <BasicText text={item.from.main} style={styles.fromMainLocation} />
+              <BasicText text={item.from.sub} style={styles.fromSubLocation} />
+            </View>
+            <View style={styles.toContainer}>
+              <View style={styles.fromToLine}>
+                <SVG name="FromToLine" />
               </View>
-
-              <View style={styles.toContainer}>
-                <View style={styles.fromToLine}>
-                  <SVG name="FromToLine" />
-                </View>
-                <SVG name="User"/>
-                <SVG name="User"/>
-                <SVG name="DisabledUser"/>
-                <SVG name="DisabledUser"/>
-                <BasicText text="(2/4)" fontWeight={500} fontSize={theme.fontSize.size16} color={theme.colors.gray1}/>
-              </View>
-
-              <View style={styles.toContainer}>
-                <SVG name="Location"/>
-                <BasicText text="던킨도너츠" style={styles.fromMainLocation}/>
-                <BasicText text="충주 터미널" style={styles.fromSubLocation}/>
-              </View>
-
-              <View style={styles.timeContainer}>
-                <SVG name="Clock"/>
-                <View>
-                  <BasicText text="시간 협의가능" style={styles.fromMainLocation} color={theme.colors.gray2} fontSize={theme.fontSize.size10}/>
-                  <BasicText text="2025년 00월 00일 (0) 00 : 00" style={styles.fromSubLocation} color={theme.colors.black} fontSize={theme.fontSize.size14}/>
-                </View>
-              </View>
-
-              <View style={styles.tags}>
-                <TextTag
-                  text="성별무관"
+              {Array(item.users)
+                .fill(null)
+                .map((_, idx) => (
+                  <SVG key={`user-${item.id}-${idx}`} name="User" />
+                ))}
+              {Array(item.capacity - item.users)
+                .fill(null)
+                .map((_, idx) => (
+                  <SVG key={`disabled-${item.id}-${idx}`} name="DisabledUser" />
+                ))}
+              <BasicText
+                text={`(${item.users}/${item.capacity})`}
+                fontWeight={500}
+                fontSize={theme.fontSize.size16}
+                color={theme.colors.gray1}
+              />
+            </View>
+            <View style={styles.toContainer}>
+              <SVG name="Location" />
+              <BasicText text={item.destination.main} style={styles.fromMainLocation} />
+              <BasicText text={item.destination.sub} style={styles.fromSubLocation} />
+            </View>
+            <View style={styles.timeContainer}>
+              <SVG name="Clock" />
+              <View>
+                <BasicText
+                  text={item.timeAgreement ? '시간 협의가능' : '시간 협의불가'}
+                  style={styles.fromMainLocation}
+                  color={theme.colors.gray2}
+                  fontSize={theme.fontSize.size10}
                 />
-                <SVGTextTag
-                  text="캐리어"
-                  iconName="GreenCarrier"
+                <BasicText
+                  text={item.time}
+                  style={styles.fromSubLocation}
+                  color={theme.colors.black}
+                  fontSize={theme.fontSize.size14}
                 />
               </View>
+            </View>
+            <View style={styles.tags}>
+              {item.tags.map((tag, index) =>
+                 <TextTag key={index} text={tag} />
+              )}
+            </View>
           </View>
-          <View style={styles.borderedListBox}  >
-
-            <BasicText text="하재연님의 갈대" style={styles.galdaeOwner}/>
-
-            <View style={styles.fromContainer}>
-              <SVG name="Car"/>
-              <BasicText text="정문" style={styles.fromMainLocation}/>
-              <BasicText text="학교" style={styles.fromSubLocation}/>
-            </View>
-
-            <View style={styles.toContainer}>
-              <View style={styles.fromToLine}>
-                <SVG name="FromToLine" />
-              </View>
-              <SVG name="User"/>
-              <SVG name="User"/>
-              <SVG name="DisabledUser"/>
-              <SVG name="DisabledUser"/>
-              <BasicText text="(2/4)" fontWeight={500} fontSize={theme.fontSize.size16} color={theme.colors.gray1}/>
-            </View>
-
-            <View style={styles.toContainer}>
-              <SVG name="Location"/>
-              <BasicText text="던킨도너츠" style={styles.fromMainLocation}/>
-              <BasicText text="충주 터미널" style={styles.fromSubLocation}/>
-            </View>
-
-            <View style={styles.timeContainer}>
-              <SVG name="Clock"/>
-              <View>
-                <BasicText text="시간 협의가능" style={styles.fromMainLocation} color={theme.colors.gray2} fontSize={theme.fontSize.size10}/>
-                <BasicText text="2025년 00월 00일 (0) 00 : 00" style={styles.fromSubLocation} color={theme.colors.black} fontSize={theme.fontSize.size14}/>
-              </View>
-            </View>
-
-            <View style={styles.tags}>
-              <TextTag
-                text="성별무관"
-              />
-              <SVGTextTag
-                text="캐리어"
-                iconName="GreenCarrier"
-              />
-            </View>
-            </View>
-            <View style={styles.borderedListBox}  >
-
-            <BasicText text="하재연님의 갈대" style={styles.galdaeOwner}/>
-
-            <View style={styles.fromContainer}>
-              <SVG name="Car"/>
-              <BasicText text="정문" style={styles.fromMainLocation}/>
-              <BasicText text="학교" style={styles.fromSubLocation}/>
-            </View>
-
-            <View style={styles.toContainer}>
-              <View style={styles.fromToLine}>
-                <SVG name="FromToLine" />
-              </View>
-              <SVG name="User"/>
-              <SVG name="User"/>
-              <SVG name="DisabledUser"/>
-              <SVG name="DisabledUser"/>
-              <BasicText text="(2/4)" fontWeight={500} fontSize={theme.fontSize.size16} color={theme.colors.gray1}/>
-            </View>
-
-            <View style={styles.toContainer}>
-              <SVG name="Location"/>
-              <BasicText text="던킨도너츠" style={styles.fromMainLocation}/>
-              <BasicText text="충주 터미널" style={styles.fromSubLocation}/>
-            </View>
-
-            <View style={styles.timeContainer}>
-              <SVG name="Clock"/>
-              <View>
-                <BasicText text="시간 협의가능" style={styles.fromMainLocation} color={theme.colors.gray2} fontSize={theme.fontSize.size10}/>
-                <BasicText text="2025년 00월 00일 (0) 00 : 00" style={styles.fromSubLocation} color={theme.colors.black} fontSize={theme.fontSize.size14}/>
-              </View>
-            </View>
-
-            <View style={styles.tags}>
-              <TextTag
-                text="성별무관"
-              />
-              <SVGTextTag
-                text="캐리어"
-                iconName="GreenCarrier"
-              />
-            </View>
-            </View>
-        </View>
+        ))}
+      </View>
       </ScrollView>
 
     </ScrollView>
