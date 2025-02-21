@@ -36,7 +36,13 @@ type Member = {
     id: string,
     image: string,
     name: string,
+    account?: Account,
 }
+
+type Account = {
+    bankName: string,
+    accountNumber: string,
+};
 
 type SettlementType = {
     accountNumber: String,
@@ -280,6 +286,7 @@ const ChatRoom: React.FC = () => {
     };
 
     const openSettlement = () => {
+        //TODO: 방장만 열 수 있게
         setSettlementOpen(true);
     };
 
