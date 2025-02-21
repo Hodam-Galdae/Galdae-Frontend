@@ -24,6 +24,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 type RootStackParamList = {
   CreateGaldae: undefined;
   NowGaldae:undefined;
+  NowGaldaeDetail: { item: any };
 };
 
 type LoginScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -329,6 +330,10 @@ const Home: React.FC<HomeProps> = () => {
 
         <View style={styles.nowGaldaeList}>
         {dummyGaldaeData.map(item => (
+           <TouchableOpacity
+              key={item.id}
+              onPress={() => navigation.navigate('NowGaldaeDetail', { item })}
+            >
           <View key={item.id} style={styles.borderedListBox}>
             <BasicText text={item.owner} style={styles.galdaeOwner} />
             <View style={styles.fromContainer}>
@@ -385,6 +390,7 @@ const Home: React.FC<HomeProps> = () => {
               )}
             </View>
           </View>
+        </TouchableOpacity>
         ))}
       </View>
       </ScrollView>

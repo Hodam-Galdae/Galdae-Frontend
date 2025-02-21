@@ -38,3 +38,5 @@ export {default as location_line} from './location_line 5.svg';
 export {default as arrow_right_line} from './arrow_right_line 2.svg';
 export {default as arrow_down_fill} from './arrow_down_fill 1.svg';
 export {default as arrow_left_line} from './arrow_left_line 1.svg';
+export {default as Profile} from './Profile.svg';
+export {default as Badge} from './Badge.svg';
