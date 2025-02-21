@@ -1,15 +1,141 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 import { theme } from './theme';
 
+const width = Dimensions.get('window').width;
+
 export default StyleSheet.create({
+    rootContainer: {
+        flex: 1,
+    },
     container: {
         paddingTop: 50,
         flex: 1,
         backgroundColor: theme.colors.lightGray,
+        justifyContent: 'space-between',
     },
     list: {
         flex: 1,
         paddingLeft: 15,
+    },
+    settlementLastText: {
+        fontSize: theme.fontSize.size14,
+        fontWeight: '500',
+        color: theme.colors.black,
+    },
+    settlementLastTextContainer: {
+        paddingHorizontal: 20,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 8,
+    },
+    settlementContainer: {
+        paddingHorizontal: 15,
+        backgroundColor: theme.colors.white,
+        flex: 1,
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+    },
+    settlementCostContainer : {
+        width: '100%',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'flex-start',
+        paddingHorizontal: 20,
+    },
+    settlementBtnText: {
+        fontSize: theme.fontSize.size16,
+        fontWeight: '700',
+        color: theme.colors.white,
+    },
+    settlementTitle: {
+        fontSize: theme.fontSize.size20,
+        color: theme.colors.black,
+        fontWeight: '700',
+        paddingLeft: 10,
+        marginTop: 20,
+    },
+    settlementTime: {
+        paddingLeft: 10,
+        fontSize: theme.fontSize.size12,
+        color: theme.colors.gray1,
+        fontWeight: '500',
+        marginTop: 8,
+    },
+    settlementLoactionContainer: {
+        paddingLeft: 10,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        marginTop: 4,
+    },
+    settlementLocationIcon: {
+        marginRight: 4,
+    },
+    settlementLastCostContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: 10,
+        marginBottom: 15,
+    },
+    settlementLastCostBox: {
+        paddingTop: 15,
+        backgroundColor: theme.colors.lightGray,
+        height: 128,
+        borderRadius: 10,
+        width: (width - 37) / 2,
+    },
+    settlementLocationText: {
+        fontSize: theme.fontSize.size16,
+        fontWeight: '700',
+        color: theme.colors.black,
+    },
+    settlementBtn: {
+        backgroundColor: theme.colors.brandColor,
+        paddingVertical: 10,
+        marginTop: 11,
+    },
+    settlementCostText: {
+        color: theme.colors.black,
+        fontSize: theme.fontSize.size20,
+        fontWeight: '700',
+    },
+    settlementCostTextContainer: {
+        alignItems: 'flex-end',
+    },
+    settlementCostEditText: {
+        color: theme.colors.gray2,
+        fontSize: theme.fontSize.size12,
+        fontWeight: '400',
+        textDecorationLine: 'underline',
+        marginTop: 4,
+    },
+    bankContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 22,
+        backgroundColor: theme.colors.lightGray,
+        paddingVertical: 10,
+        borderRadius: 10,
+    },
+    bankIcon: {
+        width: 26,
+        height: 26,
+        marginRight: 6,
+    },
+    bankText: {
+        fontSize: theme.fontSize.size14,
+        fontWeight: '400',
+        color: theme.colors.black,
+    },
+    bankEdit: {
+        color: theme.colors.gray2,
+        fontSize: theme.fontSize.size12,
+        fontWeight: '400',
+        marginTop: 4,
+        alignSelf: 'flex-end',
+        textDecorationLine: 'underline',
     },
     addBtn: {
         width: 30,
@@ -18,6 +144,15 @@ export default StyleSheet.create({
         marginRight: 10,
         borderRadius: 999,
     },
+    settlementCloseBtn: {
+        width: 30,
+        height: 30,
+        backgroundColor: theme.colors.brandSubColor,
+        position: 'absolute',
+        borderRadius: 999,
+        right: 15,
+        top: 15,
+    },
     sendBtn: {
         width: 34,
         height: 34,
@@ -25,7 +160,7 @@ export default StyleSheet.create({
         marginLeft: 12,
         borderRadius: 999,
     },
-    input: {
+    inputBox: {
         flex: 1,
         height: 'auto',
         flexWrap: 'wrap',

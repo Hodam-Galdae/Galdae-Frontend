@@ -11,6 +11,7 @@ type RootStackParamList = {
 };
 
 type Member = {
+    id: string,
     image: string,
     name: string,
 }
@@ -42,12 +43,16 @@ const Settlement: React.FC = () => {
             </View>
         </TouchableOpacity>
         <View style={styles.divider}/>
-        <BasicText style={styles.allCostText}>{'총 금액 ' + '7500원'}</BasicText>
-        <View style={styles.userContainer}>
-            <SVG name="DefaultProfile" style={styles.userIcon}/>
-            <BasicText style={styles.userText} text="철수"/>
-            <BasicText style={styles.userText}>{'2500' + '원'}</BasicText>
-        </View>
+        <BasicText style={styles.allCostText}>{'총 금액 ' + data.cost}</BasicText>
+        {data.members.map(e => {
+            return (
+            <View key={e.id} style={styles.userContainer}>
+                <SVG name="DefaultProfile" style={styles.userIcon}/>
+                <BasicText style={styles.userText} text={e.name}/>
+                <BasicText style={styles.userText}>{Math.ceil(data.cost / data.members.length) + '원'}</BasicText>
+            </View>
+            );
+        })}
         </View>
     );
 };

@@ -67,13 +67,13 @@ export default StyleSheet.create({
     allCostText: {
         color: theme.colors.brandColor,
         fontSize: theme.fontSize.size14,
-        marginBottom: 25,
         fontWeight: '700',
     },
     userContainer: {
         flexDirection: 'row',
         justifyContent: 'flex-start',
         alignItems: 'center',
+        marginTop: 26,
     },
     userIcon: {
         width: 36,

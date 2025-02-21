@@ -5,9 +5,15 @@ import BasicText from './BasicText';
 import BasicButton from './button/BasicButton';
 import SVG from './SVG';
 
+type Member = {
+    id: string,
+    image: string,
+    name: string,
+}
+
 type Settlement = {
     id: string,
-    currentUser: number,
+    currentUser: Member[],
     cost: number,
     sender?: string,
     senderImage?: string,
@@ -35,7 +41,7 @@ const ChatItem: React.FC<{settlement: Settlement}> = React.memo(({settlement}) =
                     <View style={styles.backImage}>
 
                     </View>
-                    <BasicText style={styles.text}>{'갈대 정산을 요청합니다.\n\n' + '정산 인원 : ' + settlement.currentUser.toString() + '명\n' + '총 금액 : ' + settlement.cost.toString() + '원\n\n' + '정산 요청 금액 (1/N)\n1인 : ' + settlement.cost / settlement.currentUser + '원\n\n' + '계좌 확인 후 송금해주세요.'}</BasicText>
+                    <BasicText style={styles.text}>{'갈대 정산을 요청합니다.\n\n' + '정산 인원 : ' + settlement.currentUser.length.toString() + '명\n' + '총 금액 : ' + settlement.cost.toString() + '원\n\n' + '정산 요청 금액 (1/N)\n1인 : ' + Math.ceil(settlement.cost / settlement.currentUser.length) + '원\n\n' + '계좌 확인 후 송금해주세요.'}</BasicText>
                     <BasicButton text="정산 상세" buttonStyle={styles.button} textStyle={styles.buttonText} onPress={settlement.onPress}/>
                 </View>
                 {settlement.isShowTime && settlement.sender !== tempUser ? (

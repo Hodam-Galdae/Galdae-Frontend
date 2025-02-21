@@ -19,9 +19,21 @@ type ChatRoomType = {
   time: string;
   from: string;
   to: string;
-  currentPerson: number;
+  currentPerson: Member[];
   maxPerson: number;
   message: number;
+};
+
+type Member = {
+  id: string,
+  image: string,
+  name: string,
+  account?: Account
+};
+
+type Account = {
+  bankName: string,
+  accountNumber: string,
 };
 
 const Chat: React.FC = () => {
@@ -36,7 +48,22 @@ const Chat: React.FC = () => {
         time: '2025년 00월 00일 (0) 00:00',
         from: '학교',
         to: '호암동',
-        currentPerson: 1,
+        currentPerson: [
+          {
+            id: 'a',
+            image: '',
+            name: 'donghyun',
+            account: {
+              bankName: '우리은행',
+              accountNumber: '1234-12312312-12312',
+            },
+          },
+          {
+            id: 'b',
+            image: '',
+            name: 'lee',
+          },
+        ],
         maxPerson: 4,
         message: 5,
       },
@@ -45,7 +72,27 @@ const Chat: React.FC = () => {
         time: '2025년 00월 00일 (0) 00:00',
         from: '서울역',
         to: '호암동',
-        currentPerson: 4,
+        currentPerson: [
+          {
+            id: 'a',
+            image: '',
+            name: 'donghyun',
+            account: {
+              bankName: '우리은행',
+              accountNumber: '1234-12312312-12312',
+            },
+          },
+          {
+            id: 'b',
+            image: '',
+            name: 'lee',
+          },
+          {
+            id: 'c',
+            image: '',
+            name: 'park',
+          },
+        ],
         maxPerson: 4,
         message: 5,
       },
