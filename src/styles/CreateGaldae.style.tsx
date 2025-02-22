@@ -189,5 +189,5 @@ export default StyleSheet.create({
     checkText: {
         fontSize: theme.fontSize.size16,
         color: theme.colors.gray1,
-    }
+    },
 });

@@ -40,3 +40,5 @@ export {default as arrow_down_fill} from './arrow_down_fill 1.svg';
 export {default as arrow_left_line} from './arrow_left_line 1.svg';
 export {default as Profile} from './Profile.svg';
 export {default as Badge} from './Badge.svg';
+export {default as information_line} from './information_line 2.svg';
+export {default as transfer_2_line} from './transfer_2_line 1.svg';

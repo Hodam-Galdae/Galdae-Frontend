@@ -14,23 +14,58 @@ export default StyleSheet.create({
           android: 40,
         }),
     },
+    btns:{
+      flexDirection:'row',
+      alignItems:'center',
+      justifyContent:'space-between',
+      marginTop:(18),
+      marginBottom:8,
+    },
     filters:{
         flexDirection:'row',
-        marginTop:(18),
+        alignItems:'center',
         gap:(8),
-        marginBottom:8,
+
+    },
+    arrayBtn:{
+      alignItems:'center',
     },
     galdaeList:{
         paddingTop:30,
         paddingHorizontal:15,
     },
+    search:{
+      width:'100%',
+      justifyContent:'space-between',
+    },
+    searchBtn:{
+      height:42,
+      borderWidth:2,
+      borderColor:theme.colors.lightGray,
+      borderRadius:theme.borderRadius.size10,
+    },
+    searchText:{
+      marginLeft:20,
+      fontSize:theme.fontSize.size14,
+      fontWeight:'500',
+    },
+    searchSVG:{
+      marginRight:20,
+    },
     scroll:{
         height:'75%',
     },
     nowGaldaeList:{
-        marginTop:14,
-        position:'relative',
-      },
+      marginTop:14,
+      position:'relative',
+      height:'100%',
+    },
+    noData:{
+      height:'75%',
+      alignItems:'center',
+      justifyContent:'center',
+      gap:12,
+    },
     borderedListBox:{
       width:'100%',
       height:195,

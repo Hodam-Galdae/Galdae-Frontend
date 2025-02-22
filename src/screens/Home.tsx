@@ -14,6 +14,7 @@ import SVG from '../components/SVG';
 import TextTag from '../components/tag/TextTag';
 //import Search from '../components/Search';
 import FloatingButton from '../components/button/FloatingButton';
+import GaldaeItem from '../components/GaldaeItem';
 //import DeletePopup from '../components/popup/DeletePopup';
 import CreateGaldaePopup from '../components/popup/CreateGaldaePopup';
 import { useNavigation } from '@react-navigation/native';
@@ -330,67 +331,11 @@ const Home: React.FC<HomeProps> = () => {
 
         <View style={styles.nowGaldaeList}>
         {dummyGaldaeData.map(item => (
-           <TouchableOpacity
-              key={item.id}
-              onPress={() => navigation.navigate('NowGaldaeDetail', { item })}
-            >
-          <View key={item.id} style={styles.borderedListBox}>
-            <BasicText text={item.owner} style={styles.galdaeOwner} />
-            <View style={styles.fromContainer}>
-              <SVG name="Car" />
-              <BasicText text={item.from.main} style={styles.fromMainLocation} />
-              <BasicText text={item.from.sub} style={styles.fromSubLocation} />
-            </View>
-            <View style={styles.toContainer}>
-              <View style={styles.fromToLine}>
-                <SVG name="FromToLine" />
-              </View>
-              {Array(item.users)
-                .fill(null)
-                .map((_, idx) => (
-                  <SVG key={`user-${item.id}-${idx}`} name="User" />
-                ))}
-              {Array(item.capacity - item.users)
-                .fill(null)
-                .map((_, idx) => (
-                  <SVG key={`disabled-${item.id}-${idx}`} name="DisabledUser" />
-                ))}
-              <BasicText
-                text={`(${item.users}/${item.capacity})`}
-                fontWeight={500}
-                fontSize={theme.fontSize.size16}
-                color={theme.colors.gray1}
-              />
-            </View>
-            <View style={styles.toContainer}>
-              <SVG name="Location" />
-              <BasicText text={item.destination.main} style={styles.fromMainLocation} />
-              <BasicText text={item.destination.sub} style={styles.fromSubLocation} />
-            </View>
-            <View style={styles.timeContainer}>
-              <SVG name="Clock" />
-              <View>
-                <BasicText
-                  text={item.timeAgreement ? '시간 협의가능' : '시간 협의불가'}
-                  style={styles.fromMainLocation}
-                  color={theme.colors.gray2}
-                  fontSize={theme.fontSize.size10}
-                />
-                <BasicText
-                  text={item.time}
-                  style={styles.fromSubLocation}
-                  color={theme.colors.black}
-                  fontSize={theme.fontSize.size14}
-                />
-              </View>
-            </View>
-            <View style={styles.tags}>
-              {item.tags.map((tag, index) =>
-                 <TextTag key={index} text={tag} />
-              )}
-            </View>
-          </View>
-        </TouchableOpacity>
+          <GaldaeItem
+          key={item.id}
+          item={item}
+          onPress={() => navigation.navigate('NowGaldaeDetail', { item })}
+        />
         ))}
       </View>
       </ScrollView>

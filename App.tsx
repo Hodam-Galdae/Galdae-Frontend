@@ -11,6 +11,7 @@ import CreateGaldae from './src/screens/CreateGaldae';
 import NowGaldae from './src/screens/NowGaldae';
 import NowGaldaeDetail from './src/screens/NowGaldaeDetail';
 import Onboarding from './src/screens/Onboarding';
+import SetDestination from './src/screens/SetDestination';
 import axios, {AxiosResponse, InternalAxiosRequestConfig} from 'axios';
 import {errorLogger, requestLogger, responseLogger} from 'axios-logger';
 
@@ -82,6 +83,7 @@ function App() {
                         <Stack.Screen name="CreateGaldae" component={CreateGaldae} />
                         <Stack.Screen name="NowGaldae" component={NowGaldae} />
                         <Stack.Screen name="NowGaldaeDetail" component={NowGaldaeDetail} />
+                        <Stack.Screen name="SetDestination" component={SetDestination} />
                         <Stack.Screen name="SignUp" component={SignUp} />
                         <Stack.Screen name="MainTab" component={MainTab} />
 

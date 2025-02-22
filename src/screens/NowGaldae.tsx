@@ -1,17 +1,18 @@
 // Home.tsx 테스트
-import React,{useState} from 'react';
-import {  View ,ScrollView,TouchableOpacity} from 'react-native';
+import React,{} from 'react';
+import {  View ,ScrollView} from 'react-native';
+import { useRoute, RouteProp } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
 import styles from '../styles/NowGaldae.style';
 import Header from '../components/Header';
 import SVGButton from '../components/button/SVGButton';
 import BasicText from '../components/BasicText';
-import Search from '../components/Search';
 import FilterButton from '../components/button/FilterButton';
 import GrayBorderTextButton from '../components/button/GrayBorderTextButton';
+import SVGTextButton from '../components/button/SVGTextButton';
 import SVG from '../components/SVG';
+import GaldaeItem from '../components/GaldaeItem';
 import { theme } from '../styles/theme';
-import TextTag from '../components/tag/TextTag';
 import FloatingButton from '../components/button/FloatingButton';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 type HomeProps = {
@@ -20,21 +21,28 @@ type HomeProps = {
 // 내비게이션 스택 타입 정의
 type RootStackParamList = {
     CreateGaldae: undefined;
-    NowGaldae: undefined;
+    NowGaldae: {
+      departureLarge?:string,
+      departureSmall?:string,
+      destinationLarge?:string,
+      destinationSmall?:string,
+    };
     NowGaldaeDetail: { item: any };
+    SetDestination:undefined;
 };
 
 type nowGaldaeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 const NowGaldae: React.FC<HomeProps> = () => {
+
     const dummyGaldaeData = [
         {
           id: 1,
           owner: '하재연님의 갈대',
-          from: { main: '정문', sub: '학교' },
+          from: { main: '학교', sub: '정문' },
           users: 2,
           capacity: 4,
-          destination: { main: '던킨도너츠', sub: '충주 터미널' },
+          destination: { main: '학교', sub: '정문' },
           time: '2025년 00월 00일 (0) 00 : 00',
           timeAgreement: true,
           tags: ['성별무관'],
@@ -84,10 +92,11 @@ const NowGaldae: React.FC<HomeProps> = () => {
             tags: ['여자만'],
           },
       ];
-    const [destination, setDestination] = useState<string>('');
     const navigation = useNavigation<nowGaldaeScreenNavigationProp>();
     const goBack = () => navigation.goBack();
-
+    const route = useRoute<RouteProp<RootStackParamList, 'NowGaldae'>>();
+    // 전달받은 검색 조건
+    const { departureLarge, departureSmall,destinationLarge,destinationSmall } = route.params || {};
     const handleFilterPress = ()=>{
 
     };
@@ -99,6 +108,16 @@ const NowGaldae: React.FC<HomeProps> = () => {
     const handlePressGenderFilterBtn = () =>{
 
     };
+
+     // 검색 조건이 전달되면, 조건에 맞게 데이터를 필터링합니다.
+    const filteredData = departureLarge && destinationLarge && departureSmall && destinationSmall
+    ? dummyGaldaeData.filter(
+        item =>
+          item.from.main.includes(departureLarge) && item.from.sub.includes(departureSmall) &&
+          item.destination.main.includes(destinationLarge) && item.destination.sub.includes(destinationSmall)
+      )
+    : dummyGaldaeData;
+
   return (
     <View style={styles.main}>
         <Header
@@ -107,92 +126,91 @@ const NowGaldae: React.FC<HomeProps> = () => {
         />
 
         <View style={styles.galdaeList}>
-            <Search
-            value={destination}
-            onChangeText={setDestination}
-            placeholder="목적지를 검색해주세요."
-            onPressIcon={() => console.log('Search icon pressed')}
-            />
+          {
+            departureLarge && destinationLarge && departureSmall && destinationSmall ? (
+            <SVGTextButton
+              text={departureLarge && destinationLarge ? `${departureSmall}  ${destinationSmall}` : '목적지를 설정해주세요'}
+              iconName="Search"
+              iconPosition="right"
+              style={styles.search}
+              buttonStyle={styles.searchBtn}
+              textStyle={styles.searchText}
+              SVGStyle={styles.searchSVG}
+              enabledColors={
+                {
+                  backgroundColor:theme.colors.white,
+                  textColor:theme.colors.gray2,
+                }
+              }
+              onPress={()=>navigation.navigate('SetDestination')}
+              />
+            ) : (
+              <SVGTextButton
+                text={departureLarge && destinationLarge ? `${departureSmall}  ${destinationSmall}` : '목적지를 설정해주세요'}
+                iconName="Search"
+                iconPosition="right"
+                style={styles.search}
+                buttonStyle={styles.searchBtn}
+                textStyle={styles.searchText}
+                SVGStyle={styles.searchSVG}
+                enabledColors={
+                  {
+                    backgroundColor:theme.colors.white,
+                    textColor:theme.colors.gray2,
+                  }
+                }
+                onPress={()=>navigation.navigate('SetDestination')}
+                />
+              )
+          }
 
-            <View style={styles.filters}>
-              <FilterButton onPress={handleFilterPress} />
-              <GrayBorderTextButton
-                text="시간협의가능"
-                onPress={handlePressTimeFilterBtn}
-              />
-              <GrayBorderTextButton
-                text="성별무관"
-                onPress={handlePressGenderFilterBtn}
-              />
+            <View style={styles.btns}>
+              <View style={styles.filters}>
+                <FilterButton onPress={handleFilterPress} />
+                <GrayBorderTextButton
+                  text="시간협의가능"
+                  onPress={handlePressTimeFilterBtn}
+                />
+                <GrayBorderTextButton
+                  text="성별무관"
+                  onPress={handlePressGenderFilterBtn}
+                />
+              </View>
+              <View style={styles.arrayBtn}>
+                <SVGTextButton
+                text="최신순"
+                //onPress={arrayItems}
+                iconName="transfer_2_line"
+                iconPosition="right"
+                enabledColors={
+                  {
+                    backgroundColor:theme.colors.white,
+                    textColor:theme.colors.gray1,
+                  }
+                }
+                />
+              </View>
             </View>
 
-            <ScrollView style={styles.scroll}>
+              {filteredData.length === 0 ? (
+                <View style={styles.noData}>
+                  <SVG name="information_line" />
+                  <BasicText text="해당 경로의 갈대가 없습니다." color={theme.colors.gray1}/>
+                </View>
+              ) : (
+                <ScrollView style={styles.scroll}>
                 <View style={styles.nowGaldaeList}>
-                  {dummyGaldaeData.map(item => (
-                    <TouchableOpacity
-                    key={item.id}
-                    onPress={() => navigation.navigate('NowGaldaeDetail', { item })}
-                  >
-                    <View key={item.id} style={styles.borderedListBox}>
-                      <BasicText text={item.owner} style={styles.galdaeOwner} />
-                      <View style={styles.fromContainer}>
-                        <SVG name="Car" />
-                        <BasicText text={item.from.main} style={styles.fromMainLocation} />
-                        <BasicText text={item.from.sub} style={styles.fromSubLocation} />
-                      </View>
-                      <View style={styles.toContainer}>
-                        <View style={styles.fromToLine}>
-                          <SVG name="FromToLine" />
-                        </View>
-                        {Array(item.users)
-                          .fill(null)
-                          .map((_, idx) => (
-                            <SVG key={`user-${item.id}-${idx}`} name="User" />
-                          ))}
-                        {Array(item.capacity - item.users)
-                          .fill(null)
-                          .map((_, idx) => (
-                            <SVG key={`disabled-${item.id}-${idx}`} name="DisabledUser" />
-                          ))}
-                        <BasicText
-                          text={`(${item.users}/${item.capacity})`}
-                          fontWeight={500}
-                          fontSize={theme.fontSize.size16}
-                          color={theme.colors.gray1}
-                        />
-                      </View>
-                      <View style={styles.toContainer}>
-                        <SVG name="Location" />
-                        <BasicText text={item.destination.main} style={styles.fromMainLocation} />
-                        <BasicText text={item.destination.sub} style={styles.fromSubLocation} />
-                      </View>
-                      <View style={styles.timeContainer}>
-                        <SVG name="Clock" />
-                        <View>
-                          <BasicText
-                            text={item.timeAgreement ? '시간 협의가능' : '시간 협의불가'}
-                            style={styles.fromMainLocation}
-                            color={theme.colors.gray2}
-                            fontSize={theme.fontSize.size10}
-                          />
-                          <BasicText
-                            text={item.time}
-                            style={styles.fromSubLocation}
-                            color={theme.colors.black}
-                            fontSize={theme.fontSize.size14}
-                          />
-                        </View>
-                      </View>
-                      <View style={styles.tags}>
-                        {item.tags.map((tag, index) =>
-                           <TextTag key={index} text={tag} />
-                        )}
-                      </View>
-                    </View>
-                    </TouchableOpacity>
+                  {filteredData.map(item => (
+                    <GaldaeItem
+                      key={item.id}
+                      item={item}
+                      onPress={() => navigation.navigate('NowGaldaeDetail', { item })}
+                    />
                   ))}
                 </View>
-            </ScrollView>
+                </ScrollView>
+              )}
+
 
         </View>
         <FloatingButton onPress={() => navigation.navigate('CreateGaldae')} />
