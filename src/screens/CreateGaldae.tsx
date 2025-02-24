@@ -14,8 +14,18 @@ import SelectTextButton from '../components/button/SelectTextButton';
 import FastGaldaeStartPopup, { FastGaldaeStartPopupRef } from '../components/popup/FastGaldaeStartPopup';
 import FastGaldaeEndPopup, { FastGaldaeEndPopupRef } from '../components/popup/FastGaldaeEndPopup';
 import FastGaldaeTimePopup, { FastGaldaeTimePopupRef } from '../components/popup/FastGaldaeTimePopup';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+
+// 내비게이션 스택 타입 정의
+type RootStackParamList = {
+  CreateGaldae: undefined;
+  NowGaldae: undefined;
+  NowGaldaeDetail: { item: any };
+};
+
+
 const CreateGaldae: React.FC = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const goBack = () => navigation.goBack();
   const [selectedGender, setSelectedGender] = useState<number>(0);
   const [selectedTimeDiscuss, setSelectedTimeDiscuss] = useState<number>(0);
@@ -43,12 +53,26 @@ const CreateGaldae: React.FC = () => {
     }
   };
   const handleGenerateGaldae = () => {
-    // 예시: 생성 처리 시작 시 로딩 상태 활성화 후 2초 후에 로딩 해제
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-      goBack();
-      // 필요에 따라 추가 작업을 진행하거나 다른 화면으로 이동
+      // 생성된 갈대 정보를 담은 객체 생성 (필요에 따라 state 값을 활용하여 데이터를 구성)
+      const createdItem = {
+        id: Date.now(), // 예시용 ID
+        owner: '내 갈대', // 본인 이름 또는 별칭
+        from: { main: departureLarge, sub: departureSmall },
+        // 현재 탑승 인원은 본인 포함(passengerNumber + 1)로 계산
+        users: 1,
+        capacity: passengerNumber + 1,
+        destination: { main: destinationLarge, sub: destinationSmall },
+        time: formatDepartureDateTime(),
+        timeAgreement: selectedTimeDiscuss === 0,
+        // 성별 선택에 따라 태그 처리
+        tags: selectedGender === 0 ? ['성별무관'] : (selectedGender === 1 ? ['여자'] : ['남자']),
+      };
+
+      // NowGaldaeDetail 페이지로 이동하면서 생성된 데이터를 전달합니다.
+      navigation.navigate('NowGaldaeDetail', { item: createdItem });
     }, 2000);
   };
   const toggleFastGaldaeStartPopup = () =>{

@@ -8,8 +8,11 @@ import MainTab from './src/components/MainTab';
 import Login from './src/screens/Login';
 import SignUp from './src/screens/SignUp';
 import CreateGaldae from './src/screens/CreateGaldae';
+import NowGaldae from './src/screens/NowGaldae';
+import NowGaldaeDetail from './src/screens/NowGaldaeDetail';
 import Onboarding from './src/screens/Onboarding';
 import ChatRoom from './src/screens/ChatRoom';
+import SetDestination from './src/screens/SetDestination';
 import axios, {AxiosResponse, InternalAxiosRequestConfig} from 'axios';
 import {errorLogger, requestLogger, responseLogger} from 'axios-logger';
 import Settlement from './src/screens/Settlement';
@@ -79,6 +82,9 @@ function App() {
                         <Stack.Screen name="Onboarding" component={Onboarding} />
                         <Stack.Screen name="Login" component={Login} />
                         <Stack.Screen name="CreateGaldae" component={CreateGaldae} />
+                        <Stack.Screen name="NowGaldae" component={NowGaldae} />
+                        <Stack.Screen name="NowGaldaeDetail" component={NowGaldaeDetail} />
+                        <Stack.Screen name="SetDestination" component={SetDestination} />
                         <Stack.Screen name="SignUp" component={SignUp} />
                         <Stack.Screen name="MainTab" component={MainTab} />
                         <Stack.Screen name="ChatRoom" component={ChatRoom}/>

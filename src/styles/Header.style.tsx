@@ -8,7 +8,7 @@ export default StyleSheet.create({
         height: 102,
         backgroundColor: theme.colors.white,
         shadowColor: theme.colors.gray1,
-        shadowOpacity: 0.25,
+        shadowOpacity: 0.2,
         shadowRadius: 10,
         elevation: 4,
       },

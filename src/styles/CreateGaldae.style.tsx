@@ -1,5 +1,5 @@
 
-import { StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet, Dimensions,Platform } from 'react-native';
 import {moderateScale} from '../utils/ScreenScaler';
 // import {} from '../utils/ScreenScaler';
 
@@ -35,6 +35,9 @@ export default StyleSheet.create({
     mainTitle:{
         fontSize: theme.fontSize.size22,
         fontWeight: 'bold',
+        lineHeight: Platform.select({
+          android: 40,
+        }),
     },
     title: {
         fontSize: theme.fontSize.size18,
@@ -186,5 +189,5 @@ export default StyleSheet.create({
     checkText: {
         fontSize: theme.fontSize.size16,
         color: theme.colors.gray1,
-    }
+    },
 });

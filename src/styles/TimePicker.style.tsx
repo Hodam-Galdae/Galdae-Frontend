@@ -12,7 +12,6 @@ export default StyleSheet.create({
       },
       amPm:{
         flexDirection:'row',
-        marginTop:22,
         gap:8,
       },
       amPmBtn:{

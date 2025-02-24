@@ -107,6 +107,7 @@ const FastGaldaeTimePopup = forwardRef<FastGaldaeTimePopupRef, FastGaldaePopupPr
                 setSelectedMinute(minute);
               }}
               isToday={true}
+              style={styles.timePicker}
             />
 
           <View style={styles.confirmBtnContainer}>

@@ -1,6 +1,8 @@
 import React, { useState,useEffect } from 'react';
 import moment from 'moment';
 import {
+  StyleProp,
+  ViewStyle,
   View,
   Text,
   TouchableOpacity,
@@ -16,12 +18,13 @@ import DeletePopup from './popup/DeletePopup';
 export interface TimePickerProps {
   onTimeChange?: (amPm: '오전' | '오후', hour: number, minute: number) => void;
   isToday?: boolean; // 오늘 날짜 여부. true이면 현재 시간 이전 선택 불가
+   style?: StyleProp<ViewStyle>;
 }
 
 const hours = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
 const minutes = [0, 15, 30, 45];
 
-const TimePicker: React.FC<TimePickerProps> = ({ onTimeChange, isToday = false }) => {
+const TimePicker: React.FC<TimePickerProps> = ({ onTimeChange, isToday = false,style}) => {
   // AM/PM, 시, 분 상태를 관리
   const [selectedAmPm, setSelectedAmPm] = useState<'오전' | '오후'>('오전');
   const [selectedHour, setSelectedHour] = useState<number>(0);
@@ -96,7 +99,7 @@ const TimePicker: React.FC<TimePickerProps> = ({ onTimeChange, isToday = false }
   };
 
   return (
-   <View>
+   <View style={style}>
     <View style={styles.amPm}>
       <SelectTextButton
         text="오전"
