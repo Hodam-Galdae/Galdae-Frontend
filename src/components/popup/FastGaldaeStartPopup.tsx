@@ -222,3 +222,4 @@ const FastGaldaeStartPopup = forwardRef<FastGaldaeStartPopupRef, FastGaldaePopup
 
 
 export default FastGaldaeStartPopup;
+

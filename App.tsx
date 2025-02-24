@@ -9,9 +9,10 @@ import Login from './src/screens/Login';
 import SignUp from './src/screens/SignUp';
 import CreateGaldae from './src/screens/CreateGaldae';
 import Onboarding from './src/screens/Onboarding';
+import ChatRoom from './src/screens/ChatRoom';
 import axios, {AxiosResponse, InternalAxiosRequestConfig} from 'axios';
 import {errorLogger, requestLogger, responseLogger} from 'axios-logger';
-
+import Settlement from './src/screens/Settlement';
 
 function App() {
     useEffect(() => {
@@ -80,7 +81,8 @@ function App() {
                         <Stack.Screen name="CreateGaldae" component={CreateGaldae} />
                         <Stack.Screen name="SignUp" component={SignUp} />
                         <Stack.Screen name="MainTab" component={MainTab} />
-
+                        <Stack.Screen name="ChatRoom" component={ChatRoom}/>
+                        <Stack.Screen name="Settlement" component={Settlement}/>
 
                     </Stack.Navigator>
                 </NavigationContainer>
