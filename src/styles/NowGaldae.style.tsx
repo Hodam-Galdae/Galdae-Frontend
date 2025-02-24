@@ -38,11 +38,20 @@ export default StyleSheet.create({
       width:'100%',
       justifyContent:'space-between',
     },
+    searchContent:{
+      marginLeft:20,
+      flexDirection:'row',
+      gap:4,
+      alignItems:'center',
+    },
     searchBtn:{
       height:42,
       borderWidth:2,
       borderColor:theme.colors.lightGray,
       borderRadius:theme.borderRadius.size10,
+    },
+    searchPos:{
+      fontWeight:'700',
     },
     searchText:{
       marginLeft:20,

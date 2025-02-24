@@ -4,14 +4,14 @@ import { theme } from './theme';
 
 export default StyleSheet.create({
     background:{
-        backgroundColor: theme.colors.popupBackGround,
+        backgroundColor: theme.colors.transparent,
     },
     container: {
-      shadowColor: 'rgba(156, 156, 156, 10)',
-      shadowOffset: { width: 10, height: 10 },
-      shadowOpacity:0.05,
+      shadowColor: 'rgba(156, 156, 156, 20)',
+      shadowOffset: { width: 20, height: 20 },
+      shadowOpacity:20,
       shadowRadius: 20,
-      elevation: 5,
+      elevation: 20,
       height:586,
       backgroundColor: theme.colors.white,
       paddingHorizontal: (30),
@@ -91,9 +91,6 @@ export default StyleSheet.create({
       gap:13,
       justifyContent:'center',
     },
-    selectBtn:{
-      width:102,
-    },
     selectText:{
       fontSize:theme.fontSize.size18,
       fontWeight:'500',
@@ -161,5 +158,100 @@ export default StyleSheet.create({
       color:theme.colors.white,
       fontSize:theme.fontSize.size14,
       fontWeight:'500',
+  },
+  arrayContent:{
+
+  },
+  font:{
+    fontSize:theme.fontSize.size18,
+    fontWeight:'500',
+  },
+  latest:{
+    flexDirection:'row',
+    alignItems:'center',
+    gap:13,
+    marginBottom:20,
+  },
+  line:{
+    borderTopWidth:2,
+    borderColor:theme.colors.gray0,
+    width:'100%',
+    height:2,
+    marginTop:15,
+  },
+  time:{
+    marginTop:15,
+    fontWeight:'500',
+    marginBottom:8,
+  },
+  timePicker:{
+    marginTop:22,
+  },
+  warnText: {
+    fontWeight:'500',
+    color: theme.colors.red,
+    fontSize: theme.fontSize.size12,
+    marginTop: 10,
+  },
+  buttonWrapper: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap:8,
+    marginBottom: 20,
+},
+ personWrapper: {
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 90,
+    },
+    personBox: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    personText: {
+        fontSize: theme.fontSize.size18,
+        color: theme.colors.black,
+        marginRight: 4,
+        fontWeight:'700',
+    },
+    personSubText: {
+        fontSize: theme.fontSize.size14,
+        color: theme.colors.gray1,
+        fontWeight:'500',
+    },
+    plusBtn: {
+        width: 26,
+        height: 26,
+        backgroundColor: theme.colors.gray0,
+        borderRadius: 999,
+    },
+    plusIcon: {
+        width: 16,
+        height: 16,
+    },
+    numberText: {
+        fontSize: theme.fontSize.size24,
+        color: theme.colors.black,
+        marginHorizontal: 10,
+    },
+    selectGender:{
+      marginTop:20,
+      fontWeight:'500',
+      marginBottom:8,
+    },
+    selectTime:{
+      marginTop:20,
+      fontWeight:'500',
+      marginBottom:8,
+    },
+    selectBtn:{
+      paddingVertical:6,
+      paddingHorizontal:22,
   },
   });

@@ -6,14 +6,12 @@ import {
   ViewStyle,
   TextStyle,
   ActivityIndicator,
-
 } from 'react-native';
-//import {  } from '../utils/ScreenScaler';
 import stylesheet from '../../styles/stylesheet';
 import { theme } from '../../styles/theme';
 import SVG from '../../components/SVG';
 import BasicText from './../BasicText';
-import * as svgIcons from '../../assets/svg'; // SVG 아이콘들이 export된 객체
+import * as svgIcons from '../../assets/svg';
 import styles from '../../styles/BasicButton.style';
 
 export interface ButtonColors {
@@ -28,18 +26,17 @@ export type IconPosition = 'left' | 'right';
 export interface SVGTextButtonProps {
   buttonStyle?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
-  SVGStyle?:StyleProp<ViewStyle>;
-  style?:StyleProp<ViewStyle>;
-  text: string;
-  // 아이콘 이름은 '../assets/svg/index.ts'에서 export한 키(key)여야 합니다.
+  SVGStyle?: StyleProp<ViewStyle>;
+  style?: StyleProp<ViewStyle>;
+  text?: string; // text를 optional로 변경 (children 사용 시 대체)
+  children?: React.ReactNode;
   iconName: keyof typeof svgIcons;
-  // 아이콘이 텍스트의 어느 위치에 올지 결정 (기본값 'left')
   iconPosition?: IconPosition;
   onPress?: () => void;
   disabled?: boolean;
   loading?: boolean;
-  enabledColors?: ButtonColors;   // 활성화 상태 색상
-  disabledColors?: ButtonColors;  // 비활성화 상태 색상
+  enabledColors?: ButtonColors;
+  disabledColors?: ButtonColors;
   accessibilityLabel?: string;
 }
 
@@ -49,8 +46,9 @@ const SVGTextButton: React.FC<SVGTextButtonProps> = React.memo(({
   style,
   SVGStyle,
   text,
+  children,
   iconName,
-  iconPosition = 'left',  // 기본값을 'left'로 지정
+  iconPosition = 'left',
   onPress,
   disabled,
   loading,
@@ -68,38 +66,28 @@ const SVGTextButton: React.FC<SVGTextButtonProps> = React.memo(({
 }) => {
   const isDisabled = disabled || loading;
 
-  // 활성/비활성 상태에 따라 색상 객체를 메모이제이션
-  const colors = useMemo(() => {
-    return isDisabled ? disabledColors : enabledColors;
-  }, [isDisabled, disabledColors, enabledColors]);
+  const colors = useMemo(() => isDisabled ? disabledColors : enabledColors, [isDisabled, disabledColors, enabledColors]);
 
-  // 아이콘과 텍스트의 순서를 결정하는 함수
   const renderContent = () => {
+    // children이 있으면 우선 children을 렌더링하고, 없으면 text를 BasicText로 표시합니다.
+    const contentNode = children ? children : <BasicText style={[styles.buttonText, { color: colors.textColor }, textStyle]}>{text}</BasicText>;
     if (iconPosition === 'left') {
       return (
         <>
           <SVG
             name={iconName}
-            // width={(24)}
-            // height={(24)}
             fill={colors.textColor}
             style={SVGStyle}
           />
-          <BasicText style={[styles.buttonText, { color: colors.textColor }, textStyle]}>
-            {text}
-          </BasicText>
+          {contentNode}
         </>
       );
     } else {
       return (
-        < >
-          <BasicText style={[styles.buttonText, { color: colors.textColor }, textStyle]}>
-            {text}
-          </BasicText>
+        <>
+          {contentNode}
           <SVG
             name={iconName}
-            // width={(24)}
-            // height={(24)}
             fill={colors.textColor}
             style={SVGStyle}
           />
@@ -126,7 +114,7 @@ const SVGTextButton: React.FC<SVGTextButtonProps> = React.memo(({
         {loading ? (
           <ActivityIndicator size="small" color={colors.textColor} />
         ) : (
-          <View style={[styles.contentContainer ,style]}>
+          <View style={[styles.contentContainer, style]}>
             {renderContent()}
           </View>
         )}
