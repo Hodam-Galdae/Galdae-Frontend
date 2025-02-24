@@ -11,10 +11,10 @@ export default StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'flex-start',
         backgroundColor: theme.colors.white,
         paddingLeft: 15,
         paddingTop: 30,
+        paddingRight:15,
     },
     generateButton:{
         width: screenWidth - 30,
@@ -27,9 +27,14 @@ export default StyleSheet.create({
         fontWeight: '700',
     },
     warnText: {
+        fontWeight:'500',
         color: theme.colors.red,
         fontSize: theme.fontSize.size12,
         marginTop: 10,
+    },
+    mainTitle:{
+        fontSize: theme.fontSize.size22,
+        fontWeight: 'bold',
     },
     title: {
         fontSize: theme.fontSize.size18,
@@ -51,7 +56,7 @@ export default StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         width: screenWidth - 30,
-        marginBottom: 12,
+        marginBottom: 30,
     },
     buttonStyle: {
         borderWidth:1,
@@ -69,14 +74,14 @@ export default StyleSheet.create({
         marginRight: 2,
     },
     timeBox: {
-        width: screenWidth - 30,
+        width: '100%',
         height: 56,
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
         borderWidth: 2,
-        borderColor: '#F8F8F8',
+        borderColor: theme.colors.lightGray,
         backgroundColor: theme.colors.white,
         borderRadius: 10,
         marginBottom: 30,
@@ -84,6 +89,7 @@ export default StyleSheet.create({
     timeText: {
         fontSize: theme.fontSize.size18,
         color: theme.colors.black,
+        fontWeight:'500',
     },
     subTitle: {
         color: theme.colors.gray1,
@@ -104,7 +110,16 @@ export default StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
+        gap:8,
         marginBottom: 20,
+    },
+    selectBtn:{
+        paddingVertical:6,
+        paddingHorizontal:22,
+    },
+    selectText:{
+      fontWeight:'500',
+      fontSize:theme.fontSize.size14,
     },
     additionalIcon: {
         marginRight: 4,
@@ -129,15 +144,17 @@ export default StyleSheet.create({
         fontSize: theme.fontSize.size18,
         color: theme.colors.black,
         marginRight: 4,
+        fontWeight:'700',
     },
     personSubText: {
         fontSize: theme.fontSize.size14,
         color: theme.colors.gray1,
+        fontWeight:'500',
     },
     plusBtn: {
         width: 26,
         height: 26,
-        backgroundColor: theme.colors.black,
+        backgroundColor: theme.colors.gray0,
         borderRadius: 999,
     },
     plusIcon: {

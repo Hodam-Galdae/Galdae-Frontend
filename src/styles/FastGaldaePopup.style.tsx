@@ -9,11 +9,10 @@ export default StyleSheet.create({
     container: {
       shadowColor: 'rgba(156, 156, 156, 10)',
       shadowOffset: { width: 10, height: 10 },
-      shadowOpacity:0.5,
+      shadowOpacity:0.05,
       shadowRadius: 20,
       elevation: 5,
-
-
+      height:586,
       backgroundColor: theme.colors.white,
       paddingHorizontal: (30),
       borderTopLeftRadius: (20),
@@ -31,7 +30,8 @@ export default StyleSheet.create({
         backgroundColor: theme.colors.gray0,
     },
     content: {
-
+      height:500,
+      position:'relative',
     },
     start:{
       fontWeight:700,
@@ -111,7 +111,7 @@ export default StyleSheet.create({
     modalOverlay: {
       flex: 1,
       position:'relative',
-      backgroundColor: 'rgba(0, 0, 0, 0.7)',
+      backgroundColor: theme.colors.popupBackGround,
       justifyContent: 'center',
       alignItems: 'center',
       paddingHorizontal:15,
@@ -138,4 +138,28 @@ export default StyleSheet.create({
       height: '100%',
       borderRadius: 10,
     },
+    datePicker:{
+      marginTop:22,
+      marginBottom:40,
+    },
+    confirmBtnContainer:{
+      alignSelf:'flex-end',
+      justifyContent:'flex-end',
+      bottom:0,
+      position:'absolute',
+    },
+    toastPopup:{
+      paddingVertical:9,
+      paddingHorizontal:26,
+      borderRadius:theme.borderRadius.size30,
+      backgroundColor:theme.colors.brandColor,
+      justifyContent:'center',
+      alignItems:'center',
+      alignSelf: 'center', // 가로 중앙 정렬
+      position:'absolute',
+      bottom:(20),
+      color:theme.colors.white,
+      fontSize:theme.fontSize.size14,
+      fontWeight:'500',
+  },
   });

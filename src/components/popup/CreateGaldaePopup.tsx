@@ -7,48 +7,67 @@ import { theme } from '../../styles/theme';
 //import {  } from '../utils/ScreenScaler';
 import styles from '../../styles/DeletePopup.style';
 
-export interface DeletePopupProps {
+export interface CreateGaldaePopupProps {
     visible: boolean;
     onCancel: () => void;
     onConfirm: () => void;
-    title?: string;
-    message?: string;
+    departureDateTime: string;
+    departureLocation: string;
+    destination: string;
     containerStyle?: StyleProp<ViewStyle>;
-    buttonText?:string;
   }
 
-  const DeletePopup: React.FC<DeletePopupProps> = ({
+  const CreateGaldaePopup: React.FC<CreateGaldaePopupProps> = ({
     visible,
     onCancel,
     onConfirm,
-    title = '선택하신 갈대를',
-    message = '삭제하시겠습니까?',
+    departureDateTime,
+    departureLocation,
+    destination,
     containerStyle,
-    buttonText="삭제하기",
   }) => {
     return (
       <Modal transparent={true} visible={visible} animationType="fade">
         <View style={styles.overlay}>
-          <View style={[styles.textPopUp, containerStyle]}>
+          <View style={[styles.createGaldae, containerStyle]}>
             <TouchableOpacity onPress={onCancel} style={styles.cancelIconWrapper}>
               <SVG name="Cancel" style={styles.cancelIcon} />
             </TouchableOpacity>
-            <View style={styles.textPopUpcontent}>
+            <View style={styles.createPopUpcontent}>
               <BasicText
-                text={title}
-                fontSize={theme.fontSize.size16}
+                text={departureDateTime}
+                fontSize={theme.fontSize.size14}
                 color={theme.colors.black}
-                style={styles.titleText}
+                style={styles.timeText}
               />
+
+              <View style={styles.positionContainer}>
+                <SVG name="location_line" width={18} height={18}/>
+                <BasicText
+                  text={departureLocation}
+                  fontSize={theme.fontSize.size18}
+                  color={theme.colors.black}
+                  style={styles.departureText}
+                />
+                <SVG name="arrow_right_line" width={18} height={18}/>
+                <BasicText
+                  text={destination}
+                  fontSize={theme.fontSize.size18}
+                  color={theme.colors.black}
+                  style={styles.departureText}
+                />
+              </View>
+
               <BasicText
-                text={message}
-                fontSize={theme.fontSize.size16}
+                text="위 경로로 갈대를 생성하시겠습니까?"
+                fontSize={theme.fontSize.size14}
                 color={theme.colors.black}
-                style={styles.textPopUpText}
+                style={styles.timeText}
               />
+
               <View style={styles.cancelContainer}>
                 <BasicButton
-                  text={buttonText}
+                  text="생성하기"
                   textStyle={styles.cancelBtnText}
                   buttonStyle={styles.cancelBtn}
                   enabledColors={{
@@ -66,4 +85,4 @@ export interface DeletePopupProps {
     );
   };
 
-export default DeletePopup;
+export default CreateGaldaePopup;

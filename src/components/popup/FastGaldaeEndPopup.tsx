@@ -18,10 +18,11 @@ export interface FastGaldaeEndPopupRef {
 
 export interface FastGaldaePopupProps {
   onClose?: () => void;
+  onConfirm?: (largeCategory: string, smallCategory: string) => void;
 }
 
 const FastGaldaePopup = forwardRef<FastGaldaeEndPopupRef, FastGaldaePopupProps>(
-  ({ onClose }, ref) => {
+  ({ onClose,onConfirm }, ref) => {
     const modalizeRef = useRef<Modalize>(null);
     const pictureModalRef = useRef<Modalize>(null);
     // 대분류와 소분류 선택 상태 (더미 데이터)
@@ -29,6 +30,7 @@ const FastGaldaePopup = forwardRef<FastGaldaeEndPopupRef, FastGaldaePopupProps>(
     const [smallCategory, setSmallCategory] = useState<string>('');
 
     const handleSelectConfirm = () =>{
+      onConfirm && onConfirm(largeCategory, smallCategory);
       modalizeRef.current?.close();
     };
 
@@ -104,6 +106,7 @@ const FastGaldaePopup = forwardRef<FastGaldaeEndPopupRef, FastGaldaePopupProps>(
             <ScrollView style={styles.selectContainer}>
               <View style={styles.select}>
                 <SelectTextButton text={'학교'} onPress={()=>toggleLargeCategory('학교')}
+                selected={largeCategory === '학교'}
                 unselectedColors={
                   {
                     backgroundColor:theme.colors.transparent,
@@ -121,6 +124,7 @@ const FastGaldaePopup = forwardRef<FastGaldaeEndPopupRef, FastGaldaePopupProps>(
                 buttonStyle={styles.selectBtn}
                 textStyle={styles.selectText}/>
                 <SelectTextButton text={'모시래'} onPress={() => toggleLargeCategory('모시래')}
+                selected={largeCategory === '모시래'}
                 unselectedColors={
                   {
                     backgroundColor:theme.colors.transparent,
@@ -144,6 +148,7 @@ const FastGaldaePopup = forwardRef<FastGaldaeEndPopupRef, FastGaldaePopupProps>(
             <ScrollView style={styles.selectContainer}>
                 <View style={styles.select}>
                 <SelectTextButton text={'정문'}  onPress={() => setSmallCategory('정문')}
+                selected={smallCategory === '정문'}
                 unselectedColors={
                   {
                     backgroundColor:theme.colors.transparent,
@@ -162,6 +167,7 @@ const FastGaldaePopup = forwardRef<FastGaldaeEndPopupRef, FastGaldaePopupProps>(
                 textStyle={styles.selectText}/>
 
               <SelectTextButton text={'후문'}  onPress={() => setSmallCategory('후문')}
+                selected={smallCategory === '후문'}
                 unselectedColors={
                   {
                     backgroundColor:theme.colors.transparent,
@@ -182,24 +188,26 @@ const FastGaldaePopup = forwardRef<FastGaldaeEndPopupRef, FastGaldaePopupProps>(
             </ScrollView>
 
           </View>
+        </View>
 
-          <BasicButton
-            text="완료"
-            disabled={!(largeCategory && smallCategory)}
-            onPress={handleSelectConfirm}
-            buttonStyle={styles.confirmButton}
-            textStyle={styles.confirmText}
-            enabledColors={{
-              backgroundColor: theme.colors.brandColor,
-              textColor: theme.colors.white,
-              borderColor:theme.colors.transparent,
-            }}
-            disabledColors={{
-              backgroundColor: theme.colors.lightGray,
-              textColor: theme.colors.black,
-              borderColor:theme.colors.transparent,
-            }}
-          />
+        <View style={styles.confirmBtnContainer}>
+        <BasicButton
+             text="완료"
+             disabled={!(largeCategory && smallCategory)}
+             onPress={handleSelectConfirm}
+             buttonStyle={styles.confirmButton}
+             textStyle={styles.confirmText}
+             enabledColors={{
+               backgroundColor: theme.colors.brandColor,
+               textColor: theme.colors.white,
+               borderColor:theme.colors.transparent,
+             }}
+             disabledColors={{
+               backgroundColor: theme.colors.lightGray,
+               textColor: theme.colors.black,
+               borderColor:theme.colors.transparent,
+             }}
+           />
         </View>
         <BigPictureModal
         ref={pictureModalRef}

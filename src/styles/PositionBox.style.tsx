@@ -11,7 +11,7 @@ export default StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         borderWidth: 2,
-        borderColor: '#F8F8F8',
+        borderColor: theme.colors.lightGray,
         backgroundColor: theme.colors.white,
         borderRadius: 10,
     },
@@ -21,19 +21,19 @@ export default StyleSheet.create({
         borderColor: theme.colors.brandColor,
         borderWidth: 1,
         color: theme.colors.brandColor,
-        fontSize: 12,
-        textAlign: 'center',
-        marginBottom: moderateScale(10),
-        borderRadius: 999,
+        fontSize: theme.fontSize.size14,
+        marginBottom: moderateScale(12),
     },
     title: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: theme.colors.black,
+        fontSize: theme.fontSize.size18,
+        //marginBottom: (4),
+        fontWeight: '700',
+        lineHeight: (22), // 예시 값
     },
     subTitle: {
-        fontSize: 14,
-        fontWeight: '600',
+        fontSize: theme.fontSize.size16,
+        fontWeight: '500',
         color: theme.colors.gray1,
-    }
+        lineHeight: (22), // mainPosName과 동일하게 지정
+    },
 });

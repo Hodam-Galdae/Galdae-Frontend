@@ -29,6 +29,7 @@ export interface SVGTextButtonProps {
   buttonStyle?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
   SVGStyle?:StyleProp<ViewStyle>;
+  style?:StyleProp<ViewStyle>;
   text: string;
   // 아이콘 이름은 '../assets/svg/index.ts'에서 export한 키(key)여야 합니다.
   iconName: keyof typeof svgIcons;
@@ -45,6 +46,7 @@ export interface SVGTextButtonProps {
 const SVGTextButton: React.FC<SVGTextButtonProps> = React.memo(({
   buttonStyle,
   textStyle,
+  style,
   SVGStyle,
   text,
   iconName,
@@ -90,7 +92,7 @@ const SVGTextButton: React.FC<SVGTextButtonProps> = React.memo(({
       );
     } else {
       return (
-        <>
+        < >
           <BasicText style={[styles.buttonText, { color: colors.textColor }, textStyle]}>
             {text}
           </BasicText>
@@ -124,7 +126,7 @@ const SVGTextButton: React.FC<SVGTextButtonProps> = React.memo(({
         {loading ? (
           <ActivityIndicator size="small" color={colors.textColor} />
         ) : (
-          <View style={styles.contentContainer}>
+          <View style={[styles.contentContainer ,style]}>
             {renderContent()}
           </View>
         )}
