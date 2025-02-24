@@ -24,7 +24,7 @@ export interface DeletePopupProps {
     title = '선택하신 갈대를',
     message = '삭제하시겠습니까?',
     containerStyle,
-    buttonText="삭제하기",
+    buttonText = '삭제하기',
   }) => {
     return (
       <Modal transparent={true} visible={visible} animationType="fade">

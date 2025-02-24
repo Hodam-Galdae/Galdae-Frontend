@@ -16,7 +16,9 @@ import SetDestination from './src/screens/SetDestination';
 import axios, {AxiosResponse, InternalAxiosRequestConfig} from 'axios';
 import {errorLogger, requestLogger, responseLogger} from 'axios-logger';
 import Settlement from './src/screens/Settlement';
-
+import Payment from './src/screens/myinfo/Payment';
+import MyGaldae from './src/screens/myinfo/MyGaldae';
+import MyGaldaeHistory from './src/screens/myinfo/MyGaldaeHistory';
 function App() {
     useEffect(() => {
         if (Platform.OS === 'android') {
@@ -89,7 +91,9 @@ function App() {
                         <Stack.Screen name="MainTab" component={MainTab} />
                         <Stack.Screen name="ChatRoom" component={ChatRoom}/>
                         <Stack.Screen name="Settlement" component={Settlement}/>
-
+                        <Stack.Screen name="Payment" component={Payment}/>
+                        <Stack.Screen name="MyGaldae" component={MyGaldae}/>
+                        <Stack.Screen name="MyGaldaeHistory" component={MyGaldaeHistory}/>
                     </Stack.Navigator>
                 </NavigationContainer>
             </SafeAreaProvider>
