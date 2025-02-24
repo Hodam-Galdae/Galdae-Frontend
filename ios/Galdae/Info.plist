@@ -48,11 +48,13 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>${PRODUCT_NAME) would like access to your photo gallery</string>
 	<key>NSCameraUsageDescription</key>
-	<string>${PRODUCT_NAME) would like to use your camera</string>
+	<string>카메라 사용을 위한 권한이 필요합니다.</string>
+
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>갤러리 접근을 위한 권한이 필요합니다.</string>
+
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>${PRODUCT_NAME) would like to save photos to your photo gallery</string>
+	<string>사진 저장을 위한 권한이 필요합니다.</string>
 </dict>
 </plist>
