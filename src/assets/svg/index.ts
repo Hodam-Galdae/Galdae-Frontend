@@ -49,4 +49,6 @@ export {default as GalleryBlack} from './GalleryBlack.svg';
 export {default as CancelBlack} from './CancelBlack.svg';
 export {default as DownArrow} from './DownArrow.svg';
 export {default as UpArrow} from './UpArrow.svg';
+export {default as PictureGray} from './PictureGray.svg';
+export {default as Alert} from './Alert.svg';
 

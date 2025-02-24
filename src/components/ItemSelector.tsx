@@ -9,9 +9,10 @@ export interface ItemSelectorProps {
     items: string[],
     selected: number,
     setSelected: React.Dispatch<React.SetStateAction<number>>
+    style?: any,
 }
 
-const ItemSelector: React.FC<ItemSelectorProps> = ({hint, items, selected, setSelected}) => {
+const ItemSelector: React.FC<ItemSelectorProps> = ({hint, items, selected, setSelected, style}) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const animatedHeight = useRef(new Animated.Value(0)).current;
     const contentRef = useRef<View>(null);
@@ -53,7 +54,7 @@ const ItemSelector: React.FC<ItemSelectorProps> = ({hint, items, selected, setSe
     };
 
     return (
-        <View ref={contentRef} style={[styles.container]}>
+        <View ref={contentRef} style={[styles.container, style]}>
             <TouchableOpacity onPress={toggle}>
                 <View style={styles.selectContainer}>
                     <BasicText text={selected < 0 ? hint : items[selected]} style={styles.text}/>

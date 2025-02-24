@@ -25,6 +25,8 @@ import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import SettlementRequestPopup from '../components/popup/SettlementRequestPopup';
 import {SettlementRequestPopupRef} from '../components/popup/SettlementRequestPopup';
 import ReportModal from '../components/popup/ReportModal';
+import ChatRoomExitModal from '../components/popup/ChatRoomExitModal';
+import ReportCheckModal from '../components/popup/ReportCheckModal';
 
 enum Type {
   MESSAGE,
@@ -91,6 +93,8 @@ const ChatRoom: React.FC = () => {
   const [showExtraView, setShowExtraView] = useState<boolean>(false);
   const [keyboardHeight, setKeyboardHeight] = useState<number>(0);
   const [isVisibleReportPopup, setIsVisibleReportPopup] = useState<boolean>(false);
+  const [isVisibleReportCheckPopup, setIsVisibleReportCheckPopup] = useState<boolean>(false);
+  const [isVisibleExitPopup, setIsVisibleExitPopup] = useState<boolean>(false);
   const chatListRef = useRef<FlatList>(null);
   const {imageUri, getImageByCamera, getImageByGallery} = useImagePicker();
   const navigation =
@@ -103,6 +107,7 @@ const ChatRoom: React.FC = () => {
   const translateX = useRef(new Animated.Value(SIDE_MENU_WIDTH)).current;
   const translateY = useRef(new Animated.Value(100)).current;
   const {params} = useRoute<RouteProp<RootStackParamList, 'ChatRoom'>>();
+  const reportData = useRef({member: {}, reason: ''});
   const chatRoomData = params.data;
 
   const panResponder = useRef(
@@ -271,6 +276,23 @@ const ChatRoom: React.FC = () => {
     }).start();
   };
 
+  const checkReportUser = (reason: string) => {
+    reportData.current.reason = reason;
+    setIsVisibleReportPopup(false);
+    setIsVisibleReportCheckPopup(true);
+  };
+
+  const reportUser = () => {
+    setIsVisibleReportCheckPopup(false);
+    console.log(reportData.current);
+    // TODO: 신고하기
+  };
+
+  const startReportUser = (member: Member) => {
+    setIsVisibleReportPopup(true);
+    reportData.current.member = member;
+  };
+
   const openSettlement = () => {
     //TODO: 방장만 열 수 있게
     Keyboard.dismiss();
@@ -392,7 +414,7 @@ const ChatRoom: React.FC = () => {
                     <BasicButton
                       textStyle={styles.menuUserBtnText}
                       buttonStyle={styles.menuUserBtn}
-                      onPress={()=>setIsVisibleReportPopup(true)}
+                      onPress={()=>startReportUser(e)}
                       text="신고하기"
                     />
                   ) : null}
@@ -400,7 +422,7 @@ const ChatRoom: React.FC = () => {
               );
             })}
           </View>
-          <SVGButton iconName="Exit" buttonStyle={styles.exitIcon} />
+          <SVGButton onPress={()=>setIsVisibleExitPopup(true)} iconName="Exit" buttonStyle={styles.exitIcon} />
         </Animated.View>
         <FlatList
           ref={chatListRef}
@@ -486,7 +508,10 @@ const ChatRoom: React.FC = () => {
           ref={settlementRequestPopupRef}
         />
 
-        <ReportModal visible={isVisibleReportPopup} onConfirm={()=>setIsVisibleReportPopup(false)} onCancel={()=>setIsVisibleReportPopup(false)}/>
+        <ChatRoomExitModal visible={isVisibleExitPopup} onConfirm={()=>setIsVisibleExitPopup(false)} onCancel={()=>setIsVisibleExitPopup(false)}/>
+
+        <ReportModal visible={isVisibleReportPopup} onConfirm={checkReportUser} onCancel={()=>setIsVisibleReportPopup(false)}/>
+        <ReportCheckModal visible={isVisibleReportCheckPopup} onConfirm={reportUser} onCancel={()=>setIsVisibleReportCheckPopup(false)}/>
       </View>
     </KeyboardAvoidingView>
   );

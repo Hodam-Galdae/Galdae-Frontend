@@ -8,6 +8,7 @@ export default StyleSheet.create({
         borderWidth: 2,
         borderColor: theme.colors.lightGray,
         borderRadius: 10,
+        backgroundColor: theme.colors.white,
     },
     text: {
       fontSize: theme.fontSize.size14,
@@ -15,6 +16,7 @@ export default StyleSheet.create({
       color: theme.colors.gray2,
     },
     selectContainer: {
+      backgroundColor: theme.colors.white,
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
