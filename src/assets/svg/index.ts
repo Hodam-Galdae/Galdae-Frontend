@@ -46,4 +46,7 @@ export {default as Kebab} from './Kebab.svg';
 export {default as Exit} from './Exit.svg';
 export {default as Bank} from './Bank.svg';
 export {default as GalleryBlack} from './GalleryBlack.svg';
+export {default as CancelBlack} from './CancelBlack.svg';
+export {default as DownArrow} from './DownArrow.svg';
+export {default as UpArrow} from './UpArrow.svg';
 

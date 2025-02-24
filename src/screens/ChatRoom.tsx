@@ -8,10 +8,8 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   KeyboardEvent,
-  TouchableWithoutFeedback,
   Animated,
   Dimensions,
-  TouchableOpacity,
 } from 'react-native';
 import {RouteProp, useRoute} from '@react-navigation/native';
 import styles from '../styles/ChatRoom.style';
@@ -26,6 +24,8 @@ import {useNavigation} from '@react-navigation/native';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import SettlementRequestPopup from '../components/popup/SettlementRequestPopup';
 import {SettlementRequestPopupRef} from '../components/popup/SettlementRequestPopup';
+import ReportModal from '../components/popup/ReportModal';
+
 enum Type {
   MESSAGE,
   ENTER,
@@ -90,7 +90,7 @@ const ChatRoom: React.FC = () => {
   const [message, setMessage] = useState<string>('');
   const [showExtraView, setShowExtraView] = useState<boolean>(false);
   const [keyboardHeight, setKeyboardHeight] = useState<number>(0);
-  const [sideMenuOpen, setSideMenuOpen] = useState<boolean>(false);
+  const [isVisibleReportPopup, setIsVisibleReportPopup] = useState<boolean>(false);
   const chatListRef = useRef<FlatList>(null);
   const {imageUri, getImageByCamera, getImageByGallery} = useImagePicker();
   const navigation =
@@ -216,6 +216,7 @@ const ChatRoom: React.FC = () => {
     return () => {
       keyboardDidShowListener.remove();
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   //채팅 추가될 때 마다 자동 스크롤
@@ -227,15 +228,6 @@ const ChatRoom: React.FC = () => {
       );
     }
   }, [data]);
-
-  const toggleSideMenu = () => {
-    Animated.timing(translateX, {
-      toValue: sideMenuOpen ? SIDE_MENU_WIDTH : 0, // 열고 닫기 애니메이션
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-    setSideMenuOpen(!sideMenuOpen);
-  };
 
   const toggleExtraView = () => {
     if (showExtraView) {
@@ -345,7 +337,7 @@ const ChatRoom: React.FC = () => {
   );
 
   useEffect(() => {
-    if (imageUri != undefined) {
+    if (imageUri !== undefined) {
       setData([
         ...data,
         {
@@ -357,12 +349,13 @@ const ChatRoom: React.FC = () => {
         },
       ]);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [imageUri]);
 
   return (
     <KeyboardAvoidingView style={styles.rootContainer} behavior={'padding'}>
       <View style={styles.container}>
-        <SVGButton iconName="Kebab" onPress={toggleSideMenu} />
+        <SVGButton iconName="Kebab" onPress={openSideMenu} />
         {/* 사이드바 */}
         <Animated.View
           {...panResponder.panHandlers}
@@ -380,7 +373,7 @@ const ChatRoom: React.FC = () => {
           <View style={styles.menuUserList}>
             {chatRoomData.currentPerson.map(e => {
               return (
-                <View style={styles.menuUserContainer}>
+                <View key={e.id} style={styles.menuUserContainer}>
                   <View style={styles.menuUserWrapper}>
                     <SVG
                       width={46}
@@ -389,16 +382,17 @@ const ChatRoom: React.FC = () => {
                       style={styles.menuUserIcon}
                     />
                     <BasicText style={styles.menuUserText} text={e.name} />
-                    {e.name == 'donghyun' ? (
+                    {e.name === 'donghyun' ? (
                       <View style={styles.menuUserMe}>
                         <BasicText style={styles.menuUserMeText} text="나" />
                       </View>
                     ) : null}
                   </View>
-                  {e.name != 'donghyun' ? (
+                  {e.name !== 'donghyun' ? (
                     <BasicButton
                       textStyle={styles.menuUserBtnText}
                       buttonStyle={styles.menuUserBtn}
+                      onPress={()=>setIsVisibleReportPopup(true)}
                       text="신고하기"
                     />
                   ) : null}
@@ -491,6 +485,8 @@ const ChatRoom: React.FC = () => {
           chatRoomData={chatRoomData}
           ref={settlementRequestPopupRef}
         />
+
+        <ReportModal visible={isVisibleReportPopup} onConfirm={()=>setIsVisibleReportPopup(false)} onCancel={()=>setIsVisibleReportPopup(false)}/>
       </View>
     </KeyboardAvoidingView>
   );
