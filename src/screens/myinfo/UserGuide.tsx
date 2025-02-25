@@ -36,7 +36,7 @@ const UserGuide: React.FC<HomeProps> = () => {
             />
 
             <View style={styles.content}>
-                <BasicText text="현재 정산 계좌" style={styles.title}/>
+                <BasicText text="준비중입니다." style={styles.title}/>
             </View>
       </View>
     );

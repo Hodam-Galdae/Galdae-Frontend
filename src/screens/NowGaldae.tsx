@@ -1,5 +1,5 @@
 import React,{useRef,useState} from 'react';
-import {  View ,ScrollView} from 'react-native';
+import {  View } from 'react-native';
 import { useRoute, RouteProp } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
 import styles from '../styles/NowGaldae.style';
@@ -16,10 +16,11 @@ import FloatingButton from '../components/button/FloatingButton';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import ArrayPopup, { FastGaldaeTimePopupRef } from '../components/popup/ArrayPopup';
 import FilterPopup from '../components/popup/FilterPopup';
+import { FlatList } from 'react-native-gesture-handler';
 type HomeProps = {
-  navigation: any; // 실제 프로젝트에서는 proper type 사용 권장 (예: StackNavigationProp)
+  navigation: any;
 };
-// 내비게이션 스택 타입 정의
+
 type RootStackParamList = {
     CreateGaldae: undefined;
     NowGaldae: {
@@ -172,52 +173,52 @@ const NowGaldae: React.FC<HomeProps> = () => {
       )
     : dummyGaldaeData;
 
-// 추가 필터(날짜/시간, 성별, 시간협의, 탑승인원) 적용
-let finalFilteredData = baseFilteredData;
-if (filterOptions.selectedDate) {
-  // filterOptions.selectedDate를 기준으로 시간 필터링
-  let filterTimestamp =
-    new Date(filterOptions.selectedDate).getTime() +
-    (filterOptions.selectedHour * 3600 + filterOptions.selectedMinute * 60) * 1000;
-  // 오전/오후 보정: '오후'이면 12시간 추가 (단, selectedHour가 12 미만일 경우)
-  if (filterOptions.selectedAmPm === '오후' && filterOptions.selectedHour < 12) {
-    filterTimestamp += 12 * 3600 * 1000;
-  }
-  // 예시: 선택한 시간과 1시간 이내에 해당하는 항목만 통과
-  finalFilteredData = finalFilteredData.filter(
-    (item) => Math.abs(item.timestamp - filterTimestamp) <= 3600000
-  );
-}
-// 성별 필터 (0: 성별무관, 1: 여자만, 2: 남자만)
-if (filterOptions.selectedGender !== 0) {
-  if (filterOptions.selectedGender === 1) {
-    finalFilteredData = finalFilteredData.filter((item) =>
-      item.tags.includes('여자만')
-    );
-  } else if (filterOptions.selectedGender === 2) {
-    finalFilteredData = finalFilteredData.filter((item) =>
-      item.tags.includes('남자만')
+  // 추가 필터(날짜/시간, 성별, 시간협의, 탑승인원) 적용
+  let finalFilteredData = baseFilteredData;
+  if (filterOptions.selectedDate) {
+    // filterOptions.selectedDate를 기준으로 시간 필터링
+    let filterTimestamp =
+      new Date(filterOptions.selectedDate).getTime() +
+      (filterOptions.selectedHour * 3600 + filterOptions.selectedMinute * 60) * 1000;
+    // 오전/오후 보정: '오후'이면 12시간 추가 (단, selectedHour가 12 미만일 경우)
+    if (filterOptions.selectedAmPm === '오후' && filterOptions.selectedHour < 12) {
+      filterTimestamp += 12 * 3600 * 1000;
+    }
+    // 예시: 선택한 시간과 1시간 이내에 해당하는 항목만 통과
+    finalFilteredData = finalFilteredData.filter(
+      (item) => Math.abs(item.timestamp - filterTimestamp) <= 3600000
     );
   }
-}
-// 시간 협의 필터 (0: 가능, 1: 불가능)
-finalFilteredData = finalFilteredData.filter(
-  (item) => item.timeAgreement === (filterOptions.selectedTimeDiscuss === 0)
-);
-// 탑승 인원 필터: (본인을 제외한 여유 좌석이 passengerNumber 이상)
-if (filterOptions.passengerNumber > 0) {
+  // 성별 필터 (0: 성별무관, 1: 여자만, 2: 남자만)
+  if (filterOptions.selectedGender !== 0) {
+    if (filterOptions.selectedGender === 1) {
+      finalFilteredData = finalFilteredData.filter((item) =>
+        item.tags.includes('여자만')
+      );
+    } else if (filterOptions.selectedGender === 2) {
+      finalFilteredData = finalFilteredData.filter((item) =>
+        item.tags.includes('남자만')
+      );
+    }
+  }
+  // 시간 협의 필터 (0: 가능, 1: 불가능)
   finalFilteredData = finalFilteredData.filter(
-    (item) => item.capacity - item.users >= filterOptions.passengerNumber
+    (item) => item.timeAgreement === (filterOptions.selectedTimeDiscuss === 0)
   );
-}
+  // 탑승 인원 필터: (본인을 제외한 여유 좌석이 passengerNumber 이상)
+  if (filterOptions.passengerNumber > 0) {
+    finalFilteredData = finalFilteredData.filter(
+      (item) => item.capacity - item.users >= filterOptions.passengerNumber
+    );
+  }
 
-    const sortedData = [...finalFilteredData].sort((a, b) => {
-      if (sortOrder === 'latest') {
-        return b.timestamp - a.timestamp;
-      } else {
-        return a.timestamp - b.timestamp;
-      }
-    });
+  const sortedData = [...finalFilteredData].sort((a, b) => {
+    if (sortOrder === 'latest') {
+      return b.timestamp - a.timestamp;
+    } else {
+      return a.timestamp - b.timestamp;
+    }
+  });
   return (
     <View style={styles.main}>
         <Header
@@ -305,24 +306,28 @@ if (filterOptions.passengerNumber > 0) {
               </View>
             </View>
 
-              {sortedData.length === 0 ? (
-                <View style={styles.noData}>
-                  <SVG name="information_line" />
-                  <BasicText text="해당 경로의 갈대가 없습니다." color={theme.colors.gray1}/>
-                </View>
-              ) : (
-                <ScrollView style={styles.scroll}>
-                <View style={styles.nowGaldaeList}>
-                  {sortedData.map(item => (
-                    <GaldaeItem
-                      key={item.id}
-                      item={item}
-                      onPress={() => navigation.navigate('NowGaldaeDetail', { item })}
-                    />
-                  ))}
-                </View>
-                </ScrollView>
-              )}
+            {sortedData.length === 0 ? (
+
+              <View style={styles.noData}>
+                <SVG name="information_line" />
+                <BasicText text="해당 경로의 갈대가 없습니다." color={theme.colors.gray1} />
+              </View>
+            ) : (
+
+              <FlatList
+                style={styles.scroll}
+                contentContainerStyle={styles.nowGaldaeList}
+                data={sortedData}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={({ item }) => (
+                  <GaldaeItem
+                    key={item.id}
+                    item={item}
+                    onPress={() => navigation.navigate('NowGaldaeDetail', { item })}
+                  />
+                )}
+              />
+            )}
 
 
         </View>

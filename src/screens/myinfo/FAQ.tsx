@@ -1,10 +1,13 @@
-import React from 'react';
+import React ,{useState} from 'react';
 import {  View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import styles from '../../styles/Payment.style';
+import styles from '../../styles/FAQ.style';
 import Header from '../../components/Header';
 import SVGButton from '../../components/button/SVGButton';
 import BasicText from '../../components/BasicText';
+import Tabs from '../../components/Tabs';
+import FAQList from './FAQList';
+import InquiryHistory from './InquiryHistory';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 type HomeProps = {
@@ -25,9 +28,22 @@ type RootStackParamList = {
 };
 
 type nowGaldaeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
+
 const FAQ: React.FC<HomeProps> = () => {
+    const [tab, setTab] = useState(0);
     const navigation = useNavigation<nowGaldaeScreenNavigationProp>();
     const goBack = () => navigation.goBack();
+    // 현재 탭에 따라 다른 화면을 렌더링
+    const renderTabContent = () => {
+      if (tab === 0) {
+        // 자주 묻는 질문 탭
+        return <FAQList />;
+      } else {
+        // 문의하기 기록 탭
+        return <InquiryHistory />;
+      }
+    };
+
     return (
       <View style={styles.container}>
             <Header
@@ -36,7 +52,12 @@ const FAQ: React.FC<HomeProps> = () => {
             />
 
             <View style={styles.content}>
-                <BasicText text="현재 정산 계좌" style={styles.title}/>
+            <Tabs
+              menus={['자주 묻는 질문', '문의하기 기록']}
+              onSelectHandler={(index) => setTab(index)}
+              selectedIndex={tab}
+            />
+            {renderTabContent()}
             </View>
       </View>
     );

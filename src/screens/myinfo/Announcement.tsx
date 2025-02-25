@@ -1,5 +1,5 @@
 import React,{useState} from 'react';
-import {  ScrollView, TouchableOpacity, View } from 'react-native';
+import {  ScrollView, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from '../../styles/Payment.style';
 import Header from '../../components/Header';
@@ -7,21 +7,8 @@ import SVGButton from '../../components/button/SVGButton';
 import BasicText from '../../components/BasicText';
 import SVG from '../../components/SVG';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import TextTag from '../../components/tag/TextTag';
-import { theme } from '../../styles/theme';
-// 문자열 -> 실제 색상코드 매핑 함수
-const getColor = (colorName: string) => {
-  switch (colorName) {
-    case 'green':
-      return '#00AA00';
-    case 'red':
-      return '#FF3333';
-    case 'blue':
-      return '#0066FF';
-    default:
-      return '#999999';
-  }
-};
+import NoticeItem from '../../components/NoticeItem';
+
 type HomeProps = {
   navigation: any; // 실제 프로젝트에서는 proper type 사용 권장 (예: StackNavigationProp)
 };
@@ -221,43 +208,14 @@ const Announcement: React.FC<HomeProps> = () => {
                 <BasicText text="알림 받기를 설정하고 유용한 알림들을 받아보세요." style={styles.notiTitleText}/>
               </View>
               <View>
-                {notiList.map((noti) => {
-                  // color를 매핑해서 사용
-                const mappedColor = getColor(noti.color);
-                return (
-                 <View>
-                   <TouchableOpacity key={noti.id} style={styles.notiBox} onPress={()=>handleNotiDetail(noti.id)}>
-                    <View style={styles.tagContainer}>
-                     <TextTag
-                        text={noti.tag}
-                        viewStyle={styles.notiTag}
-                        textStyle={styles.notiTagText}
-                        enabledColors={{
-                          backgroundColor: theme.colors.white,
-                          textColor: mappedColor,
-                          borderColor: mappedColor,
-                        }}
-                     />
-                    </View>
-                    <View style={styles.notiBoxContent}>
-                      <BasicText text={noti.content} style={styles.notiBoxContentText} onPress={()=>handleNotiDetail(noti.id)}/>
-                      <SVGButton iconName={expandedId === noti.id ? 'up_line_black' : 'down' } onPress={()=>handleNotiDetail(noti.id)}/>
-                    </View>
-                  </TouchableOpacity>
-
-                  {/* 상세 내용 (펼쳐진 상태일 때만 표시) */}
-                  {expandedId === noti.id && (
-                    <View style={styles.notiDetailContainer}>
-                      {/* 예시: 상세 설명 or 이미지 등 */}
-                      <BasicText text={noti.title} style={styles.texts}/>
-                      <BasicText text={noti.important} color={mappedColor} style={styles.texts}/>
-                      <BasicText text={noti.main} style={styles.texts}/>
-                      <BasicText text={noti.footer} style={styles.texts}/>
-                    </View>
-                  )}
-                 </View>
-                );
-              })}
+              {notiList.map((noti) => (
+                <NoticeItem
+                  key={noti.id}
+                  noti={noti}
+                  isExpanded={expandedId === noti.id}
+                  onToggle={handleNotiDetail}
+                />
+              ))}
               <View style={styles.line} />
         </View>
           </ScrollView>

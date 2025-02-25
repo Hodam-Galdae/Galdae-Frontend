@@ -1,5 +1,5 @@
 import React,{} from 'react';
-import {  View,ScrollView } from 'react-native';
+import {  View,FlatList } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from '../../styles/Payment.style';
 import Header from '../../components/Header';
@@ -7,10 +7,9 @@ import SVGButton from '../../components/button/SVGButton';
 import BasicText from '../../components/BasicText';
 import { theme } from '../../styles/theme';
 import SVGTextButton from '../../components/button/SVGTextButton';
-import TextTag from '../../components/tag/TextTag';
 import BasicButton from '../../components/button/BasicButton';
-import SVG from '../../components/SVG';
 import GaldaeItem from '../../components/GaldaeItem';
+import FrequentRouteItem from '../../components/FrequentRouteItem';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 type HomeProps = {
@@ -220,41 +219,23 @@ const MyGaldae: React.FC<HomeProps> = () => {
                 )}
 
                 <BasicText text="자주가는 경로" style={styles.freqText}/>
-                <ScrollView style={styles.searchList}>
-                {dummySearchHistory.map((history) => (
-                  <View key={history.id} style={styles.searchListBox}>
-                    <View style={styles.startContain}>
-                      <TextTag
-                        text={history.start.label}
-                        viewStyle={styles.start}
-                        enabledColors={{
-                          backgroundColor: theme.colors.white,
-                          textColor: theme.colors.brandColor,
-                          borderColor: theme.colors.brandColor,
-                        }}
+                <FlatList
+                  style={styles.searchList}
+                  data={dummySearchHistory}
+                  keyExtractor={(routeItem) => routeItem.id.toString()}
+                  renderItem={({ item: routeItem }) => (
+                    <FrequentRouteItem key={routeItem.id} routeData={routeItem} />
+                  )}
+                  // 2) 리스트가 비었을 때 표시할 내용 (선택)
+                  ListEmptyComponent={
+                    <View style={styles.borderBox}>
+                      <BasicText
+                        text="기록이 없습니다."
+                        style={styles.noGaldaeText}
                       />
-                      <BasicText text={history.start.main} style={styles.mainPosName} />
-                      <BasicText text={history.start.sub} style={styles.subPosName} />
                     </View>
-
-                    <SVG name="arrow_right_line" width={22} height={22} style={styles.arrowRight} />
-
-                    <View style={styles.startContain}>
-                      <TextTag
-                        text={history.end.label}
-                        viewStyle={styles.start}
-                        enabledColors={{
-                          backgroundColor: theme.colors.white,
-                          textColor: theme.colors.brandColor,
-                          borderColor: theme.colors.brandColor,
-                        }}
-                      />
-                      <BasicText text={history.end.main} style={styles.mainPosName} />
-                      <BasicText text={history.end.sub} style={styles.subPosName} />
-                    </View>
-                  </View>
-                ))}
-                </ScrollView>
+                  }
+                />
 
                 <BasicButton
                     text="갈대 생성하기"
