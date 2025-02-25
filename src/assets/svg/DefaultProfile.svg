@@ -1,13 +1,13 @@
-<svg width="68" height="68" viewBox="0 0 68 68" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g id="Group 927">
-<circle id="Ellipse 436" cx="34" cy="34" r="34" fill="#D7D7D7"/>
+<circle id="Ellipse 436" cx="14" cy="14" r="14" fill="#D7D7D7"/>
 <g id="Mask group">
-<mask id="mask0_2246_20066" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="68" height="68">
-<circle id="Ellipse 438" cx="34" cy="34" r="34" fill="#D9D9D9"/>
+<mask id="mask0_2239_14924" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="28" height="28">
+<circle id="Ellipse 438" cx="14" cy="14" r="14" fill="#D9D9D9"/>
 </mask>
-<g mask="url(#mask0_2246_20066)">
-<ellipse id="Ellipse 439" cx="34" cy="60.871" rx="25.2258" ry="21.3871" fill="#9C9C9C"/>
-<circle id="Ellipse 437" cx="34" cy="24.1289" r="10.9677" fill="#9C9C9C"/>
+<g mask="url(#mask0_2239_14924)">
+<ellipse id="Ellipse 439" cx="14.0004" cy="25.0649" rx="10.3871" ry="8.80645" fill="#9C9C9C"/>
+<circle id="Ellipse 437" cx="13.9995" cy="9.93581" r="4.51613" fill="#9C9C9C"/>
 </g>
 </g>
 </g>

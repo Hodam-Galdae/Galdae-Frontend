@@ -4,7 +4,7 @@ import SVG from '../../components/SVG';
 import BasicText from '../../components/BasicText';
 import BasicButton from '../../components/button/BasicButton';
 import { theme } from '../../styles/theme';
-//import { moderateScale } from '../utils/ScreenScaler';
+//import {  } from '../utils/ScreenScaler';
 import styles from '../../styles/DeletePopup.style';
 
 export interface DeletePopupProps {
@@ -14,6 +14,7 @@ export interface DeletePopupProps {
     title?: string;
     message?: string;
     containerStyle?: StyleProp<ViewStyle>;
+    buttonText?:string;
   }
 
   const DeletePopup: React.FC<DeletePopupProps> = ({
@@ -23,6 +24,7 @@ export interface DeletePopupProps {
     title = '선택하신 갈대를',
     message = '삭제하시겠습니까?',
     containerStyle,
+    buttonText="삭제하기",
   }) => {
     return (
       <Modal transparent={true} visible={visible} animationType="fade">
@@ -35,25 +37,28 @@ export interface DeletePopupProps {
               <BasicText
                 text={title}
                 fontSize={theme.fontSize.size16}
-                color={theme.colors.white}
+                color={theme.colors.black}
+                style={styles.titleText}
               />
               <BasicText
                 text={message}
                 fontSize={theme.fontSize.size16}
-                color={theme.colors.white}
+                color={theme.colors.black}
                 style={styles.textPopUpText}
               />
-              <BasicButton
-                text="삭제하기"
-                textStyle={styles.cancelBtnText}
-                buttonStyle={styles.cancelBtn}
-                enabledColors={{
-                  backgroundColor: theme.colors.white,
-                  textColor: theme.colors.brandColor,
-                  borderColor: theme.colors.transparent,
-                }}
-                onPress={onConfirm}
-              />
+              <View style={styles.cancelContainer}>
+                <BasicButton
+                  text={buttonText}
+                  textStyle={styles.cancelBtnText}
+                  buttonStyle={styles.cancelBtn}
+                  enabledColors={{
+                    backgroundColor: theme.colors.brandColor,
+                    textColor: theme.colors.white,
+                    borderColor: theme.colors.transparent,
+                  }}
+                  onPress={onConfirm}
+                />
+              </View>
             </View>
           </View>
         </View>
