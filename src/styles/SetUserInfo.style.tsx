@@ -15,6 +15,15 @@ export default StyleSheet.create({
     marginBottom: 20,
     marginTop: 30,
   },
+  alertText: {
+    fontSize: theme.fontSize.size12,
+    fontWeight: '500',
+    color: theme.colors.red,
+    marginTop: 6,
+    position: 'absolute',
+    left: 0,
+    bottom: 10,
+  },
   profileContainer: {
     width: '100%',
     justifyContent: 'center',

@@ -4,14 +4,12 @@ import {View, Animated, Image} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import styles from '../styles/SignUp.style';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {theme} from '../styles/theme';
-import BasicText from '../components/BasicText';
-import BasicButton from '../components/button/BasicButton';
 import Agree from './Agree';
 import SetUserInfo from './SetUserInfo';
 import Header from '../components/Header';
 import SVGButton from '../components/button/SVGButton';
 import SVG from '../components/SVG';
+import VerifySchool from './VerifySchool';
 
 type RootStackParamList = {
   Onboarding: undefined;
@@ -35,7 +33,11 @@ const SignUp: React.FC = () => {
     setNowStep(nowStep + 1);
   };
 
-  const steps = [<Agree setNextStep={setNextStep} />, <SetUserInfo />];
+  const steps = [
+    <Agree setNextStep={setNextStep} />,
+    <SetUserInfo setNextStep={setNextStep} />,
+    <VerifySchool />,
+  ];
   const goBack = () => {
     if (nowStep == 0) {
       navigation.goBack();

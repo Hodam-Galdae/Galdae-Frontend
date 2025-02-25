@@ -26,6 +26,7 @@ export {default as Carrier} from './Carrier.svg';
 export {default as Bag} from './Bag.svg';
 export {default as Check} from './Check.svg';
 export {default as CheckSelected} from './CheckSelected.svg';
+export {default as CheckLine} from './CheckLine.svg';
 export {default as LeftArrow} from './LeftArrow.svg';
 export {default as Minus} from './minimize_line 1.svg';
 export {default as Plus} from './add_line 3.svg';
