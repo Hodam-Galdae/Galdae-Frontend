@@ -38,7 +38,7 @@ const Login: React.FC = () => {
   return (
     <View style={styles.container}>
       <View style={styles.allImagesImage}>
-        <Swiper 
+        <Swiper
           controlsProps={{
             dotActiveStyle: { backgroundColor: theme.colors.white },
             nextTitle: '',
