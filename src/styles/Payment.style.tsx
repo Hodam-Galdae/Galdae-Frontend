@@ -81,6 +81,7 @@ export default StyleSheet.create({
     galdaeList:{
         paddingTop:30,
         paddingHorizontal:15,
+        flex:1,
     },
     scroll:{
         height:'85%',

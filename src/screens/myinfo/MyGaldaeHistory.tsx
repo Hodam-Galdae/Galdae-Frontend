@@ -1,7 +1,7 @@
 import React,{useState} from 'react';
-import {  View ,ScrollView} from 'react-native';
+import {  View ,FlatList} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import styles from '../../styles/Payment.style';
+import styles from '../../styles/MyGaldaeHistory.style';
 import Header from '../../components/Header';
 import SVGButton from '../../components/button/SVGButton';
 import BasicText from '../../components/BasicText';
@@ -111,7 +111,26 @@ const MyGaldaeHistory: React.FC<HomeProps> = () => {
 
     const navigation = useNavigation<nowGaldaeScreenNavigationProp>();
     const goBack = () => navigation.goBack();
+    // [FlatList] 데이터가 없을 때 표시할 내용 (ListEmptyComponent)
+    const renderEmptyComponent = () => (
+      <View style={styles.noData}>
+        <SVG name="information_line" />
+        <BasicText text="갈대가 없습니다." color={theme.colors.gray1} />
+      </View>
+    );
 
+    // [FlatList] 각 항목 렌더링
+    const renderGaldaeItem = ({ item }: { item: typeof dummyGaldaeData[0] }) => (
+      <GaldaeItem
+        key={item.id}
+        item={item}
+        onLongPress={() => {
+          setSelectedItem(item);
+          setDeletePopupVisible(true);
+        }}
+        onPress={() => navigation.navigate('NowGaldaeDetail', { item })}
+      />
+    );
   return (
     <View style={styles.main}>
         <Header
@@ -122,28 +141,13 @@ const MyGaldaeHistory: React.FC<HomeProps> = () => {
 
 
              <View style={styles.galdaeList}>
-             {dummyGaldaeData.length === 0 ? (
-                <View style={styles.noData}>
-                  <SVG name="information_line" />
-                  <BasicText text="갈대가 없습니다." color={theme.colors.gray1}/>
-                </View>
-              ) : (
-                <ScrollView style={styles.scroll}>
-                <View style={styles.nowGaldaeList}>
-                  {dummyGaldaeData.map(item => (
-                    <GaldaeItem
-                      key={item.id}
-                      item={item}
-                      onLongPress={() => {
-                        setSelectedItem(item);
-                        setDeletePopupVisible(true);
-                      }}
-                      onPress={() => navigation.navigate('NowGaldaeDetail', { item })}
-                    />
-                  ))}
-                </View>
-                </ScrollView>
-              )}
+              <FlatList
+                contentContainerStyle={styles.nowGaldaeList}
+                data={dummyGaldaeData}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={renderGaldaeItem}
+                ListEmptyComponent={renderEmptyComponent}
+              />
              </View>
              {/* ➏ DeletePopup 연결 */}
             <DeletePopup
