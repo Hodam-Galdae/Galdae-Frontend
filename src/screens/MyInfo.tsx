@@ -14,6 +14,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 type RootStackParamList = {
   Payment: undefined;
   MyGaldae:undefined;
+  NicknameChange:undefined;
 };
 
 type nowGaldaeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -82,9 +83,9 @@ const MyInfo: React.FC = () => {
               </View>
               <View style={styles.userInfoText}>
                 <BasicText text="건국대 글로컬캠퍼스" style={styles.universityText}/>
-                <View style={styles.profileName}>
-                 <BasicText text="하재연" style={styles.nameText}/>
-                 <SVGButton iconName="edit_line"/>
+                <View style={styles.profileName} >
+                 <BasicText text="하재연" style={styles.nameText} onPress={()=>navigation.navigate('NicknameChange')}/>
+                 <SVGButton iconName="edit_line" onPress={()=>navigation.navigate('NicknameChange')}/>
                 </View>
               </View>
             </View>

@@ -17,6 +17,9 @@ export default StyleSheet.create({
     content:{
         paddingHorizontal:15,
         paddingTop:12,
+        flex: 1,
+        justifyContent: 'center',
+        backgroundColor: theme.colors.white,
     },
     title:{
         fontSize:theme.fontSize.size20,

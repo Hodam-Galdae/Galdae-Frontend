@@ -19,6 +19,7 @@ import Settlement from './src/screens/Settlement';
 import Payment from './src/screens/myinfo/Payment';
 import MyGaldae from './src/screens/myinfo/MyGaldae';
 import MyGaldaeHistory from './src/screens/myinfo/MyGaldaeHistory';
+import NicknameChange from './src/screens/myinfo/NicknameChange';
 function App() {
     useEffect(() => {
         if (Platform.OS === 'android') {
@@ -94,6 +95,7 @@ function App() {
                         <Stack.Screen name="Payment" component={Payment}/>
                         <Stack.Screen name="MyGaldae" component={MyGaldae}/>
                         <Stack.Screen name="MyGaldaeHistory" component={MyGaldaeHistory}/>
+                        <Stack.Screen name="NicknameChange" component={NicknameChange}/>
                     </Stack.Navigator>
                 </NavigationContainer>
             </SafeAreaProvider>
