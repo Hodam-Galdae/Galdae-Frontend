@@ -18,7 +18,7 @@ export default StyleSheet.create({
         paddingHorizontal:15,
         paddingTop:12,
         flex: 1,
-        justifyContent: 'center',
+
         backgroundColor: theme.colors.white,
     },
     title:{
@@ -137,5 +137,65 @@ export default StyleSheet.create({
       alignItems:'center',
       justifyContent:'center',
       gap:12,
+    },
+    notiTitleContainer:{
+      marginTop:30,
+      marginBottom:30,
+      backgroundColor:theme.colors.lightGray,
+      alignItems:'center',
+      justifyContent:'center',
+      flexDirection:'row',
+      width:'100%',
+      paddingVertical:11,
+      borderRadius:theme.borderRadius.size10,
+      gap:10,
+    },
+    notiTitleText:{
+      fontSize:theme.fontSize.size14,
+      fontWeight:'500',
+      color:theme.colors.gray2,
+    },
+    notiTag:{
+      paddingHorizontal:10,
+
+    },
+    tagContainer:{
+      flexDirection:'row',
+      alignItems:'center',
+    },
+    notiTagText:{
+      fontSize:theme.fontSize.size14,
+      fontWeight:'500',
+    },
+    notiBox:{
+      borderTopWidth:1,
+      borderColor:theme.colors.gray0,
+      paddingVertical:14,
+      paddingHorizontal:18,
+      gap:10,
+      justifyContent:'flex-start',
+    },
+    notiBoxContent:{
+      flexDirection:'row',
+      justifyContent:'space-between',
+    },
+    notiBoxContentText:{
+      fontSize:theme.fontSize.size16,
+      fontWeight:'500',
+      color:theme.colors.black,
+    },
+    line:{
+      borderTopWidth:1,
+      borderColor:theme.colors.gray0,
+    },
+    notiDetailContainer:{
+      width:'100%',
+      backgroundColor:theme.colors.lightGray,
+      padding:20,
+      gap:20,
+    },
+    texts:{
+      fontWeight:'500',
+      fontSize:theme.fontSize.size14,
     },
 });

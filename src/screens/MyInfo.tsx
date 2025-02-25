@@ -1,11 +1,12 @@
 // MyInfo.tsx 테스트
-import React,{useState} from 'react';
+import React,{useState,useEffect} from 'react';
 import { View,ScrollView,Image } from 'react-native';
 import SVG from '../components/SVG';
 import styles from '../styles/MyInfo.style';
 import { useNavigation } from '@react-navigation/native';
 import BasicButton from '../components/button/BasicButton';
 import BasicText from '../components/BasicText';
+import useImagePicker from '../hooks/useImagePicker';
 import SVGButton from '../components/button/SVGButton';
 import SVGTextButton from '../components/button/SVGTextButton';
 import { theme } from '../styles/theme';
@@ -15,6 +16,11 @@ type RootStackParamList = {
   Payment: undefined;
   MyGaldae:undefined;
   NicknameChange:undefined;
+  Announcement:undefined;
+  UserGuide:undefined;
+  TermsOfUse:undefined;
+  FAQ:undefined;
+  Logout:undefined;
 };
 
 type nowGaldaeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -38,14 +44,16 @@ const MyInfo: React.FC = () => {
   ];
   const myInfoMenu = [
     {text: '결제 · 정산관리', onPress: ()=>{navigation.navigate('Payment');}},
-    {text: '공지 사항', onPress: ()=>{console.log('공지 사항');}},
-    {text: '이용 가이드', onPress: ()=>{console.log('이용 가이드');}},
-    {text: '이용약관', onPress: ()=>{console.log('이용약관');}},
-    {text: 'FAQ/문의하기', onPress: ()=>{console.log('FAQ/문의하기');}},
-    {text: '로그아웃', onPress: ()=>{console.log('로그아웃');}},
+    {text: '공지 사항', onPress: ()=>{navigation.navigate('Announcement');}},
+    {text: '이용 가이드', onPress: ()=>{navigation.navigate('UserGuide');}},
+    {text: '이용약관', onPress: ()=>{navigation.navigate('TermsOfUse');}},
+    {text: 'FAQ/문의하기', onPress: ()=>{navigation.navigate('FAQ');}},
+    {text: '로그아웃', onPress: ()=>{navigation.navigate('Logout');}},
   ];
   const navigation = useNavigation<nowGaldaeScreenNavigationProp>();
   const [loading, setLoading] = useState<boolean>(false);
+  const [profileImg, setProfileImg] = useState<string>('');
+  const {imageUri, getImageByGallery} = useImagePicker();
   const handlePress = () => {
 
     setLoading(true);
@@ -57,7 +65,13 @@ const MyInfo: React.FC = () => {
   const handleMorePress = () =>{
     navigation.navigate('MyGaldae');
   };
+  useEffect(() => {
+      if (imageUri !== undefined) {
+        setProfileImg(imageUri);
 
+      }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [imageUri]);
   return (
     <View>
       <ScrollView>
@@ -75,11 +89,15 @@ const MyInfo: React.FC = () => {
             <View style={styles.userInfos}>
               <View style={styles.profile}>
                 <Image
-                  source={require('../assets/test.jpg')}
+                  source={
+                    profileImg
+                      ? { uri: profileImg } // 갤러리에서 가져온 이미지
+                      : require('../assets/test.jpg') // 기본 이미지
+                  }
                   style={styles.profileImg}
                   resizeMode="cover"
                 />
-                <SVGButton iconName="camera_2_line" buttonStyle={styles.profileCamera}/>
+                <SVGButton iconName="camera_2_line" buttonStyle={styles.profileCamera} onPress={getImageByGallery}/>
               </View>
               <View style={styles.userInfoText}>
                 <BasicText text="건국대 글로컬캠퍼스" style={styles.universityText}/>

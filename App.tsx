@@ -17,9 +17,14 @@ import axios, {AxiosResponse, InternalAxiosRequestConfig} from 'axios';
 import {errorLogger, requestLogger, responseLogger} from 'axios-logger';
 import Settlement from './src/screens/Settlement';
 import Payment from './src/screens/myinfo/Payment';
+import UserGuide from './src/screens/myinfo/UserGuide';
+import TermsOfUse from './src/screens/myinfo/TermsOfUse';
 import MyGaldae from './src/screens/myinfo/MyGaldae';
 import MyGaldaeHistory from './src/screens/myinfo/MyGaldaeHistory';
 import NicknameChange from './src/screens/myinfo/NicknameChange';
+import Announcement from './src/screens/myinfo/Announcement';
+import FAQ from './src/screens/myinfo/FAQ';
+import Logout from './src/screens/myinfo/Logout';
 function App() {
     useEffect(() => {
         if (Platform.OS === 'android') {
@@ -96,6 +101,11 @@ function App() {
                         <Stack.Screen name="MyGaldae" component={MyGaldae}/>
                         <Stack.Screen name="MyGaldaeHistory" component={MyGaldaeHistory}/>
                         <Stack.Screen name="NicknameChange" component={NicknameChange}/>
+                        <Stack.Screen name="Announcement" component={Announcement}/>
+                        <Stack.Screen name="UserGuide" component={UserGuide}/>
+                        <Stack.Screen name="TermsOfUse" component={TermsOfUse}/>
+                        <Stack.Screen name="FAQ" component={FAQ}/>
+                        <Stack.Screen name="Logout" component={Logout}/>
                     </Stack.Navigator>
                 </NavigationContainer>
             </SafeAreaProvider>
