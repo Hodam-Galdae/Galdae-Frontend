@@ -1,6 +1,6 @@
 // SignUp.tsx 테스트
 import React, {useRef, useState, useEffect, useCallback} from 'react';
-import {View, Animated} from 'react-native';
+import {View, Animated, Image} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import styles from '../styles/SignUp.style';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -9,6 +9,9 @@ import BasicText from '../components/BasicText';
 import BasicButton from '../components/button/BasicButton';
 import Agree from './Agree';
 import SetUserInfo from './SetUserInfo';
+import Header from '../components/Header';
+import SVGButton from '../components/button/SVGButton';
+import SVG from '../components/SVG';
 
 type RootStackParamList = {
   Onboarding: undefined;
@@ -33,6 +36,12 @@ const SignUp: React.FC = () => {
   };
 
   const steps = [<Agree setNextStep={setNextStep} />, <SetUserInfo />];
+  const goBack = () => {
+    if (nowStep == 0) {
+      navigation.goBack();
+    }
+    setNowStep(nowStep - 1);
+  };
 
   const load = useCallback(
     (count: number) => {
@@ -57,6 +66,16 @@ const SignUp: React.FC = () => {
 
   return (
     <View style={styles.container}>
+      <Header
+        title={<SVG name="GaldaeLogo" />}
+        leftButton={
+          <SVGButton
+            onPress={goBack}
+            iconName="LeftArrow"
+            buttonStyle={{width: 30, height: 30}}
+          />
+        }
+      />
       <View style={styles.bar}>
         <Animated.View style={{...styles.progress, width}} />
       </View>
