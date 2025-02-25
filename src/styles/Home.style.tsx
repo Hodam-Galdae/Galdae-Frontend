@@ -1,80 +1,125 @@
 import { StyleSheet } from 'react-native';
-import {moderateScale} from '../utils/ScreenScaler';
+import {} from '../utils/ScreenScaler';
 import { theme } from './theme';
 
 export default StyleSheet.create({
     container: {
-      padding: moderateScale(15),
+      padding: (15),
       position:'relative',
     },
     notiButton:{
       width:'100%',
       borderRadius:0,
-      height: moderateScale(26),
+      height: (26),
     },
     notiText:{
       fontSize:theme.fontSize.size16,
       fontWeight: '500',
     },
+    madeGaldaeContainer:{
+      marginBottom:20,
+    },
+    madeGaldae:{
+      fontSize:theme.fontSize.size20,
+      fontWeight: '700',
+      marginBottom:10,
+    },
     startGaldae:{
-      marginTop:moderateScale(5),
       fontSize:theme.fontSize.size20,
       fontWeight: '700',
     },
+    newGaldaeList:{
+      marginRight: 8,
+      padding:8,
+      alignItems:'center',
+
+      backgroundColor: theme.colors.white,
+      borderRadius: theme.borderRadius.size10,
+      borderColor:theme.colors.brandColor,
+      borderWidth:1,
+      width:86,
+      height:84,
+
+    },
+    newGaldaeTimeText:{
+      fontSize: theme.fontSize.size10,
+      marginBottom: 6,
+      color:theme.colors.gray2,
+    },
+    newGaldaeDepartText:{
+      fontSize:theme.fontSize.size14,
+      fontWeight:'500',
+      marginBottom:5,
+    },
+    newGaldaeDestText:{
+      fontSize:theme.fontSize.size14,
+      fontWeight:'500',
+    },
+    newGaldaeArrowIcon:{
+      marginBottom:5,
+    },
     startGaldaeEx:{
-      marginTop:moderateScale(2),
+      marginTop:(2),
       fontSize:theme.fontSize.size14,
       fontWeight: '500',
       color:theme.colors.gray2,
-      marginBottom:moderateScale(14),
+      marginBottom:(14),
     },
     borderedBox:{
       width:'100%',
-      height:moderateScale(174),
+      height:(174),
       justifyContent:'center',
       borderColor:theme.colors.gray0,
       borderRadius:theme.borderRadius.size10,
       borderWidth:2,
-      paddingHorizontal:moderateScale(35),
+      paddingHorizontal:(35),
 
     },
     startAndEnd:{
       alignItems:'flex-start',
       justifyContent:'center',
       flexDirection:'row',
-      gap:moderateScale(20),
-      marginBottom:moderateScale(16),
+      gap:(30),
+      marginBottom:(16),
     },
     startContain:{ //고정 width 설정해야할듯
       alignItems:'center',
-      width:moderateScale(78),
+      width:(85),
     },
     start:{
-      height:moderateScale(18),
-      marginBottom:moderateScale(12),
+      height:(18),
+      marginBottom:(12),
     },
     mainPosName: {
       fontSize: theme.fontSize.size18,
-      //marginBottom: moderateScale(4),
+      //marginBottom: (4),
       fontWeight: '700',
-      lineHeight: moderateScale(22), // 예시 값
+      lineHeight: (22), // 예시 값
     },
     subPosName: {
       fontSize: theme.fontSize.size16,
       fontWeight: '500',
       color: theme.colors.gray1,
-      lineHeight: moderateScale(22), // mainPosName과 동일하게 지정
+      lineHeight: (22), // mainPosName과 동일하게 지정
     },
     switchBtn:{
-      marginTop:moderateScale(40),
+      marginTop:(40),
     },
     switchIcon:{
-      width:moderateScale(24),
-      height:moderateScale(24),
+      width:(24),
+      height:(24),
+    },
+    startContainer:{
+      alignSelf:'center',
+    },
+    startTime:{
+      fontSize:theme.fontSize.size14,
+      color:theme.colors.brandColor,
+      fontWeight:'500',
+      marginTop:(8),
     },
     startDateTime:{
-      alignSelf:'center',
-      marginTop:moderateScale(15),
+      marginTop:(4),
       fontSize:theme.fontSize.size16,
       fontWeight:'700',
     },
@@ -84,9 +129,9 @@ export default StyleSheet.create({
     },
     generateButton:{
       width:'100%',
-      marginTop:moderateScale(10),
+      marginTop:(10),
       borderRadius:theme.borderRadius.size10,
-      height: moderateScale(42),
+      height: (42),
     },
     generateText:{
       fontSize:theme.fontSize.size16,
@@ -94,13 +139,13 @@ export default StyleSheet.create({
     },
     advertiseBox:{
       width:'100%',
-      height:moderateScale(80),
+      height:(80),
       borderRadius:theme.borderRadius.size10,
       backgroundColor:theme.colors.red,
-      marginTop:moderateScale(20),
+      marginTop:(20),
     },
     nowGaldaeTitle:{
-      marginTop:moderateScale(20),
+      marginTop:(20),
       flexDirection:'row',
       alignItems:'center',
       justifyContent:'space-between',
@@ -112,22 +157,22 @@ export default StyleSheet.create({
 
     filters:{
       flexDirection:'row',
-      marginTop:moderateScale(18),
-      gap:moderateScale(8),
+      marginTop:(18),
+      gap:(8),
     },
     nowGaldaeList:{
-      marginTop:moderateScale(14),
-      marginBottom:moderateScale(50),
+      marginTop:14,
       position:'relative',
     },
     borderedListBox:{
       width:'100%',
-      height:moderateScale(195),
+      height:195,
       borderColor:theme.colors.gray0,
       borderRadius:theme.borderRadius.size10,
       borderWidth:1,
-      paddingStart:moderateScale(24),
-      paddingTop:moderateScale(18),
+      paddingStart:24,
+      paddingTop:14,
+      marginBottom:12,
     },
     galdaeOwner:{
       fontSize:theme.fontSize.size12,
@@ -135,8 +180,8 @@ export default StyleSheet.create({
     },
     fromContainer:{
       flexDirection:'row',
-      marginTop:moderateScale(8),
-      gap:moderateScale(8),
+      marginTop:(8),
+      gap:(8),
     },
     fromMainLocation:{
       fontSize:theme.fontSize.size16,
@@ -148,55 +193,39 @@ export default StyleSheet.create({
     },
     toContainer:{
       flexDirection:'row',
-      gap:moderateScale(8),
-      marginTop:moderateScale(6),
+      gap:(8),
+      marginTop:(7),
       alignItems:'center',
     },
     timeContainer:{
       flexDirection:'row',
-      gap:moderateScale(8),
-      marginTop:moderateScale(10),
+      gap:(8),
+      marginTop:(6),
       alignItems:'center',
     },
     fromToLine:{
-      width:moderateScale(20),
+      width:(20),
       alignItems:'center',
     },
     tags:{
       flexDirection:'row',
-      gap:moderateScale(4),
-      marginTop:moderateScale(16),
+      gap:(4),
+      marginTop:(16),
       alignItems:'center',
     },
-    textPopUp:{
-      width:moderateScale(250),
-      height:moderateScale(152),
-      position:'relative',
-      backgroundColor:theme.colors.brandColor,
-      borderRadius:theme.borderRadius.size10,
-      justifyContent:'center',
-      alignItems:'center',
-    },
-    textPopUpcontent:{
-      justifyContent:'center',
-      alignItems:'center',
-      marginTop:moderateScale(25),
-    },
-    cancelIcon:{
-      position:'absolute',
-      top:moderateScale(20),
-      right:moderateScale(20),
-    },
-    cancelBtn:{
-      width:moderateScale(220),
-      height:moderateScale(32),
-    },
-    cancelBtnText:{
-      fontSize:theme.fontSize.size16,
-      fontWeight: '700',
-    },
-    textPopUpText:{
-      marginBottom:moderateScale(20),
+    toastPopup:{
+        paddingVertical:9,
+        paddingHorizontal:26,
+        borderRadius:theme.borderRadius.size30,
+        backgroundColor:theme.colors.brandColor,
+        justifyContent:'center',
+        alignItems:'center',
+        alignSelf: 'center', // 가로 중앙 정렬
+        position:'absolute',
+        bottom:(20),
+        color:theme.colors.white,
+        fontSize:theme.fontSize.size14,
+        fontWeight:'500',
     },
 });
 

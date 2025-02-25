@@ -9,7 +9,7 @@ import Chat from '../screens/Chat';
 import SVG from '../components/SVG';
 import Header from './Header';
 import { theme } from '../styles/theme';
-import { moderateScale } from '../utils/ScreenScaler';
+import SVGButton from './button/SVGButton';
 
 function App(): React.JSX.Element {
 
@@ -21,26 +21,30 @@ function App(): React.JSX.Element {
         <Tab.Navigator
             initialRouteName="홈"
             screenOptions={{
-              // 탭 아이콘, 스타일 등을 여기에 설정할 수 있습니다.
-              header: () => <Header />,
+              header: () => <Header rightButton={<SVGButton iconName="Notification"/>}/>,
               tabBarActiveTintColor: theme.colors.black,
               tabBarInactiveTintColor: theme.colors.gray1,
-              tabBarStyle: Platform.select({
-                ios: {
-                  height: moderateScale(80),
-                  // iOS 전용 스타일 추가
-                },
-                android: {
-                  height: moderateScale(50),
-                  // Android 전용 스타일 추가
-                },
-              }),
-              // 각 탭 항목 내부 컨테이너를 중앙 정렬
+              tabBarStyle: {
+                height: Platform.select({
+                  ios: 80,
+                  android: 70,
+                }),
+                borderTopLeftRadius: 20,
+                borderTopRightRadius: 20,
+                backgroundColor:theme.colors.white,
+                overflow: 'hidden', // 둥근 모서리가 잘 보이도록 설정
+                // iOS용 그림자
+                shadowColor: theme.colors.gray1,
+                shadowOffset: { width: 0, height: 0 },
+                shadowOpacity: 0.25,
+                shadowRadius: 10,
+                // Android용 그림자
+                elevation: 4,
+              },
               tabBarItemStyle: {
                 justifyContent: 'center',
                 alignItems: 'center',
               },
-              // 라벨 텍스트가 있을 경우 중앙 정렬
               tabBarLabelStyle: {
                 textAlign: 'center',
               },

@@ -1,11 +1,11 @@
 // Login.tsx
 import React from 'react';
-import { View, Button, Image } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import {View, Button, Image} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import Swiper from 'react-native-web-swiper';
 import styles from '../styles/Login.style';
-import { theme } from '../styles/theme';
+import {theme} from '../styles/theme';
 import BasicText from '../components/BasicText';
 import SVG from '../components/SVG';
 // 네비게이션 파라미터 타입 정의
@@ -18,7 +18,10 @@ type RootStackParamList = {
 };
 
 // 로그인 화면에 사용할 네비게이션 타입 지정 (Login 스크린의 네비게이션 객체)
-type LoginScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Login'>;
+type LoginScreenNavigationProp = NativeStackNavigationProp<
+  RootStackParamList,
+  'Login'
+>;
 
 const Login: React.FC = () => {
   // useNavigation에 LoginScreenNavigationProp 제네릭을 적용합니다.
@@ -40,23 +43,30 @@ const Login: React.FC = () => {
       <View style={styles.allImagesImage}>
         <Swiper
           controlsProps={{
-            dotActiveStyle: { backgroundColor: theme.colors.white },
+            dotActiveStyle: {backgroundColor: theme.colors.white},
             nextTitle: '',
             prevTitle: '',
           }}
           containerStyle={styles.allImagesImage}>
-          {images.map((item,i)=>
-              <View>
-                  <Image key={i} source={item} style={styles.allImagesImage}/>
-              </View>
-          )}
+          {images.map((item, i) => (
+            <View>
+              <Image key={i} source={item} style={styles.allImagesImage} />
+            </View>
+          ))}
         </Swiper>
       </View>
-      <BasicText text="안녕하세요" style={{...styles.title, marginTop: 98}}/>
-      <BasicText text="같이 갈 그대," style={{...styles.title, color: theme.colors.brandColor, marginBottom: 39}}/>
+      <BasicText text="안녕하세요" style={{...styles.title, marginTop: 98}} />
+      <BasicText
+        text="같이 갈 그대,"
+        style={{
+          ...styles.title,
+          color: theme.colors.brandColor,
+          marginBottom: 39,
+        }}
+      />
       <View style={styles.textWrapper}>
-        <SVG name="Logo"/>
-        <BasicText text="입니다." style={{...styles.title, marginLeft: 10}}/>
+        <SVG name="GaldaeLogo" />
+        <BasicText text="입니다." style={{...styles.title, marginLeft: 10}} />
       </View>
       <Button title="로그인" onPress={handleGoToMainTab} />
     </View>
