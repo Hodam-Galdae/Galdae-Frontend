@@ -10,6 +10,8 @@ import Header from '../components/Header';
 import SVGButton from '../components/button/SVGButton';
 import SVG from '../components/SVG';
 import VerifySchool from './VerifySchool';
+import SchoolCardVerify from './SchoolCardVerify';
+import EmailVerify from './EmailVerify';
 
 type RootStackParamList = {
   Onboarding: undefined;
@@ -33,13 +35,19 @@ const SignUp: React.FC = () => {
     setNowStep(nowStep + 1);
   };
 
+  const setNextStepByIndex = (index: number) => {
+    setNowStep(index);
+  };
+
   const steps = [
     <Agree setNextStep={setNextStep} />,
     <SetUserInfo setNextStep={setNextStep} />,
-    <VerifySchool />,
+    <VerifySchool setNextStep={setNextStepByIndex}/>,
+    <SchoolCardVerify/>,
+    <EmailVerify/>,
   ];
   const goBack = () => {
-    if (nowStep == 0) {
+    if (nowStep === 0) {
       navigation.goBack();
     }
     setNowStep(nowStep - 1);

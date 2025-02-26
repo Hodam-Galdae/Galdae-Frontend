@@ -1,6 +1,6 @@
 // MyInfo.tsx 테스트
 import React, {useState} from 'react';
-import {View, Text, TextInput, TouchableOpacity} from 'react-native';
+import {View, TextInput, TouchableOpacity} from 'react-native';
 import styles from '../styles/SetUserInfo.style';
 import BasicText from '../components/BasicText';
 import SVG from '../components/SVG';
@@ -41,7 +41,8 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep}) => {
       flag = false;
     } else if (!regex.test(name)) {
       setAlertNameText('*닉네임은 한글, 숫자 2~8자로 제한됩니다.');
-      flag = false;
+      //TODO: 잠깐 풀어둠둠
+      // flag = false;
     } else {
       setAlertNameText('');
     }
@@ -53,7 +54,7 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep}) => {
       setAlertGenderText('');
     }
 
-    if (flag) setNextStep();
+    if (flag) {setNextStep();}
   };
 
   return (
@@ -98,14 +99,14 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep}) => {
           <View style={styles.genderBtnContainer}>
             <SelectTextButton
               text="여자"
-              selected={genderSelected == 0}
+              selected={genderSelected === 0}
               onPress={() => setGenderSelected(0)}
               buttonStyle={styles.genderBtn}
             />
             <SelectTextButton
               text="남자"
               onPress={() => setGenderSelected(1)}
-              selected={genderSelected == 1}
+              selected={genderSelected === 1}
               buttonStyle={styles.genderBtn}
             />
           </View>
