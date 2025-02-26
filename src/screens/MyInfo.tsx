@@ -70,7 +70,6 @@ const MyInfo: React.FC = () => {
         setProfileImg(imageUri);
 
       }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [imageUri]);
   return (
     <View>

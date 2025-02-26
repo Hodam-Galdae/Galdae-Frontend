@@ -9,6 +9,7 @@ import Tabs from '../../components/Tabs';
 import FAQList from './FAQList';
 import InquiryHistory from './InquiryHistory';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import FloatingButton from '../../components/button/FloatingButton';
 
 type HomeProps = {
   navigation: any; // 실제 프로젝트에서는 proper type 사용 권장 (예: StackNavigationProp)
@@ -25,6 +26,7 @@ type RootStackParamList = {
     };
     NowGaldaeDetail: { item: any };
     SetDestination:undefined;
+    Inquiry:undefined;
 };
 
 type nowGaldaeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -59,6 +61,8 @@ const FAQ: React.FC<HomeProps> = () => {
             />
             {renderTabContent()}
             </View>
+
+            <FloatingButton iconName={'service_line'} onPress={()=>navigation.navigate('Inquiry')}/>
       </View>
     );
 };

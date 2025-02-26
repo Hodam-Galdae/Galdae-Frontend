@@ -74,3 +74,4 @@ export {default as right_line} from './right_line 1.svg';
 export {default as information} from './information_line 3.svg';
 export {default as down} from './down_line 5.svg';
 export {default as service_line} from './service_line 1.svg';
+export {default as pic_line} from './pic_line 2.svg';
