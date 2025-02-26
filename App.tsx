@@ -16,7 +16,7 @@ import SetDestination from './src/screens/SetDestination';
 import axios, {AxiosResponse, InternalAxiosRequestConfig} from 'axios';
 import {errorLogger, requestLogger, responseLogger} from 'axios-logger';
 import Settlement from './src/screens/Settlement';
-
+import ReviewInProgress from './src/screens/ReviewInProgress';
 
 function App() {
     useEffect(() => {
@@ -88,6 +88,7 @@ function App() {
                         <Stack.Screen name="MainTab" component={MainTab} />
                         <Stack.Screen name="ChatRoom" component={ChatRoom}/>
                         <Stack.Screen name="Settlement" component={Settlement}/>
+                        <Stack.Screen name="ReviewInProgress" component={ReviewInProgress}/>
 
                     </Stack.Navigator>
                 </NavigationContainer>

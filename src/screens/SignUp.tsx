@@ -14,10 +14,8 @@ import SchoolCardVerify from './SchoolCardVerify';
 import EmailVerify from './EmailVerify';
 
 type RootStackParamList = {
-  Onboarding: undefined;
-  CreateGaldae: undefined;
-  Login: undefined;
   SignUp: undefined;
+  ReviewInProgress: undefined;
   MainTab: undefined; // 메인 탭 네비게이터 화면
 };
 
@@ -77,7 +75,7 @@ const SignUp: React.FC = () => {
     <Agree setNextStep={setNextStep} />,
     <SetUserInfo setNextStep={setNextStep} />,
     <VerifySchool setNextStep={setNextStepByIndex}/>,
-    <SchoolCardVerify setNextStep={setNextStep}/>,
+    <SchoolCardVerify setNextStep={() => navigation.navigate('ReviewInProgress')}/>,
     <EmailVerify setNextStep={() => navigation.navigate('MainTab')}/>,
   ];
 
