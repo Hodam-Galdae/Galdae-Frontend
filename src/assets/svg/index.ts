@@ -67,3 +67,5 @@ export {default as information_line} from './information_line 2.svg';
 export {default as transfer_2_line} from './transfer_2_line 1.svg';
 export {default as check_circle_line} from './check_circle_line 1.svg';
 export {default as check_circle_fill} from './check_circle_fill 1.svg';
+export {default as CorrectEx} from './CorrectEx.svg';
+export {default as WrongEx} from './WrongEx.svg';

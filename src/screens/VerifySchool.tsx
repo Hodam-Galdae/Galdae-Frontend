@@ -1,6 +1,6 @@
 // MyInfo.tsx 테스트
 import React, { useState } from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
+import {View, TouchableOpacity} from 'react-native';
 import BasicButton from '../components/button/BasicButton';
 import { theme } from '../styles/theme';
 import styles from '../styles/VerifySchool.style';
