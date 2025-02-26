@@ -34,4 +34,36 @@ export default StyleSheet.create({
         fontSize:theme.fontSize.size14,
         fontWeight:'400',
     },
+    FAQContainer:{
+      borderBottomWidth:1,
+      borderColor:theme.colors.gray0,
+    },
+    FAQItem:{
+      flexDirection:'row',
+      paddingHorizontal:18,
+      paddingVertical:16,
+      justifyContent:'space-between',
+    },
+    FAQText:{
+      flexDirection:'row',
+      alignItems:'center',
+    },
+    Q:{
+      fontWeight:'900',
+      fontSize:theme.fontSize.size16,
+    },
+    question:{
+      fontWeight:'500',
+      fontSize:theme.fontSize.size16,
+    },
+    answerContainer:{
+      width:'100%',
+      backgroundColor:theme.colors.lightGray,
+      padding:20,
+      gap:20,
+    },
+    texts:{
+      fontWeight:'500',
+      fontSize:theme.fontSize.size14,
+    },
 });
