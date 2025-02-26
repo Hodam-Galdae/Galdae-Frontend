@@ -7,10 +7,15 @@ import BasicText from '../components/BasicText';
 import SVG from '../components/SVG';
 import SVGButton from '../components/button/SVGButton';
 
-const SchoolCardVerify: React.FC = () => {
-  const width = Dimensions.get('window').width;
-  const clickEvent = () => {
+interface SchoolCardVerifyProps {
+  setNextStep: () => void;
+}
 
+const SchoolCardVerify: React.FC<SchoolCardVerifyProps> = ({setNextStep}) => {
+  const width = Dimensions.get('window').width;
+
+  const clickEvent = () => {
+    setNextStep();
   };
 
   return (
@@ -50,7 +55,6 @@ const SchoolCardVerify: React.FC = () => {
           textStyle={styles.nextText}
         />
       </View>
-      
     </View>
   );
 };

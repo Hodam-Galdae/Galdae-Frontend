@@ -39,17 +39,16 @@ const SignUp: React.FC = () => {
     setNowStep(index);
   };
 
-  const steps = [
-    <Agree setNextStep={setNextStep} />,
-    <SetUserInfo setNextStep={setNextStep} />,
-    <VerifySchool setNextStep={setNextStepByIndex}/>,
-    <SchoolCardVerify/>,
-    <EmailVerify/>,
-  ];
   const goBack = () => {
-    if (nowStep === 0) {
+    if(nowStep === 0) {
       navigation.goBack();
+      return;
     }
+    if(nowStep === 4) {
+      setNowStep(2);
+      return;
+    }
+
     setNowStep(nowStep - 1);
   };
 
@@ -73,6 +72,14 @@ const SignUp: React.FC = () => {
   useEffect(() => {
     load(nowStep);
   }, [load, nowStep]);
+
+  const steps = [
+    <Agree setNextStep={setNextStep} />,
+    <SetUserInfo setNextStep={setNextStep} />,
+    <VerifySchool setNextStep={setNextStepByIndex}/>,
+    <SchoolCardVerify setNextStep={setNextStep}/>,
+    <EmailVerify setNextStep={() => navigation.navigate('MainTab')}/>,
+  ];
 
   return (
     <View style={styles.container}>
