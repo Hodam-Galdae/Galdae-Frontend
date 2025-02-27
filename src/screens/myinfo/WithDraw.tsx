@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState} from 'react';
 import {  View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from '../../styles/Logout';
@@ -6,8 +6,8 @@ import Header from '../../components/Header';
 import SVGButton from '../../components/button/SVGButton';
 import BasicText from '../../components/BasicText';
 import BasicButton from '../../components/button/BasicButton';
+import DeletePopup from '../../components/popup/DeletePopup';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { theme } from '../../styles/theme';
 
 type HomeProps = {
   navigation: any; // 실제 프로젝트에서는 proper type 사용 권장 (예: StackNavigationProp)
@@ -24,55 +24,57 @@ type RootStackParamList = {
     };
     NowGaldaeDetail: { item: any };
     SetDestination:undefined;
-    WithDraw:undefined;
 };
 
 type nowGaldaeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
-const Logout: React.FC<HomeProps> = () => {
+const WithDraw: React.FC<HomeProps> = () => {
+    const [invalidPopupVisible, setInvalidPopupVisible] = useState<boolean>(false);
     const navigation = useNavigation<nowGaldaeScreenNavigationProp>();
     const goBack = () => navigation.goBack();
-    const handleLogout = () =>{
 
-    };
     const handleWithDraw = () =>{
-      navigation.navigate('WithDraw');
+        setInvalidPopupVisible(false);
     };
     return (
       <View style={styles.container}>
         <Header
         leftButton={<SVGButton iconName="arrow_left_line" onPress={goBack}/>}
-        title={<BasicText text="로그아웃" style={styles.headerText}/>}
+        title={<BasicText text="회원탈퇴" style={styles.headerText}/>}
         />
         <View style={styles.content}>
-          <BasicText text="정말 로그아웃 할까요?" style={styles.title}/>
+          <BasicText text="탈퇴 하기 전 꼭 확인해주세요!" style={styles.title}/>
+
+          <View style={styles.warnTexts}>
+            <BasicText text="이용자 편의에 더욱 적합한 서비스 제공을 위해" style={styles.warnText}/>
+            <BasicText text="서비스 운영 정책을 마련했습니다." style={styles.warnText}/>
+
+            <View style={styles.margin}>
+                <BasicText text="이 약관은 2025년 00월 00일로부터 발효며" style={styles.warnText}/>
+                <BasicText text="동의 후에 갈대 서비스 이용이 가능합니다." style={styles.warnText}/>
+            </View>
+          </View>
+
           <View style={styles.logoutBtnContainer}>
             <BasicButton
-              text="회원탈퇴"
+              text="탈퇴하기"
               buttonStyle={styles.logoutBtn}
               textStyle={styles.logoutText}
               //loading={loading}
-              onPress={handleWithDraw}
-              enabledColors={
-                {
-                  backgroundColor:theme.colors.white,
-                  textColor:theme.colors.brandColor,
-                  borderColor:theme.colors.brandColor,
-                }
-              }
-            />
-            <BasicButton
-              text="로그아웃"
-              buttonStyle={styles.logoutBtn}
-              textStyle={styles.logoutText}
-              //loading={loading}
-              onPress={handleLogout}
+              onPress={()=>setInvalidPopupVisible(true)}
             />
           </View>
         </View>
-
+        <DeletePopup
+            visible={invalidPopupVisible}
+            onCancel={() => setInvalidPopupVisible(false)}
+            onConfirm={handleWithDraw }
+            title="회원 탈퇴 하시겠습니까?"
+            message=""
+            buttonText="확인"
+        />
       </View>
     );
 };
 
-export default Logout;
+export default WithDraw;
 

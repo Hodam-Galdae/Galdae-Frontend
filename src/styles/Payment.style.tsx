@@ -118,5 +118,20 @@ export default StyleSheet.create({
       borderTopWidth:1,
       borderColor:theme.colors.gray0,
     },
-
+    inquiryBtnContainer:{
+      alignSelf:'center',
+      position:'absolute',
+      width:'100%',
+      //height:42,
+      bottom:40,
+  },
+  inquiryBtn:{
+      width:'100%',
+      borderRadius:theme.borderRadius.size10,
+      height:42,
+  },
+  inquiryText:{
+      fontSize:theme.fontSize.size16,
+      fontWeight: '700',
+  },
 });
