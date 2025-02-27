@@ -37,6 +37,16 @@ export default StyleSheet.create({
         textAlign: 'left',         // ③ 가로 정렬 (iOS, 안드로이드 동일)
         marginBottom:10,
     },
+    answerContainer:{
+        marginTop:6,
+        height:245,
+        fontSize:theme.fontSize.size14,
+        color:theme.colors.gray2,
+        fontWeight:'500',
+        textAlignVertical: 'top',  // ② 안드로이드에서 위쪽 정렬
+        textAlign: 'left',         // ③ 가로 정렬 (iOS, 안드로이드 동일)
+        marginBottom:10,
+    },
     texts:{
         flexDirection:'row',
     },
@@ -79,5 +89,10 @@ export default StyleSheet.create({
     inquiryText:{
         fontSize:theme.fontSize.size16,
         fontWeight: '700',
+    },
+    answer:{
+        fontSize:theme.fontSize.size20,
+        fontWeight:'700',
+        marginTop:30,
     },
 });

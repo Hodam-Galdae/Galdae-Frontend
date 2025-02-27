@@ -25,6 +25,7 @@ import NicknameChange from './src/screens/myinfo/NicknameChange';
 import Announcement from './src/screens/myinfo/Announcement';
 import FAQ from './src/screens/myinfo/FAQ';
 import Inquiry from './src/screens/myinfo/Inquiry';
+import Answer from './src/screens/myinfo/Answer';
 import Logout from './src/screens/myinfo/Logout';
 function App() {
     useEffect(() => {
@@ -106,6 +107,7 @@ function App() {
                         <Stack.Screen name="UserGuide" component={UserGuide}/>
                         <Stack.Screen name="TermsOfUse" component={TermsOfUse}/>
                         <Stack.Screen name="FAQ" component={FAQ}/>
+                        <Stack.Screen name="Answer" component={Answer}/>
                         <Stack.Screen name="Inquiry" component={Inquiry}/>
                         <Stack.Screen name="Logout" component={Logout}/>
                     </Stack.Navigator>

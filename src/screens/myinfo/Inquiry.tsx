@@ -28,6 +28,9 @@ type RootStackParamList = {
     };
     NowGaldaeDetail: { item: any };
     SetDestination:undefined;
+    FAQ:{
+      tabIndex:number,
+    }
 };
 
 type nowGaldaeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -54,6 +57,7 @@ const Inquiry: React.FC<HomeProps> = () => {
     }, [imageUri]);
     const handleInquiry = () =>{
         setLoading(true);
+        navigation.navigate('FAQ', { tabIndex: 1 });
     };
     return (
       <View style={styles.container}>
