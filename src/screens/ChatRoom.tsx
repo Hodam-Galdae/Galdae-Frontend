@@ -387,6 +387,24 @@ const ChatRoom: React.FC = () => {
         leftButton={
           <SVGButton onPress={() => navigation.goBack()} iconName="LeftArrow" />
         }
+        title={
+          <View style={styles.header}>
+            <SVG
+              width={22}
+              height={22}
+              style={styles.headerIcon}
+              name="LocationBlack"
+            />
+            <BasicText style={styles.headerText} text={chatRoomData.from} />
+            <SVG
+              width={22}
+              height={22}
+              style={styles.headerIcon}
+              name="RightArrow"
+            />
+            <BasicText style={styles.headerText} text={chatRoomData.to} />
+          </View>
+        }
         rightButton={<SVGButton onPress={openSideMenu} iconName="Kebab" />}
       />
       {/* 사이드바 */}
