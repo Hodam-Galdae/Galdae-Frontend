@@ -53,7 +53,7 @@ const Home: React.FC = () => {
   const [createGaldaePopupVisible, setCreateGaldaePopupVisible] =
     useState<boolean>(false);
   const navigation = useNavigation<LoginScreenNavigationProp>();
-  // const [fastGaldaePopupVisible, setFastGaldaePopupVisible] = useState<boolean>(false);
+  const [fastGaldaePopupVisible, setFastGaldaePopupVisible] = useState<boolean>(false);
   const [departureDate, setDepartureDate] = useState<string | null>(null); // "YYYY-MM-DD" 형식
   const [departureAmPm, setDepartureAmPm] = useState<'오전' | '오후'>('오전');
   // 출발지 관련 상태
@@ -70,119 +70,119 @@ const Home: React.FC = () => {
   const fastGaldaeEndPopupRef = useRef<FastGaldaeEndPopupRef>(null);
   const fastGaldaeTimePopupRef = useRef<FastGaldaeTimePopupRef>(null);
 
-  // const handlePress = () => {
-  //   setLoading(true);
-  //   // 버튼 클릭 시 원하는 로직을 수행하고, 완료 후 로딩 상태를 false로 전환합니다.
-  //   setTimeout(() => {
-  //     setLoading(false);
-  //   }, 2000);
+  const handlePress = () => {
+    setLoading(true);
+    // 버튼 클릭 시 원하는 로직을 수행하고, 완료 후 로딩 상태를 false로 전환합니다.
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+  };
+
+  const handleGeneratePress = () => {
+    setgenerateLoading(true);
+    // 버튼 클릭 시 원하는 로직을 수행하고, 완료 후 로딩 상태를 false로 전환합니다.
+    setTimeout(() => {
+      setgenerateLoading(false);
+    }, 2000);
+  };
+  예를 들어, 갈대 생성 완료 시 토스트 팝업을 띄우고 3초 후에 사라지도록 함.
+
+  const handleMorePress = () => {
+    navigation.navigate('NowGaldae');
+  };
+  const handleTimePopupConfirm = (
+    selectedDate: string,
+    amPm: '오전' | '오후',
+    hour: number,
+    minute: number
+  ) => {
+    setDepartureDate(selectedDate);
+    setDepartureAmPm(amPm);
+    setDepartureHour(hour);
+    setDepartureMinute(minute);
+  };
+  // 출발일시 문자열 포맷 함수
+  const formatDepartureDateTime = () => {
+    if (!departureDate) {
+      const now = moment();
+      const formattedDate = now.format('YYYY년 M월 D일 (ddd)'); // 예: 2025년 11월 12일 (수)
+      const hour = now.hour();
+      const minute = now.minute();
+      const amPm = hour < 12 ? '오전' : '오후';
+      let hour12 = hour % 12;
+      if (hour12 === 0) {hour12 = 12;}
+      const formattedTime = `${amPm} ${hour12} : ${minute < 10 ? '0' + minute : minute}`;
+      return `${formattedDate} ${formattedTime}`;
+    }
+    const dateObj = moment(departureDate, 'YYYY-MM-DD');
+    // 예: "2025년 11월 12일 (수)"
+    const formattedDate = dateObj.format('YYYY년 M월 D일 (ddd)');
+    // 예: "오전 2 : 30" (분이 10 미만일 경우 앞에 0 추가)
+    const formattedTime = `${departureAmPm} ${departureHour} : ${departureMinute < 10 ? '0' + departureMinute : departureMinute}`;
+    return `${formattedDate} ${formattedTime}`;
+  };
+
+  // const handleFilterPress = ()=>{
+
   // };
 
-  // const handleGeneratePress = () => {
+  // const handlePressTimeFilterBtn = () =>{
+
+  // };
+
+  // const handlePressGenderFilterBtn = () =>{
+
+  // };
+  const toggleFastGaldaeStartPopup = () =>{
+    //setFastGaldaePopupVisible((prev) => !prev);
+    fastGaldaeStartPopupRef.current?.open();
+  };
+
+  const toggleFastGaldaeEndPopup = () =>{
+    //setFastGaldaePopupVisible((prev) => !prev);
+    fastGaldaeEndPopupRef.current?.open();
+  };
+
+  const toggleFastGaldaeTimePopup = () =>{
+    //setFastGaldaePopupVisible((prev) => !prev);
+    fastGaldaeTimePopupRef.current?.open();
+  };
+  // DeletePopup 관련 핸들러
+  //const openDeletePopup = () => setDeletePopupVisible(true);
+  //const closeDeletePopup = () => setDeletePopupVisible(false);
+  // const handleDeleteConfirm = () => {
+  //   // 삭제 로직 실행
+  //   console.log('삭제 confirmed');
+  //   closeDeletePopup();
+  // };
+
+  // const openCreateGaldaePopup = () => {
   //   setgenerateLoading(true);
   //   // 버튼 클릭 시 원하는 로직을 수행하고, 완료 후 로딩 상태를 false로 전환합니다.
   //   setTimeout(() => {
   //     setgenerateLoading(false);
+  //     setCreateGaldaePopupVisible(true);
   //   }, 2000);
-  // };
-  // 예를 들어, 갈대 생성 완료 시 토스트 팝업을 띄우고 3초 후에 사라지도록 함.
 
-  // const handleMorePress = () => {
-  //   navigation.navigate('NowGaldae');
-  // };
-  // const handleTimePopupConfirm = (
-  //   selectedDate: string,
-  //   amPm: '오전' | '오후',
-  //   hour: number,
-  //   minute: number
-  // ) => {
-  //   setDepartureDate(selectedDate);
-  //   setDepartureAmPm(amPm);
-  //   setDepartureHour(hour);
-  //   setDepartureMinute(minute);
-  // };
-  // // 출발일시 문자열 포맷 함수
-  // const formatDepartureDateTime = () => {
-  //   if (!departureDate) {
-  //     const now = moment();
-  //     const formattedDate = now.format('YYYY년 M월 D일 (ddd)'); // 예: 2025년 11월 12일 (수)
-  //     const hour = now.hour();
-  //     const minute = now.minute();
-  //     const amPm = hour < 12 ? '오전' : '오후';
-  //     let hour12 = hour % 12;
-  //     if (hour12 === 0) {hour12 = 12;}
-  //     const formattedTime = `${amPm} ${hour12} : ${minute < 10 ? '0' + minute : minute}`;
-  //     return `${formattedDate} ${formattedTime}`;
-  //   }
-  //   const dateObj = moment(departureDate, 'YYYY-MM-DD');
-  //   // 예: "2025년 11월 12일 (수)"
-  //   const formattedDate = dateObj.format('YYYY년 M월 D일 (ddd)');
-  //   // 예: "오전 2 : 30" (분이 10 미만일 경우 앞에 0 추가)
-  //   const formattedTime = `${departureAmPm} ${departureHour} : ${departureMinute < 10 ? '0' + departureMinute : departureMinute}`;
-  //   return `${formattedDate} ${formattedTime}`;
-  // };
+  };
+  const closeCreateGaldaePopup = () => {
+    setCreateGaldaePopupVisible(false);
+  };
 
-  // // const handleFilterPress = ()=>{
+  const handleCreateCaledaeConfirm = () => {
+    closeCreateGaldaePopup();
+    setToastVisible(true);
+  };
 
-  // // };
-
-  // // const handlePressTimeFilterBtn = () =>{
-
-  // // };
-
-  // // const handlePressGenderFilterBtn = () =>{
-
-  // // };
-  // const toggleFastGaldaeStartPopup = () =>{
-  //   //setFastGaldaePopupVisible((prev) => !prev);
-  //   fastGaldaeStartPopupRef.current?.open();
-  // };
-
-  // const toggleFastGaldaeEndPopup = () =>{
-  //   //setFastGaldaePopupVisible((prev) => !prev);
-  //   fastGaldaeEndPopupRef.current?.open();
-  // };
-
-  // const toggleFastGaldaeTimePopup = () =>{
-  //   //setFastGaldaePopupVisible((prev) => !prev);
-  //   fastGaldaeTimePopupRef.current?.open();
-  // };
-  // // DeletePopup 관련 핸들러
-  // //const openDeletePopup = () => setDeletePopupVisible(true);
-  // //const closeDeletePopup = () => setDeletePopupVisible(false);
-  // // const handleDeleteConfirm = () => {
-  // //   // 삭제 로직 실행
-  // //   console.log('삭제 confirmed');
-  // //   closeDeletePopup();
-  // // };
-
-  // // const openCreateGaldaePopup = () => {
-  // //   setgenerateLoading(true);
-  // //   // 버튼 클릭 시 원하는 로직을 수행하고, 완료 후 로딩 상태를 false로 전환합니다.
-  // //   setTimeout(() => {
-  // //     setgenerateLoading(false);
-  // //     setCreateGaldaePopupVisible(true);
-  // //   }, 2000);
-
-  // };
-  // const closeCreateGaldaePopup = () => {
-  //   setCreateGaldaePopupVisible(false);
-  // };
-
-  // const handleCreateCaledaeConfirm = () => {
-  //   closeCreateGaldaePopup();
-  //   setToastVisible(true);
-  // };
-
-  // const handleSwitch = () =>{
-  //   setDepartureLarge(destinationLarge);
-  //   setDepartureSmall(destinationSmall);
-  //   setDestinationLarge(departureLarge);
-  //   setDestinationSmall(departureSmall);
-  // };
+  const handleSwitch = () =>{
+    setDepartureLarge(destinationLarge);
+    setDepartureSmall(destinationSmall);
+    setDestinationLarge(departureLarge);
+    setDestinationSmall(departureSmall);
+  };
   return (
     <View>
-      {/* <ScrollView>
+      <ScrollView>
        <BasicButton
         text="어플 공지사항/안내"
         onPress={handlePress}
@@ -325,9 +325,9 @@ const Home: React.FC = () => {
           }}
           title="선택하신 갈대를"
           message="삭제하시겠습니까?"
-        /> */}
+        />
 
-      {/* <CreateGaldaePopup
+      <CreateGaldaePopup
         visible={createGaldaePopupVisible}
         onCancel={closeCreateGaldaePopup}
         onConfirm={handleCreateCaledaeConfirm}
@@ -340,7 +340,7 @@ const Home: React.FC = () => {
         visible={toastVisible}
         text="갈대가 생성되었습니다!"
         onDismiss={() => setToastVisible(false)}
-      /> */}
+      />
     </View>
   );
 };
