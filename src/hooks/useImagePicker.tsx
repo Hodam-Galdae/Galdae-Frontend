@@ -14,7 +14,7 @@ import {
 } from 'react-native-image-picker';
 
 const useImagePicker = () => {
-  const [imageUri, setImageUri] = useState<string>();
+  const [imageUri, setImageUri] = useState<string>('');
 
   // 권한 확인 및 요청 함수
   const checkAndRequestPermission = async (permission: Permission) => {
@@ -63,7 +63,7 @@ const useImagePicker = () => {
           } else if (response.errorCode) {
             console.log('Camera error: ', response.errorMessage);
           } else if (response.assets !== undefined) {
-            setImageUri(response.assets[0].uri);
+            setImageUri(response.assets[0].uri ?? '');
           }
         },
       );
@@ -98,7 +98,7 @@ const useImagePicker = () => {
           } else if (response.errorCode) {
             console.log('Gallery error: ', response.errorMessage);
           } else if (response.assets !== undefined) {
-            setImageUri(response.assets[0].uri);
+            setImageUri(response.assets[0].uri ?? '');
           }
         },
       );

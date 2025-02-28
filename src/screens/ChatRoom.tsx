@@ -27,6 +27,7 @@ import {SettlementRequestPopupRef} from '../components/popup/SettlementRequestPo
 import ReportModal from '../components/popup/ReportModal';
 import ChatRoomExitModal from '../components/popup/ChatRoomExitModal';
 import ReportCheckModal from '../components/popup/ReportCheckModal';
+import useDidMountEffect from '../hooks/useDidMountEffect';
 
 enum Type {
   MESSAGE,
@@ -92,8 +93,10 @@ const ChatRoom: React.FC = () => {
   const [message, setMessage] = useState<string>('');
   const [showExtraView, setShowExtraView] = useState<boolean>(false);
   const [keyboardHeight, setKeyboardHeight] = useState<number>(0);
-  const [isVisibleReportPopup, setIsVisibleReportPopup] = useState<boolean>(false);
-  const [isVisibleReportCheckPopup, setIsVisibleReportCheckPopup] = useState<boolean>(false);
+  const [isVisibleReportPopup, setIsVisibleReportPopup] =
+    useState<boolean>(false);
+  const [isVisibleReportCheckPopup, setIsVisibleReportCheckPopup] =
+    useState<boolean>(false);
   const [isVisibleExitPopup, setIsVisibleExitPopup] = useState<boolean>(false);
   const chatListRef = useRef<FlatList>(null);
   const {imageUri, getImageByCamera, getImageByGallery} = useImagePicker();
@@ -221,7 +224,7 @@ const ChatRoom: React.FC = () => {
     return () => {
       keyboardDidShowListener.remove();
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   //채팅 추가될 때 마다 자동 스크롤
@@ -358,7 +361,7 @@ const ChatRoom: React.FC = () => {
     [data, chatRoomData, navigation],
   );
 
-  useEffect(() => {
+  useDidMountEffect(() => {
     if (imageUri !== undefined) {
       setData([
         ...data,
@@ -371,7 +374,6 @@ const ChatRoom: React.FC = () => {
         },
       ]);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [imageUri]);
 
   return (
@@ -414,7 +416,7 @@ const ChatRoom: React.FC = () => {
                     <BasicButton
                       textStyle={styles.menuUserBtnText}
                       buttonStyle={styles.menuUserBtn}
-                      onPress={()=>startReportUser(e)}
+                      onPress={() => startReportUser(e)}
                       text="신고하기"
                     />
                   ) : null}
@@ -422,7 +424,11 @@ const ChatRoom: React.FC = () => {
               );
             })}
           </View>
-          <SVGButton onPress={()=>setIsVisibleExitPopup(true)} iconName="Exit" buttonStyle={styles.exitIcon} />
+          <SVGButton
+            onPress={() => setIsVisibleExitPopup(true)}
+            iconName="Exit"
+            buttonStyle={styles.exitIcon}
+          />
         </Animated.View>
         <FlatList
           ref={chatListRef}
@@ -508,10 +514,22 @@ const ChatRoom: React.FC = () => {
           ref={settlementRequestPopupRef}
         />
 
-        <ChatRoomExitModal visible={isVisibleExitPopup} onConfirm={()=>setIsVisibleExitPopup(false)} onCancel={()=>setIsVisibleExitPopup(false)}/>
+        <ChatRoomExitModal
+          visible={isVisibleExitPopup}
+          onConfirm={() => setIsVisibleExitPopup(false)}
+          onCancel={() => setIsVisibleExitPopup(false)}
+        />
 
-        <ReportModal visible={isVisibleReportPopup} onConfirm={checkReportUser} onCancel={()=>setIsVisibleReportPopup(false)}/>
-        <ReportCheckModal visible={isVisibleReportCheckPopup} onConfirm={reportUser} onCancel={()=>setIsVisibleReportCheckPopup(false)}/>
+        <ReportModal
+          visible={isVisibleReportPopup}
+          onConfirm={checkReportUser}
+          onCancel={() => setIsVisibleReportPopup(false)}
+        />
+        <ReportCheckModal
+          visible={isVisibleReportCheckPopup}
+          onConfirm={reportUser}
+          onCancel={() => setIsVisibleReportCheckPopup(false)}
+        />
       </View>
     </KeyboardAvoidingView>
   );

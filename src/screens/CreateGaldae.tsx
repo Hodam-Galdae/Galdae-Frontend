@@ -29,7 +29,7 @@ const CreateGaldae: React.FC = () => {
   const goBack = () => navigation.goBack();
   const [selectedGender, setSelectedGender] = useState<number>(0);
   const [selectedTimeDiscuss, setSelectedTimeDiscuss] = useState<number>(0);
-  const [passengerNumber, setPassengerNumber] = useState<number>(0);
+  const [passengerNumber, setPassengerNumber] = useState<number>(1);
   const [selectedChannel, setSelectedChannel] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [departureDate, setDepartureDate] = useState<string | null>(null); // "YYYY-MM-DD" 형식
@@ -48,7 +48,7 @@ const CreateGaldae: React.FC = () => {
     if(type === 'PLUS' && passengerNumber < 4){
       setPassengerNumber(passengerNumber + 1);
     }
-    else if(type === 'MINUS' && passengerNumber > 0){
+    else if(type === 'MINUS' && passengerNumber > 1){
       setPassengerNumber(passengerNumber - 1);
     }
   };
