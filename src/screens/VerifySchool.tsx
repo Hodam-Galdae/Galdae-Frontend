@@ -13,7 +13,9 @@ interface VerifySchoolProps {
 
 const VerifySchool: React.FC<VerifySchoolProps> = ({setNextStep}) => {
   const [schoolSelected, setSchoolSelected] = useState<number>(-1);
-  const [methodSelected, setMethodSelected] = useState<number>(0);
+  const [methodSelected, setMethodSelected] = useState<number>(-1);
+  const [isVisibleSchoolSelect, setIsVisibleSchoolSelect] = useState<boolean>(false);
+  const [isVisiblemethodSelect, setIsVisiblemethodSelect] = useState<boolean>(false);
   const schools = [
     '건국대학교 글로컬캠퍼스',
     '한국 교통대학교 충주캠퍼스',
@@ -25,14 +27,30 @@ const VerifySchool: React.FC<VerifySchoolProps> = ({setNextStep}) => {
   ];
 
   const clickEvent = () => {
+    let flag = true;
     if(schoolSelected === -1) {
-      return;
-    }
-    if(methodSelected === 0){
-      setNextStep(3);
+      setIsVisibleSchoolSelect(true);
+      flag = false;
     }
     else {
-      setNextStep(4);
+      setIsVisibleSchoolSelect(false);
+    }
+
+    if(methodSelected === -1){
+      setIsVisiblemethodSelect(true);
+      flag = false;
+    }
+    else {
+      setIsVisiblemethodSelect(false);
+    }
+
+    if(flag){
+      if(methodSelected === 0){
+        setNextStep(3);
+      }
+      else {
+        setNextStep(4);
+      }
     }
   };
 
@@ -40,24 +58,32 @@ const VerifySchool: React.FC<VerifySchoolProps> = ({setNextStep}) => {
     <View style={styles.container}>
       <View>
         <BasicText text="학교 선택" style={styles.title}/>
+
         <View style={styles.selector}>
-          <ItemSelector style={{position: 'absolute', zIndex: 999}} hint="학교 선택" items={schools} selected={schoolSelected} setSelected={setSchoolSelected}/>
+          <View style={styles.selectorBox}>
+            <ItemSelector style={{position: 'absolute', zIndex: 999}} hint="학교 선택" items={schools} selected={schoolSelected} setSelected={setSchoolSelected}/>
+          </View>
+          {isVisibleSchoolSelect ? <BasicText style={styles.alert} text="*학교를 선택해주세요."/> : null}
         </View>
+
         <BasicText text="학생 인증 " style={styles.title}/>
-        <TouchableOpacity onPress={() => setMethodSelected(0)}>
-          <View style={[styles.verifyContainer, methodSelected === 0 ? {backgroundColor: theme.colors.brandSubColor, borderColor: theme.colors.brandColor} : null]}>
-            <BasicText text="학생증 인증" style={styles.verifyTitle}/>
-            <BasicText style={styles.verifyContent}>{'1. 학생증 촬영\n2.학생증 이미지 갤러리에서 가져오기'}</BasicText>
-            <BasicText style={styles.verifyAlert} text="*최대 72시간 내 검토 후 이용이 가능합니다."/>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => setMethodSelected(1)}>
-          <View style={[styles.verifyContainer, methodSelected === 1 ? {backgroundColor: theme.colors.brandSubColor, borderColor: theme.colors.brandColor} : null]}>
-            <BasicText text="이메일 인증" style={styles.verifyTitle}/>
-            <BasicText style={styles.verifyContent}>{'1. 학교 이메일 입력 후 인증 코드 전송\n2. 인증 코드 입력 후 확인인'}</BasicText>
-            <BasicText style={styles.verifyAlert} text="*인증 시 바로 이용이 가능합니다."/>
-          </View>
-        </TouchableOpacity>
+        <View>
+          <TouchableOpacity onPress={() => setMethodSelected(0)}>
+            <View style={[styles.verifyContainer, methodSelected === 0 ? {backgroundColor: theme.colors.brandSubColor, borderColor: theme.colors.brandColor} : null]}>
+              <BasicText text="학생증 인증" style={styles.verifyTitle}/>
+              <BasicText style={styles.verifyContent}>{'1. 학생증 촬영\n2.학생증 이미지 갤러리에서 가져오기'}</BasicText>
+              <BasicText style={styles.verifyAlert} text="*최대 72시간 내 검토 후 이용이 가능합니다."/>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => setMethodSelected(1)}>
+            <View style={[styles.verifyContainer, methodSelected === 1 ? {backgroundColor: theme.colors.brandSubColor, borderColor: theme.colors.brandColor} : null]}>
+              <BasicText text="이메일 인증" style={styles.verifyTitle}/>
+              <BasicText style={styles.verifyContent}>{'1. 학교 이메일 입력 후 인증 코드 전송\n2. 인증 코드 입력 후 확인인'}</BasicText>
+              <BasicText style={styles.verifyAlert} text="*인증 시 바로 이용이 가능합니다."/>
+            </View>
+          </TouchableOpacity>
+          {isVisiblemethodSelect ? <BasicText style={styles.alert} text="*학생 인증 방법을 선택해주세요."/> : null}
+        </View>
       </View>
 
       <BasicButton

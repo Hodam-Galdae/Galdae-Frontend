@@ -20,7 +20,7 @@ export default StyleSheet.create({
         fontWeight: '700',
     },
     title: {
-        fontSize: 20,
+        fontSize: theme.fontSize.size20,
         fontWeight: '700',
         color: theme.colors.black,
         marginTop: 30,
@@ -28,6 +28,9 @@ export default StyleSheet.create({
     },
     selector: {
         marginBottom: 70,
+    },
+    selectorBox: {
+        height: 55,
     },
     verifyContainer: {
         backgroundColor: theme.colors.lightGray,
@@ -40,20 +43,29 @@ export default StyleSheet.create({
         borderColor: theme.colors.white,
     },
     verifyTitle: {
-        fontSize: 16,
+        fontSize: theme.fontSize.size16,
         fontWeight: '500',
         color: theme.colors.black,
         marginBottom: 6,
     },
     verifyContent: {
-        fontSize: 16,
+        fontSize: theme.fontSize.size16,
         fontWeight: '500',
         color: theme.colors.gray2,
         marginBottom: 8,
     },
     verifyAlert: {
-        fontSize: 12,
+        fontSize: theme.fontSize.size12,
         fontWeight: '500',
         color: theme.colors.black,
+    },
+    alert: {
+        color: theme.colors.red,
+        fontSize: theme.fontSize.size10,
+        fontWeight: '500',
+        marginTop: 8,
+        position: 'absolute',
+        bottom: -10,
+        left: 0,
     },
 });
