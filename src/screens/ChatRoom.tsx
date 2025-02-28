@@ -29,6 +29,7 @@ import ChatRoomExitModal from '../components/popup/ChatRoomExitModal';
 import ReportCheckModal from '../components/popup/ReportCheckModal';
 import useDidMountEffect from '../hooks/useDidMountEffect';
 import Header from '../components/Header';
+import SettlementCostEditModal from '../components/popup/SettlementCostEditModal';
 
 enum Type {
   MESSAGE,
