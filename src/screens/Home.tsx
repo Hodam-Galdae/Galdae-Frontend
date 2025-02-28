@@ -1,7 +1,6 @@
 // Home.tsx 테스트
-
 import React, {useState, useRef} from 'react';
-import {ScrollView, View, Pressable, TouchableOpacity} from 'react-native';
+import {ScrollView, View, TouchableOpacity} from 'react-native';
 //import stylesheet from '../styles/stylesheet';
 import styles from '../styles/Home.style';
 import BasicButton from '../components/button/BasicButton';
@@ -22,7 +21,6 @@ import {useNavigation} from '@react-navigation/native';
 import moment from 'moment';
 import ToastPopup from '../components/popup/ToastPopup';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import DeletePopup from '../components/popup/DeletePopup';
 
 type RootStackParamList = {
   CreateGaldae: undefined;
@@ -46,14 +44,70 @@ import FastGaldaeTimePopup, {
 type HomeProps = {
   navigation: any; // 실제 프로젝트에서는 proper type 사용 권장 (예: StackNavigationProp)
 };
-const Home: React.FC = () => {
+
+const Home: React.FC<HomeProps> = () => {
+  const newGaldaeList = [
+    {time: '방금전', dest: '충주 터미널', depart: '정문'},
+    {time: '1일전', dest: '충주역', depart: '학교'},
+    {time: '2일전', dest: '시청', depart: '정문'},
+    {time: '3일전', dest: '마트', depart: '학교'},
+    {time: '4일전', dest: '공원', depart: '후문'},
+    {time: '5일전', dest: '카페', depart: '도서관'},
+    {time: '6일전', dest: '병원', depart: '정문'},
+    {time: '7일전', dest: '은행', depart: '학교'},
+    {time: '8일전', dest: '백화점', depart: '후문'},
+    {time: '9일전', dest: '기차역', depart: '정문'},
+    {time: '10일전', dest: '공항', depart: '터미널'},
+    {time: '11일전', dest: '도서관', depart: '후문'},
+    {time: '12일전', dest: '박물관', depart: '정문'},
+    {time: '13일전', dest: '호텔', depart: '학교'},
+    {time: '14일전', dest: '극장', depart: '정문'},
+  ];
+  const dummyGaldaeData = [
+    {
+      id: 1,
+      owner: '하재연님의 갈대',
+      from: {main: '정문', sub: '학교'},
+      users: 2,
+      capacity: 4,
+      destination: {main: '던킨도너츠', sub: '충주 터미널'},
+      time: '2025년 00월 00일 (0) 00 : 00',
+      timeAgreement: true,
+      tags: ['성별무관'],
+    },
+    {
+      id: 2,
+      owner: '김철수의 갈대',
+      from: {main: '후문', sub: '대학'},
+      users: 1,
+      capacity: 3,
+      destination: {main: '스타벅스', sub: '시내'},
+      time: '2025년 01월 01일 (목) 10 : 30',
+      timeAgreement: false,
+      tags: ['남자만'],
+    },
+    {
+      id: 3,
+      owner: '이영희의 갈대',
+      from: {main: '정문', sub: '회사'},
+      users: 1,
+      capacity: 2,
+      destination: {main: '공원', sub: '주변'},
+      time: '2025년 02월 02일 (일) 14 : 00',
+      timeAgreement: true,
+      tags: ['성별무관'],
+    },
+  ];
+  const [loading, setLoading] = useState<boolean>(false);
+  //const [scrollPosition, setScrollPosition] = useState<number>(0);
+  const [generateLoading, setgenerateLoading] = useState<boolean>(false);
   const [toastVisible, setToastVisible] = useState<boolean>(false);
   //const [destination, setDestination] = useState<string>('');
   //const [deletePopupVisible, setDeletePopupVisible] = useState<boolean>(false);
   const [createGaldaePopupVisible, setCreateGaldaePopupVisible] =
     useState<boolean>(false);
   const navigation = useNavigation<LoginScreenNavigationProp>();
-  const [fastGaldaePopupVisible, setFastGaldaePopupVisible] = useState<boolean>(false);
+  // const [fastGaldaePopupVisible, setFastGaldaePopupVisible] = useState<boolean>(false);
   const [departureDate, setDepartureDate] = useState<string | null>(null); // "YYYY-MM-DD" 형식
   const [departureAmPm, setDepartureAmPm] = useState<'오전' | '오후'>('오전');
   // 출발지 관련 상태
@@ -78,14 +132,14 @@ const Home: React.FC = () => {
     }, 2000);
   };
 
-  const handleGeneratePress = () => {
-    setgenerateLoading(true);
-    // 버튼 클릭 시 원하는 로직을 수행하고, 완료 후 로딩 상태를 false로 전환합니다.
-    setTimeout(() => {
-      setgenerateLoading(false);
-    }, 2000);
-  };
-  예를 들어, 갈대 생성 완료 시 토스트 팝업을 띄우고 3초 후에 사라지도록 함.
+  // const handleGeneratePress = () => {
+  //   setgenerateLoading(true);
+  //   // 버튼 클릭 시 원하는 로직을 수행하고, 완료 후 로딩 상태를 false로 전환합니다.
+  //   setTimeout(() => {
+  //     setgenerateLoading(false);
+  //   }, 2000);
+  // };
+  // 예를 들어, 갈대 생성 완료 시 토스트 팝업을 띄우고 3초 후에 사라지도록 함.
 
   const handleMorePress = () => {
     navigation.navigate('NowGaldae');
@@ -94,7 +148,7 @@ const Home: React.FC = () => {
     selectedDate: string,
     amPm: '오전' | '오후',
     hour: number,
-    minute: number
+    minute: number,
   ) => {
     setDepartureDate(selectedDate);
     setDepartureAmPm(amPm);
@@ -110,15 +164,21 @@ const Home: React.FC = () => {
       const minute = now.minute();
       const amPm = hour < 12 ? '오전' : '오후';
       let hour12 = hour % 12;
-      if (hour12 === 0) {hour12 = 12;}
-      const formattedTime = `${amPm} ${hour12} : ${minute < 10 ? '0' + minute : minute}`;
+      if (hour12 === 0) {
+        hour12 = 12;
+      }
+      const formattedTime = `${amPm} ${hour12} : ${
+        minute < 10 ? '0' + minute : minute
+      }`;
       return `${formattedDate} ${formattedTime}`;
     }
     const dateObj = moment(departureDate, 'YYYY-MM-DD');
     // 예: "2025년 11월 12일 (수)"
     const formattedDate = dateObj.format('YYYY년 M월 D일 (ddd)');
     // 예: "오전 2 : 30" (분이 10 미만일 경우 앞에 0 추가)
-    const formattedTime = `${departureAmPm} ${departureHour} : ${departureMinute < 10 ? '0' + departureMinute : departureMinute}`;
+    const formattedTime = `${departureAmPm} ${departureHour} : ${
+      departureMinute < 10 ? '0' + departureMinute : departureMinute
+    }`;
     return `${formattedDate} ${formattedTime}`;
   };
 
@@ -133,17 +193,17 @@ const Home: React.FC = () => {
   // const handlePressGenderFilterBtn = () =>{
 
   // };
-  const toggleFastGaldaeStartPopup = () =>{
+  const toggleFastGaldaeStartPopup = () => {
     //setFastGaldaePopupVisible((prev) => !prev);
     fastGaldaeStartPopupRef.current?.open();
   };
 
-  const toggleFastGaldaeEndPopup = () =>{
+  const toggleFastGaldaeEndPopup = () => {
     //setFastGaldaePopupVisible((prev) => !prev);
     fastGaldaeEndPopupRef.current?.open();
   };
 
-  const toggleFastGaldaeTimePopup = () =>{
+  const toggleFastGaldaeTimePopup = () => {
     //setFastGaldaePopupVisible((prev) => !prev);
     fastGaldaeTimePopupRef.current?.open();
   };
@@ -156,14 +216,13 @@ const Home: React.FC = () => {
   //   closeDeletePopup();
   // };
 
-  // const openCreateGaldaePopup = () => {
-  //   setgenerateLoading(true);
-  //   // 버튼 클릭 시 원하는 로직을 수행하고, 완료 후 로딩 상태를 false로 전환합니다.
-  //   setTimeout(() => {
-  //     setgenerateLoading(false);
-  //     setCreateGaldaePopupVisible(true);
-  //   }, 2000);
-
+  const openCreateGaldaePopup = () => {
+    setgenerateLoading(true);
+    // 버튼 클릭 시 원하는 로직을 수행하고, 완료 후 로딩 상태를 false로 전환합니다.
+    setTimeout(() => {
+      setgenerateLoading(false);
+      setCreateGaldaePopupVisible(true);
+    }, 2000);
   };
   const closeCreateGaldaePopup = () => {
     setCreateGaldaePopupVisible(false);
@@ -174,7 +233,7 @@ const Home: React.FC = () => {
     setToastVisible(true);
   };
 
-  const handleSwitch = () =>{
+  const handleSwitch = () => {
     setDepartureLarge(destinationLarge);
     setDepartureSmall(destinationSmall);
     setDestinationLarge(departureLarge);
@@ -183,137 +242,152 @@ const Home: React.FC = () => {
   return (
     <View>
       <ScrollView>
-       <BasicButton
-        text="어플 공지사항/안내"
-        onPress={handlePress}
-        loading={loading}
-        buttonStyle={styles.notiButton}
-        textStyle={styles.notiText}
-      />
-      <ScrollView style={styles.container}>
-        <View style={styles.madeGaldaeContainer}>
-          <BasicText text="생성한 갈대" style={styles.madeGaldae}/>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            scrollEventThrottle={16}
-          >
-            {newGaldaeList.map((list, index) => (
-              <View key={index} style={styles.newGaldaeList}>
-                <BasicText text={list.time} style={styles.newGaldaeTimeText} />
-                <BasicText text={`${list.depart}`} style={styles.newGaldaeDepartText} />
-                <SVG name="arrow_down_fill" style={styles.newGaldaeArrowIcon}/>
-                <BasicText text={`${list.dest}`} style={styles.newGaldaeDestText} />
-              </View>
-            ))}
-          </ScrollView>
-        </View>
+        <BasicButton
+          text="어플 공지사항/안내"
+          onPress={handlePress}
+          loading={loading}
+          buttonStyle={styles.notiButton}
+          textStyle={styles.notiText}
+        />
+        <ScrollView style={styles.container}>
+          <View style={styles.madeGaldaeContainer}>
+            <BasicText text="생성한 갈대" style={styles.madeGaldae} />
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              scrollEventThrottle={16}>
+              {newGaldaeList.map((list, index) => (
+                <View key={index} style={styles.newGaldaeList}>
+                  <BasicText
+                    text={list.time}
+                    style={styles.newGaldaeTimeText}
+                  />
+                  <BasicText
+                    text={`${list.depart}`}
+                    style={styles.newGaldaeDepartText}
+                  />
+                  <SVG
+                    name="arrow_down_fill"
+                    style={styles.newGaldaeArrowIcon}
+                  />
+                  <BasicText
+                    text={`${list.dest}`}
+                    style={styles.newGaldaeDestText}
+                  />
+                </View>
+              ))}
+            </ScrollView>
+          </View>
 
-        <BasicText text="갈대 시작하기" style={styles.startGaldae}/>
-        <BasicText text="목적지 설정 후 동승자를 구하세요!" style={styles.startGaldaeEx}/>
+          <BasicText text="갈대 시작하기" style={styles.startGaldae} />
+          <BasicText
+            text="목적지 설정 후 동승자를 구하세요!"
+            style={styles.startGaldaeEx}
+          />
 
-        <View style={styles.borderedBox}>
+          <View style={styles.borderedBox}>
+            <View style={styles.startAndEnd}>
+              <TouchableOpacity
+                style={styles.startContain}
+                onPress={toggleFastGaldaeStartPopup}>
+                <TextTag text="출발지" viewStyle={styles.start} />
+                <BasicText text={departureLarge} style={styles.mainPosName} />
+                <BasicText text={departureSmall} style={styles.subPosName} />
+              </TouchableOpacity>
 
-          <View style={styles.startAndEnd}>
-
-            <TouchableOpacity style={styles.startContain}  onPress={toggleFastGaldaeStartPopup}>
-              <TextTag
-                text="출발지"
-                viewStyle={styles.start}
-              />
-              <BasicText text={departureLarge} style={styles.mainPosName}/>
-              <BasicText text={departureSmall} style={styles.subPosName}/>
-            </TouchableOpacity>
-
-            <SVGButton
+              <SVGButton
                 iconName="Switch"
                 buttonStyle={styles.switchBtn}
                 SVGStyle={styles.switchIcon}
                 onPress={handleSwitch}
-            />
-
-            <TouchableOpacity style={styles.startContain} onPress={toggleFastGaldaeEndPopup}>
-              <TextTag
-                text="도착지"
-                viewStyle={styles.start}
               />
-              <BasicText text={destinationLarge} style={styles.mainPosName}/>
-              <BasicText text={destinationSmall} style={styles.subPosName}/>
-            </TouchableOpacity>
 
+              <TouchableOpacity
+                style={styles.startContain}
+                onPress={toggleFastGaldaeEndPopup}>
+                <TextTag text="도착지" viewStyle={styles.start} />
+                <BasicText text={destinationLarge} style={styles.mainPosName} />
+                <BasicText text={destinationSmall} style={styles.subPosName} />
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.line} />
+
+            <TouchableOpacity
+              onPress={toggleFastGaldaeTimePopup}
+              style={styles.startContainer}>
+              <BasicText text="출발일시" style={styles.startTime} />
+              <BasicText
+                text={formatDepartureDateTime()}
+                style={styles.startDateTime}
+              />
+            </TouchableOpacity>
           </View>
 
-          <View style={styles.line}/>
-
-          <TouchableOpacity onPress={toggleFastGaldaeTimePopup} style={styles.startContainer}>
-            <BasicText text="출발일시" style={styles.startTime}/>
-            <BasicText text={formatDepartureDateTime()} style={styles.startDateTime}/>
-          </TouchableOpacity>
-
-        </View>
-
-        <BasicButton
-          text="생성하기"
-          onPress={openCreateGaldaePopup}
-          loading={generateLoading}
-          buttonStyle={styles.generateButton}
-          textStyle={styles.generateText}
-        />
-
-        <View style={styles.advertiseBox}>
-            <BasicText text="advertiseBox"/>
-        </View>
-
-        <View style={styles.nowGaldaeTitle}>
-          <BasicText text="실시간 갈대" style={styles.nowGaldae}/>
-          <SVGTextButton
-          iconName="More"
-          text="더보기"
-          iconPosition="right"
-          onPress={handleMorePress}
-          enabledColors={{
-            backgroundColor: 'transparent',
-            textColor: theme.colors.gray1,
-            borderColor: 'transparent',
-          }}
-          //buttonStyle={styles.button}
-          //textStyle={styles.text}
+          <BasicButton
+            text="생성하기"
+            onPress={openCreateGaldaePopup}
+            loading={generateLoading}
+            buttonStyle={styles.generateButton}
+            textStyle={styles.generateText}
           />
-        </View>
 
+          <View style={styles.advertiseBox}>
+            <BasicText text="advertiseBox" />
+          </View>
 
-        <View style={styles.nowGaldaeList}>
-        {dummyGaldaeData.map(item => (
-          <GaldaeItem
-          key={item.id}
-          item={item}
-          onPress={() => navigation.navigate('NowGaldaeDetail', { item })}
-        />
-        ))}
-      </View>
+          <View style={styles.nowGaldaeTitle}>
+            <BasicText text="실시간 갈대" style={styles.nowGaldae} />
+            <SVGTextButton
+              iconName="More"
+              text="더보기"
+              iconPosition="right"
+              onPress={handleMorePress}
+              enabledColors={{
+                backgroundColor: 'transparent',
+                textColor: theme.colors.gray1,
+                borderColor: 'transparent',
+              }}
+              //buttonStyle={styles.button}
+              //textStyle={styles.text}
+            />
+          </View>
+
+          <View style={styles.nowGaldaeList}>
+            {dummyGaldaeData.map(item => (
+              <GaldaeItem
+                key={item.id}
+                item={item}
+                onPress={() => navigation.navigate('NowGaldaeDetail', {item})}
+              />
+            ))}
+          </View>
+        </ScrollView>
       </ScrollView>
 
-    </ScrollView>
-
       <FastGaldaeStartPopup
-      ref={fastGaldaeStartPopupRef}
-      onConfirm={(large, small) => {
-        setDepartureLarge(large);
-        setDepartureSmall(small);
-      }}
-      onClose={() => console.log('팝업 닫힘')}
+        ref={fastGaldaeStartPopupRef}
+        onConfirm={(large, small) => {
+          setDepartureLarge(large);
+          setDepartureSmall(small);
+        }}
+        onClose={() => console.log('팝업 닫힘')}
       />
 
       <FastGaldaeEndPopup
-      ref={fastGaldaeEndPopupRef}
-      onConfirm={(large, small) => {
-        setDestinationLarge(large);
-        setDestinationSmall(small);
-      }}
-      onClose={() => console.log('팝업 닫힘')}
+        ref={fastGaldaeEndPopupRef}
+        onConfirm={(large, small) => {
+          setDestinationLarge(large);
+          setDestinationSmall(small);
+        }}
+        onClose={() => console.log('팝업 닫힘')}
       />
 
-      <FastGaldaeTimePopup ref={fastGaldaeTimePopupRef} onConfirm={handleTimePopupConfirm} onClose={() => console.log('팝업 닫힘')}/>
+      <FastGaldaeTimePopup
+        ref={fastGaldaeTimePopupRef}
+        onConfirm={handleTimePopupConfirm}
+        onClose={() => console.log('팝업 닫힘')}
+      />
 
       {/* <DeletePopup
           visible={deletePopupVisible}
@@ -325,15 +399,15 @@ const Home: React.FC = () => {
           }}
           title="선택하신 갈대를"
           message="삭제하시겠습니까?"
-        />
+        /> */}
 
       <CreateGaldaePopup
         visible={createGaldaePopupVisible}
         onCancel={closeCreateGaldaePopup}
         onConfirm={handleCreateCaledaeConfirm}
-        departureDateTime={formatDepartureDateTime()}  // Home.tsx의 출발일시 포맷 함수 결과
-        departureLocation={departureSmall}              // 출발지 소분류 (예: "정문")
-        destination={destinationSmall}                  // 도착지 소분류 (예: "던킨도너츠")
+        departureDateTime={formatDepartureDateTime()} // Home.tsx의 출발일시 포맷 함수 결과
+        departureLocation={departureSmall} // 출발지 소분류 (예: "정문")
+        destination={destinationSmall} // 도착지 소분류 (예: "던킨도너츠")
       />
       <FloatingButton onPress={() => navigation.navigate('CreateGaldae')} />
       <ToastPopup
