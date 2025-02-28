@@ -1,4 +1,4 @@
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {Platform, StatusBar} from 'react-native';
 import React, {useEffect} from 'react';
 import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
@@ -17,84 +17,84 @@ import axios, {AxiosResponse, InternalAxiosRequestConfig} from 'axios';
 import {errorLogger, requestLogger, responseLogger} from 'axios-logger';
 import Settlement from './src/screens/Settlement';
 import ReviewInProgress from './src/screens/ReviewInProgress';
-
+import TermsDetail from './src/screens/TermsDetail';
 function App() {
-    useEffect(() => {
-        if (Platform.OS === 'android') {
-            // StatusBar.setBackgroundColor('transparent');
-            StatusBar.setTranslucent(true);
-        }
-        StatusBar.setBarStyle('dark-content');
-        StatusBar.setHidden(false);
+  useEffect(() => {
+    if (Platform.OS === 'android') {
+      // StatusBar.setBackgroundColor('transparent');
+      StatusBar.setTranslucent(true);
+    }
+    StatusBar.setBarStyle('dark-content');
+    StatusBar.setHidden(false);
 
-        const setInterceptor = setupAxiosInterceptors();
-        return () => {
-            setInterceptor();
-        };
-        }, []);
-
-    const Stack = createNativeStackNavigator();
-
-    const theme = {
-        ...DefaultTheme,
-        colors: {
-            ...DefaultTheme.colors,
-            background: 'white',
-        },
+    const setInterceptor = setupAxiosInterceptors();
+    return () => {
+      setInterceptor();
     };
+  }, []);
 
-    const setupAxiosInterceptors = () => {
+  const Stack = createNativeStackNavigator();
 
-        axios.defaults.timeout = 10000;
+  const theme = {
+    ...DefaultTheme,
+    colors: {
+      ...DefaultTheme.colors,
+      background: 'white',
+    },
+  };
 
-        const requestInterceptors = axios.interceptors.request.use(
-            (request: InternalAxiosRequestConfig) => {
-                return requestLogger(request);
-            },
-            (error) => {
-                return Promise.reject(error);
-            }
-        );
+  const setupAxiosInterceptors = () => {
+    axios.defaults.timeout = 10000;
 
-        const responseInterceptors = axios.interceptors.response.use(
-            (response: AxiosResponse) => responseLogger(response),
-            (error) => errorLogger(error)
-        );
-
-
-        return () => {
-            axios.interceptors.request.eject(requestInterceptors);
-            axios.interceptors.response.eject(responseInterceptors);
-        };
-    };
-
-    return (
-        <GestureHandlerRootView>
-            <SafeAreaProvider>
-                <NavigationContainer theme={theme}>
-                    <Stack.Navigator
-                        initialRouteName="Onboarding"
-                        screenOptions={{
-                            headerShown: false,
-                        }}
-                    >
-                        <Stack.Screen name="Onboarding" component={Onboarding} />
-                        <Stack.Screen name="Login" component={Login} />
-                        <Stack.Screen name="CreateGaldae" component={CreateGaldae} />
-                        <Stack.Screen name="NowGaldae" component={NowGaldae} />
-                        <Stack.Screen name="NowGaldaeDetail" component={NowGaldaeDetail} />
-                        <Stack.Screen name="SetDestination" component={SetDestination} />
-                        <Stack.Screen name="SignUp" component={SignUp} />
-                        <Stack.Screen name="MainTab" component={MainTab} />
-                        <Stack.Screen name="ChatRoom" component={ChatRoom}/>
-                        <Stack.Screen name="Settlement" component={Settlement}/>
-                        <Stack.Screen name="ReviewInProgress" component={ReviewInProgress}/>
-
-                    </Stack.Navigator>
-                </NavigationContainer>
-            </SafeAreaProvider>
-        </GestureHandlerRootView>
+    const requestInterceptors = axios.interceptors.request.use(
+      (request: InternalAxiosRequestConfig) => {
+        return requestLogger(request);
+      },
+      error => {
+        return Promise.reject(error);
+      },
     );
+
+    const responseInterceptors = axios.interceptors.response.use(
+      (response: AxiosResponse) => responseLogger(response),
+      error => errorLogger(error),
+    );
+
+    return () => {
+      axios.interceptors.request.eject(requestInterceptors);
+      axios.interceptors.response.eject(responseInterceptors);
+    };
+  };
+
+  return (
+    <GestureHandlerRootView>
+      <SafeAreaProvider>
+        <NavigationContainer theme={theme}>
+          <Stack.Navigator
+            initialRouteName="Onboarding"
+            screenOptions={{
+              headerShown: false,
+            }}>
+            <Stack.Screen name="Onboarding" component={Onboarding} />
+            <Stack.Screen name="Login" component={Login} />
+            <Stack.Screen name="CreateGaldae" component={CreateGaldae} />
+            <Stack.Screen name="NowGaldae" component={NowGaldae} />
+            <Stack.Screen name="NowGaldaeDetail" component={NowGaldaeDetail} />
+            <Stack.Screen name="SetDestination" component={SetDestination} />
+            <Stack.Screen name="SignUp" component={SignUp} />
+            <Stack.Screen name="MainTab" component={MainTab} />
+            <Stack.Screen name="ChatRoom" component={ChatRoom} />
+            <Stack.Screen name="Settlement" component={Settlement} />
+            <Stack.Screen
+              name="ReviewInProgress"
+              component={ReviewInProgress}
+            />
+            <Stack.Screen name="TermsDetail" component={TermsDetail} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
+  );
 }
 
 export default App;

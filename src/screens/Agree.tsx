@@ -9,9 +9,10 @@ import BasicButton from '../components/button/BasicButton';
 
 interface AgreeProps {
   setNextStep: () => void;
+  goTermsDetailPage: (data: string) => void;
 }
 
-const Agree: React.FC<AgreeProps> = ({setNextStep}) => {
+const Agree: React.FC<AgreeProps> = ({setNextStep, goTermsDetailPage}) => {
   const agreeDetailTexts = [
     '[필수] 만 17세 이상입니다.',
     '[필수] 서비스 이용약관 동의',
@@ -86,17 +87,19 @@ const Agree: React.FC<AgreeProps> = ({setNextStep}) => {
         </TouchableOpacity>
         {agreeDetailTexts.map((e, i) => {
           return (
-            <TouchableOpacity key={i} onPress={() => selectOne(i)}>
-              <View style={styles.agreeWrapper}>
+            <View key={i} style={styles.agreeWrapper}>
+              <TouchableOpacity onPress={() => selectOne(i)}>
                 <SVG
                   width={20}
                   height={20}
                   name={selected[i] ? 'CheckSelected' : 'CheckLine'}
                   style={styles.agreeIcon}
                 />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => goTermsDetailPage(e)}>
                 <BasicText style={styles.agreeDetailText} text={e} />
-              </View>
-            </TouchableOpacity>
+              </TouchableOpacity>
+            </View>
           );
         })}
         <BasicButton
