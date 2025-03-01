@@ -1,7 +1,7 @@
 import React,{useState} from 'react';
 import {  View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import styles from '../../styles/Logout';
+import styles from '../../styles/Logout.style';
 import Header from '../../components/Header';
 import SVGButton from '../../components/button/SVGButton';
 import BasicText from '../../components/BasicText';
@@ -39,7 +39,7 @@ const WithDraw: React.FC<HomeProps> = () => {
       <View style={styles.container}>
         <Header
         leftButton={<SVGButton iconName="arrow_left_line" onPress={goBack}/>}
-        title={<BasicText text="회원탈퇴" style={styles.headerText}/>}
+        title={<BasicText text="회원 탈퇴" style={styles.headerText}/>}
         />
         <View style={styles.content}>
           <BasicText text="탈퇴 하기 전 꼭 확인해주세요!" style={styles.title}/>

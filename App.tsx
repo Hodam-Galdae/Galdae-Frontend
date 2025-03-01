@@ -17,6 +17,7 @@ import axios, {AxiosResponse, InternalAxiosRequestConfig} from 'axios';
 import {errorLogger, requestLogger, responseLogger} from 'axios-logger';
 import Settlement from './src/screens/Settlement';
 import Payment from './src/screens/myinfo/Payment';
+import AccountRegister from './src/screens/myinfo/AccountRegister';
 import UserGuide from './src/screens/myinfo/UserGuide';
 import TermsOfUse from './src/screens/myinfo/TermsOfUse';
 import MyGaldae from './src/screens/myinfo/MyGaldae';
@@ -101,6 +102,7 @@ function App() {
                         <Stack.Screen name="ChatRoom" component={ChatRoom}/>
                         <Stack.Screen name="Settlement" component={Settlement}/>
                         <Stack.Screen name="Payment" component={Payment}/>
+                        <Stack.Screen name="AccountRegister" component={AccountRegister}/>
                         <Stack.Screen name="MyGaldae" component={MyGaldae}/>
                         <Stack.Screen name="MyGaldaeHistory" component={MyGaldaeHistory}/>
                         <Stack.Screen name="NicknameChange" component={NicknameChange}/>

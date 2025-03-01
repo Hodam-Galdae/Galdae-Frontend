@@ -1,7 +1,7 @@
 import React from 'react';
 import {  View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import styles from '../../styles/Logout';
+import styles from '../../styles/Logout.style';
 import Header from '../../components/Header';
 import SVGButton from '../../components/button/SVGButton';
 import BasicText from '../../components/BasicText';

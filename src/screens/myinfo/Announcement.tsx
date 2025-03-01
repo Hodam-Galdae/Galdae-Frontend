@@ -1,7 +1,7 @@
 import React,{useState} from 'react';
 import {  ScrollView, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import styles from '../../styles/Payment.style';
+import styles from '../../styles/Announcement.style';
 import Header from '../../components/Header';
 import SVGButton from '../../components/button/SVGButton';
 import BasicText from '../../components/BasicText';

@@ -1,0 +1,27 @@
+<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Frame" clip-path="url(#clip0_2544_7770)">
+<path id="Vector" d="M40 0H0V40H40V0Z" fill="#0091D0"/>
+<path id="Vector_2" d="M0 0L9.99708 10.0029L20 0H0Z" fill="#0091D0"/>
+<path id="Vector_3" d="M0 0V20L9.99708 10.0029L0 0Z" fill="#009AD8"/>
+<path id="Vector_4" d="M20 20L10.0029 9.99704L0 20H20Z" fill="#0091D0"/>
+<path id="Vector_5" d="M20 20V0L10.0029 9.99708L20 20Z" fill="#0082C9"/>
+<path id="Vector_6" d="M20 0V20L29.9971 10.0029L20 0Z" fill="#0071BB"/>
+<path id="Vector_7" d="M40 20L30.0029 9.99704L20 20H40Z" fill="#004C98"/>
+<path id="Vector_8" d="M0 20L9.99708 30.0029L20 20H0Z" fill="#0082C9"/>
+<path id="Vector_9" d="M0 20V40L9.99708 30.0029L0 20Z" fill="#0071BB"/>
+<path id="Vector_10" d="M20 40L10.0029 29.997L0 40H20Z" fill="#0066B3"/>
+<path id="Vector_11" d="M20 40V20L10.0029 29.9971L20 40Z" fill="#00529C"/>
+<path id="Vector_12" d="M20 20L29.9971 30.0029L40 20H20Z" fill="#1B3281"/>
+<path id="Vector_13" d="M20 20V40L29.9971 30.0029L20 20Z" fill="#004C98"/>
+<path id="Vector_14" d="M40 40L30.0029 29.997L20 40H40Z" fill="#1B3281"/>
+<path id="Vector_15" d="M40 40V20L30.0029 29.9971L40 40Z" fill="#1B3281"/>
+<path id="Vector_16" d="M20 0L29.9971 10.0029L40 0H20Z" fill="#0066B3"/>
+<path id="Vector_17" d="M40 20V0L30.0029 9.99708L40 20Z" fill="#00529C"/>
+<path id="Vector_18" d="M40 25.0015L27.1925 12.8075L7.75928 32.2875L14.8466 39.3748L27.1925 27.2218L40 39.9591V25.0015Z" fill="white"/>
+</g>
+<defs>
+<clipPath id="clip0_2544_7770">
+<rect width="40" height="40" fill="white"/>
+</clipPath>
+</defs>
+</svg>
