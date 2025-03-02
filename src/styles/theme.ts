@@ -13,6 +13,7 @@ export const theme = {
       caption1:'#9D9D9D',
       black:'#121212',
       red:'#FF5354',
+      sub:'#FDFD94',
       sub2:'#CEF8BF',
       transparent:'transparent',
       enabledBorder:'transparent',

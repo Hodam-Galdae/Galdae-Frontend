@@ -1,4 +1,4 @@
-import React,{} from 'react';
+import React,{ useState } from 'react';
 import {  TouchableOpacity, View,FlatList } from 'react-native';
 import { useNavigation,useRoute, RouteProp } from '@react-navigation/native';
 import styles from '../../styles/Payment.style';
@@ -9,15 +9,17 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import SVG from '../../components/SVG';
 import BasicButton from '../../components/button/BasicButton';
 import SettlementItem,{ Settlement } from '../../components/SettlementItem';
+import LinearGradient from 'react-native-linear-gradient';
 import { theme } from '../../styles/theme';
-
+import * as SVGIcon from '../../assets/svg';
+import DeletePopup from '../../components/popup/DeletePopup';
 type HomeProps = {
   navigation: any; // 실제 프로젝트에서는 proper type 사용 권장 (예: StackNavigationProp)
 };
-
 // 내비게이션 스택 타입 정의
 type RootStackParamList = {
     CreateGaldae: undefined;
+    MyInfo:undefined;
     NowGaldae: {
       departureLarge?:string,
       departureSmall?:string,
@@ -47,8 +49,9 @@ const Payment: React.FC<HomeProps> = () => {
   //   isAccountRegister :false,
   // };
   const navigation = useNavigation<nowGaldaeScreenNavigationProp>();
-  const goBack = () => navigation.goBack();
+  const goBack = () =>  navigation.navigate('MyInfo');
   const route = useRoute<RouteProp<RootStackParamList, 'Payment'>>();
+  const [deletePopupVisible, setDeletePopupVisible] = useState<boolean>(false);
   // 전달된 파라미터를 추출합니다.
   const { bank, account, svg } = route.params || {};
   // 전달된 정보가 있으면 계좌 등록이 완료된 것으로 처리합니다.
@@ -62,6 +65,9 @@ const Payment: React.FC<HomeProps> = () => {
   const handleRegisterAccount = () =>{
     navigation.navigate('AccountRegister');
   };
+  const handleDeleteConfirm = () =>{
+
+  };
   return (
     <View style={styles.container}>
           <Header
@@ -72,13 +78,20 @@ const Payment: React.FC<HomeProps> = () => {
               <BasicText text="현재 정산 계좌" style={styles.title}/>
               {
                 isAccountRegister ? (
+                  <LinearGradient
+                    colors={[theme.colors.brandColor, theme.colors.sub]}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 1 }}
+                    style={styles.gradient}
+                    >
                     <View style={styles.hasAccountContainer}>
                       <View style={styles.bankContainer}>
-                        <SVG name={svg ?? 'Bank_Busan'}/>
-                        <BasicText text={bank}/>
+                        <SVG name={(svg ?? 'Bank_Busan') as keyof typeof SVGIcon} width={23}/>
+                        <BasicText text={bank} style={styles.bankText}/>
                       </View>
-                      <BasicText text={account}/>
+                      <BasicText text={account} style={styles.accountText}/>
                     </View>
+                  </LinearGradient>
                 ) : (
                   <TouchableOpacity style={styles.accountContainer} onPress={handleRegisterAccount}>
                     <View style={styles.addContainer}>
@@ -102,7 +115,7 @@ const Payment: React.FC<HomeProps> = () => {
 
                   }
                 }
-                />
+                onPress={()=>navigation.navigate('AccountRegister')}/>
                 <BasicButton
                 text="삭제하기"
                 textStyle={styles.text}
@@ -114,6 +127,7 @@ const Payment: React.FC<HomeProps> = () => {
 
                   }
                 }
+                onPress={()=>setDeletePopupVisible(true)}
                 />
             </View>
               )}
@@ -127,6 +141,16 @@ const Payment: React.FC<HomeProps> = () => {
                 //contentContainerStyle={{ paddingBottom: 50 }}
               />
           </View>
+          <DeletePopup
+          visible={deletePopupVisible}
+          onCancel={()=>setDeletePopupVisible(false)}
+          onConfirm={() => {
+            setDeletePopupVisible(false);
+            handleDeleteConfirm();
+          }}
+          title="정산 계좌 정보를"
+          message="삭제하시겠습니까?"
+        />
     </View>
     );
 };

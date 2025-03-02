@@ -49,6 +49,10 @@ export default StyleSheet.create({
     borderRadius: theme.borderRadius.size10,
     backgroundColor: theme.colors.white,
   },
+  bankSVGText:{
+    flexDirection:'row',
+    gap:8,
+  },
   bankPickerButton: {
     flexDirection: 'row',
     alignItems: 'center',

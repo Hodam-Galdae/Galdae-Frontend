@@ -16,6 +16,7 @@ import SetDestination from './src/screens/SetDestination';
 import axios, {AxiosResponse, InternalAxiosRequestConfig} from 'axios';
 import {errorLogger, requestLogger, responseLogger} from 'axios-logger';
 import Settlement from './src/screens/Settlement';
+import MyInfo from './src/screens/MyInfo';
 import Payment from './src/screens/myinfo/Payment';
 import AccountRegister from './src/screens/myinfo/AccountRegister';
 import UserGuide from './src/screens/myinfo/UserGuide';
@@ -101,6 +102,7 @@ function App() {
                         <Stack.Screen name="MainTab" component={MainTab} />
                         <Stack.Screen name="ChatRoom" component={ChatRoom}/>
                         <Stack.Screen name="Settlement" component={Settlement}/>
+                        <Stack.Screen name="MyInfo" component={MyInfo}/>
                         <Stack.Screen name="Payment" component={Payment}/>
                         <Stack.Screen name="AccountRegister" component={AccountRegister}/>
                         <Stack.Screen name="MyGaldae" component={MyGaldae}/>

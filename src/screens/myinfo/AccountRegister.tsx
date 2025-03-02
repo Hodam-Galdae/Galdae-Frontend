@@ -113,6 +113,10 @@ const AccountRegister: React.FC<HomeProps> = () => {
                 }
                 }
               >
+                <View style={styles.bankSVGText}>
+                {selectedBank && <SVG name={
+                 sortedBanks.find((bank: BankOption) => bank.code === selectedBank)?.svg || 'Bank_KB'
+                 } width={16} height={16}/>}
                 <BasicText
                   text={
                     selectedBank
@@ -121,6 +125,7 @@ const AccountRegister: React.FC<HomeProps> = () => {
                   }
                   style={styles.bankPickerText}
                 />
+                </View>
                 <SVG
                   name={dropdownVisible ? 'up_line' : 'down_line'}
                   style={styles.bankPickerIcon}

@@ -25,19 +25,40 @@ export default StyleSheet.create({
         fontSize:theme.fontSize.size20,
         fontWeight:'700',
     },
-    hasAccountContainer:{
-      width:275,
-      height:145,
-      backgroundColor:theme.colors.sub2,
-      borderRadius:theme.borderRadius.size10,
+    gradient:{
+      borderRadius: 10,
+      //padding: 2, // 그라데이션 border 두께
+      width: 286,
+      height: 156,
       justifyContent:'center',
       alignItems:'center',
       alignSelf:'center',
       marginTop:40,
       marginBottom:40,
     },
+    hasAccountContainer:{
+      width:282,
+      height:152,
+      backgroundColor:theme.colors.sub2,
+      borderRadius:theme.borderRadius.size10,
+      borderWidth:0,
+      gap:14,
+      justifyContent:'center',
+      alignItems:'center',
+      alignSelf:'center',
+    },
     bankContainer:{
       flexDirection:'row',
+      alignItems:'center',
+      gap:8,
+    },
+    bankText:{
+      fontSize:theme.fontSize.size20,
+      fontWeight:'500',
+    },
+    accountText:{
+      fontSize:theme.fontSize.size22,
+      fontWeight:'700',
     },
     accountContainer:{
       width:275,

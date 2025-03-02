@@ -24,6 +24,7 @@ type HomeProps = {
 // 내비게이션 스택 타입 정의
 type RootStackParamList = {
     CreateGaldae: undefined;
+    MyInfo:undefined;
     NowGaldae: {
       departureLarge?:string,
       departureSmall?:string,
@@ -44,7 +45,7 @@ const FAQ: React.FC<HomeProps> = () => {
     const tabIndex = (route.params as FAQParamList)?.tabIndex ?? 0;
     const [tab, setTab] = useState(tabIndex);
     const navigation = useNavigation<nowGaldaeScreenNavigationProp>();
-    const goBack = () => navigation.goBack();
+    const goBack = () =>  navigation.navigate('MyInfo');
     // 현재 탭에 따라 다른 화면을 렌더링
     const renderTabContent = () => {
       if (tab === 0) {
