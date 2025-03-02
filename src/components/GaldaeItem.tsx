@@ -10,11 +10,12 @@ import styles from '../styles/GaldaeItem.style';
 interface GaldaeItemProps {
   item: any;
   onPress: () => void;
+  onLongPress?: () => void;
 }
 
-const GaldaeItem: React.FC<GaldaeItemProps> = ({ item, onPress }) => {
+const GaldaeItem: React.FC<GaldaeItemProps> = ({ item, onPress,onLongPress }) => {
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity onPress={onPress} onLongPress={onLongPress}>
       <View style={styles.borderedListBox}>
         <BasicText text={item.owner} style={styles.galdaeOwner} />
         <View style={styles.fromContainer}>

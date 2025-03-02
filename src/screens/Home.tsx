@@ -389,17 +389,6 @@ const Home: React.FC<HomeProps> = () => {
         onClose={() => console.log('팝업 닫힘')}
       />
 
-      {/* <DeletePopup
-          visible={deletePopupVisible}
-          onCancel={closeDeletePopup}
-          onConfirm={() => {
-            console.log('삭제 confirmed');
-            closeDeletePopup();
-            handleDeleteConfirm();
-          }}
-          title="선택하신 갈대를"
-          message="삭제하시겠습니까?"
-        /> */}
 
       <CreateGaldaePopup
         visible={createGaldaePopupVisible}

@@ -5,7 +5,7 @@ import { theme } from './theme';
 
 export default StyleSheet.create({
     main:{
-        height:'100%',
+      flex: 1,
     },
     headerText:{
         fontSize: theme.fontSize.size22,
@@ -33,6 +33,7 @@ export default StyleSheet.create({
     galdaeList:{
         paddingTop:30,
         paddingHorizontal:15,
+        flex:1,
     },
     search:{
       width:'100%',
@@ -62,12 +63,13 @@ export default StyleSheet.create({
       marginRight:20,
     },
     scroll:{
-        height:'75%',
+       // height:'75%',
+        flexGrow: 1,       // 스크롤 가능한 영역도 남은 공간 전부 쓰기
     },
     nowGaldaeList:{
       marginTop:14,
       position:'relative',
-      height:'100%',
+      //height:'100%',
     },
     noData:{
       height:'75%',

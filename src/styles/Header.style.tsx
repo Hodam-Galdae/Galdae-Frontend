@@ -3,15 +3,19 @@ import { StyleSheet } from 'react-native';
 import { theme } from '../styles/theme';
 export default StyleSheet.create({
     headerContainer: {
-        flexDirection: 'row',
-        alignItems: 'flex-end',
-        height: 102,
-        backgroundColor: theme.colors.white,
-        shadowColor: theme.colors.gray1,
-        shadowOpacity: 0.2,
-        shadowRadius: 10,
-        elevation: 4,
-      },
+      flexDirection: 'row',
+      alignItems: 'flex-end',
+      height: 102,
+      backgroundColor: theme.colors.white,
+      // iOS 전용 그림자
+      shadowColor: theme.colors.gray1,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 10,
+      // Android 전용 그림자
+      elevation: 4,
+      zIndex:999,
+    },
       backContainer:{
         position: 'absolute',  // 절대 위치로 설정
         left: 20,
