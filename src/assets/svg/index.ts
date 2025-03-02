@@ -103,4 +103,9 @@ export {default as Bank_SC} from './Bank_SC.svg';
 export {default as Bank_Suhyup} from './Bank_Suhyup.svg';
 export {default as Bank_Toss} from './Bank_Toss.svg';
 export {default as Bank_Woori} from './Bank_Woori.svg';
+export {default as Hand} from './Hand.svg';
+export {default as LogoYellow} from './LogoYellow.svg';
+export {default as CarAni} from './CarAni.svg';
+export {default as LocationGreen} from './LocationGreen.svg';
+export {default as Balloon} from './Balloon.svg';
 
