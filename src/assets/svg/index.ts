@@ -103,4 +103,5 @@ export {default as Bank_SC} from './Bank_SC.svg';
 export {default as Bank_Suhyup} from './Bank_Suhyup.svg';
 export {default as Bank_Toss} from './Bank_Toss.svg';
 export {default as Bank_Woori} from './Bank_Woori.svg';
-
+export {default as Bank_KDB} from './Bank_KDB.svg';
+export {default as Bank_Saemaul} from './Bank_Saemaul.svg';

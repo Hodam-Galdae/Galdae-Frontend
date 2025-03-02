@@ -23,6 +23,7 @@ import Payment from './src/screens/myinfo/Payment';
 import AccountRegister from './src/screens/myinfo/AccountRegister';
 import UserGuide from './src/screens/myinfo/UserGuide';
 import TermsOfUse from './src/screens/myinfo/TermsOfUse';
+import TermsOfUseDetail from './src/screens/myinfo/TermsOfUseDetail';
 import MyGaldae from './src/screens/myinfo/MyGaldae';
 import MyGaldaeHistory from './src/screens/myinfo/MyGaldaeHistory';
 import NicknameChange from './src/screens/myinfo/NicknameChange';
@@ -117,6 +118,7 @@ function App() {
                         <Stack.Screen name="Announcement" component={Announcement}/>
                         <Stack.Screen name="UserGuide" component={UserGuide}/>
                         <Stack.Screen name="TermsOfUse" component={TermsOfUse}/>
+                        <Stack.Screen name="TermsOfUseDetail" component={TermsOfUseDetail}/>
                         <Stack.Screen name="FAQ" component={FAQ}/>
                         <Stack.Screen name="Answer" component={Answer}/>
                         <Stack.Screen name="Inquiry" component={Inquiry}/>
