@@ -31,12 +31,13 @@ function App(): React.JSX.Element {
                 }),
                 borderTopLeftRadius: 20,
                 borderTopRightRadius: 20,
+                borderColor:theme.colors.white,
                 backgroundColor:theme.colors.white,
-                overflow: 'hidden', // 둥근 모서리가 잘 보이도록 설정
+                //overflow: 'hidden', // 둥근 모서리가 잘 보이도록 설정
                 // iOS용 그림자
                 shadowColor: theme.colors.gray1,
                 shadowOffset: { width: 0, height: 0 },
-                shadowOpacity: 0.25,
+                shadowOpacity: 0.05,
                 shadowRadius: 10,
                 // Android용 그림자
                 elevation: 4,
