@@ -1,5 +1,5 @@
 import React from 'react';
-import {  View } from 'react-native';
+import {  ScrollView, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from '../styles/Notification.style';
 import Header from '../components/Header';
@@ -70,7 +70,7 @@ const Notification: React.FC<HomeProps> = () => {
             title={<BasicText text="알림" style={styles.headerText}/>}
             />
 
-            <View style={styles.content}>
+            <ScrollView style={styles.content}>
                 <BasicText text="오늘" style={styles.title}/>
                 {
                     notifications.map(noti=>(
@@ -97,7 +97,7 @@ const Notification: React.FC<HomeProps> = () => {
                         </View>
                     ))
                 }
-            </View>
+            </ScrollView>
       </View>
     );
 };

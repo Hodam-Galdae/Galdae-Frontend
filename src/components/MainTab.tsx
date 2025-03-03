@@ -1,8 +1,9 @@
 /* eslint-disable react/no-unstable-nested-components */
 
-import React from 'react';
+import React,{useContext} from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useNavigation } from '@react-navigation/native';
+import { TabBarVisibilityContext } from '../utils/TabBarVisibilityContext';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Platform } from 'react-native';
 import Home from '../screens/Home';
@@ -22,7 +23,7 @@ function App(): React.JSX.Element {
 
     const Tab = createBottomTabNavigator();
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-
+    const { isTabBarVisible } = useContext(TabBarVisibilityContext);
     return (
         <Tab.Navigator
             initialRouteName="홈"
@@ -31,9 +32,10 @@ function App(): React.JSX.Element {
               tabBarActiveTintColor: theme.colors.black,
               tabBarInactiveTintColor: theme.colors.gray1,
               tabBarStyle: {
+                display: isTabBarVisible ? 'flex' : 'none',
                 height: Platform.select({
-                  ios: 80,
-                  android: 70,
+                  ios: 84,
+                  android: 84,
                 }),
                 borderTopLeftRadius: 20,
                 borderTopRightRadius: 20,
@@ -51,6 +53,7 @@ function App(): React.JSX.Element {
               tabBarItemStyle: {
                 justifyContent: 'center',
                 alignItems: 'center',
+              
               },
               tabBarLabelStyle: {
                 textAlign: 'center',

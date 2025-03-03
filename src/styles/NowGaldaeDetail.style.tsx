@@ -153,5 +153,5 @@ export default StyleSheet.create({
         fontWeight: '700',
       },
 
-      
+
 });

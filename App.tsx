@@ -1,5 +1,5 @@
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import {Platform, StatusBar} from 'react-native';
+import {Platform, StatusBar,SafeAreaView} from 'react-native';
 import React, {useEffect} from 'react';
 import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
@@ -34,6 +34,7 @@ import Answer from './src/screens/myinfo/Answer';
 import Logout from './src/screens/myinfo/Logout';
 import WithDraw from './src/screens/myinfo/WithDraw';
 import Notification from './src/screens/Notification';
+import {TabBarVisibilityProvider} from './src/utils/TabBarVisibilityContext';
 function App() {
   useEffect(() => {
     if (Platform.OS === 'android') {
@@ -87,6 +88,8 @@ function App() {
 
         <GestureHandlerRootView>
             <SafeAreaProvider>
+              <SafeAreaView style={{ flex: 1 }}>
+              <TabBarVisibilityProvider>
                 <NavigationContainer theme={theme}>
                     <Stack.Navigator
                         initialRouteName="Onboarding"
@@ -128,6 +131,8 @@ function App() {
                         <Stack.Screen name="Notification" component={Notification}/>
                     </Stack.Navigator>
                 </NavigationContainer>
+              </TabBarVisibilityProvider>
+              </SafeAreaView>
             </SafeAreaProvider>
         </GestureHandlerRootView>
 
