@@ -2,6 +2,8 @@
 
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Platform } from 'react-native';
 import Home from '../screens/Home';
 import MyInfo from '../screens/MyInfo';
@@ -10,18 +12,22 @@ import SVG from '../components/SVG';
 import Header from './Header';
 import { theme } from '../styles/theme';
 import SVGButton from './button/SVGButton';
+// 내비게이션 스택 타입 정의
+type RootStackParamList = {
+  Notification: undefined;
+};
 
 function App(): React.JSX.Element {
 
 
     const Tab = createBottomTabNavigator();
-
+    const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
     return (
         <Tab.Navigator
             initialRouteName="홈"
             screenOptions={{
-              header: () => <Header rightButton={<SVGButton iconName="Notification"/>}/>,
+              header: () => <Header rightButton={<SVGButton iconName="Notification" onPress={()=>navigation.navigate('Notification')}/>}/>,
               tabBarActiveTintColor: theme.colors.black,
               tabBarInactiveTintColor: theme.colors.gray1,
               tabBarStyle: {

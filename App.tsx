@@ -33,6 +33,7 @@ import Inquiry from './src/screens/myinfo/Inquiry';
 import Answer from './src/screens/myinfo/Answer';
 import Logout from './src/screens/myinfo/Logout';
 import WithDraw from './src/screens/myinfo/WithDraw';
+import Notification from './src/screens/Notification';
 function App() {
   useEffect(() => {
     if (Platform.OS === 'android') {
@@ -124,6 +125,7 @@ function App() {
                         <Stack.Screen name="Inquiry" component={Inquiry}/>
                         <Stack.Screen name="Logout" component={Logout}/>
                         <Stack.Screen name="WithDraw" component={WithDraw}/>
+                        <Stack.Screen name="Notification" component={Notification}/>
                     </Stack.Navigator>
                 </NavigationContainer>
             </SafeAreaProvider>
