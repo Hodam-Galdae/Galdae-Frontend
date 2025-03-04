@@ -1,7 +1,7 @@
 // Onboarding.tsx 임시 테스트
 import React, {useRef, useEffect, useState} from 'react';
 import {View, Animated, Dimensions} from 'react-native';
-import Onboarding from 'react-native-onboarding-swiper';
+import Video from 'react-native-video';
 import styles from '../styles/Onboarding.style';
 import BasicText from '../components/BasicText';
 import {theme} from '../styles/theme';
@@ -74,7 +74,7 @@ const OnBoarding1 = () => {
         style={[styles.title, {color: theme.colors.brandColor}]}
       />
       <BasicText text="반갑습니다:)" style={styles.title} />
-      <SVG name="GaldaeLogo" style={styles.logo} />
+      <SVG width={72} name="GaldaeLogo" style={styles.logo} />
       <View style={{position: 'absolute', bottom: -350}}>
         <Svg height="542" width="542">
           <Defs>
@@ -232,36 +232,66 @@ const OnBoarding3 = () => {
           </Defs>
           <Circle cx="271" cy="271" r="271" fill="url(#grad)" />
         </Svg>
-        <SVG name="GaldaeLogo" style={styles.logo} />
+        <SVG width={72} name="GaldaeLogo" style={styles.logo} />
       </View>
     </View>
   );
 };
 
 const OnBoarding4 = () => {
+  const height = Dimensions.get('window').height / 2;
+  const opacity = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(opacity, {
+      toValue: 1,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+  }, []);
+
   return (
     <View style={styles.wrapper}>
-      <View style={styles.container}>
+      <Video
+        source={require('../assets/video/onboarding.mp4')}
+        style={styles.fullScreen}
+        paused={false}
+        resizeMode={'cover'}
+        repeat={false}
+      />
+      <View
+        style={{
+          position: 'absolute',
+          alignItems: 'center',
+          width: '100%',
+          top: height - 250,
+        }}>
         <BasicText
           style={{
-            marginTop: 177,
             fontSize: 28,
             fontWeight: '700',
             color: theme.colors.brandColor,
           }}
           text="환영합니다!"
         />
-        <BasicText
-          style={{
-            marginTop: 17,
-            fontSize: 20,
-            fontWeight: '700',
-            color: theme.colors.black,
-          }}
-          text={'편리한 이동을 위한\n당신만의 갈대를 만들어보세요!'}
-        />
-        <SVG name="GaldaeLogo" style={styles.logo} />
+        <Animated.View style={{opacity}}>
+          <BasicText
+            style={{
+              marginTop: 17,
+              fontSize: 20,
+              fontWeight: '700',
+              color: theme.colors.black,
+              textAlign: 'center',
+            }}
+            text={'편리한 이동을 위한\n당신만의 갈대를 만들어보세요!'}
+          />
+        </Animated.View>
       </View>
+      <SVG
+        width={72}
+        name="GaldaeLogo"
+        style={[styles.logo, {left: '50%', transform: [{translateX: -36}]}]}
+      />
     </View>
   );
 };
