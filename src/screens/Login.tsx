@@ -50,8 +50,8 @@ const Login: React.FC = () => {
           }}
           containerStyle={styles.allImagesImage}>
           {images.map((item, i) => (
-            <View>
-              <Image key={i} source={item} style={styles.allImagesImage} />
+            <View key={i}>
+              <Image source={item} style={styles.allImagesImage} />
             </View>
           ))}
         </Swiper>
