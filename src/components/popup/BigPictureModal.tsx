@@ -41,11 +41,14 @@ const BigPictureModal = forwardRef<BigPictureModalRef, BigPictureModalProps>(({ 
             />
         </View>
 
-        <SVGButton
-       onPress={handleClose}
-        iconName="ClosePic"
-        buttonStyle={styles.closeButton}
-        SVGStyle={styles.closeButtonIcon}/>
+        <View style={styles.closeContainer}>
+          <SVGButton
+            onPress={handleClose}
+            iconName="ClosePic"
+            buttonStyle={styles.closeButton}
+            SVGStyle={styles.closeButtonIcon}
+          />
+        </View>
       </View>
     </Modal>
   );

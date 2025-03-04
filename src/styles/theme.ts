@@ -18,6 +18,7 @@ export const theme = {
       transparent:'transparent',
       enabledBorder:'transparent',
       popupBackGround:'rgba(108, 108, 108, 0.2)',
+      notification:'#DAFFCD66',
     },
     fontSize:{
       size10: 10,

@@ -66,6 +66,8 @@ const AccountRegister: React.FC<HomeProps> = () => {
         { code: 'citi', name: '씨티은행', svg: 'Bank_Citi' },
         { code: 'daegu', name: '대구은행', svg: 'Bank_DaeGu' },
         { code: 'forestry', name: '산림조합은행', svg: 'Bank_ForestryCooperative' },
+        { code: 'Bank_Saemaul', name: '새마을금고', svg: 'Bank_Saemaul' },
+        { code: 'Bank_KDB', name: 'KDB산업은행', svg: 'Bank_KDB' },
     ];
     // 영어로 시작하는 은행과 한글로 시작하는 은행 분리 후 정렬
     const englishBanks = banks

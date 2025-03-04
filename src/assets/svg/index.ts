@@ -108,4 +108,5 @@ export {default as LogoYellow} from './LogoYellow.svg';
 export {default as CarAni} from './CarAni.svg';
 export {default as LocationGreen} from './LocationGreen.svg';
 export {default as Balloon} from './Balloon.svg';
-
+export {default as Bank_KDB} from './Bank_KDB.svg';
+export {default as Bank_Saemaul} from './Bank_Saemaul.svg';

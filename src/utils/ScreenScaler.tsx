@@ -7,7 +7,7 @@ const  { width, height } = Dimensions.get('window');
 const guidelineBaseWidth = 375;
 
 //기준이 되는 세로
-const guidelineBaseHeight = 872;
+const guidelineBaseHeight = 812;
 
 // 뷰포트기반
 const scale = (size : number) => width / guidelineBaseWidth * size;

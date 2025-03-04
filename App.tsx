@@ -1,5 +1,5 @@
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import {Platform, StatusBar} from 'react-native';
+import {Platform, StatusBar,SafeAreaView} from 'react-native';
 import React, {useEffect} from 'react';
 import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
@@ -23,6 +23,7 @@ import Payment from './src/screens/myinfo/Payment';
 import AccountRegister from './src/screens/myinfo/AccountRegister';
 import UserGuide from './src/screens/myinfo/UserGuide';
 import TermsOfUse from './src/screens/myinfo/TermsOfUse';
+import TermsOfUseDetail from './src/screens/myinfo/TermsOfUseDetail';
 import MyGaldae from './src/screens/myinfo/MyGaldae';
 import MyGaldaeHistory from './src/screens/myinfo/MyGaldaeHistory';
 import NicknameChange from './src/screens/myinfo/NicknameChange';
@@ -32,6 +33,8 @@ import Inquiry from './src/screens/myinfo/Inquiry';
 import Answer from './src/screens/myinfo/Answer';
 import Logout from './src/screens/myinfo/Logout';
 import WithDraw from './src/screens/myinfo/WithDraw';
+import Notification from './src/screens/Notification';
+import {TabBarVisibilityProvider} from './src/utils/TabBarVisibilityContext';
 function App() {
   useEffect(() => {
     if (Platform.OS === 'android') {
@@ -85,6 +88,8 @@ function App() {
 
         <GestureHandlerRootView>
             <SafeAreaProvider>
+              <SafeAreaView style={{ flex: 1 }}>
+              <TabBarVisibilityProvider>
                 <NavigationContainer theme={theme}>
                     <Stack.Navigator
                         initialRouteName="Onboarding"
@@ -117,13 +122,17 @@ function App() {
                         <Stack.Screen name="Announcement" component={Announcement}/>
                         <Stack.Screen name="UserGuide" component={UserGuide}/>
                         <Stack.Screen name="TermsOfUse" component={TermsOfUse}/>
+                        <Stack.Screen name="TermsOfUseDetail" component={TermsOfUseDetail}/>
                         <Stack.Screen name="FAQ" component={FAQ}/>
                         <Stack.Screen name="Answer" component={Answer}/>
                         <Stack.Screen name="Inquiry" component={Inquiry}/>
                         <Stack.Screen name="Logout" component={Logout}/>
                         <Stack.Screen name="WithDraw" component={WithDraw}/>
+                        <Stack.Screen name="Notification" component={Notification}/>
                     </Stack.Navigator>
                 </NavigationContainer>
+              </TabBarVisibilityProvider>
+              </SafeAreaView>
             </SafeAreaProvider>
         </GestureHandlerRootView>
 

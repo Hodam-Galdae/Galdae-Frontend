@@ -12,7 +12,7 @@ export default StyleSheet.create({
       shadowOpacity:20,
       shadowRadius: 20,
       elevation: 20,
-      height:586,
+      //height:586,
       backgroundColor: theme.colors.white,
       paddingHorizontal: (30),
       borderTopLeftRadius: (20),
@@ -116,15 +116,18 @@ export default StyleSheet.create({
     },
     modalContent: {
       width: '100%',
-      height:506,
+      height:'60%',
       backgroundColor: theme.colors.gray0,
       borderRadius: 10,
       alignItems: 'center',
     },
-    closeButton: {
+    closeContainer:{
       position: 'absolute',
-      top: 15,   // 원하는 위치로 조정 (예: 모달 컨텐츠 상단 바깥쪽)
-      left:160, // 원하는 위치로 조정 (예: 모달 컨텐츠 우측 바깥쪽)
+      bottom: 96,   // 원하는 위치로 조정 (예: 모달 컨텐츠 상단 바깥쪽)
+      right:18, // 원하는 위치로 조정 (예: 모달 컨텐츠 우측 바깥쪽)
+    },
+    closeButton: {
+      
     },
     closeButtonIcon: {
       width: 30,

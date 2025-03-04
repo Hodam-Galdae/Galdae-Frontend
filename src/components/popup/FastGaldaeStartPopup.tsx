@@ -1,6 +1,9 @@
-import React, { forwardRef, useImperativeHandle, useRef,useState } from 'react';
+import React, { forwardRef, useImperativeHandle, useRef,useState,useContext } from 'react';
+//import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import {TabBarVisibilityContext} from '../../utils/TabBarVisibilityContext';
 import { View } from 'react-native';
 import { Modalize } from 'react-native-modalize';
+//import { useNavigation } from '@react-navigation/native';
 import BasicText from '../BasicText';
 import { theme } from '../../styles/theme';
 import styles from '../../styles/FastGaldaePopup.style';
@@ -10,7 +13,8 @@ import { ScrollView } from 'react-native-gesture-handler';
 import BasicButton from '../button/BasicButton';
 import SelectTextButton from '../button/SelectTextButton';
 import BigPictureModal from './BigPictureModal';
-
+//import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+//import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 export interface FastGaldaeStartPopupRef {
   open: () => void;
   close: () => void;
@@ -20,6 +24,11 @@ export interface FastGaldaePopupProps {
   onClose?: () => void;
   onConfirm?: (largeCategory: string, smallCategory: string) => void;
 }
+// 내비게이션 스택 타입 정의
+// type RootStackParamList = {
+//   TermsOfUseDetail: {index:number}
+// };
+//type nowGaldaeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 const FastGaldaeStartPopup = forwardRef<FastGaldaeStartPopupRef, FastGaldaePopupProps>(
   ({ onClose ,onConfirm}, ref) => {
@@ -28,7 +37,8 @@ const FastGaldaeStartPopup = forwardRef<FastGaldaeStartPopupRef, FastGaldaePopup
     // 대분류와 소분류 선택 상태 (더미 데이터)
     const [largeCategory, setLargeCategory] = useState<string>('');
     const [smallCategory, setSmallCategory] = useState<string>('');
-
+    //const navigation = useNavigation<nowGaldaeScreenNavigationProp>();
+    const { setIsTabBarVisible } = useContext(TabBarVisibilityContext);
     const handleSelectConfirm = () =>{
       onConfirm && onConfirm(largeCategory, smallCategory);
       modalizeRef.current?.close();
@@ -56,7 +66,14 @@ const FastGaldaeStartPopup = forwardRef<FastGaldaeStartPopupRef, FastGaldaePopup
       <Modalize
         ref={modalizeRef}
         modalHeight={586} // 고정 높이 설정
-        onClosed={onClose}
+
+        onOpened={() => {
+          setIsTabBarVisible(false);
+        }}
+        onClosed={() => {
+          setIsTabBarVisible(true);
+          onClose && onClose();
+        }}
         overlayStyle={styles.background}
         modalStyle={styles.container}
         withHandle={false}  // 기본 핸들을 비활성화
