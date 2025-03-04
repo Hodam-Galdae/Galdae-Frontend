@@ -1,6 +1,7 @@
 // NowGaldaeDetail.tsx
 import React,{useState} from 'react';
 import { View,Image } from 'react-native';
+import { WebView } from 'react-native-webview'; // 추가
 import BasicText from '../components/BasicText';
 import SVGButton from '../components/button/SVGButton';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
@@ -11,6 +12,7 @@ import SVG from '../components/SVG';
 import { theme } from '../styles/theme';
 import TextTag from '../components/tag/TextTag';
 import BasicButton from '../components/button/BasicButton';
+import { ScrollView } from 'react-native-gesture-handler';
 
 // 내비게이션 스택 타입 정의 (이전과 동일)
 type RootStackParamList = {
@@ -27,6 +29,8 @@ const NowGaldaeDetail: React.FC = () => {
   const route = useRoute<NowGaldaeDetailRouteProp>();
   const [loading, setLoading] = useState<boolean>(false);
   const { item } = route.params; // 전달받은 데이터
+  const mapUrl = `https://galdae-kakao-map.vercel.app/?startLat=${item.from.lat}&startLng=${item.from.lng}&endLat=${item.destination.lat}&endLng=${item.destination.lng}`;
+  console.log(`mapUrl: `,mapUrl);
   const goBack = () => navigation.goBack();
   const handleParticipateGaldae = () =>{
     setLoading(true);
@@ -47,7 +51,7 @@ const NowGaldaeDetail: React.FC = () => {
         </View>
         }
       />
-      <View style={styles.content}>
+      <ScrollView style={styles.content}>
 
         <View style={styles.advertiseBox}>
             <BasicText text="advertiseBox"/>
@@ -111,7 +115,7 @@ const NowGaldaeDetail: React.FC = () => {
         </View>
 
         <View style={styles.map}>
-
+          <WebView source={{ uri: mapUrl }} style={styles.map}/>
         </View>
 
         <BasicText text="유저정보" style={styles.userInfo} />
@@ -142,7 +146,7 @@ const NowGaldaeDetail: React.FC = () => {
               onPress={handleParticipateGaldae}
             />
         </View>
-      </View>
+      </ScrollView>
     </View>
   );
 };
