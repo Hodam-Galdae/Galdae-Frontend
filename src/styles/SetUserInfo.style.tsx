@@ -13,7 +13,6 @@ export default StyleSheet.create({
     fontWeight: '700',
     color: theme.colors.black,
     marginBottom: 20,
-    marginTop: 30,
   },
   alertText: {
     fontSize: theme.fontSize.size12,
@@ -103,6 +102,8 @@ export default StyleSheet.create({
   genderBtn: {
     width: 81,
     marginRight: 8,
+    paddingVertical: 6,
+    paddingHorizontal: 20,
   },
   bankContainer: {
     borderRadius: 10,
