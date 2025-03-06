@@ -99,8 +99,6 @@ export default StyleSheet.create({
     backgroundColor: theme.colors.lightGray,
     borderRadius: theme.borderRadius.size10,
     width:86,
-    height:84,
-
   },
   newGaldaeTimeText:{
     fontSize: theme.fontSize.size10,
