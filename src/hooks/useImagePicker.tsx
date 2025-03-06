@@ -1,6 +1,6 @@
 // useImagePicker.ts
-import { useState } from 'react';
-import { Platform } from 'react-native';
+import {useState} from 'react';
+import {Platform} from 'react-native';
 import {
   check,
   request,
@@ -15,7 +15,7 @@ import {
 } from 'react-native-image-picker';
 
 const useImagePicker = () => {
-  const [imageUri, setImageUri] = useState<string>();
+  const [imageUri, setImageUri] = useState<string>('');
 
   // 권한 확인 및 요청 함수
   const checkAndRequestPermission = async (permission: Permission) => {
@@ -46,12 +46,12 @@ const useImagePicker = () => {
       if (Platform.Version >= 33) {
         // Android 13 이상
         hasStoragePermission = await checkAndRequestPermission(
-          PERMISSIONS.ANDROID.READ_MEDIA_IMAGES
+          PERMISSIONS.ANDROID.READ_MEDIA_IMAGES,
         );
       } else {
         // Android 12 이하
         hasStoragePermission = await checkAndRequestPermission(
-          PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE
+          PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
         );
       }
     } else {
@@ -77,7 +77,7 @@ const useImagePicker = () => {
           } else if (response.errorCode) {
             console.log('Camera error: ', response.errorMessage);
           } else if (response.assets !== undefined) {
-            setImageUri(response.assets[0].uri);
+            setImageUri(response.assets[0].uri ?? '');
           }
         },
       );
@@ -94,18 +94,18 @@ const useImagePicker = () => {
       if (Platform.Version >= 33) {
         // Android 13 이상
         hasStoragePermission = await checkAndRequestPermission(
-          PERMISSIONS.ANDROID.READ_MEDIA_IMAGES
+          PERMISSIONS.ANDROID.READ_MEDIA_IMAGES,
         );
       } else {
         // Android 12 이하
         hasStoragePermission = await checkAndRequestPermission(
-          PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE
+          PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
         );
       }
     } else {
       // iOS
       hasStoragePermission = await checkAndRequestPermission(
-        PERMISSIONS.IOS.PHOTO_LIBRARY
+        PERMISSIONS.IOS.PHOTO_LIBRARY,
       );
     }
 
@@ -121,8 +121,11 @@ const useImagePicker = () => {
             console.log('User cancelled gallery');
           } else if (response.errorCode) {
             console.log('Gallery error: ', response.errorMessage);
-          } else if (response.assets !== undefined && response.assets.length > 0) {
-            setImageUri(response.assets[0].uri);
+          } else if (
+            response.assets !== undefined &&
+            response.assets.length > 0
+          ) {
+            setImageUri(response.assets[0].uri ?? '');
           }
         },
       );
@@ -131,7 +134,7 @@ const useImagePicker = () => {
     }
   };
 
-  return { imageUri, getImageByCamera, getImageByGallery };
+  return {imageUri, getImageByCamera, getImageByGallery};
 };
 
 export default useImagePicker;

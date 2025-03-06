@@ -57,67 +57,68 @@ const NowGaldae: React.FC<HomeProps> = () => {
   const arrayPopupRef = useRef<FastGaldaeTimePopupRef>(null);
     const filterRef = useRef<FastGaldaeTimePopupRef>(null);
     const dummyGaldaeData = [
-        {
-          id: 1,
-          owner: '하재연님의 갈대',
-          from: { main: '학교', sub: '정문' },
-          users: 2,
-          capacity: 4,
-          destination: { main: '학교', sub: '정문' },
-          time: '2025년 00월 00일 (0) 00 : 00',
-          timeAgreement: true,
-          tags: ['성별무관'],
-          timestamp: 1735689600000, // 예시 타임스탬프 (밀리초 단위)
-        },
-        {
-          id: 2,
-          owner: '김철수의 갈대',
-          from: { main: '후문', sub: '대학' },
-          users: 1,
-          capacity: 3,
-          destination: { main: '스타벅스', sub: '시내' },
-          time: '2025년 01월 01일 (목) 10 : 30',
-          timeAgreement: false,
-          tags: ['남자만'],
-          timestamp: 1735689600001, // 예시 타임스탬프 (밀리초 단위)
-        },
-        {
-          id: 3,
-          owner: '이영희의 갈대',
-          from: { main: '정문', sub: '회사' },
-          users: 1,
-          capacity: 2,
-          destination: { main: '공원', sub: '주변' },
-          time: '2025년 02월 02일 (일) 14 : 00',
-          timeAgreement: true,
-          tags: ['성별무관'],
-          timestamp: 1735689600002, // 예시 타임스탬프 (밀리초 단위)
-        },
-        {
-            id: 4,
-            owner: '최희연의 갈대',
-            from: { main: '호담', sub: '여기는어디야' },
-            users: 1,
-            capacity: 3,
-            destination: { main: '가천대학교', sub: '무당이정거장' },
-            time: '2025년 02월 13일 (일) 15 : 00',
-            timeAgreement: true,
-            tags: ['여자만'],
-            timestamp: 1735689600003, // 예시 타임스탬프 (밀리초 단위)
-          },
-          {
-            id: 5,
-            owner: '이서준의 갈대',
-            from: { main: '호담', sub: '여기는어디야' },
-            users: 1,
-            capacity: 3,
-            destination: { main: '가천대학교', sub: '무당이정거장' },
-            time: '2025년 02월 13일 (일) 15 : 00',
-            timeAgreement: true,
-            tags: ['여자만'],
-            timestamp: 1735689600004, // 예시 타임스탬프 (밀리초 단위)
-          },
-      ];
+      {
+        id: 1,
+        owner: '하재연님의 갈대',
+        from: { main: '학교', sub: '정문', lat: 37.5665, lng: 126.9780 }, // 서울 시청 근처
+        users: 2,
+        capacity: 4,
+        destination: { main: '강남역', sub: '출구 1번', lat: 37.4980, lng: 127.0276 }, // 강남역
+        time: '2025년 00월 00일 (0) 00 : 00',
+        timeAgreement: true,
+        tags: ['성별무관'],
+        timestamp: 1735689600000,
+      },
+      {
+        id: 2,
+        owner: '김철수의 갈대',
+        from: { main: '후문', sub: '대학', lat: 37.5796, lng: 126.9770 }, // 광화문 근처
+        users: 1,
+        capacity: 3,
+        destination: { main: '스타벅스', sub: '시내', lat: 37.5650, lng: 126.9835 }, // 명동 스타벅스 근처
+        time: '2025년 01월 01일 (목) 10 : 30',
+        timeAgreement: false,
+        tags: ['남자만'],
+        timestamp: 1735689600001,
+      },
+      {
+        id: 3,
+        owner: '이영희의 갈대',
+        from: { main: '정문', sub: '회사', lat: 37.5112, lng: 127.0124 }, // 압구정 근처
+        users: 1,
+        capacity: 2,
+        destination: { main: '공원', sub: '주변', lat: 37.5281, lng: 127.0366 }, // 한강공원 근처
+        time: '2025년 02월 02일 (일) 14 : 00',
+        timeAgreement: true,
+        tags: ['성별무관'],
+        timestamp: 1735689600002,
+      },
+      {
+        id: 4,
+        owner: '최희연의 갈대',
+        from: { main: '호담', sub: '여기는어디야', lat: 37.6500, lng: 127.0160 }, // 노원구 근처
+        users: 1,
+        capacity: 3,
+        destination: { main: '가천대학교', sub: '무당이정거장', lat: 37.4504, lng: 127.1289 }, // 가천대 근처
+        time: '2025년 02월 13일 (일) 15 : 00',
+        timeAgreement: true,
+        tags: ['여자만'],
+        timestamp: 1735689600003,
+      },
+      {
+        id: 5,
+        owner: '이서준의 갈대',
+        from: { main: '호담', sub: '여기는어디야', lat: 37.6530, lng: 127.0190 }, // 노원구 근처
+        users: 1,
+        capacity: 3,
+        destination: { main: '가천대학교', sub: '무당이정거장', lat: 37.4492, lng: 127.1280 }, // 가천대 근처
+        time: '2025년 02월 13일 (일) 15 : 00',
+        timeAgreement: true,
+        tags: ['여자만'],
+        timestamp: 1735689600004,
+      },
+    ];
+
       // 정렬 상태: 'latest' (최신순, 내림차순) 또는 'soon' (시간 임박순, 오름차순)
     const [sortOrder, setSortOrder] = useState<'latest' | 'soon'>('latest');
     const navigation = useNavigation<nowGaldaeScreenNavigationProp>();
