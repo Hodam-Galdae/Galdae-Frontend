@@ -84,7 +84,7 @@ export default StyleSheet.create({
     backgroundColor: theme.colors.lightGray,
     borderRadius: 10,
     zIndex: 999,
-    width: 60,
+    width: 80,
     height: 28,
     justifyContent: 'center',
     alignItems: 'center',

@@ -1,5 +1,5 @@
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import {Platform, StatusBar,SafeAreaView} from 'react-native';
+import {Platform, StatusBar} from 'react-native';
 import React, {useEffect} from 'react';
 import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
@@ -88,7 +88,6 @@ function App() {
 
         <GestureHandlerRootView>
             <SafeAreaProvider>
-              <SafeAreaView style={{ flex: 1 }}>
               <TabBarVisibilityProvider>
                 <NavigationContainer theme={theme}>
                     <Stack.Navigator
@@ -132,7 +131,6 @@ function App() {
                     </Stack.Navigator>
                 </NavigationContainer>
               </TabBarVisibilityProvider>
-              </SafeAreaView>
             </SafeAreaProvider>
         </GestureHandlerRootView>
 

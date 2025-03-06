@@ -15,6 +15,7 @@ import SelectTextButton from '../components/button/SelectTextButton';
 import BasicButton from '../components/button/BasicButton';
 import {theme} from '../styles/theme';
 import ItemSelector from '../components/ItemSelector';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {ScrollView} from 'react-native-gesture-handler';
 
 interface AgreeProps {
@@ -43,15 +44,15 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep}) => {
   const clickEvent = () => {
     const regex = /^[가-힣0-9]{2,8}$/;
     let flag = true;
-    if (name.length === 0) {
-      setAlertNameText('*필수 입력 항목입니다.');
-      flag = false;
-    } else if (!regex.test(name)) {
-      setAlertNameText('*닉네임은 한글, 숫자 2~8자로 제한됩니다.');
-      flag = false;
-    } else {
-      setAlertNameText('');
-    }
+    // if (name.length === 0) {
+    //   setAlertNameText('*필수 입력 항목입니다.');
+    //   flag = false;
+    // } else if (!regex.test(name)) {
+    //   setAlertNameText('*닉네임은 한글, 숫자 2~8자로 제한됩니다.');
+    //   flag = false;
+    // } else {
+    //   setAlertNameText('');
+    // }
 
     if (genderSelected === -1) {
       setAlertGenderText('*필수 선택 항목입니다.');
@@ -66,8 +67,10 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep}) => {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={styles.container}>
+    <SafeAreaView style={{flex: 1}}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <ScrollView>
+        <View style={styles.container}>
         <View>
           <BasicText text="유저 정보 입력" style={styles.title} />
           <View style={styles.profileContainer}>
@@ -79,8 +82,8 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep}) => {
                 height={68}
               />
               <SVGButton
-                iconName="Filter"
-                SVGStyle={{width: 28, height: 28}}
+                iconName="GalleryBlack"
+                SVGStyle={{width: 30, height: 30}}
                 buttonStyle={styles.camera}
               />
             </View>
@@ -161,7 +164,10 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep}) => {
           textStyle={styles.nextText}
         />
       </View>
+        </ScrollView>
     </TouchableWithoutFeedback>
+    </SafeAreaView>
+
   );
 };
 
