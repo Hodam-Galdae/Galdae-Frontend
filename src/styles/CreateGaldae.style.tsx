@@ -15,6 +15,7 @@ export default StyleSheet.create({
         paddingLeft: 15,
         paddingTop: 30,
         paddingRight:15,
+        marginBottom: 100,
     },
     generateButton:{
         width: screenWidth - 30,

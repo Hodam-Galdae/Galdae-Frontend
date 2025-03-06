@@ -1,11 +1,9 @@
 import { StyleSheet } from 'react-native';
-import {moderateScale} from '../utils/ScreenScaler';
 import { theme } from './theme';
 
 export default StyleSheet.create({
     container: {
-        width: moderateScale(146),
-        height: moderateScale(112),
+        width: 146,
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
@@ -14,15 +12,14 @@ export default StyleSheet.create({
         borderColor: theme.colors.lightGray,
         backgroundColor: theme.colors.white,
         borderRadius: 10,
+        paddingVertical: 20,
     },
     tag: {
-        width: moderateScale(50),
-        height: moderateScale(18),
         borderColor: theme.colors.brandColor,
         borderWidth: 1,
         color: theme.colors.brandColor,
         fontSize: theme.fontSize.size14,
-        marginBottom: moderateScale(12),
+        marginBottom: 12,
     },
     title: {
         fontSize: theme.fontSize.size18,
