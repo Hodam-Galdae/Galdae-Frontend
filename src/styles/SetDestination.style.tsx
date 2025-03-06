@@ -31,25 +31,29 @@ export default StyleSheet.create({
     },
 
     searchDate:{
-        position:'absolute',
-        top:8,
-        left:14,
+        marginBottom: 2,
+        marginLeft: 14,
     },
     searchList:{
         height:500,
     },
+    searchListWrapper: {
+      width:'100%',
+      borderRadius:10,
+      borderWidth:2,
+      borderColor:theme.colors.lightGray,
+      alignItems:'flex-start',
+      justifyContent:'flex-start',
+      marginBottom:(12),
+      paddingBottom: 15,
+      paddingTop: 8,
+    },
     searchListBox:{
-        position:'relative',
         width:'100%',
-        height:104,
-        borderRadius:10,
-        borderWidth:2,
-        borderColor:theme.colors.lightGray,
         alignItems:'center',
         justifyContent:'center',
         flexDirection:'row',
         gap:(30),
-        marginBottom:(12),
     },
     mainTitle:{
         fontSize: theme.fontSize.size22,
@@ -97,14 +101,12 @@ export default StyleSheet.create({
     },
       startContain:{ //고정 width 설정해야할듯
         alignItems:'center',
-        width:(85),
       },
       arrowRight:{
         marginTop:30,
       },
       start:{
         marginTop:7,
-        height:(18),
         marginBottom:(10),
       },
       mainPosName: {

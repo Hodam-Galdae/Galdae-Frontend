@@ -204,42 +204,45 @@ const SetDestination: React.FC = () => {
 
           <ScrollView style={styles.searchList}>
             {dummySearchHistory.map((item) => (
-              <View key={item.id} style={styles.searchListBox}>
+              <View key={item.id} style={styles.searchListWrapper}>
                 <BasicText
                   text={item.date}
                   style={styles.searchDate}
                   color={theme.colors.gray1}
                   fontSize={theme.fontSize.size12}
                 />
-                <View style={styles.startContain}>
-                  <TextTag
-                    text={item.start.label}
-                    viewStyle={styles.start}
-                    enabledColors={{
-                      backgroundColor: theme.colors.white,
-                      textColor: theme.colors.gray0,
-                      borderColor: theme.colors.gray0,
-                    }}
-                  />
-                  <BasicText text={item.start.main} style={styles.mainPosName} />
-                  <BasicText text={item.start.sub} style={styles.subPosName} />
-                </View>
+                <View style={styles.searchListBox}>
+                  <View style={styles.startContain}>
+                    <TextTag
+                      text={item.start.label}
+                      viewStyle={styles.start}
+                      enabledColors={{
+                        backgroundColor: theme.colors.white,
+                        textColor: theme.colors.gray0,
+                        borderColor: theme.colors.gray0,
+                      }}
+                    />
+                    <BasicText text={item.start.main} style={styles.mainPosName} />
+                    <BasicText text={item.start.sub} style={styles.subPosName} />
+                  </View>
 
-                <SVG name="arrow_right_line" width={22} height={22} style={styles.arrowRight} />
+                  <SVG name="arrow_right_line" width={22} height={22} style={styles.arrowRight} />
 
-                <View style={styles.startContain}>
-                  <TextTag
-                    text={item.end.label}
-                    viewStyle={styles.start}
-                    enabledColors={{
-                      backgroundColor: theme.colors.white,
-                      textColor: theme.colors.gray0,
-                      borderColor: theme.colors.gray0,
-                    }}
-                  />
-                  <BasicText text={item.end.main} style={styles.mainPosName} />
-                  <BasicText text={item.end.sub} style={styles.subPosName} />
+                  <View style={styles.startContain}>
+                    <TextTag
+                      text={item.end.label}
+                      viewStyle={styles.start}
+                      enabledColors={{
+                        backgroundColor: theme.colors.white,
+                        textColor: theme.colors.gray0,
+                        borderColor: theme.colors.gray0,
+                      }}
+                    />
+                    <BasicText text={item.end.main} style={styles.mainPosName} />
+                    <BasicText text={item.end.sub} style={styles.subPosName} />
+                  </View>
                 </View>
+                
               </View>
             ))}
           </ScrollView>
