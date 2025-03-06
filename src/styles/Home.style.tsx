@@ -32,14 +32,11 @@ export default StyleSheet.create({
       marginRight: 8,
       padding:8,
       alignItems:'center',
-
       backgroundColor: theme.colors.white,
       borderRadius: theme.borderRadius.size10,
       borderColor:theme.colors.brandColor,
       borderWidth:1,
-      width:86,
-      height:84,
-
+      width: 90,
     },
     newGaldaeTimeText:{
       fontSize: theme.fontSize.size10,
@@ -67,13 +64,12 @@ export default StyleSheet.create({
     },
     borderedBox:{
       width:'100%',
-      height:(174),
       justifyContent:'center',
       borderColor:theme.colors.gray0,
       borderRadius:theme.borderRadius.size10,
       borderWidth:2,
       paddingHorizontal:(35),
-
+      paddingVertical: 18,
     },
     startAndEnd:{
       alignItems:'flex-start',
@@ -87,7 +83,6 @@ export default StyleSheet.create({
       width:(85),
     },
     start:{
-      height:(18),
       marginBottom:(12),
     },
     mainPosName: {

@@ -59,7 +59,6 @@ const stylesheet = StyleSheet.create({
         justifyContent:'center',
         paddingHorizontal:(8),
         paddingVertical:(1),
-        height:(20),
     },
     floatingBtn:{
         width:(62),
