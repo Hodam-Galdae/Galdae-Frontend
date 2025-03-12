@@ -16,7 +16,9 @@ import EmailVerify from './EmailVerify';
 type RootStackParamList = {
   SignUp: undefined;
   ReviewInProgress: undefined;
-  MainTab: undefined; // 메인 탭 네비게이터 화면
+  MainTab: undefined;
+  Login: undefined;
+  TermsDetail: {data: string};
 };
 
 type SignUpScreenNavigationProp = NativeStackNavigationProp<
@@ -38,11 +40,11 @@ const SignUp: React.FC = () => {
   };
 
   const goBack = () => {
-    if(nowStep === 0) {
-      navigation.goBack();
+    if (nowStep === 0) {
+      navigation.replace('Login');
       return;
     }
-    if(nowStep === 4) {
+    if (nowStep === 4) {
       setNowStep(2);
       return;
     }
@@ -67,16 +69,22 @@ const SignUp: React.FC = () => {
     extrapolate: 'clamp', //extrapolate은 clamp 으로 설정한다.
   });
 
+  const goToTermsDetail = (data: string) => {
+    navigation.navigate('TermsDetail', {data: data});
+  };
+
   useEffect(() => {
     load(nowStep);
   }, [load, nowStep]);
 
   const steps = [
-    <Agree setNextStep={setNextStep} />,
+    <Agree setNextStep={setNextStep} goTermsDetailPage={goToTermsDetail} />,
     <SetUserInfo setNextStep={setNextStep} />,
-    <VerifySchool setNextStep={setNextStepByIndex}/>,
-    <SchoolCardVerify setNextStep={() => navigation.navigate('ReviewInProgress')}/>,
-    <EmailVerify setNextStep={() => navigation.navigate('MainTab')}/>,
+    <VerifySchool setNextStep={setNextStepByIndex} />,
+    <SchoolCardVerify
+      setNextStep={() => navigation.replace('ReviewInProgress')}
+    />,
+    <EmailVerify setNextStep={() => navigation.replace('MainTab')} />,
   ];
 
   return (

@@ -1,5 +1,5 @@
 import React,{useRef,useState} from 'react';
-import {  View ,ScrollView} from 'react-native';
+import {  View } from 'react-native';
 import { useRoute, RouteProp } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
 import styles from '../styles/NowGaldae.style';
@@ -16,10 +16,11 @@ import FloatingButton from '../components/button/FloatingButton';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import ArrayPopup, { FastGaldaeTimePopupRef } from '../components/popup/ArrayPopup';
 import FilterPopup from '../components/popup/FilterPopup';
+import { FlatList } from 'react-native-gesture-handler';
 type HomeProps = {
-  navigation: any; // 실제 프로젝트에서는 proper type 사용 권장 (예: StackNavigationProp)
+  navigation: any;
 };
-// 내비게이션 스택 타입 정의
+
 type RootStackParamList = {
     CreateGaldae: undefined;
     NowGaldae: {
@@ -56,67 +57,68 @@ const NowGaldae: React.FC<HomeProps> = () => {
   const arrayPopupRef = useRef<FastGaldaeTimePopupRef>(null);
     const filterRef = useRef<FastGaldaeTimePopupRef>(null);
     const dummyGaldaeData = [
-        {
-          id: 1,
-          owner: '하재연님의 갈대',
-          from: { main: '학교', sub: '정문' },
-          users: 2,
-          capacity: 4,
-          destination: { main: '학교', sub: '정문' },
-          time: '2025년 00월 00일 (0) 00 : 00',
-          timeAgreement: true,
-          tags: ['성별무관'],
-          timestamp: 1735689600000, // 예시 타임스탬프 (밀리초 단위)
-        },
-        {
-          id: 2,
-          owner: '김철수의 갈대',
-          from: { main: '후문', sub: '대학' },
-          users: 1,
-          capacity: 3,
-          destination: { main: '스타벅스', sub: '시내' },
-          time: '2025년 01월 01일 (목) 10 : 30',
-          timeAgreement: false,
-          tags: ['남자만'],
-          timestamp: 1735689600001, // 예시 타임스탬프 (밀리초 단위)
-        },
-        {
-          id: 3,
-          owner: '이영희의 갈대',
-          from: { main: '정문', sub: '회사' },
-          users: 1,
-          capacity: 2,
-          destination: { main: '공원', sub: '주변' },
-          time: '2025년 02월 02일 (일) 14 : 00',
-          timeAgreement: true,
-          tags: ['성별무관'],
-          timestamp: 1735689600002, // 예시 타임스탬프 (밀리초 단위)
-        },
-        {
-            id: 4,
-            owner: '최희연의 갈대',
-            from: { main: '호담', sub: '여기는어디야' },
-            users: 1,
-            capacity: 3,
-            destination: { main: '가천대학교', sub: '무당이정거장' },
-            time: '2025년 02월 13일 (일) 15 : 00',
-            timeAgreement: true,
-            tags: ['여자만'],
-            timestamp: 1735689600003, // 예시 타임스탬프 (밀리초 단위)
-          },
-          {
-            id: 5,
-            owner: '이서준의 갈대',
-            from: { main: '호담', sub: '여기는어디야' },
-            users: 1,
-            capacity: 3,
-            destination: { main: '가천대학교', sub: '무당이정거장' },
-            time: '2025년 02월 13일 (일) 15 : 00',
-            timeAgreement: true,
-            tags: ['여자만'],
-            timestamp: 1735689600004, // 예시 타임스탬프 (밀리초 단위)
-          },
-      ];
+      {
+        id: 1,
+        owner: '하재연님의 갈대',
+        from: { main: '학교', sub: '정문', lat: 37.5665, lng: 126.9780 }, // 서울 시청 근처
+        users: 2,
+        capacity: 4,
+        destination: { main: '강남역', sub: '출구 1번', lat: 37.4980, lng: 127.0276 }, // 강남역
+        time: '2025년 00월 00일 (0) 00 : 00',
+        timeAgreement: true,
+        tags: ['성별무관'],
+        timestamp: 1735689600000,
+      },
+      {
+        id: 2,
+        owner: '김철수의 갈대',
+        from: { main: '후문', sub: '대학', lat: 37.5796, lng: 126.9770 }, // 광화문 근처
+        users: 1,
+        capacity: 3,
+        destination: { main: '스타벅스', sub: '시내', lat: 37.5650, lng: 126.9835 }, // 명동 스타벅스 근처
+        time: '2025년 01월 01일 (목) 10 : 30',
+        timeAgreement: false,
+        tags: ['남자만'],
+        timestamp: 1735689600001,
+      },
+      {
+        id: 3,
+        owner: '이영희의 갈대',
+        from: { main: '정문', sub: '회사', lat: 37.5112, lng: 127.0124 }, // 압구정 근처
+        users: 1,
+        capacity: 2,
+        destination: { main: '공원', sub: '주변', lat: 37.5281, lng: 127.0366 }, // 한강공원 근처
+        time: '2025년 02월 02일 (일) 14 : 00',
+        timeAgreement: true,
+        tags: ['성별무관'],
+        timestamp: 1735689600002,
+      },
+      {
+        id: 4,
+        owner: '최희연의 갈대',
+        from: { main: '호담', sub: '여기는어디야', lat: 37.6500, lng: 127.0160 }, // 노원구 근처
+        users: 1,
+        capacity: 3,
+        destination: { main: '가천대학교', sub: '무당이정거장', lat: 37.4504, lng: 127.1289 }, // 가천대 근처
+        time: '2025년 02월 13일 (일) 15 : 00',
+        timeAgreement: true,
+        tags: ['여자만'],
+        timestamp: 1735689600003,
+      },
+      {
+        id: 5,
+        owner: '이서준의 갈대',
+        from: { main: '호담', sub: '여기는어디야', lat: 37.6530, lng: 127.0190 }, // 노원구 근처
+        users: 1,
+        capacity: 3,
+        destination: { main: '가천대학교', sub: '무당이정거장', lat: 37.4492, lng: 127.1280 }, // 가천대 근처
+        time: '2025년 02월 13일 (일) 15 : 00',
+        timeAgreement: true,
+        tags: ['여자만'],
+        timestamp: 1735689600004,
+      },
+    ];
+
       // 정렬 상태: 'latest' (최신순, 내림차순) 또는 'soon' (시간 임박순, 오름차순)
     const [sortOrder, setSortOrder] = useState<'latest' | 'soon'>('latest');
     const navigation = useNavigation<nowGaldaeScreenNavigationProp>();
@@ -172,52 +174,52 @@ const NowGaldae: React.FC<HomeProps> = () => {
       )
     : dummyGaldaeData;
 
-// 추가 필터(날짜/시간, 성별, 시간협의, 탑승인원) 적용
-let finalFilteredData = baseFilteredData;
-if (filterOptions.selectedDate) {
-  // filterOptions.selectedDate를 기준으로 시간 필터링
-  let filterTimestamp =
-    new Date(filterOptions.selectedDate).getTime() +
-    (filterOptions.selectedHour * 3600 + filterOptions.selectedMinute * 60) * 1000;
-  // 오전/오후 보정: '오후'이면 12시간 추가 (단, selectedHour가 12 미만일 경우)
-  if (filterOptions.selectedAmPm === '오후' && filterOptions.selectedHour < 12) {
-    filterTimestamp += 12 * 3600 * 1000;
-  }
-  // 예시: 선택한 시간과 1시간 이내에 해당하는 항목만 통과
-  finalFilteredData = finalFilteredData.filter(
-    (item) => Math.abs(item.timestamp - filterTimestamp) <= 3600000
-  );
-}
-// 성별 필터 (0: 성별무관, 1: 여자만, 2: 남자만)
-if (filterOptions.selectedGender !== 0) {
-  if (filterOptions.selectedGender === 1) {
-    finalFilteredData = finalFilteredData.filter((item) =>
-      item.tags.includes('여자만')
-    );
-  } else if (filterOptions.selectedGender === 2) {
-    finalFilteredData = finalFilteredData.filter((item) =>
-      item.tags.includes('남자만')
+  // 추가 필터(날짜/시간, 성별, 시간협의, 탑승인원) 적용
+  let finalFilteredData = baseFilteredData;
+  if (filterOptions.selectedDate) {
+    // filterOptions.selectedDate를 기준으로 시간 필터링
+    let filterTimestamp =
+      new Date(filterOptions.selectedDate).getTime() +
+      (filterOptions.selectedHour * 3600 + filterOptions.selectedMinute * 60) * 1000;
+    // 오전/오후 보정: '오후'이면 12시간 추가 (단, selectedHour가 12 미만일 경우)
+    if (filterOptions.selectedAmPm === '오후' && filterOptions.selectedHour < 12) {
+      filterTimestamp += 12 * 3600 * 1000;
+    }
+    // 예시: 선택한 시간과 1시간 이내에 해당하는 항목만 통과
+    finalFilteredData = finalFilteredData.filter(
+      (item) => Math.abs(item.timestamp - filterTimestamp) <= 3600000
     );
   }
-}
-// 시간 협의 필터 (0: 가능, 1: 불가능)
-finalFilteredData = finalFilteredData.filter(
-  (item) => item.timeAgreement === (filterOptions.selectedTimeDiscuss === 0)
-);
-// 탑승 인원 필터: (본인을 제외한 여유 좌석이 passengerNumber 이상)
-if (filterOptions.passengerNumber > 0) {
+  // 성별 필터 (0: 성별무관, 1: 여자만, 2: 남자만)
+  if (filterOptions.selectedGender !== 0) {
+    if (filterOptions.selectedGender === 1) {
+      finalFilteredData = finalFilteredData.filter((item) =>
+        item.tags.includes('여자만')
+      );
+    } else if (filterOptions.selectedGender === 2) {
+      finalFilteredData = finalFilteredData.filter((item) =>
+        item.tags.includes('남자만')
+      );
+    }
+  }
+  // 시간 협의 필터 (0: 가능, 1: 불가능)
   finalFilteredData = finalFilteredData.filter(
-    (item) => item.capacity - item.users >= filterOptions.passengerNumber
+    (item) => item.timeAgreement === (filterOptions.selectedTimeDiscuss === 0)
   );
-}
+  // 탑승 인원 필터: (본인을 제외한 여유 좌석이 passengerNumber 이상)
+  if (filterOptions.passengerNumber > 0) {
+    finalFilteredData = finalFilteredData.filter(
+      (item) => item.capacity - item.users >= filterOptions.passengerNumber
+    );
+  }
 
-    const sortedData = [...finalFilteredData].sort((a, b) => {
-      if (sortOrder === 'latest') {
-        return b.timestamp - a.timestamp;
-      } else {
-        return a.timestamp - b.timestamp;
-      }
-    });
+  const sortedData = [...finalFilteredData].sort((a, b) => {
+    if (sortOrder === 'latest') {
+      return b.timestamp - a.timestamp;
+    } else {
+      return a.timestamp - b.timestamp;
+    }
+  });
   return (
     <View style={styles.main}>
         <Header
@@ -305,24 +307,28 @@ if (filterOptions.passengerNumber > 0) {
               </View>
             </View>
 
-              {sortedData.length === 0 ? (
-                <View style={styles.noData}>
-                  <SVG name="information_line" />
-                  <BasicText text="해당 경로의 갈대가 없습니다." color={theme.colors.gray1}/>
-                </View>
-              ) : (
-                <ScrollView style={styles.scroll}>
-                <View style={styles.nowGaldaeList}>
-                  {sortedData.map(item => (
-                    <GaldaeItem
-                      key={item.id}
-                      item={item}
-                      onPress={() => navigation.navigate('NowGaldaeDetail', { item })}
-                    />
-                  ))}
-                </View>
-                </ScrollView>
-              )}
+            {sortedData.length === 0 ? (
+
+              <View style={styles.noData}>
+                <SVG name="information_line" />
+                <BasicText text="해당 경로의 갈대가 없습니다." color={theme.colors.gray1} />
+              </View>
+            ) : (
+
+              <FlatList
+                style={styles.scroll}
+                contentContainerStyle={styles.nowGaldaeList}
+                data={sortedData}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={({ item }) => (
+                  <GaldaeItem
+                    key={item.id}
+                    item={item}
+                    onPress={() => navigation.navigate('NowGaldaeDetail', { item })}
+                  />
+                )}
+              />
+            )}
 
 
         </View>

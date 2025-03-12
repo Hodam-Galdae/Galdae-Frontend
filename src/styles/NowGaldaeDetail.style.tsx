@@ -138,10 +138,10 @@ export default StyleSheet.create({
       },
       participateContainer:{
         alignSelf:'center',
-        position:'absolute',
         width:'100%',
+        marginTop:35,
+        marginBottom:35,
         //height:42,
-        bottom:40,
       },
       participateBtn:{
         width:'100%',
@@ -153,5 +153,5 @@ export default StyleSheet.create({
         fontWeight: '700',
       },
 
-      
+
 });

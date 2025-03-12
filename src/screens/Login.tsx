@@ -29,8 +29,8 @@ const Login: React.FC = () => {
 
   const handleGoToMainTab = () => {
     // 로그인 로직 수행 후 메인 탭 네비게이터로 이동 (replace 메서드 사용 가능)
-    // navigation.navigate('SignUp');
-    navigation.navigate('MainTab');
+    navigation.replace('SignUp');
+    // navigation.navigate('MainTab');
   };
 
   const images = [
@@ -50,8 +50,8 @@ const Login: React.FC = () => {
           }}
           containerStyle={styles.allImagesImage}>
           {images.map((item, i) => (
-            <View>
-              <Image key={i} source={item} style={styles.allImagesImage} />
+            <View key={i}>
+              <Image source={item} style={styles.allImagesImage} />
             </View>
           ))}
         </Swiper>

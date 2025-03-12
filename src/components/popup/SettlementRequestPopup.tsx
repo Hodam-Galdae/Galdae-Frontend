@@ -7,6 +7,7 @@ import styles from '../../styles/SettlementRequestPopup.style';
 import BasicButton from '../button/BasicButton';
 import SVGButton from '../button/SVGButton';
 import SVG from '../SVG';
+import SettlementCostEditModal from './SettlementCostEditModal';
 
 enum Type {
   MESSAGE,
@@ -81,9 +82,10 @@ const SettlementRequestPopup = forwardRef<
     },
   }));
 
-  const [settlementCost, setSettlementCost] = useState<number>(10000);
+  const [settlementCost, setSettlementCost] = useState<number>(0);
   const [isLastSettlement, setIsLastSettlement] = useState(false);
-
+  const [isVisibleCostEditPopup, setIsVisibleCostEditPopup] =
+    useState<boolean>(false);
   //정산 요청 메서드
   const requestSettlement = () => {
     if (!isLastSettlement) {
@@ -103,6 +105,11 @@ const SettlementRequestPopup = forwardRef<
       },
     ]);
     //메시지 보내기
+  };
+
+  const setCost = (cost: number) => {
+    setSettlementCost(cost);
+    setIsVisibleCostEditPopup(false);
   };
 
   const close = () => {
@@ -132,7 +139,8 @@ const SettlementRequestPopup = forwardRef<
                 <BasicText style={styles.settlementCostText}>
                   {settlementCost + '원'}
                 </BasicText>
-                <TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => setIsVisibleCostEditPopup(true)}>
                   <BasicText
                     text="정산 금액 수정"
                     style={styles.settlementCostEditText}
@@ -244,6 +252,11 @@ const SettlementRequestPopup = forwardRef<
           buttonStyle={styles.settlementBtn}
         />
       </View>
+      <SettlementCostEditModal
+        visible={isVisibleCostEditPopup}
+        onConfirm={setCost}
+        onCancel={() => setIsVisibleCostEditPopup(false)}
+      />
     </Modalize>
   );
 });

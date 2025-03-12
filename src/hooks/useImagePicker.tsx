@@ -1,3 +1,4 @@
+// useImagePicker.ts
 import {useState} from 'react';
 import {Platform} from 'react-native';
 import {
@@ -19,29 +20,42 @@ const useImagePicker = () => {
   // 권한 확인 및 요청 함수
   const checkAndRequestPermission = async (permission: Permission) => {
     const result = await check(permission);
-    console.log(result);
+    console.log(`Check permission: ${permission} => ${result}`);
 
     if (result === RESULTS.GRANTED) {
       return true;
     } else {
       const requestResult = await request(permission);
+      console.log(`Request permission: ${permission} => ${requestResult}`);
       return requestResult === RESULTS.GRANTED;
     }
   };
 
   // 사진 촬영
   const getImageByCamera = async () => {
-    let hasCameraPermission;
-    let hasStoragePermission;
+    let hasCameraPermission = false;
+    let hasStoragePermission = false;
 
     if (Platform.OS === 'android') {
+      // 카메라 권한
       hasCameraPermission = await checkAndRequestPermission(
         PERMISSIONS.ANDROID.CAMERA,
       );
-      hasStoragePermission = await checkAndRequestPermission(
-        PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
-      );
+
+      // 갤러리(스토리지) 권한
+      if (Platform.Version >= 33) {
+        // Android 13 이상
+        hasStoragePermission = await checkAndRequestPermission(
+          PERMISSIONS.ANDROID.READ_MEDIA_IMAGES,
+        );
+      } else {
+        // Android 12 이하
+        hasStoragePermission = await checkAndRequestPermission(
+          PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
+        );
+      }
     } else {
+      // iOS
       hasCameraPermission = await checkAndRequestPermission(
         PERMISSIONS.IOS.CAMERA,
       );
@@ -74,12 +88,22 @@ const useImagePicker = () => {
 
   // 갤러리에서 이미지 선택
   const getImageByGallery = async () => {
-    let hasStoragePermission;
+    let hasStoragePermission = false;
+
     if (Platform.OS === 'android') {
-      hasStoragePermission = await checkAndRequestPermission(
-        PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
-      );
+      if (Platform.Version >= 33) {
+        // Android 13 이상
+        hasStoragePermission = await checkAndRequestPermission(
+          PERMISSIONS.ANDROID.READ_MEDIA_IMAGES,
+        );
+      } else {
+        // Android 12 이하
+        hasStoragePermission = await checkAndRequestPermission(
+          PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
+        );
+      }
     } else {
+      // iOS
       hasStoragePermission = await checkAndRequestPermission(
         PERMISSIONS.IOS.PHOTO_LIBRARY,
       );
@@ -97,7 +121,10 @@ const useImagePicker = () => {
             console.log('User cancelled gallery');
           } else if (response.errorCode) {
             console.log('Gallery error: ', response.errorMessage);
-          } else if (response.assets !== undefined) {
+          } else if (
+            response.assets !== undefined &&
+            response.assets.length > 0
+          ) {
             setImageUri(response.assets[0].uri ?? '');
           }
         },

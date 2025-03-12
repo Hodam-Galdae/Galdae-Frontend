@@ -7,6 +7,19 @@ export default StyleSheet.create({
   rootContainer: {
     flex: 1,
   },
+  headerIcon: {
+    marginRight: 4,
+  },
+  headerText: {
+    marginRight: 4,
+    color: theme.colors.black,
+    fontSize: theme.fontSize.size22,
+    fontWeight: '700',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   container: {
     paddingTop: 50,
     flex: 1,

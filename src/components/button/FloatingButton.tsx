@@ -1,19 +1,18 @@
 import React from 'react';
 import { TouchableOpacity, StyleProp, ViewStyle } from 'react-native';
-import SVG from '../../components/SVG';
-//import {  } from '../../utils/ScreenScaler';
+import SVG from '../SVG';
 import { theme } from '../../styles/theme';
 import stylesheet from '../../styles/stylesheet';
 export interface FloatingButtonProps {
   onPress?: () => void;
   style?: StyleProp<ViewStyle>;
-  iconName?: string; // 기본 아이콘 이름을 "Add"로 사용. 외부에서 다른 이름 전달 가능.
+  iconName?: any; // string 대신 IconNames
 }
 
-const FloatingButton: React.FC<FloatingButtonProps> = ({ onPress, style }) => {
+const FloatingButton: React.FC<FloatingButtonProps> = ({ onPress, style,iconName = 'Add' }) => {
   return (
     <TouchableOpacity onPress={onPress} style={[stylesheet.floatingBtn, style]}>
-      <SVG name="Add" width={24} height={24} fill={theme.colors.white} />
+      <SVG name={iconName} width={24} height={24} fill={theme.colors.white} />
     </TouchableOpacity>
   );
 };

@@ -28,6 +28,8 @@ import ReportModal from '../components/popup/ReportModal';
 import ChatRoomExitModal from '../components/popup/ChatRoomExitModal';
 import ReportCheckModal from '../components/popup/ReportCheckModal';
 import useDidMountEffect from '../hooks/useDidMountEffect';
+import Header from '../components/Header';
+import SettlementCostEditModal from '../components/popup/SettlementCostEditModal';
 
 enum Type {
   MESSAGE,
@@ -305,6 +307,9 @@ const ChatRoom: React.FC = () => {
   //메시지 보내는 메서드
   const sendMessage = () => {
     //api 호출
+    if (message.length === 0) {
+      return;
+    }
 
     setData([
       ...data,
@@ -362,7 +367,7 @@ const ChatRoom: React.FC = () => {
   );
 
   useDidMountEffect(() => {
-    if (imageUri !== undefined) {
+    if (imageUri !== '') {
       setData([
         ...data,
         {
@@ -378,58 +383,81 @@ const ChatRoom: React.FC = () => {
 
   return (
     <KeyboardAvoidingView style={styles.rootContainer} behavior={'padding'}>
-      <View style={styles.container}>
-        <SVGButton iconName="Kebab" onPress={openSideMenu} />
-        {/* 사이드바 */}
-        <Animated.View
-          {...panResponder.panHandlers}
-          style={[
-            styles.sideMenu,
-            {transform: [{translateX}], width: SIDE_MENU_WIDTH},
-          ]}>
-          <BasicText style={styles.menuText}>
-            {'참여자 목록 ( ' +
-              chatRoomData.currentPerson.length +
-              '/' +
-              chatRoomData.maxPerson +
-              ' )'}
-          </BasicText>
-          <View style={styles.menuUserList}>
-            {chatRoomData.currentPerson.map(e => {
-              return (
-                <View key={e.id} style={styles.menuUserContainer}>
-                  <View style={styles.menuUserWrapper}>
-                    <SVG
-                      width={46}
-                      height={46}
-                      name="DefaultProfile"
-                      style={styles.menuUserIcon}
-                    />
-                    <BasicText style={styles.menuUserText} text={e.name} />
-                    {e.name === 'donghyun' ? (
-                      <View style={styles.menuUserMe}>
-                        <BasicText style={styles.menuUserMeText} text="나" />
-                      </View>
-                    ) : null}
-                  </View>
-                  {e.name !== 'donghyun' ? (
-                    <BasicButton
-                      textStyle={styles.menuUserBtnText}
-                      buttonStyle={styles.menuUserBtn}
-                      onPress={() => startReportUser(e)}
-                      text="신고하기"
-                    />
+      <Header
+        leftButton={
+          <SVGButton onPress={() => navigation.goBack()} iconName="LeftArrow" />
+        }
+        title={
+          <View style={styles.header}>
+            <SVG
+              width={22}
+              height={22}
+              style={styles.headerIcon}
+              name="LocationBlack"
+            />
+            <BasicText style={styles.headerText} text={chatRoomData.from} />
+            <SVG
+              width={22}
+              height={22}
+              style={styles.headerIcon}
+              name="RightArrow"
+            />
+            <BasicText style={styles.headerText} text={chatRoomData.to} />
+          </View>
+        }
+        rightButton={<SVGButton onPress={openSideMenu} iconName="Kebab" />}
+      />
+      {/* 사이드바 */}
+      <Animated.View
+        {...panResponder.panHandlers}
+        style={[
+          styles.sideMenu,
+          {transform: [{translateX}], width: SIDE_MENU_WIDTH},
+        ]}>
+        <BasicText style={styles.menuText}>
+          {'참여자 목록 ( ' +
+            chatRoomData.currentPerson.length +
+            '/' +
+            chatRoomData.maxPerson +
+            ' )'}
+        </BasicText>
+        <View style={styles.menuUserList}>
+          {chatRoomData.currentPerson.map(e => {
+            return (
+              <View key={e.id} style={styles.menuUserContainer}>
+                <View style={styles.menuUserWrapper}>
+                  <SVG
+                    width={46}
+                    height={46}
+                    name="DefaultProfile"
+                    style={styles.menuUserIcon}
+                  />
+                  <BasicText style={styles.menuUserText} text={e.name} />
+                  {e.name === 'donghyun' ? (
+                    <View style={styles.menuUserMe}>
+                      <BasicText style={styles.menuUserMeText} text="나" />
+                    </View>
                   ) : null}
                 </View>
-              );
-            })}
-          </View>
-          <SVGButton
-            onPress={() => setIsVisibleExitPopup(true)}
-            iconName="Exit"
-            buttonStyle={styles.exitIcon}
-          />
-        </Animated.View>
+                {e.name !== 'donghyun' ? (
+                  <BasicButton
+                    textStyle={styles.menuUserBtnText}
+                    buttonStyle={styles.menuUserBtn}
+                    onPress={() => startReportUser(e)}
+                    text="신고하기"
+                  />
+                ) : null}
+              </View>
+            );
+          })}
+        </View>
+        <SVGButton
+          onPress={() => setIsVisibleExitPopup(true)}
+          iconName="Exit"
+          buttonStyle={styles.exitIcon}
+        />
+      </Animated.View>
+      <View style={styles.container}>
         <FlatList
           ref={chatListRef}
           style={styles.list}
