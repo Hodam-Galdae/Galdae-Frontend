@@ -41,7 +41,8 @@
     "react-native-video": "^6.10.2",
     "react-native-web-swiper": "^2.2.4",
     "react-native-webview": "^13.13.2",
-    "react-redux": "^9.2.0"
+    "react-redux": "^9.2.0",
+    "redux-flipper": "^2.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.26.8",

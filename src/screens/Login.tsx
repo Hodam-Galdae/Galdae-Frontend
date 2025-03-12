@@ -8,6 +8,14 @@ import styles from '../styles/Login.style';
 import {theme} from '../styles/theme';
 import BasicText from '../components/BasicText';
 import SVG from '../components/SVG';
+import {
+  login,
+  logout,
+  getProfile as getKakaoProfile,
+  shippingAddresses as getKakaoShippingAddresses,
+  unlink,
+} from '@react-native-seoul/kakao-login';
+
 // 네비게이션 파라미터 타입 정의
 type RootStackParamList = {
   Onboarding: undefined;
@@ -26,6 +34,15 @@ type LoginScreenNavigationProp = NativeStackNavigationProp<
 const Login: React.FC = () => {
   // useNavigation에 LoginScreenNavigationProp 제네릭을 적용합니다.
   const navigation = useNavigation<LoginScreenNavigationProp>();
+
+  const signInWithKakao = async (): Promise<void> => {
+    try {
+      const token = await login();
+      console.log(token);
+    } catch (err) {
+      console.error('login err', err);
+    }
+  };
 
   const handleGoToMainTab = () => {
     // 로그인 로직 수행 후 메인 탭 네비게이터로 이동 (replace 메서드 사용 가능)
@@ -69,7 +86,7 @@ const Login: React.FC = () => {
         <SVG name="GaldaeLogo" />
         <BasicText text="입니다." style={{...styles.title, marginLeft: 10}} />
       </View>
-      <Button title="로그인" onPress={handleGoToMainTab} />
+      <Button title="로그인" onPress={signInWithKakao} />
     </View>
   );
 };

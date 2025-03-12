@@ -22,14 +22,14 @@
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
 		<array>
-			<dict>
+		<dict>
 				<key>CFBundleTypeRole</key>
 				<string>Editor</string>
 				<key>CFBundleURLSchemes</key>
 				<array>
-					<string>3525284d2d1ca180a3ee3bb37840f922</string>
-				</array>
-			</dict>
+				<string>kakao3525284d2d1ca180a3ee3bb37840f922</string>
+			</array>
+		</dict>
 		</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
@@ -37,10 +37,7 @@
 	<string>3525284d2d1ca180a3ee3bb37840f922</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
-		<string>kakao0123456789</string>
 		<string>kakaokompassauth</string>
-		<string>storykompassauth</string>
-		<string>kakaolink</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
