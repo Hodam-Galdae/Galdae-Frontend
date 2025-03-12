@@ -1,6 +1,6 @@
 // Login.tsx
 import React, {useEffect} from 'react';
-import {View, Button, Image} from 'react-native';
+import {View, Button, Image, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import Swiper from 'react-native-web-swiper';
@@ -88,20 +88,53 @@ const Login: React.FC = () => {
           ))}
         </Swiper>
       </View>
-      <BasicText text="안녕하세요" style={{...styles.title, marginTop: 98}} />
-      <BasicText
-        text="같이 갈 그대,"
-        style={{
-          ...styles.title,
-          color: theme.colors.brandColor,
-          marginBottom: 39,
-        }}
-      />
-      <View style={styles.textWrapper}>
-        <SVG name="GaldaeLogo" />
-        <BasicText text="입니다." style={{...styles.title, marginLeft: 10}} />
+      <View style={{alignItems: 'center'}}>
+        <BasicText text="안녕하세요" style={styles.title} />
+        <BasicText
+          text="같이 갈 그대,"
+          style={{
+            ...styles.title,
+            color: theme.colors.brandColor,
+            marginBottom: 39,
+          }}
+        />
+        <View style={styles.textWrapper}>
+          <SVG name="GaldaeLogo" />
+          <BasicText text="입니다." style={{...styles.title, marginLeft: 10}} />
+        </View>
       </View>
-      <Button title="로그인" onPress={signInWithGoogle} />
+
+      <View style={{marginBottom: 30}}>
+        <TouchableOpacity onPress={() => {}}>
+          <View style={[styles.button, {backgroundColor: theme.colors.black}]}>
+            <SVG style={styles.icon} name="Apple" />
+            <BasicText
+              style={[styles.btnText, {color: theme.colors.white}]}
+              text="Sign in with Apple"
+            />
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={signInWithGoogle}>
+          <View
+            style={[
+              styles.button,
+              {
+                backgroundColor: theme.colors.white,
+                borderWidth: 1,
+                borderColor: '#747775',
+              },
+            ]}>
+            <SVG style={styles.icon} name="Google" />
+            <BasicText style={styles.btnText} text="Sign in with Google" />
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={signInWithKakao}>
+          <View style={[styles.button, {backgroundColor: '#FEE500'}]}>
+            <SVG style={styles.icon} name="Kakao" />
+            <BasicText text="Sign in with Kakao" />
+          </View>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
