@@ -1,5 +1,5 @@
 // Login.tsx
-import React from 'react';
+import React, {useEffect} from 'react';
 import {View, Button, Image} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -15,6 +15,7 @@ import {
   shippingAddresses as getKakaoShippingAddresses,
   unlink,
 } from '@react-native-seoul/kakao-login';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
 
 // 네비게이션 파라미터 타입 정의
 type RootStackParamList = {
@@ -44,6 +45,12 @@ const Login: React.FC = () => {
     }
   };
 
+  const signInWithGoogle = async (): Promise<void> => {
+    await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
+    const response = await GoogleSignin.signIn();
+    console.log(response.data?.idToken);
+  };
+
   const handleGoToMainTab = () => {
     // 로그인 로직 수행 후 메인 탭 네비게이터로 이동 (replace 메서드 사용 가능)
     navigation.replace('SignUp');
@@ -55,6 +62,14 @@ const Login: React.FC = () => {
     require('../assets/test.jpg'),
     require('../assets/test.jpg'),
   ];
+
+  useEffect(() => {
+    //TODO: 환경변수
+    GoogleSignin.configure({
+      webClientId:
+        '1034543222691-3m9roadnkpqs562p6q2dj3qblv2ps69h.apps.googleusercontent.com',
+    });
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -86,7 +101,7 @@ const Login: React.FC = () => {
         <SVG name="GaldaeLogo" />
         <BasicText text="입니다." style={{...styles.title, marginLeft: 10}} />
       </View>
-      <Button title="로그인" onPress={signInWithKakao} />
+      <Button title="로그인" onPress={signInWithGoogle} />
     </View>
   );
 };
