@@ -1,6 +1,6 @@
 // Login.tsx
 import React, {useEffect} from 'react';
-import {View, Button, Image, TouchableOpacity} from 'react-native';
+import {View, Image, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import Swiper from 'react-native-web-swiper';
@@ -8,14 +8,9 @@ import styles from '../styles/Login.style';
 import {theme} from '../styles/theme';
 import BasicText from '../components/BasicText';
 import SVG from '../components/SVG';
-import {
-  login,
-  logout,
-  getProfile as getKakaoProfile,
-  shippingAddresses as getKakaoShippingAddresses,
-  unlink,
-} from '@react-native-seoul/kakao-login';
+import {login} from '@react-native-seoul/kakao-login';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import axios from 'axios';
 
 // 네비게이션 파라미터 타입 정의
 type RootStackParamList = {
@@ -39,7 +34,7 @@ const Login: React.FC = () => {
   const signInWithKakao = async (): Promise<void> => {
     try {
       const token = await login();
-      console.log(token);
+      getToken(token.idToken, 'kakao');
     } catch (err) {
       console.error('login err', err);
     }
@@ -48,7 +43,17 @@ const Login: React.FC = () => {
   const signInWithGoogle = async (): Promise<void> => {
     await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
     const response = await GoogleSignin.signIn();
+    console.log(response);
+    getToken(response.data?.idToken || '', 'google');
+
     console.log(response.data?.idToken);
+  };
+
+  const getToken = async (token: string, method: string): Promise<void> => {
+    console.log('in');
+    axios.post('http://192.168.0.158:8080/auth/' + method, null, {params:{'token': token}}).then((res)=>{
+      console.log(res);
+    });
   };
 
   const handleGoToMainTab = () => {
