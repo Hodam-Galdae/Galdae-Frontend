@@ -35,6 +35,9 @@ import Logout from './src/screens/myinfo/Logout';
 import WithDraw from './src/screens/myinfo/WithDraw';
 import Notification from './src/screens/Notification';
 import {TabBarVisibilityProvider} from './src/utils/TabBarVisibilityContext';
+import {Provider} from 'react-redux';
+import store from './src/modules/redux/store/index';
+
 function App() {
   useEffect(() => {
     if (Platform.OS === 'android') {
@@ -85,8 +88,8 @@ function App() {
     };
 
     return (
-
-        <GestureHandlerRootView>
+      <Provider store={store}>
+          <GestureHandlerRootView>
             <SafeAreaProvider>
               <TabBarVisibilityProvider>
                 <NavigationContainer theme={theme}>
@@ -133,7 +136,7 @@ function App() {
               </TabBarVisibilityProvider>
             </SafeAreaProvider>
         </GestureHandlerRootView>
-
+      </Provider>
 );
 
 }

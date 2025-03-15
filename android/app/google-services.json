@@ -1,0 +1,134 @@
+{
+  "project_info": {
+    "project_number": "1034543222691",
+    "project_id": "galdae2-0",
+    "storage_bucket": "galdae2-0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1034543222691:android:c1b92908b5b790ccdc9416",
+        "android_client_info": {
+          "package_name": "com.galdae"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1034543222691-tiatjv47fjr25f7s7iot3tsf7ekqgrfd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.galdae",
+            "certificate_hash": "6dfd56fb2ee81ed591bc1a4ebddd05f6c9ecd83e"
+          }
+        },
+        {
+          "client_id": "1034543222691-3m9roadnkpqs562p6q2dj3qblv2ps69h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjFgkqy0PGFJvO7ihjs6hYUQiAdeVQDT4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1034543222691-3m9roadnkpqs562p6q2dj3qblv2ps69h.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1034543222691-3iaqm66uah6dhaumi5no0sj0gk2kj9bc.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.hodam.galdae2"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1034543222691:android:9062137f9429a4e7dc9416",
+        "android_client_info": {
+          "package_name": "com.hodam.galdae2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1034543222691-lmebl3247cj6enlu330ac8qh4btsgprs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hodam.galdae2",
+            "certificate_hash": "6dfd56fb2ee81ed591bc1a4ebddd05f6c9ecd83e"
+          }
+        },
+        {
+          "client_id": "1034543222691-3m9roadnkpqs562p6q2dj3qblv2ps69h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjFgkqy0PGFJvO7ihjs6hYUQiAdeVQDT4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1034543222691-3m9roadnkpqs562p6q2dj3qblv2ps69h.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1034543222691-3iaqm66uah6dhaumi5no0sj0gk2kj9bc.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.hodam.galdae2"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1034543222691:android:105ce9b6fb0e333fdc9416",
+        "android_client_info": {
+          "package_name": "com.hodam.galdaemanage"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1034543222691-3m9roadnkpqs562p6q2dj3qblv2ps69h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjFgkqy0PGFJvO7ihjs6hYUQiAdeVQDT4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1034543222691-3m9roadnkpqs562p6q2dj3qblv2ps69h.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1034543222691-3iaqm66uah6dhaumi5no0sj0gk2kj9bc.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.hodam.galdae2"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

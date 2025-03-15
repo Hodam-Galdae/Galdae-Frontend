@@ -110,3 +110,6 @@ export {default as LocationGreen} from './LocationGreen.svg';
 export {default as Balloon} from './Balloon.svg';
 export {default as Bank_KDB} from './Bank_KDB.svg';
 export {default as Bank_Saemaul} from './Bank_Saemaul.svg';
+export {default as Google} from './Google.svg';
+export {default as Kakao} from './Kakao.svg';
+export {default as Apple} from './Apple.svg';

@@ -1,6 +1,6 @@
 // Login.tsx
-import React from 'react';
-import {View, Button, Image} from 'react-native';
+import React, {useEffect} from 'react';
+import {View, Image, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import Swiper from 'react-native-web-swiper';
@@ -8,6 +8,10 @@ import styles from '../styles/Login.style';
 import {theme} from '../styles/theme';
 import BasicText from '../components/BasicText';
 import SVG from '../components/SVG';
+import {login} from '@react-native-seoul/kakao-login';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import axios from 'axios';
+
 // 네비게이션 파라미터 타입 정의
 type RootStackParamList = {
   Onboarding: undefined;
@@ -27,6 +31,31 @@ const Login: React.FC = () => {
   // useNavigation에 LoginScreenNavigationProp 제네릭을 적용합니다.
   const navigation = useNavigation<LoginScreenNavigationProp>();
 
+  const signInWithKakao = async (): Promise<void> => {
+    try {
+      const token = await login();
+      getToken(token.idToken, 'kakao');
+    } catch (err) {
+      console.error('login err', err);
+    }
+  };
+
+  const signInWithGoogle = async (): Promise<void> => {
+    await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
+    const response = await GoogleSignin.signIn();
+    console.log(response);
+    getToken(response.data?.idToken || '', 'google');
+
+    console.log(response.data?.idToken);
+  };
+
+  const getToken = async (token: string, method: string): Promise<void> => {
+    console.log('in');
+    axios.post('http://192.168.0.158:8080/auth/' + method, null, {params:{'token': token}}).then((res)=>{
+      console.log(res);
+    });
+  };
+
   const handleGoToMainTab = () => {
     // 로그인 로직 수행 후 메인 탭 네비게이터로 이동 (replace 메서드 사용 가능)
     navigation.replace('SignUp');
@@ -38,6 +67,14 @@ const Login: React.FC = () => {
     require('../assets/test.jpg'),
     require('../assets/test.jpg'),
   ];
+
+  useEffect(() => {
+    //TODO: 환경변수
+    GoogleSignin.configure({
+      webClientId:
+        '1034543222691-3m9roadnkpqs562p6q2dj3qblv2ps69h.apps.googleusercontent.com',
+    });
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -56,20 +93,53 @@ const Login: React.FC = () => {
           ))}
         </Swiper>
       </View>
-      <BasicText text="안녕하세요" style={{...styles.title, marginTop: 98}} />
-      <BasicText
-        text="같이 갈 그대,"
-        style={{
-          ...styles.title,
-          color: theme.colors.brandColor,
-          marginBottom: 39,
-        }}
-      />
-      <View style={styles.textWrapper}>
-        <SVG name="GaldaeLogo" />
-        <BasicText text="입니다." style={{...styles.title, marginLeft: 10}} />
+      <View style={{alignItems: 'center'}}>
+        <BasicText text="안녕하세요" style={styles.title} />
+        <BasicText
+          text="같이 갈 그대,"
+          style={{
+            ...styles.title,
+            color: theme.colors.brandColor,
+            marginBottom: 39,
+          }}
+        />
+        <View style={styles.textWrapper}>
+          <SVG name="GaldaeLogo" />
+          <BasicText text="입니다." style={{...styles.title, marginLeft: 10}} />
+        </View>
       </View>
-      <Button title="로그인" onPress={handleGoToMainTab} />
+
+      <View style={{marginBottom: 30}}>
+        <TouchableOpacity onPress={() => {}}>
+          <View style={[styles.button, {backgroundColor: theme.colors.black}]}>
+            <SVG style={styles.icon} name="Apple" />
+            <BasicText
+              style={[styles.btnText, {color: theme.colors.white}]}
+              text="Sign in with Apple"
+            />
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={signInWithGoogle}>
+          <View
+            style={[
+              styles.button,
+              {
+                backgroundColor: theme.colors.white,
+                borderWidth: 1,
+                borderColor: '#747775',
+              },
+            ]}>
+            <SVG style={styles.icon} name="Google" />
+            <BasicText style={styles.btnText} text="Sign in with Google" />
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={signInWithKakao}>
+          <View style={[styles.button, {backgroundColor: '#FEE500'}]}>
+            <SVG style={styles.icon} name="Kakao" />
+            <BasicText text="Sign in with Kakao" />
+          </View>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
