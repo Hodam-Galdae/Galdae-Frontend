@@ -10,7 +10,10 @@ import BasicText from '../components/BasicText';
 import SVG from '../components/SVG';
 import {login} from '@react-native-seoul/kakao-login';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import { loginWithGoogle, loginWithKakao } from '../api/authApi';
 import axios from 'axios';
+import EncryptedStorage from 'react-native-encrypted-storage';
+
 
 // 네비게이션 파라미터 타입 정의
 type RootStackParamList = {
@@ -33,30 +36,31 @@ const Login: React.FC = () => {
 
   const signInWithKakao = async (): Promise<void> => {
     try {
-      const token = await login();
-      getToken(token.idToken, 'kakao');
+      const token = (await login()).accessToken;
+      const response = await loginWithKakao(token);
+      await EncryptedStorage.setItem('accessToken', response.accessToken);
+      await EncryptedStorage.setItem('refreshToken', response.refreshToken || '');
+      console.log("access token : " + response.accessToken);
+      console.log("refresh token : " + response.accessToken);
+      handleGoToSignUp();
     } catch (err) {
-      console.error('login err', err);
+      console.error('login err : ', err);
     }
   };
 
   const signInWithGoogle = async (): Promise<void> => {
-    await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
-    const response = await GoogleSignin.signIn();
-    console.log(response);
-    getToken(response.data?.idToken || '', 'google');
-
-    console.log(response.data?.idToken);
+      // await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
+      // const token = (await GoogleSignin.signIn()).data?.idToken;
+      // console.log(token);
+      // if(token === null) {
+      //   //로그인 에러
+      //   return;
+      // }
+      // const result = await loginWithGoogle(token || '');
+      // console.log("api" + result.accessToken);
   };
 
-  const getToken = async (token: string, method: string): Promise<void> => {
-    console.log('in');
-    axios.post('http://192.168.0.158:8080/auth/' + method, null, {params:{'token': token}}).then((res)=>{
-      console.log(res);
-    });
-  };
-
-  const handleGoToMainTab = () => {
+  const handleGoToSignUp = () => {
     // 로그인 로직 수행 후 메인 탭 네비게이터로 이동 (replace 메서드 사용 가능)
     navigation.replace('SignUp');
     // navigation.navigate('MainTab');

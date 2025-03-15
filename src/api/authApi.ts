@@ -17,19 +17,19 @@ interface CheckNicknameResponse {
 
 // ✅ 카카오 로그인
 export const loginWithKakao = async (kakaoToken: string): Promise<AuthResponse> => {
-  const response = await axiosInstance.post<AuthResponse>('/auth/kakao', { token: kakaoToken });
+  const response = await axiosInstance.post<AuthResponse>('/auth/kakao', {'token': kakaoToken});
   return response.data;
 };
 
 // ✅ 구글 로그인
 export const loginWithGoogle = async (googleToken: string): Promise<AuthResponse> => {
-  const response = await axiosInstance.post<AuthResponse>('/auth/google', { token: googleToken });
+  const response = await axiosInstance.post<AuthResponse>('/auth/google', {'token': googleToken});
   return response.data;
 };
 
 // ✅ 애플 로그인
 export const loginWithApple = async (appleToken: string): Promise<AuthResponse> => {
-  const response = await axiosInstance.post<AuthResponse>('/auth/apple', { token: appleToken });
+  const response = await axiosInstance.post<AuthResponse>('/auth/apple', { 'token': appleToken });
   return response.data;
 };
 
