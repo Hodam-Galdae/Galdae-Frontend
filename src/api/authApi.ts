@@ -6,9 +6,11 @@ interface AuthResponse {
 }
 
 interface JoinRequest {
-  email: string;
-  password: string;
   nickname: string;
+  gender: string;
+  bankType: string;
+  accountNumber: string;
+  depositor: string;
 }
 
 interface CheckNicknameResponse {

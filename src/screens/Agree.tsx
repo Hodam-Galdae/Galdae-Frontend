@@ -1,11 +1,12 @@
 // SignUp.tsx 테스트
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, TouchableOpacity} from 'react-native';
 import BasicText from '../components/BasicText';
 import styles from '../styles/Agree.style';
 import {theme} from '../styles/theme';
 import SVG from '../components/SVG';
 import BasicButton from '../components/button/BasicButton';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface AgreeProps {
   setNextStep: () => void;
@@ -38,12 +39,34 @@ const Agree: React.FC<AgreeProps> = ({setNextStep, goTermsDetailPage}) => {
     setSelected(newArr);
   };
 
-  const clickEvent = () => {
+  const clickEvent = async() => {
     if (!selected.every(value => value)) {
       return;
     }
-    setNextStep();
+
+    try{
+      await AsyncStorage.setItem('agree', 'agreeAll');
+      setNextStep();
+    }
+    catch(e) {
+      console.log(e);
+    }
   };
+
+  const readAgree = async() => {
+    try {
+      const value = await AsyncStorage.getItem('agree');
+      if (value !== null) {
+        setNextStep();
+      }
+    } catch (e) {
+      // error reading value
+    }
+  };
+
+  useEffect(() => {
+    readAgree();
+  }, []);
 
   return (
     <View style={styles.container}>
