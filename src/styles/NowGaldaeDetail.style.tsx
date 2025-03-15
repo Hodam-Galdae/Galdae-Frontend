@@ -12,9 +12,6 @@ export default StyleSheet.create({
         flexDirection:'row',
         gap:4,
         alignItems:'center',
-        top: Platform.select({
-            android:5,
-        }),
     },
     headerText:{
         fontSize: theme.fontSize.size22,

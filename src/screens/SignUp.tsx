@@ -1,6 +1,6 @@
 // SignUp.tsx 테스트
 import React, {useRef, useState, useEffect, useCallback} from 'react';
-import {View, Animated} from 'react-native';
+import {View, Animated, SafeAreaView} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import styles from '../styles/SignUp.style';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -88,22 +88,22 @@ const SignUp: React.FC = () => {
   ];
 
   return (
-    <View style={styles.container}>
-      <Header
-        title={<SVG name="GaldaeLogo" />}
-        leftButton={
-          <SVGButton
-            onPress={goBack}
-            iconName="LeftArrow"
-            buttonStyle={{width: 30, height: 30}}
-          />
-        }
-      />
-      <View style={styles.bar}>
-        <Animated.View style={{...styles.progress, width}} />
-      </View>
-      {steps[nowStep]}
-    </View>
+      <SafeAreaView style={styles.container}>
+        <Header
+          title={<SVG name="GaldaeLogo" />}
+          leftButton={
+            <SVGButton
+              onPress={goBack}
+              iconName="LeftArrow"
+              buttonStyle={{width: 30, height: 30}}
+            />
+          }
+        />
+        <View style={styles.bar}>
+          <Animated.View style={{...styles.progress, width}} />
+        </View>
+        {steps[nowStep]}
+      </SafeAreaView>
   );
 };
 

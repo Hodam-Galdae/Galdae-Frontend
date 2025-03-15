@@ -96,7 +96,6 @@ export default StyleSheet.create({
       fontWeight:'500',
     },
     confirmButton:{
-      width:60,
       paddingHorizontal:16,
       height:42,
       alignSelf:'flex-end',

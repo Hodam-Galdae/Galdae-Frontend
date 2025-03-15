@@ -7,12 +7,12 @@ export default StyleSheet.create({
 
     borderedListBox:{
       width:'100%',
-      height:195,
       borderColor:theme.colors.gray0,
       borderRadius:theme.borderRadius.size10,
       borderWidth:1,
       paddingStart:24,
       paddingTop:14,
+      paddingBottom: 18,
       marginBottom:12,
     },
     galdaeOwner:{

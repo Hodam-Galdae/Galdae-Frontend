@@ -4,6 +4,7 @@ import { View } from 'react-native';
 import SVG from '../components/SVG';
 //import {  } from '../utils/ScreenScaler';
 import styles from '../styles/Header.style';
+import { SafeAreaView } from 'react-native-safe-area-context';
 //import SVGButton from '../components/button/SVGButton';
 
 export interface HeaderProps {
@@ -14,7 +15,7 @@ export interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ leftButton, title, rightButton }) => {
   return (
-    <View style={styles.headerContainer}>
+    <SafeAreaView style={styles.headerContainer}>
       <View style={styles.backContainer}>
       {leftButton}
       </View>
@@ -30,7 +31,7 @@ const Header: React.FC<HeaderProps> = ({ leftButton, title, rightButton }) => {
       <View style={styles.notificationContainer}>
           {rightButton}
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 

@@ -7,7 +7,6 @@ export default StyleSheet.create({
     searchListBox:{
         position:'relative',
         width:'100%',
-        height:104,
         borderRadius:10,
         borderWidth:2,
         borderColor:theme.colors.lightGray,
@@ -16,17 +15,16 @@ export default StyleSheet.create({
         flexDirection:'row',
         gap:(50),
         marginBottom:(12),
+        paddingVertical: 15,
     },
     startContain:{ //고정 width 설정해야할듯
         alignItems:'center',
-        width:(85),
     },
     arrowRight:{
       marginTop:30,
     },
     start:{
       marginTop:7,
-      height:(18),
       marginBottom:(10),
     },
     mainPosName: {
