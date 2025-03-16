@@ -17,6 +17,7 @@ import {theme} from '../styles/theme';
 import ItemSelector from '../components/ItemSelector';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {ScrollView} from 'react-native-gesture-handler';
+import { checkNickname, join } from '../api/authApi';
 
 interface AgreeProps {
   setNextStep: () => void;
@@ -41,19 +42,25 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep}) => {
     '광주 은행',
   ];
 
-  const clickEvent = () => {
+  const clickEvent = async() => {
     const regex = /^[가-힣0-9]{2,8}$/;
     let flag = true;
-    // if (name.length === 0) {
-    //   setAlertNameText('*필수 입력 항목입니다.');
-    //   flag = false;
-    // } else if (!regex.test(name)) {
-    //   setAlertNameText('*닉네임은 한글, 숫자 2~8자로 제한됩니다.');
-    //   flag = false;
-    // } else {
-    //   setAlertNameText('');
-    // }
 
+    // 닉네임 확인
+    if (name.length === 0) {
+      setAlertNameText('*필수 입력 항목입니다.');
+      flag = false;
+    } else if (!regex.test(name)) {
+      setAlertNameText('*닉네임은 한글, 숫자 2~8자로 제한됩니다.');
+      flag = false;
+    } else if ((await checkNickname(name)).available) {
+      setAlertNameText('*중복되는 닉네임입니다.');
+      flag = false;
+    } else {
+      setAlertNameText('');
+    }
+
+    // 성별 확인
     if (genderSelected === -1) {
       setAlertGenderText('*필수 선택 항목입니다.');
       flag = false;
@@ -61,8 +68,21 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep}) => {
       setAlertGenderText('');
     }
 
+    // 모든 조건 충족
     if (flag) {
-      setNextStep();
+      try{
+        await join({
+          nickname: name,
+          gender: genderSelected === 0 ? 'FEMALE' : 'MALE',
+          bankType: bankText[bankSelect],
+          accountNumber: accountNumber,
+          depositor: accountName,
+        });
+        setNextStep();
+      }
+      catch(e) {
+        console.log(e);
+      }
     }
   };
 
