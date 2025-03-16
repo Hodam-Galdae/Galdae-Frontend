@@ -2,7 +2,9 @@ import axiosInstance from './axiosInstance';
 
 interface AuthResponse {
   accessToken: string;
-  refreshToken?: string;
+  refreshToken: string;
+  expiredIn: number;
+  isJoined: boolean;
 }
 
 interface JoinRequest {
