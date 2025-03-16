@@ -10,10 +10,9 @@ import BasicText from '../components/BasicText';
 import SVG from '../components/SVG';
 import {login} from '@react-native-seoul/kakao-login';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
-import { loginWithGoogle, loginWithKakao } from '../api/authApi';
+import {loginWithGoogle, loginWithKakao} from '../api/authApi';
 import axios from 'axios';
 import EncryptedStorage from 'react-native-encrypted-storage';
-
 
 // 네비게이션 파라미터 타입 정의
 type RootStackParamList = {
@@ -37,11 +36,15 @@ const Login: React.FC = () => {
   const signInWithKakao = async (): Promise<void> => {
     try {
       const token = (await login()).accessToken;
+      console.log(token);
       const response = await loginWithKakao(token);
       await EncryptedStorage.setItem('accessToken', response.accessToken);
-      await EncryptedStorage.setItem('refreshToken', response.refreshToken || '');
-      console.log("access token : " + response.accessToken);
-      console.log("refresh token : " + response.accessToken);
+      await EncryptedStorage.setItem(
+        'refreshToken',
+        response.refreshToken || '',
+      );
+      console.log('access token : ' + response.accessToken);
+      console.log('refresh token : ' + response.accessToken);
       handleGoToSignUp();
     } catch (err) {
       console.error('login err : ', err);
@@ -49,15 +52,16 @@ const Login: React.FC = () => {
   };
 
   const signInWithGoogle = async (): Promise<void> => {
-      // await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
-      // const token = (await GoogleSignin.signIn()).data?.idToken;
-      // console.log(token);
-      // if(token === null) {
-      //   //로그인 에러
-      //   return;
-      // }
-      // const result = await loginWithGoogle(token || '');
-      // console.log("api" + result.accessToken);
+    await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
+    const token = (await GoogleSignin.signIn()).data?.serverAuthCode;
+    console.log(token);
+    // if(token === null) {
+    //   //로그인 에러
+    //   return;
+    // }
+    const result = await loginWithGoogle(token || '');
+    console.log(result.accessToken);
+    // console.log("api" + result.accessToken);
   };
 
   const handleGoToSignUp = () => {
