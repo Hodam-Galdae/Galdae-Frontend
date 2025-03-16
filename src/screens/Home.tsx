@@ -2,6 +2,7 @@
 import React, {useState, useRef} from 'react';
 import {ScrollView, View, TouchableOpacity} from 'react-native';
 //import stylesheet from '../styles/stylesheet';
+import { CreatePostRequest } from '../types/postTypes'; // API 요청 타입 가져오기
 import styles from '../styles/Home.style';
 import BasicButton from '../components/button/BasicButton';
 import BasicText from '../components/BasicText';
@@ -18,9 +19,12 @@ import GaldaeItem from '../components/GaldaeItem';
 //import DeletePopup from '../components/popup/DeletePopup';
 import CreateGaldaePopup from '../components/popup/CreateGaldaePopup';
 import {useNavigation} from '@react-navigation/native';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import ToastPopup from '../components/popup/ToastPopup';
+import { createPost } from '../api/galdaeApi'; // 갈대 생성 API 불러오기
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import { useSelector } from 'react-redux';
+import { RootState } from '../modules/redux/RootReducer'; // store.ts에서 RootState 가져오기
 
 type RootStackParamList = {
   CreateGaldae: undefined;
@@ -125,8 +129,9 @@ const Home: React.FC<HomeProps> = () => {
       timestamp: 1735689600004,
     },
   ];
-
+  const accessToken = useSelector((state: RootState) => state.user.accessToken);
   const [loading, setLoading] = useState<boolean>(false);
+  const [createGaldaeLoading, setCreateGaldaeLoading] = useState<boolean>(false);
   //const [scrollPosition, setScrollPosition] = useState<number>(0);
   const [generateLoading, setgenerateLoading] = useState<boolean>(false);
   const [toastVisible, setToastVisible] = useState<boolean>(false);
@@ -160,14 +165,45 @@ const Home: React.FC<HomeProps> = () => {
     }, 2000);
   };
 
-  // const handleGeneratePress = () => {
-  //   setgenerateLoading(true);
-  //   // 버튼 클릭 시 원하는 로직을 수행하고, 완료 후 로딩 상태를 false로 전환합니다.
-  //   setTimeout(() => {
-  //     setgenerateLoading(false);
-  //   }, 2000);
-  // };
-  // 예를 들어, 갈대 생성 완료 시 토스트 팝업을 띄우고 3초 후에 사라지도록 함.
+// ✅ 갈대 생성 요청
+const handleCreateGaldaeConfirm = async () => {
+  if (!accessToken) {
+    console.error('❌ 토큰이 없습니다. 로그인 필요.');
+    return;
+  }
+
+  setCreateGaldaeLoading(true);
+
+  // 🔹 출발일시를 ISO 8601 형식으로 변환
+  const formattedDepartureTime = moment()
+    .tz('Asia/Seoul') // 한국 시간 기준
+    .format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
+
+  // 🔹 API 요청 형식에 맞게 데이터 변환
+  const generateGaldaeData: CreatePostRequest = {
+    departure: departureSmall, // 출발지
+    arrival: destinationSmall, // 도착지
+    departureTime: formattedDepartureTime, // ISO 8601 형식 변환
+    passengerType: 'MALE', // 🚀 '성인'을 'MALE'로 변환 (추후 선택 가능하도록 수정)
+    arrangeTime: 'POSSIBLE', // 🚀 '5분'을 'POSSIBLE'로 변환 (필요시 수정 가능)
+    passengerCount: 1, // 기본값 1 (추후 사용자 입력으로 변경 가능)
+    isFavoriteRoute: false, // 기본값 false
+  };
+
+  console.log('🚀 서버로 보낼 갈대 생성 데이터:',accessToken, generateGaldaeData); // 디버깅용 콘솔 로그
+
+  try {
+    await createPost(accessToken, generateGaldaeData);
+
+    setCreateGaldaePopupVisible(false);
+    setToastVisible(true);
+  } catch (error) {
+    console.error('❌ 갈대 생성 실패:', error);
+  } finally {
+    setCreateGaldaeLoading(false);
+  }
+};
+
 
   const handleMorePress = () => {
     navigation.navigate('NowGaldae');
@@ -246,17 +282,15 @@ const Home: React.FC<HomeProps> = () => {
 
   const openCreateGaldaePopup = () => {
     setgenerateLoading(true);
-    // 버튼 클릭 시 원하는 로직을 수행하고, 완료 후 로딩 상태를 false로 전환합니다.
-    setTimeout(() => {
-      setgenerateLoading(false);
-      setCreateGaldaePopupVisible(true);
-    }, 2000);
+    setgenerateLoading(false);
+    setCreateGaldaePopupVisible(true);
   };
   const closeCreateGaldaePopup = () => {
     setCreateGaldaePopupVisible(false);
   };
 
   const handleCreateCaledaeConfirm = () => {
+    handleCreateGaldaeConfirm();
     closeCreateGaldaePopup();
     setToastVisible(true);
   };
@@ -419,6 +453,7 @@ const Home: React.FC<HomeProps> = () => {
 
 
       <CreateGaldaePopup
+        loading={createGaldaeLoading}
         visible={createGaldaePopupVisible}
         onCancel={closeCreateGaldaePopup}
         onConfirm={handleCreateCaledaeConfirm}

@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 // Login.tsx
 import React, {useEffect} from 'react';
 import {View, Image, TouchableOpacity} from 'react-native';
@@ -13,7 +14,8 @@ import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import { loginWithGoogle, loginWithKakao } from '../api/authApi';
 import axios from 'axios';
 import EncryptedStorage from 'react-native-encrypted-storage';
-
+import { useDispatch } from 'react-redux';
+import { setAccessToken } from '../modules/redux/slice/UserSlice'; // Redux 액션 가져오기
 
 // 네비게이션 파라미터 타입 정의
 type RootStackParamList = {
@@ -33,15 +35,17 @@ type LoginScreenNavigationProp = NativeStackNavigationProp<
 const Login: React.FC = () => {
   // useNavigation에 LoginScreenNavigationProp 제네릭을 적용합니다.
   const navigation = useNavigation<LoginScreenNavigationProp>();
+  const dispatch = useDispatch(); // Redux dispatch 사용
 
   const signInWithKakao = async (): Promise<void> => {
     try {
       const token = (await login()).accessToken;
       const response = await loginWithKakao(token);
+      dispatch(setAccessToken(response.accessToken));
       await EncryptedStorage.setItem('accessToken', response.accessToken);
       await EncryptedStorage.setItem('refreshToken', response.refreshToken || '');
-      console.log("access token : " + response.accessToken);
-      console.log("refresh token : " + response.accessToken);
+      console.log('access token : ' + response.accessToken);
+      console.log('refresh token : ' + response.accessToken);
       handleGoToSignUp();
     } catch (err) {
       console.error('login err : ', err);
@@ -62,8 +66,8 @@ const Login: React.FC = () => {
 
   const handleGoToSignUp = () => {
     // 로그인 로직 수행 후 메인 탭 네비게이터로 이동 (replace 메서드 사용 가능)
-    navigation.replace('SignUp');
-    // navigation.navigate('MainTab');
+    //navigation.replace('SignUp');
+    navigation.navigate('MainTab');
   };
 
   const images = [

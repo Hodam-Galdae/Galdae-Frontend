@@ -34,8 +34,8 @@ function App(): React.JSX.Element {
               tabBarStyle: {
                 display: isTabBarVisible ? 'flex' : 'none',
                 height: Platform.select({
-                  ios: 84,
-                  android: 84,
+                  ios: 54,
+                  android: 54,
                 }),
                 borderTopLeftRadius: 20,
                 borderTopRightRadius: 20,
@@ -53,7 +53,6 @@ function App(): React.JSX.Element {
               tabBarItemStyle: {
                 justifyContent: 'center',
                 alignItems: 'center',
-              
               },
               tabBarLabelStyle: {
                 textAlign: 'center',
