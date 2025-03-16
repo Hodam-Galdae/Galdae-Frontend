@@ -19,7 +19,7 @@ type RootStackParamList = {
   Onboarding: undefined;
   CreateGaldae: undefined;
   Login: undefined;
-  SignUp: undefined;
+  SignUp: {data: Readonly<boolean>};
   MainTab: undefined; // 메인 탭 네비게이터 화면
 };
 
@@ -28,6 +28,13 @@ type LoginScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
   'Login'
 >;
+
+interface AuthResponse {
+  accessToken: string;
+  refreshToken: string;
+  expiredIn: number;
+  isJoined: boolean;
+}
 
 const Login: React.FC = () => {
   // useNavigation에 LoginScreenNavigationProp 제네릭을 적용합니다.
@@ -39,7 +46,7 @@ const Login: React.FC = () => {
       const response = await loginWithKakao(token);
       await EncryptedStorage.setItem('accessToken', response.accessToken);
       await EncryptedStorage.setItem('refreshToken', response.refreshToken || '');
-      handleGoToSignUp();
+      handleGoNextPage(response);
     } catch (err) {
       console.error('login err : ', err);
     }
@@ -52,16 +59,20 @@ const Login: React.FC = () => {
         const response = await loginWithGoogle(token || '');
         await EncryptedStorage.setItem('accessToken', response.accessToken);
         await EncryptedStorage.setItem('refreshToken', response.refreshToken || '');
-        handleGoToSignUp();
+        handleGoNextPage(response);
       } catch (err) {
         console.error('login err : ', err);
       }
   };
 
-  const handleGoToSignUp = () => {
-    // 로그인 로직 수행 후 메인 탭 네비게이터로 이동 (replace 메서드 사용 가능)
-    navigation.replace('SignUp');
-    // navigation.navigate('MainTab');
+  const handleGoNextPage = (response: AuthResponse) => {
+    // if(response.isAuthenticate){
+    //   navigation.replace('MainTab');
+    // }
+    // else {
+    //   navigation.replace('SignUp', { data: response.isJoined});
+    // }
+    navigation.replace('SignUp', { data: response.isJoined});
   };
 
   const images = [

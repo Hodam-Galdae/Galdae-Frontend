@@ -8,7 +8,7 @@ import BasicText from '../components/BasicText';
 import ItemSelector from '../components/ItemSelector';
 
 interface VerifySchoolProps {
-  setNextStep: (index: number) => void;
+  setNextStep: (name: string) => void;
 }
 
 const VerifySchool: React.FC<VerifySchoolProps> = ({setNextStep}) => {
@@ -46,9 +46,9 @@ const VerifySchool: React.FC<VerifySchoolProps> = ({setNextStep}) => {
 
     if (flag) {
       if (methodSelected === 0) {
-        setNextStep(3);
+        setNextStep('schoolCardVerify');
       } else {
-        setNextStep(4);
+        setNextStep('emailVerify');
       }
     }
   };
