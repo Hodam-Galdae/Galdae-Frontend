@@ -11,7 +11,6 @@ import SVG from '../components/SVG';
 import {login} from '@react-native-seoul/kakao-login';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import { loginWithGoogle, loginWithKakao } from '../api/authApi';
-import axios from 'axios';
 import EncryptedStorage from 'react-native-encrypted-storage';
 
 
@@ -40,8 +39,6 @@ const Login: React.FC = () => {
       const response = await loginWithKakao(token);
       await EncryptedStorage.setItem('accessToken', response.accessToken);
       await EncryptedStorage.setItem('refreshToken', response.refreshToken || '');
-      console.log("access token : " + response.accessToken);
-      console.log("refresh token : " + response.accessToken);
       handleGoToSignUp();
     } catch (err) {
       console.error('login err : ', err);
@@ -49,15 +46,16 @@ const Login: React.FC = () => {
   };
 
   const signInWithGoogle = async (): Promise<void> => {
-      // await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
-      // const token = (await GoogleSignin.signIn()).data?.idToken;
-      // console.log(token);
-      // if(token === null) {
-      //   //로그인 에러
-      //   return;
-      // }
-      // const result = await loginWithGoogle(token || '');
-      // console.log("api" + result.accessToken);
+      try{
+        await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
+        const token = (await GoogleSignin.getTokens()).accessToken;
+        const response = await loginWithGoogle(token || '');
+        await EncryptedStorage.setItem('accessToken', response.accessToken);
+        await EncryptedStorage.setItem('refreshToken', response.refreshToken || '');
+        handleGoToSignUp();
+      } catch (err) {
+        console.error('login err : ', err);
+      }
   };
 
   const handleGoToSignUp = () => {

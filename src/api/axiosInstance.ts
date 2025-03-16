@@ -1,7 +1,7 @@
 import axios from 'axios';
 import EncryptedStorage from 'react-native-encrypted-storage';
 
-const API_BASE_URL = 'http://15.164.118.59:8081'; // 백엔드 API 주소
+const API_BASE_URL = 'http://15.164.118.59'; // 백엔드 API 주소
 
 const EXCLUDED_URLS = ['/auth/kakao', '/auth/google', '/auth/apple'];
 
