@@ -50,12 +50,18 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
-	<dict>
-		<key>NSAllowsArbitraryLoads</key>
-		<false/>
-		<key>NSAllowsLocalNetworking</key>
-		<true/>
-	</dict>
+<dict>
+<key>NSAllowsArbitraryLoads</key>
+<true/>
+<key>NSExceptionDomains</key>
+<dict>
+<key>http://15.164.118.59</key>
+<dict>
+<key>NSExceptionAllowsInsecureHTTPLoads</key>
+<true/>
+</dict>
+</dict>
+</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>카메라 사용을 위한 권한이 필요합니다.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>

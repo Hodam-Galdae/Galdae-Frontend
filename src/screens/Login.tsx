@@ -10,9 +10,8 @@ import BasicText from '../components/BasicText';
 import SVG from '../components/SVG';
 import {login} from '@react-native-seoul/kakao-login';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
-import { loginWithGoogle, loginWithKakao } from '../api/authApi';
+import {loginWithGoogle, loginWithKakao} from '../api/authApi';
 import EncryptedStorage from 'react-native-encrypted-storage';
-
 
 // 네비게이션 파라미터 타입 정의
 type RootStackParamList = {
@@ -45,7 +44,10 @@ const Login: React.FC = () => {
       const token = (await login()).accessToken;
       const response = await loginWithKakao(token);
       await EncryptedStorage.setItem('accessToken', response.accessToken);
-      await EncryptedStorage.setItem('refreshToken', response.refreshToken || '');
+      await EncryptedStorage.setItem(
+        'refreshToken',
+        response.refreshToken || '',
+      );
       handleGoNextPage(response);
     } catch (err) {
       console.error('login err : ', err);
@@ -53,16 +55,20 @@ const Login: React.FC = () => {
   };
 
   const signInWithGoogle = async (): Promise<void> => {
-      try{
-        await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
-        const token = (await GoogleSignin.getTokens()).accessToken;
-        const response = await loginWithGoogle(token || '');
-        await EncryptedStorage.setItem('accessToken', response.accessToken);
-        await EncryptedStorage.setItem('refreshToken', response.refreshToken || '');
-        handleGoNextPage(response);
-      } catch (err) {
-        console.error('login err : ', err);
-      }
+    try {
+      await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
+      await GoogleSignin.signIn();
+      const token = (await GoogleSignin.getTokens()).accessToken;
+      const response = await loginWithGoogle(token || '');
+      await EncryptedStorage.setItem('accessToken', response.accessToken);
+      await EncryptedStorage.setItem(
+        'refreshToken',
+        response.refreshToken || '',
+      );
+      handleGoNextPage(response);
+    } catch (err) {
+      console.error('login err : ', err);
+    }
   };
 
   const handleGoNextPage = (response: AuthResponse) => {
@@ -76,7 +82,7 @@ const Login: React.FC = () => {
     //     navigation.replace('SignUp', { data: response.isJoined});
     //   }
     // }
-    navigation.replace('SignUp', { data: response.isJoined});
+    navigation.replace('SignUp', {data: response.isJoined});
   };
 
   const images = [
