@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-//import {} from '../utils/ScreenScaler';
+import {Platform} from 'react-native';
 import {theme} from '../styles/theme';
 export default StyleSheet.create({
   headerContainer: {
@@ -17,6 +17,9 @@ export default StyleSheet.create({
     // Android 전용 그림자
     elevation: 4,
     zIndex: 999,
+    ...(Platform.OS === 'ios' && {
+      paddingTop: 20,
+    }),
   },
   backContainer: {
     width: 30,

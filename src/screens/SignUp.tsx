@@ -14,7 +14,6 @@ import SchoolCardVerify from './SchoolCardVerify';
 import EmailVerify from './EmailVerify';
 import {RouteProp, useRoute} from '@react-navigation/native';
 
-
 type RootStackParamList = {
   SignUp: {data: Readonly<boolean>};
   ReviewInProgress: undefined;
@@ -44,21 +43,16 @@ const SignUp: React.FC = () => {
   const goBack = () => {
     if (nowStep === 0) {
       navigation.replace('Login');
-    }
-    else if (nowPageName === 'setUserInfo'){
+    } else if (nowPageName === 'setUserInfo') {
       setNowPageName('Agree');
-    }
-    else if (nowPageName === 'verifySchool'){
-      console.log(isJoinedRef.current);
-      if(isJoinedRef.current){
+    } else if (nowPageName === 'verifySchool') {
+      if (isJoinedRef.current) {
         navigation.replace('Login');
       }
       setNowPageName('setUserInfo');
-    }
-    else if (nowPageName === 'schoolCardVerify'){
+    } else if (nowPageName === 'schoolCardVerify') {
       setNowPageName('verifySchool');
-    }
-    else if (nowPageName === 'emailVerify'){
+    } else if (nowPageName === 'emailVerify') {
       setNowPageName('verifySchool');
     }
 
@@ -86,15 +80,18 @@ const SignUp: React.FC = () => {
     navigation.navigate('TermsDetail', {data: data});
   };
 
-  useEffect(()=>{
-    if(isJoinedRef.current){
+  useEffect(() => {
+    if (isJoinedRef.current) {
       setNowPageName('verifySchool');
       setNowStep(2);
     }
   }, []);
 
   const steps = [
-    <Agree setNextStep={setNextStepByName} goTermsDetailPage={goToTermsDetail} />,
+    <Agree
+      setNextStep={setNextStepByName}
+      goTermsDetailPage={goToTermsDetail}
+    />,
     <SetUserInfo setNextStep={setNextStepByName} />,
     <VerifySchool setNextStep={setNextStepByName} />,
     <SchoolCardVerify
@@ -105,20 +102,20 @@ const SignUp: React.FC = () => {
 
   const displayPage = (pageName: string) => {
     let result = 0;
-    switch(pageName){
-      case 'agree' :
+    switch (pageName) {
+      case 'agree':
         result = 0;
         break;
-      case 'setUserInfo' :
+      case 'setUserInfo':
         result = 1;
         break;
-      case 'verifySchool' :
+      case 'verifySchool':
         result = 2;
         break;
-      case 'schoolCardVerify' :
+      case 'schoolCardVerify':
         result = 3;
         break;
-      case 'emailVerify' :
+      case 'emailVerify':
         result = 4;
         break;
     }
@@ -130,22 +127,22 @@ const SignUp: React.FC = () => {
   }, [load, nowStep]);
 
   return (
-      <SafeAreaView style={styles.container}>
-        <Header
-          title={<SVG name="GaldaeLogo" />}
-          leftButton={
-            <SVGButton
-              onPress={goBack}
-              iconName="LeftArrow"
-              buttonStyle={{width: 30, height: 30}}
-            />
-          }
-        />
-        <View style={styles.bar}>
-          <Animated.View style={{...styles.progress, width}} />
-        </View>
-        {steps[displayPage(nowPageName)]}
-      </SafeAreaView>
+    <View style={styles.container}>
+      <Header
+        title={<SVG name="GaldaeLogo" />}
+        leftButton={
+          <SVGButton
+            onPress={goBack}
+            iconName="LeftArrow"
+            buttonStyle={{width: 30, height: 30}}
+          />
+        }
+      />
+      <View style={styles.bar}>
+        <Animated.View style={{...styles.progress, width}} />
+      </View>
+      {steps[displayPage(nowPageName)]}
+    </View>
   );
 };
 
