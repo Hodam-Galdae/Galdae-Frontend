@@ -12,9 +12,11 @@ import SVG from '../components/SVG';
 import VerifySchool from './VerifySchool';
 import SchoolCardVerify from './SchoolCardVerify';
 import EmailVerify from './EmailVerify';
+import {RouteProp, useRoute} from '@react-navigation/native';
+
 
 type RootStackParamList = {
-  SignUp: undefined;
+  SignUp: {data: Readonly<boolean>};
   ReviewInProgress: undefined;
   MainTab: undefined;
   Login: undefined;
@@ -28,25 +30,36 @@ type SignUpScreenNavigationProp = NativeStackNavigationProp<
 
 const SignUp: React.FC = () => {
   const navigation = useNavigation<SignUpScreenNavigationProp>();
+  const {params} = useRoute<RouteProp<RootStackParamList, 'SignUp'>>();
   const [nowStep, setNowStep] = useState<number>(0);
+  const [nowPageName, setNowPageName] = useState<string>('agree');
   const loaderValue = useRef(new Animated.Value(0)).current;
+  const isJoinedRef = useRef(params.data);
 
-  const setNextStep = () => {
+  const setNextStepByName = (name: string) => {
+    setNowPageName(name);
     setNowStep(nowStep + 1);
-  };
-
-  const setNextStepByIndex = (index: number) => {
-    setNowStep(index);
   };
 
   const goBack = () => {
     if (nowStep === 0) {
       navigation.replace('Login');
-      return;
     }
-    if (nowStep === 4) {
-      setNowStep(2);
-      return;
+    else if (nowPageName === 'setUserInfo'){
+      setNowPageName('Agree');
+    }
+    else if (nowPageName === 'verifySchool'){
+      console.log(isJoinedRef.current);
+      if(isJoinedRef.current){
+        navigation.replace('Login');
+      }
+      setNowPageName('setUserInfo');
+    }
+    else if (nowPageName === 'schoolCardVerify'){
+      setNowPageName('verifySchool');
+    }
+    else if (nowPageName === 'emailVerify'){
+      setNowPageName('verifySchool');
     }
 
     setNowStep(nowStep - 1);
@@ -73,19 +86,48 @@ const SignUp: React.FC = () => {
     navigation.navigate('TermsDetail', {data: data});
   };
 
-  useEffect(() => {
-    load(nowStep);
-  }, [load, nowStep]);
+  useEffect(()=>{
+    if(isJoinedRef.current){
+      setNowPageName('verifySchool');
+      setNowStep(2);
+    }
+  }, []);
 
   const steps = [
-    <Agree setNextStep={setNextStep} goTermsDetailPage={goToTermsDetail} />,
-    <SetUserInfo setNextStep={setNextStep} />,
-    <VerifySchool setNextStep={setNextStepByIndex} />,
+    <Agree setNextStep={setNextStepByName} goTermsDetailPage={goToTermsDetail} />,
+    <SetUserInfo setNextStep={setNextStepByName} />,
+    <VerifySchool setNextStep={setNextStepByName} />,
     <SchoolCardVerify
       setNextStep={() => navigation.replace('ReviewInProgress')}
     />,
     <EmailVerify setNextStep={() => navigation.replace('MainTab')} />,
   ];
+
+  const displayPage = (pageName: string) => {
+    let result = 0;
+    switch(pageName){
+      case 'agree' :
+        result = 0;
+        break;
+      case 'setUserInfo' :
+        result = 1;
+        break;
+      case 'verifySchool' :
+        result = 2;
+        break;
+      case 'schoolCardVerify' :
+        result = 3;
+        break;
+      case 'emailVerify' :
+        result = 4;
+        break;
+    }
+    return result;
+  };
+
+  useEffect(() => {
+    load(nowStep);
+  }, [load, nowStep]);
 
   return (
       <SafeAreaView style={styles.container}>
@@ -102,7 +144,7 @@ const SignUp: React.FC = () => {
         <View style={styles.bar}>
           <Animated.View style={{...styles.progress, width}} />
         </View>
-        {steps[nowStep]}
+        {steps[displayPage(nowPageName)]}
       </SafeAreaView>
   );
 };

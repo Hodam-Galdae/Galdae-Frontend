@@ -3,7 +3,6 @@ import React, {useState} from 'react';
 import {
   View,
   TextInput,
-  TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
@@ -20,7 +19,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 import { checkNickname, join } from '../api/authApi';
 
 interface AgreeProps {
-  setNextStep: () => void;
+  setNextStep: (name: string) => void;
 }
 
 const SetUserInfo: React.FC<AgreeProps> = ({setNextStep}) => {
@@ -53,10 +52,16 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep}) => {
     } else if (!regex.test(name)) {
       setAlertNameText('*닉네임은 한글, 숫자 2~8자로 제한됩니다.');
       flag = false;
-    } else if ((await checkNickname(name)).available) {
+    } else {
+      setAlertNameText('');
+    }
+    const isAvailable = (await checkNickname(name)).available;
+
+    if(!isAvailable){
       setAlertNameText('*중복되는 닉네임입니다.');
       flag = false;
-    } else {
+    }
+    else {
       setAlertNameText('');
     }
 
@@ -74,11 +79,11 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep}) => {
         await join({
           nickname: name,
           gender: genderSelected === 0 ? 'FEMALE' : 'MALE',
-          bankType: bankText[bankSelect],
-          accountNumber: accountNumber,
-          depositor: accountName,
+          // bankType: bankText[bankSelect],
+          // accountNumber: accountNumber,
+          // depositor: accountName,
         });
-        setNextStep();
+        setNextStep('verifySchool');
       }
       catch(e) {
         console.log(e);
@@ -116,11 +121,11 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep}) => {
                 value={name}
                 onChangeText={setName}
               />
-              <TouchableOpacity>
+              {/* <TouchableOpacity>
                 <View style={styles.checkBtn}>
                   <BasicText style={styles.checkBtnText} text="중복 확인" />
                 </View>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
             {alertNameText.length !== 0 ? (
               <BasicText style={styles.alertText} text={alertNameText} />

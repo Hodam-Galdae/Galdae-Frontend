@@ -10,9 +10,9 @@ interface AuthResponse {
 interface JoinRequest {
   nickname: string;
   gender: string;
-  bankType: string;
-  accountNumber: string;
-  depositor: string;
+  bankType?: string;
+  accountNumber?: string;
+  depositor?: string;
 }
 
 interface CheckNicknameResponse {
