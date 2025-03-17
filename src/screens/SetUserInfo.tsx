@@ -3,7 +3,6 @@ import React, {useState} from 'react';
 import {
   View,
   TextInput,
-  TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
@@ -58,7 +57,7 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep}) => {
     }
     const isAvailable = (await checkNickname(name)).available;
 
-    if(isAvailable){
+    if(!isAvailable){
       setAlertNameText('*중복되는 닉네임입니다.');
       flag = false;
     }
@@ -122,11 +121,11 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep}) => {
                 value={name}
                 onChangeText={setName}
               />
-              <TouchableOpacity>
+              {/* <TouchableOpacity>
                 <View style={styles.checkBtn}>
                   <BasicText style={styles.checkBtnText} text="중복 확인" />
                 </View>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
             {alertNameText.length !== 0 ? (
               <BasicText style={styles.alertText} text={alertNameText} />

@@ -66,11 +66,15 @@ const Login: React.FC = () => {
   };
 
   const handleGoNextPage = (response: AuthResponse) => {
+    // // 학생 인증 완료
     // if(response.isAuthenticate){
     //   navigation.replace('MainTab');
     // }
     // else {
-    //   navigation.replace('SignUp', { data: response.isJoined});
+    //   // 학생증 인증 중
+    //   if(response.isJoined) {
+    //     navigation.replace('SignUp', { data: response.isJoined});
+    //   }
     // }
     navigation.replace('SignUp', { data: response.isJoined});
   };

@@ -34,7 +34,7 @@ const SignUp: React.FC = () => {
   const [nowStep, setNowStep] = useState<number>(0);
   const [nowPageName, setNowPageName] = useState<string>('agree');
   const loaderValue = useRef(new Animated.Value(0)).current;
-  const isJoined = params.data;
+  const isJoinedRef = useRef(params.data);
 
   const setNextStepByName = (name: string) => {
     setNowPageName(name);
@@ -49,16 +49,17 @@ const SignUp: React.FC = () => {
       setNowPageName('Agree');
     }
     else if (nowPageName === 'verifySchool'){
-      if(isJoined){
+      console.log(isJoinedRef.current);
+      if(isJoinedRef.current){
         navigation.replace('Login');
       }
       setNowPageName('setUserInfo');
     }
     else if (nowPageName === 'schoolCardVerify'){
-      setNowPageName('VerifySchool');
+      setNowPageName('verifySchool');
     }
     else if (nowPageName === 'emailVerify'){
-      setNowPageName('VerifySchool');
+      setNowPageName('verifySchool');
     }
 
     setNowStep(nowStep - 1);
@@ -86,10 +87,11 @@ const SignUp: React.FC = () => {
   };
 
   useEffect(()=>{
-    if(isJoined){
+    if(isJoinedRef.current){
       setNowPageName('verifySchool');
+      setNowStep(2);
     }
-  }, [isJoined]);
+  }, []);
 
   const steps = [
     <Agree setNextStep={setNextStepByName} goTermsDetailPage={goToTermsDetail} />,
