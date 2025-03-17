@@ -1,7 +1,6 @@
 // Home.tsx 테스트
-import React, {useState, useRef} from 'react';
-import {ScrollView, View, TouchableOpacity} from 'react-native';
-//import stylesheet from '../styles/stylesheet';
+import React, {useState, useRef,useEffect} from 'react';
+import {ScrollView, View, TouchableOpacity,ActivityIndicator} from 'react-native';
 import { CreatePostRequest } from '../types/postTypes'; // API 요청 타입 가져오기
 import styles from '../styles/Home.style';
 import BasicButton from '../components/button/BasicButton';
@@ -9,22 +8,24 @@ import BasicText from '../components/BasicText';
 import SVGTextButton from '../components/button/SVGTextButton';
 import {theme} from '../styles/theme';
 import SVGButton from '../components/button/SVGButton';
-//import FilterButton from '../components/button/FilterButton';
-//import GrayBorderTextButton from '../components/button/GrayBorderTextButton';
 import SVG from '../components/SVG';
 import TextTag from '../components/tag/TextTag';
-//import Search from '../components/Search';
 import FloatingButton from '../components/button/FloatingButton';
 import GaldaeItem from '../components/GaldaeItem';
-//import DeletePopup from '../components/popup/DeletePopup';
 import CreateGaldaePopup from '../components/popup/CreateGaldaePopup';
 import {useNavigation} from '@react-navigation/native';
 import moment from 'moment-timezone';
 import ToastPopup from '../components/popup/ToastPopup';
-import { createPost } from '../api/galdaeApi'; // 갈대 생성 API 불러오기
+
+//type
+import {MyCreatedPost} from '../types/getTypes';
+
+//API
+import { createPost } from '../api/postApi'; // 갈대 생성 API 불러오기
+import {getMyCreatedPosts} from '../api/membersApi';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import { useSelector } from 'react-redux';
-import { RootState } from '../modules/redux/RootReducer'; // store.ts에서 RootState 가져오기
+//import { useSelector } from 'react-redux';
+//import { RootState } from '../modules/redux/RootReducer'; // store.ts에서 RootState 가져오기
 
 type RootStackParamList = {
   CreateGaldae: undefined;
@@ -42,31 +43,13 @@ import FastGaldaeEndPopup, {
 import FastGaldaeTimePopup, {
   FastGaldaeTimePopupRef,
 } from '../components/popup/FastGaldaeTimePopup';
-//import SelectSVGTextButton from '../components/button/SelectSVGTextButton';
-//import SelectTextButton from '../components/button/SelectTextButton';
 
 type HomeProps = {
   navigation: any; // 실제 프로젝트에서는 proper type 사용 권장 (예: StackNavigationProp)
 };
 
 const Home: React.FC<HomeProps> = () => {
-  const newGaldaeList = [
-    {time: '방금전', dest: '충주 터미널', depart: '정문'},
-    {time: '1일전', dest: '충주역', depart: '학교'},
-    {time: '2일전', dest: '시청', depart: '정문'},
-    {time: '3일전', dest: '마트', depart: '학교'},
-    {time: '4일전', dest: '공원', depart: '후문'},
-    {time: '5일전', dest: '카페', depart: '도서관'},
-    {time: '6일전', dest: '병원', depart: '정문'},
-    {time: '7일전', dest: '은행', depart: '학교'},
-    {time: '8일전', dest: '백화점', depart: '후문'},
-    {time: '9일전', dest: '기차역', depart: '정문'},
-    {time: '10일전', dest: '공항', depart: '터미널'},
-    {time: '11일전', dest: '도서관', depart: '후문'},
-    {time: '12일전', dest: '박물관', depart: '정문'},
-    {time: '13일전', dest: '호텔', depart: '학교'},
-    {time: '14일전', dest: '극장', depart: '정문'},
-  ];
+
   const dummyGaldaeData = [
     {
       id: 1,
@@ -129,18 +112,15 @@ const Home: React.FC<HomeProps> = () => {
       timestamp: 1735689600004,
     },
   ];
-  const accessToken = useSelector((state: RootState) => state.user.accessToken);
   const [loading, setLoading] = useState<boolean>(false);
   const [createGaldaeLoading, setCreateGaldaeLoading] = useState<boolean>(false);
-  //const [scrollPosition, setScrollPosition] = useState<number>(0);
+
   const [generateLoading, setgenerateLoading] = useState<boolean>(false);
   const [toastVisible, setToastVisible] = useState<boolean>(false);
-  //const [destination, setDestination] = useState<string>('');
-  //const [deletePopupVisible, setDeletePopupVisible] = useState<boolean>(false);
+
   const [createGaldaePopupVisible, setCreateGaldaePopupVisible] =
     useState<boolean>(false);
   const navigation = useNavigation<LoginScreenNavigationProp>();
-  // const [fastGaldaePopupVisible, setFastGaldaePopupVisible] = useState<boolean>(false);
   const [departureDate, setDepartureDate] = useState<string | null>(null); // "YYYY-MM-DD" 형식
   const [departureAmPm, setDepartureAmPm] = useState<'오전' | '오후'>('오전');
   // 출발지 관련 상태
@@ -156,6 +136,24 @@ const Home: React.FC<HomeProps> = () => {
   const fastGaldaeStartPopupRef = useRef<FastGaldaeStartPopupRef>(null);
   const fastGaldaeEndPopupRef = useRef<FastGaldaeEndPopupRef>(null);
   const fastGaldaeTimePopupRef = useRef<FastGaldaeTimePopupRef>(null);
+  const [myCreatedGaldaeList, setMyCreatedGaldaeList] = useState<MyCreatedPost[]>([]); // ✅ 내가 생성한 갈대 목록 상태 추가
+  const [myCreatedGaldaeLoading, setMyCreatedGaldaeLoading] = useState<boolean>(true); // ✅ API 로딩 상태
+
+  // ✅ 내가 생성한 갈대 불러오기
+  useEffect(() => {
+    const fetchMyCreatedGaldae = async () => {
+      try {
+        const response = await getMyCreatedPosts();
+        setMyCreatedGaldaeList(response); // 응답 데이터 상태 저장
+      } catch (error) {
+        console.error('❌ 내가 생성한 갈대 목록 불러오기 실패:', error);
+      } finally {
+        setMyCreatedGaldaeLoading(false); // 로딩 완료
+      }
+    };
+
+    fetchMyCreatedGaldae();
+  }, []);
 
   const handlePress = () => {
     setLoading(true);
@@ -165,44 +163,38 @@ const Home: React.FC<HomeProps> = () => {
     }, 2000);
   };
 
-// ✅ 갈대 생성 요청
-const handleCreateGaldaeConfirm = async () => {
-  if (!accessToken) {
-    console.error('❌ 토큰이 없습니다. 로그인 필요.');
-    return;
-  }
+  const handleCreateGaldaeConfirm = async () => {
+    setCreateGaldaeLoading(true);
 
-  setCreateGaldaeLoading(true);
+    // 🔹 출발일시를 ISO 8601 형식으로 변환
+    const formattedDepartureTime = moment()
+      .tz('Asia/Seoul') // 한국 시간 기준
+      .format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
 
-  // 🔹 출발일시를 ISO 8601 형식으로 변환
-  const formattedDepartureTime = moment()
-    .tz('Asia/Seoul') // 한국 시간 기준
-    .format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
+    // 🔹 API 요청 형식에 맞게 데이터 변환
+    const generateGaldaeData: CreatePostRequest = {
+      departure: departureSmall, // 출발지
+      arrival: destinationSmall, // 도착지
+      departureTime: formattedDepartureTime, // ISO 8601 형식 변환
+      passengerType: 'MALE', // 🚀 '성인'을 'MALE'로 변환 (추후 선택 가능하도록 수정)
+      arrangeTime: 'POSSIBLE', // 🚀 '5분'을 'POSSIBLE'로 변환 (필요시 수정 가능)
+      passengerCount: 4, // 기본값 4 (추후 사용자 입력으로 변경 가능)
+      isFavoriteRoute: false, // 기본값 false
+    };
 
-  // 🔹 API 요청 형식에 맞게 데이터 변환
-  const generateGaldaeData: CreatePostRequest = {
-    departure: departureSmall, // 출발지
-    arrival: destinationSmall, // 도착지
-    departureTime: formattedDepartureTime, // ISO 8601 형식 변환
-    passengerType: 'MALE', // 🚀 '성인'을 'MALE'로 변환 (추후 선택 가능하도록 수정)
-    arrangeTime: 'POSSIBLE', // 🚀 '5분'을 'POSSIBLE'로 변환 (필요시 수정 가능)
-    passengerCount: 1, // 기본값 1 (추후 사용자 입력으로 변경 가능)
-    isFavoriteRoute: false, // 기본값 false
+    console.log('🚀 서버로 보낼 갈대 생성 데이터:', generateGaldaeData); // 디버깅용 콘솔 로그
+
+    try {
+      await createPost(generateGaldaeData); // 🔹 `accessToken` 제거, 자동 추가됨
+
+      setCreateGaldaePopupVisible(false);
+      setToastVisible(true);
+    } catch (error) {
+      console.error('❌ 갈대 생성 실패:', error);
+    } finally {
+      setCreateGaldaeLoading(false);
+    }
   };
-
-  console.log('🚀 서버로 보낼 갈대 생성 데이터:',accessToken, generateGaldaeData); // 디버깅용 콘솔 로그
-
-  try {
-    await createPost(accessToken, generateGaldaeData);
-
-    setCreateGaldaePopupVisible(false);
-    setToastVisible(true);
-  } catch (error) {
-    console.error('❌ 갈대 생성 실패:', error);
-  } finally {
-    setCreateGaldaeLoading(false);
-  }
-};
 
 
   const handleMorePress = () => {
@@ -246,39 +238,17 @@ const handleCreateGaldaeConfirm = async () => {
     return `${formattedDate} ${formattedTime}`;
   };
 
-  // const handleFilterPress = ()=>{
-
-  // };
-
-  // const handlePressTimeFilterBtn = () =>{
-
-  // };
-
-  // const handlePressGenderFilterBtn = () =>{
-
-  // };
   const toggleFastGaldaeStartPopup = () => {
-    //setFastGaldaePopupVisible((prev) => !prev);
     fastGaldaeStartPopupRef.current?.open();
   };
 
   const toggleFastGaldaeEndPopup = () => {
-    //setFastGaldaePopupVisible((prev) => !prev);
     fastGaldaeEndPopupRef.current?.open();
   };
 
   const toggleFastGaldaeTimePopup = () => {
-    //setFastGaldaePopupVisible((prev) => !prev);
     fastGaldaeTimePopupRef.current?.open();
   };
-  // DeletePopup 관련 핸들러
-  //const openDeletePopup = () => setDeletePopupVisible(true);
-  //const closeDeletePopup = () => setDeletePopupVisible(false);
-  // const handleDeleteConfirm = () => {
-  //   // 삭제 로직 실행
-  //   console.log('삭제 confirmed');
-  //   closeDeletePopup();
-  // };
 
   const openCreateGaldaePopup = () => {
     setgenerateLoading(true);
@@ -312,34 +282,27 @@ const handleCreateGaldaeConfirm = async () => {
           textStyle={styles.notiText}
         />
         <ScrollView style={styles.container}>
-          <View style={styles.madeGaldaeContainer}>
+
+          {myCreatedGaldaeList.length > 0 && (
+            <View style={styles.madeGaldaeContainer}>
             <BasicText text="생성한 갈대" style={styles.madeGaldae} />
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              scrollEventThrottle={16}>
-              {newGaldaeList.map((list, index) => (
-                <View key={index} style={styles.newGaldaeList}>
-                  <BasicText
-                    text={list.time}
-                    style={styles.newGaldaeTimeText}
-                  />
-                  <BasicText
-                    text={`${list.depart}`}
-                    style={styles.newGaldaeDepartText}
-                  />
-                  <SVG
-                    name="arrow_down_fill"
-                    style={styles.newGaldaeArrowIcon}
-                  />
-                  <BasicText
-                    text={`${list.dest}`}
-                    style={styles.newGaldaeDestText}
-                  />
-                </View>
-              ))}
-            </ScrollView>
+             {myCreatedGaldaeLoading ? (
+              <ActivityIndicator size="large" color={theme.colors.brandColor} />
+            ) : (
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} scrollEventThrottle={16}>
+                {myCreatedGaldaeList.map((item, index) => (
+                  <View key={index} style={styles.newGaldaeList}>
+                    <BasicText text={moment(item.createdAt).fromNow()} style={styles.newGaldaeTimeText} />
+                    <BasicText text={`${item.departure}`} style={styles.newGaldaeDepartText} />
+                    <SVG name="arrow_down_fill" style={styles.newGaldaeArrowIcon} />
+                    <BasicText text={`${item.arrival}`} style={styles.newGaldaeDestText} />
+                  </View>
+                ))}
+              </ScrollView>
+            )}
           </View>
+          )}
+
 
           <BasicText text="갈대 시작하기" style={styles.startGaldae} />
           <BasicText

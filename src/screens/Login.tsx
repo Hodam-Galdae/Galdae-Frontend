@@ -14,8 +14,6 @@ import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import { loginWithGoogle, loginWithKakao } from '../api/authApi';
 import axios from 'axios';
 import EncryptedStorage from 'react-native-encrypted-storage';
-import { useDispatch } from 'react-redux';
-import { setAccessToken } from '../modules/redux/slice/UserSlice'; // Redux 액션 가져오기
 
 // 네비게이션 파라미터 타입 정의
 type RootStackParamList = {
@@ -35,13 +33,11 @@ type LoginScreenNavigationProp = NativeStackNavigationProp<
 const Login: React.FC = () => {
   // useNavigation에 LoginScreenNavigationProp 제네릭을 적용합니다.
   const navigation = useNavigation<LoginScreenNavigationProp>();
-  const dispatch = useDispatch(); // Redux dispatch 사용
 
   const signInWithKakao = async (): Promise<void> => {
     try {
       const token = (await login()).accessToken;
       const response = await loginWithKakao(token);
-      dispatch(setAccessToken(response.accessToken));
       await EncryptedStorage.setItem('accessToken', response.accessToken);
       await EncryptedStorage.setItem('refreshToken', response.refreshToken || '');
       console.log('access token : ' + response.accessToken);

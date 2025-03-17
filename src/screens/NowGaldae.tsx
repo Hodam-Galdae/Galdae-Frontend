@@ -1,4 +1,4 @@
-import React,{useRef,useState} from 'react';
+import React,{useRef,useState,useEffect} from 'react';
 import {  View } from 'react-native';
 import { useRoute, RouteProp } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
@@ -17,6 +17,8 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import ArrayPopup, { FastGaldaeTimePopupRef } from '../components/popup/ArrayPopup';
 import FilterPopup from '../components/popup/FilterPopup';
 import { FlatList } from 'react-native-gesture-handler';
+import { getPosts } from '../api/postApi'; // ✅ 실시간 갈대 조회 API 추가
+import { GetPostsRequest } from '../types/postTypes'; // API 요청 타입 가져오기
 type HomeProps = {
   navigation: any;
 };
@@ -36,6 +38,11 @@ type RootStackParamList = {
 type nowGaldaeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 const NowGaldae: React.FC<HomeProps> = () => {
+  // ✅ API로 가져올 갈대 데이터
+  // const [galdaeList, setGaldaeList] = useState<any[]>([]);
+  // const [loading, setLoading] = useState<boolean>(true);
+  // const [error, setError] = useState<string | null>(null);
+
   const [filterOptions, setFilterOptions] = useState<{
     selectedDate: string | null;
     selectedAmPm: '오전' | '오후';
@@ -126,6 +133,34 @@ const NowGaldae: React.FC<HomeProps> = () => {
     const route = useRoute<RouteProp<RootStackParamList, 'NowGaldae'>>();
     // 전달받은 검색 조건
     const { departureLarge, departureSmall,destinationLarge,destinationSmall } = route.params || {};
+     // ✅ 실시간 갈대 목록 조회 API 호출
+    useEffect(() => {
+      const fetchGaldaeList = async () => {
+        //setLoading(true);
+        //setError(null);
+
+        const params: GetPostsRequest = {
+
+          pageNumber: 0,
+          pageSize: 10,
+          direction: sortOrder === 'latest' ? 'DESC' : 'ASC',
+          properties: ['create_at'],
+        };
+
+        try {
+          const response = await getPosts(params);
+          console.log(response);
+          //setGaldaeList(response);
+        } catch (err) {
+          //setError('갈대 목록을 불러오는 데 실패했습니다.');
+          console.error('❌ 갈대 조회 실패:', err);
+        } finally {
+          //setLoading(false);
+        }
+      };
+
+      fetchGaldaeList();
+    }, [ sortOrder]); // ✅ `sortOrder` 변경 시 다시 요청
     const handleFilterPress = ()=>{
       filterRef.current?.open();
     };

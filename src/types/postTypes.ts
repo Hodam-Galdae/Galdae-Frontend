@@ -22,7 +22,6 @@ export interface DeletePostRequest {
  * 갈대 목록 조회 요청 타입
  */
 export interface GetPostsRequest {
-  accessToken: string;
   pageNumber?: number;
   pageSize?: number;
   direction?: 'ASC' | 'DESC';
@@ -39,6 +38,5 @@ export interface SearchPostsRequest extends GetPostsRequest {
  * 갈대 상세 조회 요청 타입
  */
 export interface GetPostDetailRequest {
-  accessToken: string;
   postId: string;
 }
