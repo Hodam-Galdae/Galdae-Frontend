@@ -52,16 +52,16 @@ const Login: React.FC = () => {
   };
 
   const signInWithGoogle = async (): Promise<void> => {
-    await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
-    const token = (await GoogleSignin.signIn()).data?.serverAuthCode;
-    console.log(token);
-    // if(token === null) {
-    //   //로그인 에러
-    //   return;
-    // }
-    const result = await loginWithGoogle(token || '');
-    console.log(result.accessToken);
-    // console.log("api" + result.accessToken);
+    try {
+      await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
+      const token = (await GoogleSignin.signIn()).data?.serverAuthCode;
+      console.log(token);
+      const result = await loginWithGoogle(token || '');
+      console.log(result.accessToken);
+      handleGoToSignUp();
+    } catch (err) {
+      console.error('login err : ', err);
+    }
   };
 
   const handleGoToSignUp = () => {

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import EncryptedStorage from 'react-native-encrypted-storage';
 
-const API_BASE_URL = 'http://15.164.118.59:8081'; // 백엔드 API 주소
+const API_BASE_URL = 'http://15.164.118.59'; // 백엔드 API 주소
 
 const EXCLUDED_URLS = ['/auth/kakao', '/auth/google', '/auth/apple'];
 
@@ -15,10 +15,9 @@ const axiosInstance = axios.create({
 
 // 요청 인터셉터 (요청 전에 공통 처리)
 axiosInstance.interceptors.request.use(
-  async (config) => {
-
+  async config => {
     //제외 대상 url 스킵
-    if(EXCLUDED_URLS.includes(config.url || '')) {
+    if (EXCLUDED_URLS.includes(config.url || '')) {
       return config;
     }
 
@@ -29,14 +28,13 @@ axiosInstance.interceptors.request.use(
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  error => Promise.reject(error),
 );
-
 
 // 응답 인터셉터 (응답 공통 처리)
 axiosInstance.interceptors.response.use(
-  (response) => response,
-  async (error) => {
+  response => response,
+  async error => {
     console.error('API Error:', error.response?.data || error.message);
     const originalRequest = error.config;
 
@@ -65,7 +63,7 @@ axiosInstance.interceptors.response.use(
     //   }
     // }
     return Promise.reject(error);
-  }
+  },
 );
 
 export default axiosInstance;
