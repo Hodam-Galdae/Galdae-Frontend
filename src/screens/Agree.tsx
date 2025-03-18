@@ -6,9 +6,10 @@ import styles from '../styles/Agree.style';
 import {theme} from '../styles/theme';
 import SVG from '../components/SVG';
 import BasicButton from '../components/button/BasicButton';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface AgreeProps {
-  setNextStep: () => void;
+  setNextStep: (name: string) => void;
   goTermsDetailPage: (data: string) => void;
 }
 
@@ -38,11 +39,18 @@ const Agree: React.FC<AgreeProps> = ({setNextStep, goTermsDetailPage}) => {
     setSelected(newArr);
   };
 
-  const clickEvent = () => {
+  const clickEvent = async() => {
     if (!selected.every(value => value)) {
       return;
     }
-    setNextStep();
+
+    try{
+      await AsyncStorage.setItem('agree', 'agreeAll');
+      setNextStep('setUserInfo');
+    }
+    catch(e) {
+      console.log(e);
+    }
   };
 
   return (
