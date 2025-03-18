@@ -42,7 +42,7 @@ const Login: React.FC = () => {
       await EncryptedStorage.setItem('refreshToken', response.refreshToken || '');
       console.log('access token : ' + response.accessToken);
       console.log('refresh token : ' + response.accessToken);
-      handleGoToSignUp();
+      handleGoNextPage(response);
     } catch (err) {
       console.error('login err : ', err);
     }
