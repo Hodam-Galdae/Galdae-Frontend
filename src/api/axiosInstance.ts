@@ -15,8 +15,6 @@ const axiosInstance = axios.create({
 });
 
 axiosInstance.interceptors.request.use(
-  async config => {
-    //제외 대상 url 스킵
   async (config) => {
     //제외 대상 URL이면 스킵
     if (EXCLUDED_URLS.includes(config.url || '')) {
