@@ -94,7 +94,7 @@ function App() {
               <TabBarVisibilityProvider>
                 <NavigationContainer theme={theme}>
                     <Stack.Navigator
-                        initialRouteName="Login" //MainTab ,Onboarding
+                        initialRouteName="Login" //MainTab ,Onboarding,Login
                         screenOptions={{
                             headerShown: false,
                         }}

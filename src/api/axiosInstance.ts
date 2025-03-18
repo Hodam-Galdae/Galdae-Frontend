@@ -25,6 +25,7 @@ axiosInstance.interceptors.request.use(
       const token = await EncryptedStorage.getItem('accessToken');
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
+        console.log(`Bearer ${token}`);
       }
     } catch (error) {
       console.error('Token 가져오는 중 오류 발생:', error);

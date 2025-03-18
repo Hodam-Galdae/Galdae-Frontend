@@ -26,7 +26,7 @@ import { CreatePostRequest } from '../types/postTypes';
 type RootStackParamList = {
   CreateGaldae: undefined;
   NowGaldae: undefined;
-  NowGaldaeDetail: { item: any };
+  NowGaldaeDetail: { postId: string };
 };
 
 
@@ -104,7 +104,13 @@ const CreateGaldae: React.FC = () => {
     console.log('🚀 서버로 보낼 갈대 생성 데이터:', postData);
 
     try {
-      await createPost(postData);
+      const response = await createPost(postData); // ✅ 서버에서 postId 반환
+      console.log('✅ 생성된 갈대 postId:', response.postId);
+
+      if (response.postId) {
+        // ✅ 상세 페이지로 이동하면서 postId 전달
+        navigation.navigate('NowGaldaeDetail', { postId: response.postId });
+      }
     } catch (error) {
       console.error('❌ 갈대 생성 실패:', error);
     } finally {

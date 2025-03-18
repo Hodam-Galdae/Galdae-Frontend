@@ -1,7 +1,8 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, { forwardRef, useImperativeHandle, useRef,useState,useContext } from 'react';
 //import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {TabBarVisibilityContext} from '../../utils/TabBarVisibilityContext';
-import { View } from 'react-native';
+import { View,KeyboardAvoidingView } from 'react-native';
 import { Modalize } from 'react-native-modalize';
 //import { useNavigation } from '@react-navigation/native';
 import BasicText from '../BasicText';
@@ -65,7 +66,7 @@ const FastGaldaeStartPopup = forwardRef<FastGaldaeStartPopupRef, FastGaldaePopup
     return (
       <Modalize
         ref={modalizeRef}
-        modalHeight={586} // 고정 높이 설정
+        adjustToContentHeight={true} // ✅ 컨텐츠 크기에 따라 높이 자동 조절
 
         onOpened={() => {
           setIsTabBarVisible(false);
@@ -77,161 +78,168 @@ const FastGaldaeStartPopup = forwardRef<FastGaldaeStartPopupRef, FastGaldaePopup
         overlayStyle={styles.background}
         modalStyle={styles.container}
         withHandle={false}  // 기본 핸들을 비활성화
-        {...({ swipeToClose: true, swipeThreshold: 10 } as any)}
+        scrollViewProps={{
+          keyboardShouldPersistTaps: 'always',
+        }}
+        {...({ swipeToClose: true, swipeThreshold: 100 } as any)}
       >
-        {/* 팝업 안쪽에 커스텀 핸들 추가 */}
-        <View style={styles.handleContainer}>
-          <View style={styles.handle} />
-        </View>
+        <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
+           {/* 팝업 안쪽에 커스텀 핸들 추가 */}
+           <View style={styles.handleContainer}>
+                <View style={styles.handle} />
+              </View>
+          <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
 
-        <View style={styles.content}>
-          <BasicText
-            text="출발지 설정"
-            fontSize={theme.fontSize.size16}
-            color={theme.colors.black}
-            style={styles.start}
-          />
+              <View style={styles.content}>
+                <BasicText
+                  text="출발지 설정"
+                  fontSize={theme.fontSize.size16}
+                  color={theme.colors.black}
+                  style={styles.start}
+                />
 
-          <View style={styles.landMarkContainer}>
+                <View style={styles.landMarkContainer}>
 
-            <View style={styles.picture}>
-              <SVGButton
-                iconName="ToBigPic"
-                onPress={handlePicturePress}
-                buttonStyle={styles.toBigPicIcon}
-              />
-            </View>
+                  <View style={styles.picture}>
+                    <SVGButton
+                      iconName="ToBigPic"
+                      onPress={handlePicturePress}
+                      buttonStyle={styles.toBigPicIcon}
+                    />
+                  </View>
 
-            <View style={styles.landMark}>
-              <TextTag
-                text="랜드마크"
-                viewStyle={styles.landMarkTag}
-                enabledColors={{
-                  backgroundColor: theme.colors.brandSubColor,
-                  textColor: theme.colors.brandColor,
-                  borderColor:theme.colors.transparent,
-                }}
-              />
-              <BasicText text={smallCategory || '정문'} fontSize={theme.fontSize.size24} style={styles.title}/>
-              <BasicText text={largeCategory || '학교'} fontSize={theme.fontSize.size16} color={theme.colors.gray1} style={styles.subTitle}/>
-            </View>
+                  <View style={styles.landMark}>
+                    <TextTag
+                      text="랜드마크"
+                      viewStyle={styles.landMarkTag}
+                      enabledColors={{
+                        backgroundColor: theme.colors.brandSubColor,
+                        textColor: theme.colors.brandColor,
+                        borderColor:theme.colors.transparent,
+                      }}
+                    />
+                    <BasicText text={smallCategory || '정문'} fontSize={theme.fontSize.size24} style={styles.title}/>
+                    <BasicText text={largeCategory || '학교'} fontSize={theme.fontSize.size16} color={theme.colors.gray1} style={styles.subTitle}/>
+                  </View>
 
-          </View>
+                </View>
 
-          <View style={styles.selects}>
-            {/** 대분류 */}
-            <ScrollView style={styles.selectContainer}>
-              <View style={styles.select}>
-                <SelectTextButton text={'학교'} onPress={()=>toggleLargeCategory('학교')}
-                selected={largeCategory === '학교'}
-                unselectedColors={
-                  {
-                    backgroundColor:theme.colors.transparent,
-                    textColor:theme.colors.gray1,
-                    borderColor:theme.colors.transparent,
-                  }
-                }
-                selectedColors={
-                  {
-                    backgroundColor:theme.colors.brandColor,
-                    textColor:theme.colors.white,
-                    borderColor:theme.colors.transparent,
-                  }
-                }
-                buttonStyle={styles.selectBtn}
-                textStyle={styles.selectText}/>
-                <SelectTextButton text={'모시래'} onPress={() => toggleLargeCategory('모시래')}
-                selected={largeCategory === '모시래'}
-                unselectedColors={
-                  {
-                    backgroundColor:theme.colors.transparent,
-                    textColor:theme.colors.gray1,
-                    borderColor:theme.colors.transparent,
-                  }
-                }
-                selectedColors={
-                  {
-                    backgroundColor:theme.colors.brandColor,
-                    textColor:theme.colors.white,
-                    borderColor:theme.colors.transparent,
-                  }
-                }
-                buttonStyle={styles.selectBtn}
-                textStyle={styles.selectText}/>
+                <View style={styles.selects}>
+                  {/** 대분류 */}
+                  <ScrollView style={styles.selectContainer}>
+                    <View style={styles.select}>
+                      <SelectTextButton text={'학교'} onPress={()=>toggleLargeCategory('학교')}
+                      selected={largeCategory === '학교'}
+                      unselectedColors={
+                        {
+                          backgroundColor:theme.colors.transparent,
+                          textColor:theme.colors.gray1,
+                          borderColor:theme.colors.transparent,
+                        }
+                      }
+                      selectedColors={
+                        {
+                          backgroundColor:theme.colors.brandColor,
+                          textColor:theme.colors.white,
+                          borderColor:theme.colors.transparent,
+                        }
+                      }
+                      buttonStyle={styles.selectBtn}
+                      textStyle={styles.selectText}/>
+                      <SelectTextButton text={'모시래'} onPress={() => toggleLargeCategory('모시래')}
+                      selected={largeCategory === '모시래'}
+                      unselectedColors={
+                        {
+                          backgroundColor:theme.colors.transparent,
+                          textColor:theme.colors.gray1,
+                          borderColor:theme.colors.transparent,
+                        }
+                      }
+                      selectedColors={
+                        {
+                          backgroundColor:theme.colors.brandColor,
+                          textColor:theme.colors.white,
+                          borderColor:theme.colors.transparent,
+                        }
+                      }
+                      buttonStyle={styles.selectBtn}
+                      textStyle={styles.selectText}/>
+                    </View>
+
+                  </ScrollView>
+                  {/** 소분류 */}
+                  <ScrollView style={styles.selectContainer}>
+                      <View style={styles.select}>
+                      <SelectTextButton text={'정문'}  onPress={() => setSmallCategory('정문')}
+                      selected={smallCategory === '정문'}
+                      unselectedColors={
+                        {
+                          backgroundColor:theme.colors.transparent,
+                          textColor:theme.colors.gray1,
+                          borderColor:theme.colors.transparent,
+                        }
+                      }
+                      selectedColors={
+                        {
+                          backgroundColor:theme.colors.brandColor,
+                          textColor:theme.colors.white,
+                          borderColor:theme.colors.transparent,
+                        }
+                      }
+                      buttonStyle={styles.selectBtn}
+                      textStyle={styles.selectText}/>
+
+                    <SelectTextButton text={'후문'}  onPress={() => setSmallCategory('후문')}
+                      selected={smallCategory === '후문'}
+                      unselectedColors={
+                        {
+                          backgroundColor:theme.colors.transparent,
+                          textColor:theme.colors.gray1,
+                          borderColor:theme.colors.transparent,
+                        }
+                      }
+                      selectedColors={
+                        {
+                          backgroundColor:theme.colors.brandColor,
+                          textColor:theme.colors.white,
+                          borderColor:theme.colors.transparent,
+                        }
+                      }
+                      buttonStyle={styles.selectBtn}
+                      textStyle={styles.selectText}/>
+                      </View>
+                  </ScrollView>
+
+                </View>
+                <View style={styles.confirmBtnContainer}>
+                  <BasicButton
+                   text="완료"
+                   disabled={!(largeCategory && smallCategory)}
+                   onPress={handleSelectConfirm}
+                   buttonStyle={styles.confirmButton}
+                   textStyle={styles.confirmText}
+                   enabledColors={{
+                     backgroundColor: theme.colors.brandColor,
+                     textColor: theme.colors.white,
+                     borderColor:theme.colors.transparent,
+                   }}
+                   disabledColors={{
+                     backgroundColor: theme.colors.lightGray,
+                     textColor: theme.colors.black,
+                     borderColor:theme.colors.transparent,
+                   }}
+                 />
               </View>
 
-            </ScrollView>
-            {/** 소분류 */}
-            <ScrollView style={styles.selectContainer}>
-                <View style={styles.select}>
-                <SelectTextButton text={'정문'}  onPress={() => setSmallCategory('정문')}
-                selected={smallCategory === '정문'}
-                unselectedColors={
-                  {
-                    backgroundColor:theme.colors.transparent,
-                    textColor:theme.colors.gray1,
-                    borderColor:theme.colors.transparent,
-                  }
-                }
-                selectedColors={
-                  {
-                    backgroundColor:theme.colors.brandColor,
-                    textColor:theme.colors.white,
-                    borderColor:theme.colors.transparent,
-                  }
-                }
-                buttonStyle={styles.selectBtn}
-                textStyle={styles.selectText}/>
+              </View>
 
-              <SelectTextButton text={'후문'}  onPress={() => setSmallCategory('후문')}
-                selected={smallCategory === '후문'}
-                unselectedColors={
-                  {
-                    backgroundColor:theme.colors.transparent,
-                    textColor:theme.colors.gray1,
-                    borderColor:theme.colors.transparent,
-                  }
-                }
-                selectedColors={
-                  {
-                    backgroundColor:theme.colors.brandColor,
-                    textColor:theme.colors.white,
-                    borderColor:theme.colors.transparent,
-                  }
-                }
-                buttonStyle={styles.selectBtn}
-                textStyle={styles.selectText}/>
-                </View>
-            </ScrollView>
+              <BigPictureModal
+              ref={pictureModalRef}
+              imageSource={require('../../assets/test.jpg')}
+            />
+          </ScrollView>
+        </KeyboardAvoidingView>
 
-          </View>
-
-
-        </View>
-
-       <View style={styles.confirmBtnContainer}>
-        <BasicButton
-             text="완료"
-             disabled={!(largeCategory && smallCategory)}
-             onPress={handleSelectConfirm}
-             buttonStyle={styles.confirmButton}
-             textStyle={styles.confirmText}
-             enabledColors={{
-               backgroundColor: theme.colors.brandColor,
-               textColor: theme.colors.white,
-               borderColor:theme.colors.transparent,
-             }}
-             disabledColors={{
-               backgroundColor: theme.colors.lightGray,
-               textColor: theme.colors.black,
-               borderColor:theme.colors.transparent,
-             }}
-           />
-        </View>
-        <BigPictureModal
-        ref={pictureModalRef}
-        imageSource={require('../../assets/test.jpg')}
-      />
       </Modalize>
     );
   }

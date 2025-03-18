@@ -1,5 +1,5 @@
-import React, { forwardRef, useImperativeHandle, useRef,useState } from 'react';
-import { View } from 'react-native';
+import React, { forwardRef, useImperativeHandle, useRef,useState,useContext } from 'react';
+import { View,KeyboardAvoidingView } from 'react-native';
 import { Modalize } from 'react-native-modalize';
 import BasicText from '../BasicText';
 import { theme } from '../../styles/theme';
@@ -10,7 +10,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import BasicButton from '../button/BasicButton';
 import SelectTextButton from '../button/SelectTextButton';
 import BigPictureModal from './BigPictureModal';
-
+import {TabBarVisibilityContext} from '../../utils/TabBarVisibilityContext';
 export interface FastGaldaeEndPopupRef {
   open: () => void;
   close: () => void;
@@ -28,7 +28,7 @@ const FastGaldaePopup = forwardRef<FastGaldaeEndPopupRef, FastGaldaePopupProps>(
     // 대분류와 소분류 선택 상태 (더미 데이터)
     const [largeCategory, setLargeCategory] = useState<string>('');
     const [smallCategory, setSmallCategory] = useState<string>('');
-
+    const { setIsTabBarVisible } = useContext(TabBarVisibilityContext);
     const handleSelectConfirm = () =>{
       onConfirm && onConfirm(largeCategory, smallCategory);
       modalizeRef.current?.close();
@@ -55,19 +55,29 @@ const FastGaldaePopup = forwardRef<FastGaldaeEndPopupRef, FastGaldaePopupProps>(
     return (
       <Modalize
         ref={modalizeRef}
-        modalHeight={586} // 고정 높이 설정
-        onClosed={onClose}
+        adjustToContentHeight={true} // ✅ 컨텐츠 크기에 따라 높이 자동 조절
+        onOpened={() => {
+          setIsTabBarVisible(false);
+        }}
+        onClosed={() => {
+          setIsTabBarVisible(true);
+          onClose && onClose();
+        }}
+        scrollViewProps={{
+          keyboardShouldPersistTaps: 'always',
+        }}
         overlayStyle={styles.background}
         modalStyle={styles.container}
         withHandle={false}  // 기본 핸들을 비활성화
-        {...({ swipeToClose: true, swipeThreshold: 10 } as any)}
+        {...({ swipeToClose: true, swipeThreshold: 100 } as any)}
       >
-        {/* 팝업 안쪽에 커스텀 핸들 추가 */}
-        <View style={styles.handleContainer}>
-          <View style={styles.handle} />
-        </View>
-
-        <View style={styles.content}>
+         <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
+           {/* 팝업 안쪽에 커스텀 핸들 추가 */}
+            <View style={styles.handleContainer}>
+              <View style={styles.handle} />
+            </View>
+          <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
+          <View style={styles.content}>
           <BasicText
             text="도착지 설정"
             fontSize={theme.fontSize.size16}
@@ -188,27 +198,32 @@ const FastGaldaePopup = forwardRef<FastGaldaeEndPopupRef, FastGaldaePopupProps>(
             </ScrollView>
 
           </View>
-        </View>
 
-        <View style={styles.confirmBtnContainer}>
-        <BasicButton
-             text="완료"
-             disabled={!(largeCategory && smallCategory)}
-             onPress={handleSelectConfirm}
-             buttonStyle={styles.confirmButton}
-             textStyle={styles.confirmText}
-             enabledColors={{
-               backgroundColor: theme.colors.brandColor,
-               textColor: theme.colors.white,
-               borderColor:theme.colors.transparent,
-             }}
-             disabledColors={{
-               backgroundColor: theme.colors.lightGray,
-               textColor: theme.colors.black,
-               borderColor:theme.colors.transparent,
-             }}
-           />
+          <View style={styles.confirmBtnContainer}>
+            <BasicButton
+                 text="완료"
+                 disabled={!(largeCategory && smallCategory)}
+                 onPress={handleSelectConfirm}
+                 buttonStyle={styles.confirmButton}
+                 textStyle={styles.confirmText}
+                 enabledColors={{
+                   backgroundColor: theme.colors.brandColor,
+                   textColor: theme.colors.white,
+                   borderColor:theme.colors.transparent,
+                 }}
+                 disabledColors={{
+                   backgroundColor: theme.colors.lightGray,
+                   textColor: theme.colors.black,
+                   borderColor:theme.colors.transparent,
+                 }}
+               />
+            </View>
         </View>
+             
+          </ScrollView>
+        </KeyboardAvoidingView>
+
+
         <BigPictureModal
         ref={pictureModalRef}
         imageSource={require('../../assets/test.jpg')}

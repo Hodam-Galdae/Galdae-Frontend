@@ -46,19 +46,33 @@ export const deletePost = async (postId: string) => {
  * 갈대 실시간 조회 API
  */
 export const getPosts = async (params: GetPostsRequest) => {
-  console.log('🚀 [갈대 조회 요청] GET /posts');
+  const requestUrl = '/posts'; // API 엔드포인트
+  console.log(`🚀 [갈대 조회 요청] GET ${requestUrl}`);
   console.log('📌 요청 파라미터:', params);
 
+  // ✅ 모든 값이 string이 되도록 변환
+  const formattedParams: Record<string, string> = {
+    pageNumber: String(params.pageNumber ?? ''),  // 숫자를 문자열로 변환
+    pageSize: String(params.pageSize ?? ''),      // 숫자를 문자열로 변환
+    direction: params.direction ?? '',            // 문자열 그대로 사용
+    properties: params.properties?.join(',') ?? '', // 배열을 쉼표로 구분된 문자열로 변환
+  };
+
+  // ✅ 쿼리 문자열로 변환
+  const queryString = new URLSearchParams(formattedParams).toString();
+  console.log(`🚀 요청 URL: /posts?${queryString}`);
+
   try {
-    const response = await axiosInstance.get('/posts', { params });
-    console.log('✅ [갈대 조회 성공] 응답 데이터:', response.data);
+    const response = await axiosInstance.get(requestUrl, { params: formattedParams });
+
+    console.log(`✅ [실제 요청된 URL]: ${response.config.url}`);
+    console.log('✅ 응답 데이터:', response.data);
     return response.data;
   } catch (error: any) {
     console.error('❌ [갈대 조회 실패] 오류 발생:', error.response ? error.response.data : error);
     throw error;
   }
 };
-
 /**
  * 갈대 검색 API
  */

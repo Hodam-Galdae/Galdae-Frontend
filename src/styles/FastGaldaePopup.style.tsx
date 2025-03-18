@@ -7,31 +7,31 @@ export default StyleSheet.create({
         backgroundColor: theme.colors.transparent,
     },
     container: {
+      
       shadowColor: 'rgba(156, 156, 156, 20)',
       shadowOffset: { width: 20, height: 20 },
       shadowOpacity:20,
       shadowRadius: 20,
       elevation: 20,
-      //height:586,
-      backgroundColor: theme.colors.white,
       paddingHorizontal: (30),
       borderTopLeftRadius: (20),
       borderTopRightRadius: (20),
+      //position:'relative',
     },
     handleContainer: {
         alignItems: 'center',
-        marginTop:12,
-        marginBottom: 33,
     },
     handle: {
-        width: 68,
+        width: 100,
         height: 5,
         borderRadius: 2.5,
         backgroundColor: theme.colors.gray0,
+        marginTop:12,
+        marginBottom: 33, // ✅ 여백을 추가하여 쉽게 터치 가능
     },
     content: {
-      height:500,
-      position:'relative',
+      height:'100%',
+      //position:'relative',
     },
     start:{
       fontWeight:700,
@@ -96,17 +96,17 @@ export default StyleSheet.create({
       fontWeight:'500',
     },
     confirmButton:{
+
       paddingHorizontal:16,
       height:42,
       alignSelf:'flex-end',
-      marginTop:12,
     },
     confirmText:{
 
     },
     modalOverlay: {
       flex: 1,
-      position:'relative',
+      //position:'relative',
       backgroundColor: theme.colors.popupBackGround,
       justifyContent: 'center',
       alignItems: 'center',
@@ -121,7 +121,7 @@ export default StyleSheet.create({
       alignItems: 'center',
     },
     closeContainer:{
-      position: 'absolute',
+      //position: 'absolute',
       bottom: 96,   // 원하는 위치로 조정 (예: 모달 컨텐츠 상단 바깥쪽)
       right:18, // 원하는 위치로 조정 (예: 모달 컨텐츠 우측 바깥쪽)
     },
@@ -142,10 +142,9 @@ export default StyleSheet.create({
       marginBottom:40,
     },
     confirmBtnContainer:{
+      paddingTop:20,
       alignSelf:'flex-end',
       justifyContent:'flex-end',
-      bottom:0,
-      position:'absolute',
     },
     toastPopup:{
       paddingVertical:9,
@@ -155,7 +154,7 @@ export default StyleSheet.create({
       justifyContent:'center',
       alignItems:'center',
       alignSelf: 'center', // 가로 중앙 정렬
-      position:'absolute',
+      //position:'absolute',
       bottom:(20),
       color:theme.colors.white,
       fontSize:theme.fontSize.size14,
