@@ -2,13 +2,17 @@ import axiosInstance from './axiosInstance';
 
 interface AuthResponse {
   accessToken: string;
-  refreshToken?: string;
+  refreshToken: string;
+  expiredIn: number;
+  isJoined: boolean;
 }
 
 interface JoinRequest {
-  email: string;
-  password: string;
   nickname: string;
+  gender: string;
+  bankType?: string;
+  accountNumber?: string;
+  depositor?: string;
 }
 
 interface CheckNicknameResponse {
