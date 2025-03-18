@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 // Login.tsx
 import React, {useEffect} from 'react';
 import {View, Image, TouchableOpacity} from 'react-native';
@@ -44,11 +45,10 @@ const Login: React.FC = () => {
       const token = (await login()).accessToken;
       const response = await loginWithKakao(token);
       await EncryptedStorage.setItem('accessToken', response.accessToken);
-      await EncryptedStorage.setItem(
-        'refreshToken',
-        response.refreshToken || '',
-      );
-      handleGoNextPage(response);
+      await EncryptedStorage.setItem('refreshToken', response.refreshToken || '');
+      console.log('access token : ' + response.accessToken);
+      console.log('refresh token : ' + response.accessToken);
+      handleGoToSignUp();
     } catch (err) {
       console.error('login err : ', err);
     }
@@ -83,6 +83,7 @@ const Login: React.FC = () => {
     //   }
     // }
     navigation.replace('SignUp', {data: response.isJoined});
+
   };
 
   const images = [

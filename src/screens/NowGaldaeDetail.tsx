@@ -1,5 +1,5 @@
 // NowGaldaeDetail.tsx
-import React,{useState} from 'react';
+import React,{useState,useEffect} from 'react';
 import { View,Image } from 'react-native';
 import { WebView } from 'react-native-webview'; // 추가
 import BasicText from '../components/BasicText';
@@ -13,12 +13,13 @@ import { theme } from '../styles/theme';
 import TextTag from '../components/tag/TextTag';
 import BasicButton from '../components/button/BasicButton';
 import { ScrollView } from 'react-native-gesture-handler';
+import { getPostDetail } from '../api/postApi';
 
 // 내비게이션 스택 타입 정의 (이전과 동일)
 type RootStackParamList = {
   CreateGaldae: undefined;
   NowGaldae: undefined;
-  NowGaldaeDetail: { item: any };
+  NowGaldaeDetail: { postId: string };
 };
 
 type NowGaldaeDetailScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'NowGaldaeDetail'>;
@@ -28,9 +29,11 @@ const NowGaldaeDetail: React.FC = () => {
   const navigation = useNavigation<NowGaldaeDetailScreenNavigationProp>();
   const route = useRoute<NowGaldaeDetailRouteProp>();
   const [loading, setLoading] = useState<boolean>(false);
-  const { item } = route.params; // 전달받은 데이터
-  const mapUrl = `https://galdae-kakao-map.vercel.app/?startLat=${item.from.lat}&startLng=${item.from.lng}&endLat=${item.destination.lat}&endLng=${item.destination.lng}`;
-  console.log(`mapUrl: `,mapUrl);
+  const { postId } = route.params; // ✅ 전달받은 postId
+  const [galdaeDetail, setGaldaeDetail] = useState<any>(null);
+
+  //const mapUrl = `https://galdae-kakao-map.vercel.app/?startLat=${galdaeDetail.from.lat}&startLng=${galdaeDetail.from.lng}&endLat=${galdaeDetail.destination.lat}&endLng=${galdaeDetail.destination.lng}`;
+  //console.log(`mapUrl: `,mapUrl);
   const goBack = () => navigation.goBack();
   const handleParticipateGaldae = () =>{
     setLoading(true);
@@ -38,6 +41,30 @@ const NowGaldaeDetail: React.FC = () => {
       setLoading(false);
     },200);
   };
+
+   // ✅ postId로 상세 정보 조회
+   useEffect(() => {
+    const fetchPostDetail = async () => {
+      try {
+        const response = await getPostDetail({ postId });
+        console.log('✅ 가져온 갈대 상세 정보:', response);
+        setGaldaeDetail(response); // API 응답을 상태로 저장
+      } catch (error) {
+        console.error('❌ 갈대 상세 조회 실패:', error);
+      }
+    };
+
+    fetchPostDetail();
+  }, [postId]);
+  if (!galdaeDetail) {
+    return (
+      <View >
+        <BasicText text="로딩 중..." />
+      </View>
+    );
+  }
+  const mapUrl = `https://galdae-kakao-map.vercel.app/?startLat=${galdaeDetail.from.lat}&startLng=${galdaeDetail.from.lng}&endLat=${galdaeDetail.destination.lat}&endLng=${galdaeDetail.destination.lng}`;
+
   return (
     <View style={styles.main}>
       <Header
@@ -45,9 +72,9 @@ const NowGaldaeDetail: React.FC = () => {
         title={
         <View style={styles.headerTitle}>
             <SVG name="location_line"  width={22} height={22}/>
-            <BasicText text={item.from.main} style={styles.headerText} />
+            <BasicText text={galdaeDetail.from.main} style={styles.headerText} />
             <SVG name="arrow_right_line" width={22} height={22}/>
-            <BasicText text={item.destination.main} style={styles.headerText} />
+            <BasicText text={galdaeDetail.destination.main} style={styles.headerText} />
         </View>
         }
       />
@@ -57,29 +84,29 @@ const NowGaldaeDetail: React.FC = () => {
             <BasicText text="advertiseBox"/>
         </View>
 
-        <View key={item.id} style={styles.borderedListBox}>
-          <BasicText text={item.owner} style={styles.galdaeOwner} />
+        <View key={galdaeDetail.id} style={styles.borderedListBox}>
+          <BasicText text={galdaeDetail.owner} style={styles.galdaeOwner} />
           <View style={styles.fromContainer}>
             <SVG name="Car" />
-            <BasicText text={item.from.main} style={styles.fromMainLocation} />
-            <BasicText text={item.from.sub} style={styles.fromSubLocation} />
+            <BasicText text={galdaeDetail.from.main} style={styles.fromMainLocation} />
+            <BasicText text={galdaeDetail.from.sub} style={styles.fromSubLocation} />
           </View>
           <View style={styles.toContainer}>
             <View style={styles.fromToLine}>
               <SVG name="FromToLine" />
             </View>
-            {Array(item.users)
+            {Array(galdaeDetail.users)
               .fill(null)
               .map((_, idx) => (
-                <SVG key={`user-${item.id}-${idx}`} name="User" />
+                <SVG key={`user-${galdaeDetail.id}-${idx}`} name="User" />
               ))}
-            {Array(item.capacity - item.users)
+            {Array(galdaeDetail.capacity - galdaeDetail.users)
               .fill(null)
               .map((_, idx) => (
-                <SVG key={`disabled-${item.id}-${idx}`} name="DisabledUser" />
+                <SVG key={`disabled-${galdaeDetail.id}-${idx}`} name="DisabledUser" />
               ))}
             <BasicText
-              text={`(${item.users}/${item.capacity})`}
+              text={`(${galdaeDetail.users}/${galdaeDetail.capacity})`}
               fontWeight={500}
               fontSize={theme.fontSize.size16}
               color={theme.colors.gray1}
@@ -87,20 +114,20 @@ const NowGaldaeDetail: React.FC = () => {
           </View>
           <View style={styles.toContainer}>
             <SVG name="Location" />
-            <BasicText text={item.destination.main} style={styles.fromMainLocation} />
-            <BasicText text={item.destination.sub} style={styles.fromSubLocation} />
+            <BasicText text={galdaeDetail.destination.main} style={styles.fromMainLocation} />
+            <BasicText text={galdaeDetail.destination.sub} style={styles.fromSubLocation} />
           </View>
           <View style={styles.timeContainer}>
             <SVG name="Clock" />
             <View>
               <BasicText
-                text={item.timeAgreement ? '시간 협의가능' : '시간 협의불가'}
+                text={galdaeDetail.timeAgreement ? '시간 협의가능' : '시간 협의불가'}
                 style={styles.fromMainLocation}
                 color={theme.colors.gray2}
                 fontSize={theme.fontSize.size10}
               />
               <BasicText
-                text={item.time}
+                text={galdaeDetail.time}
                 style={styles.fromSubLocation}
                 color={theme.colors.black}
                 fontSize={theme.fontSize.size14}
@@ -108,7 +135,7 @@ const NowGaldaeDetail: React.FC = () => {
             </View>
           </View>
           <View style={styles.tags}>
-            {item.tags.map((tag:string, index:number) =>
+            {galdaeDetail.tags.map((tag:string, index:number) =>
                <TextTag key={index} text={tag} />
             )}
           </View>

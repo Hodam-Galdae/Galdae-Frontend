@@ -9,6 +9,7 @@ import styles from '../../styles/DeletePopup.style';
 
 export interface CreateGaldaePopupProps {
     visible: boolean;
+    loading: boolean;
     onCancel: () => void;
     onConfirm: () => void;
     departureDateTime: string;
@@ -18,6 +19,7 @@ export interface CreateGaldaePopupProps {
   }
 
   const CreateGaldaePopup: React.FC<CreateGaldaePopupProps> = ({
+    loading,
     visible,
     onCancel,
     onConfirm,
@@ -75,6 +77,8 @@ export interface CreateGaldaePopupProps {
                     textColor: theme.colors.white,
                     borderColor: theme.colors.transparent,
                   }}
+                  disabled={loading}
+                  loading={loading}
                   onPress={onConfirm}
                 />
               </View>

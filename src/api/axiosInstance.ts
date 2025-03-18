@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import axios from 'axios';
 import EncryptedStorage from 'react-native-encrypted-storage';
 
@@ -13,19 +14,24 @@ const axiosInstance = axios.create({
   },
 });
 
-// 요청 인터셉터 (요청 전에 공통 처리)
 axiosInstance.interceptors.request.use(
   async config => {
     //제외 대상 url 스킵
+  async (config) => {
+    //제외 대상 URL이면 스킵
     if (EXCLUDED_URLS.includes(config.url || '')) {
       return config;
     }
-
-    const token = await EncryptedStorage.getItem('accessToken');
-    console.log(token);
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    try {
+      const token = await EncryptedStorage.getItem('accessToken');
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+        console.log(`Bearer ${token}`);
+      }
+    } catch (error) {
+      console.error('Token 가져오는 중 오류 발생:', error);
     }
+
     return config;
   },
   error => Promise.reject(error),
