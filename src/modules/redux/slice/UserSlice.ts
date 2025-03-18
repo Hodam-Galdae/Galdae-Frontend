@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 /**
  * UserSlice의 관리하는 상태값(State)을 정의합니다.

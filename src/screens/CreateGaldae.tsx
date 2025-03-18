@@ -16,11 +16,17 @@ import FastGaldaeEndPopup, { FastGaldaeEndPopupRef } from '../components/popup/F
 import FastGaldaeTimePopup, { FastGaldaeTimePopupRef } from '../components/popup/FastGaldaeTimePopup';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
+//API
+import { createPost } from '../api/postApi'; // ✅ 갈대 생성 API 추가
+
+// ✅ 갈대 생성 요청 타입
+import { CreatePostRequest } from '../types/postTypes';
+
 // 내비게이션 스택 타입 정의
 type RootStackParamList = {
   CreateGaldae: undefined;
   NowGaldae: undefined;
-  NowGaldaeDetail: { item: any };
+  NowGaldaeDetail: { postId: string };
 };
 
 
@@ -52,29 +58,66 @@ const CreateGaldae: React.FC = () => {
       setPassengerNumber(passengerNumber - 1);
     }
   };
-  const handleGenerateGaldae = () => {
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      // 생성된 갈대 정보를 담은 객체 생성 (필요에 따라 state 값을 활용하여 데이터를 구성)
-      const createdItem = {
-        id: Date.now(), // 예시용 ID
-        owner: '내 갈대', // 본인 이름 또는 별칭
-        from: { main: departureLarge, sub: departureSmall },
-        // 현재 탑승 인원은 본인 포함(passengerNumber + 1)로 계산
-        users: 1,
-        capacity: passengerNumber + 1,
-        destination: { main: destinationLarge, sub: destinationSmall },
-        time: formatDepartureDateTime(),
-        timeAgreement: selectedTimeDiscuss === 0,
-        // 성별 선택에 따라 태그 처리
-        tags: selectedGender === 0 ? ['성별무관'] : (selectedGender === 1 ? ['여자'] : ['남자']),
-      };
+  // const handleGenerateGaldae = () => {
+  //   setLoading(true);
+  //   setTimeout(() => {
+  //     setLoading(false);
+  //     // 생성된 갈대 정보를 담은 객체 생성 (필요에 따라 state 값을 활용하여 데이터를 구성)
+  //     const createdItem = {
+  //       id: Date.now(), // 예시용 ID
+  //       owner: '내 갈대', // 본인 이름 또는 별칭
+  //       from: { main: departureLarge, sub: departureSmall },
+  //       // 현재 탑승 인원은 본인 포함(passengerNumber + 1)로 계산
+  //       users: 1,
+  //       capacity: passengerNumber + 1,
+  //       destination: { main: destinationLarge, sub: destinationSmall },
+  //       time: formatDepartureDateTime(),
+  //       timeAgreement: selectedTimeDiscuss === 0,
+  //       // 성별 선택에 따라 태그 처리
+  //       tags: selectedGender === 0 ? ['성별무관'] : (selectedGender === 1 ? ['여자'] : ['남자']),
+  //     };
 
-      // NowGaldaeDetail 페이지로 이동하면서 생성된 데이터를 전달합니다.
-      navigation.navigate('NowGaldaeDetail', { item: createdItem });
-    }, 2000);
+  //     // NowGaldaeDetail 페이지로 이동하면서 생성된 데이터를 전달합니다.
+  //     navigation.navigate('NowGaldaeDetail', { item: createdItem });
+  //   }, 2000);
+  // };
+
+  // ✅ 갈대 생성 API 호출 함수
+  const handleCreateGaldaeConfirm = async () => {
+    setLoading(true);
+
+    // 출발 일시를 ISO 8601 형식으로 변환
+    const formattedDepartureTime = moment()
+      .tz('Asia/Seoul')
+      .format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
+
+    const postData: CreatePostRequest = {
+      departure: departureSmall,
+      arrival: destinationSmall,
+      departureTime: formattedDepartureTime,
+      passengerType: selectedGender === 1 ? 'FEMALE' : 'MALE',
+      arrangeTime: selectedTimeDiscuss === 0 ? 'POSSIBLE' : 'IMPOSSIBLE',
+      passengerCount: passengerNumber,
+      isFavoriteRoute: selectedChannel,
+    };
+
+    console.log('🚀 서버로 보낼 갈대 생성 데이터:', postData);
+
+    try {
+      const response = await createPost(postData); // ✅ 서버에서 postId 반환
+      console.log('✅ 생성된 갈대 postId:', response.postId);
+
+      if (response.postId) {
+        // ✅ 상세 페이지로 이동하면서 postId 전달
+        navigation.navigate('NowGaldaeDetail', { postId: response.postId });
+      }
+    } catch (error) {
+      console.error('❌ 갈대 생성 실패:', error);
+    } finally {
+      setLoading(false);
+    }
   };
+
   const toggleFastGaldaeStartPopup = () =>{
     fastGaldaeStartPopupRef.current?.open();
   };
@@ -222,7 +265,7 @@ const CreateGaldae: React.FC = () => {
             buttonStyle={styles.generateButton}
             textStyle={styles.generateText}
             loading={loading}
-            onPress={handleGenerateGaldae}
+            onPress={handleCreateGaldaeConfirm}
           />
         </View>
         </ScrollView>

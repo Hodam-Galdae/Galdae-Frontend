@@ -1,5 +1,5 @@
-import React, { forwardRef, useImperativeHandle, useRef,useState } from 'react';
-import { View } from 'react-native';
+import React, { forwardRef, useImperativeHandle, useRef,useState,useContext } from 'react';
+import { View,KeyboardAvoidingView } from 'react-native';
 import { Modalize } from 'react-native-modalize';
 import BasicText from '../BasicText';
 import { theme } from '../../styles/theme';
@@ -7,7 +7,9 @@ import styles from '../../styles/FastGaldaePopup.style';
 import BasicButton from '../button/BasicButton';
 import Calendar from '../Calendar';
 import moment from 'moment';
+import { ScrollView } from 'react-native-gesture-handler';
 import TimePicker from '../TimePicker';
+import {TabBarVisibilityContext} from '../../utils/TabBarVisibilityContext';
 export interface FastGaldaeTimePopupRef {
   open: () => void;
   close: () => void;
@@ -24,6 +26,7 @@ const FastGaldaeTimePopup = forwardRef<FastGaldaeTimePopupRef, FastGaldaePopupPr
     const [selectedAmPm, setSelectedAmPm] = useState<'오전' | '오후'>('오전');
     const [selectedHour, setSelectedHour] = useState<number>(0);
     const [selectedMinute, setSelectedMinute] = useState<number>(0);
+    const { setIsTabBarVisible } = useContext(TabBarVisibilityContext);
     const modalizeRef = useRef<Modalize>(null);
 
     // 팝업이 열릴 때 기본값을 현재 시간(다음 15분 단위)으로 설정하는 onOpened 콜백
@@ -67,20 +70,31 @@ const FastGaldaeTimePopup = forwardRef<FastGaldaeTimePopupRef, FastGaldaePopupPr
     return (
       <Modalize
         ref={modalizeRef}
-        modalHeight={586} // 고정 높이 설정
-        onClosed={onClose}
-        onOpened={handleOnOpened} // 팝업 열릴 때 기본값 자동 매핑
+        adjustToContentHeight={true} // ✅ 컨텐츠 크기에 따라 높이 자동 조절
+        onOpened={() => {
+          setIsTabBarVisible(false);
+          handleOnOpened();
+        }}
+        onClosed={() => {
+          setIsTabBarVisible(true);
+          onClose && onClose();
+        }}
         overlayStyle={styles.background}
         modalStyle={styles.container}
         withHandle={false}  // 기본 핸들을 비활성화
-        {...({ swipeToClose: true, swipeThreshold: 10 } as any)}
+        scrollViewProps={{
+          keyboardShouldPersistTaps: 'always',
+        }}
+        {...({ swipeToClose: true, swipeThreshold: 100 } as any)}
       >
-        {/* 팝업 안쪽에 커스텀 핸들 추가 */}
-        <View style={styles.handleContainer}>
-          <View style={styles.handle} />
-        </View>
+        <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
+           {/* 팝업 안쪽에 커스텀 핸들 추가 */}
+           <View style={styles.handleContainer}>
+                <View style={styles.handle} />
+              </View>
+          <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
 
-        <View style={styles.content}>
+          <View style={styles.content}>
           <BasicText
             text="출발 일시"
             fontSize={theme.fontSize.size16}
@@ -130,6 +144,9 @@ const FastGaldaeTimePopup = forwardRef<FastGaldaeTimePopupRef, FastGaldaePopupPr
             />
           </View>
         </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
+
 
       </Modalize>
     );
