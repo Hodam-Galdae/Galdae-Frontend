@@ -1,5 +1,5 @@
-import React,{useEffect} from 'react';
-import {  View,FlatList } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, FlatList } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from '../../styles/MyGaldae.style';
 import Header from '../../components/Header';
@@ -8,254 +8,133 @@ import BasicText from '../../components/BasicText';
 import { theme } from '../../styles/theme';
 import SVGTextButton from '../../components/button/SVGTextButton';
 import BasicButton from '../../components/button/BasicButton';
-import GaldaeItem from '../../components/GaldaeItem';
+import MyGaldaeItem from '../../components/MyGaldaeItem';
 import FrequentRouteItem from '../../components/FrequentRouteItem';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchFrequentRoutes, FrequentRoute } from '../../modules/redux/slice/frequentRouteSlice';
+import {  useSelector } from 'react-redux';
+import { useAppDispatch } from '../../modules/redux/store';
+import { fetchFrequentRoutes } from '../../modules/redux/slice/frequentRouteSlice';
 import { RootState } from '../../modules/redux/RootReducer';
-type HomeProps = {
-  navigation: any; // 실제 프로젝트에서는 proper type 사용 권장 (예: StackNavigationProp)
 
+type HomeProps = {
+  navigation: any;
 };
 
-// 내비게이션 스택 타입 정의
 type RootStackParamList = {
-    CreateGaldae: undefined;
-    NowGaldae: {
-      departureLarge?:string,
-      departureSmall?:string,
-      destinationLarge?:string,
-      destinationSmall?:string,
-    };
-    NowGaldaeDetail: { item: any };
-    SetDestination:undefined;
-    MyGaldaeHistory:any;
+  CreateGaldae: undefined;
+  NowGaldae: {
+    departureLarge?: string;
+    departureSmall?: string;
+    destinationLarge?: string;
+    destinationSmall?: string;
+  };
+  SetDestination: undefined;
+  MyGaldaeHistory: any;
 };
 
 type nowGaldaeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
+
 const MyGaldae: React.FC<HomeProps> = () => {
-  // Redux에서 자주 가는 경로 데이터 가져오기
+  const dispatch = useAppDispatch();
+  const navigation = useNavigation<nowGaldaeScreenNavigationProp>();
+
+  // Redux에서 자주 가는 경로 데이터 가져오기 (인터페이스는 departure, arrival, createdAt 등)
   const { routes, loading, error } = useSelector((state: RootState) => state.frequentSlice);
-    const dummySearchHistory = [
-        {
-          id: 1,
-          date: '3일전',
-          start: { label: '출발지', main: '학교', sub: '중원도서관' },
-          end: { label: '도착지', main: '충주 터미널', sub: '하이마트앞' },
-        },
-        {
-          id: 2,
-          date: '5일전',
-          start: { label: '출발지', main: '역', sub: '서울역' },
-          end: { label: '도착지', main: '백화점', sub: '롯데백화점' },
-        },
-        {
-          id: 3,
-          date: '일주일전',
-          start: { label: '출발지', main: '카페', sub: '강남카페' },
-          end: { label: '도착지', main: '공원', sub: '한강공원' },
-        },
-        {
-          id: 4,
-          date: '2일전',
-          start: { label: '출발지', main: '집', sub: '우리집' },
-          end: { label: '도착지', main: '마트', sub: '이마트' },
-        },
-        {
-          id: 5,
-          date: '오늘',
-          start: { label: '출발지', main: '학교', sub: '도서관' },
-          end: { label: '도착지', main: '카페', sub: '스타벅스' },
-        },
-        {
-          id: 6,
-          date: '어제',
-          start: { label: '출발지', main: '역', sub: '부산역' },
-          end: { label: '도착지', main: '공원', sub: '부산시민공원' },
-        },
-        {
-          id: 7,
-          date: '4일전',
-          start: { label: '출발지', main: '회사', sub: '사옥' },
-          end: { label: '도착지', main: '호텔', sub: '그랜드호텔' },
-        },
-        {
-          id: 8,
-          date: '6일전',
-          start: { label: '출발지', main: '학교', sub: '정문' },
-          end: { label: '도착지', main: '도서관', sub: '중앙도서관' },
-        },
-        {
-          id: 9,
-          date: '8일전',
-          start: { label: '출발지', main: '카페', sub: '이디야' },
-          end: { label: '도착지', main: '백화점', sub: '현대백화점' },
-        },
-        {
-          id: 10,
-          date: '9일전',
-          start: { label: '출발지', main: '홈', sub: '내집' },
-          end: { label: '도착지', main: '시장', sub: '재래시장' },
-        },
-        {
-          id: 11,
-          date: '2주전',
-          start: { label: '출발지', main: '공항', sub: '김포공항' },
-          end: { label: '도착지', main: '호텔', sub: '인터컨티넨탈' },
-        },
-        {
-          id: 12,
-          date: '3주전',
-          start: { label: '출발지', main: '역', sub: '부산역' },
-          end: { label: '도착지', main: '센터', sub: '코엑스' },
-        },
-        {
-          id: 13,
-          date: '한달전',
-          start: { label: '출발지', main: '학교', sub: '대학' },
-          end: { label: '도착지', main: '공원', sub: '서울숲' },
-        },
-        {
-          id: 14,
-          date: '2달전',
-          start: { label: '출발지', main: '병원', sub: '서울병원' },
-          end: { label: '도착지', main: '약국', sub: 'CU약국' },
-        },
-        {
-          id: 15,
-          date: '3달전',
-          start: { label: '출발지', main: '오피스', sub: '작업실' },
-          end: { label: '도착지', main: '식당', sub: '한식당' },
-        },
-        {
-          id: 16,
-          date: '4달전',
-          start: { label: '출발지', main: '노원', sub: '서울' },
-          end: { label: '도착지', main: '강남', sub: '서울' },
-        },
-        {
-          id: 17,
-          date: '5달전',
-          start: { label: '출발지', main: '부산', sub: '부산역' },
-          end: { label: '도착지', main: '울산', sub: '울산역' },
-        },
-        {
-          id: 18,
-          date: '6달전',
-          start: { label: '출발지', main: '대구', sub: '대구역' },
-          end: { label: '도착지', main: '광주', sub: '광주역' },
-        },
-        {
-          id: 19,
-          date: '7달전',
-          start: { label: '출발지', main: '청주', sub: '청주역' },
-          end: { label: '도착지', main: '전주', sub: '전주역' },
-        },
-        {
-          id: 20,
-          date: '8달전',
-          start: { label: '출발지', main: '인천', sub: '인천공항' },
-          end: { label: '도착지', main: '서울', sub: '종로' },
-        },
-      ];
-    const dispatch = useDispatch();
-    const navigation = useNavigation<nowGaldaeScreenNavigationProp>();
-    const goBack = () => navigation.goBack();
 
-    const item = {
-        id: 1,
-        owner: '하재연님의 갈대',
-        from: { main: '학교', sub: '정문' },
-        users: 2,
-        capacity: 4,
-        destination: { main: '학교', sub: '정문' },
-        time: '2025년 00월 00일 (0) 00 : 00',
-        timeAgreement: true,
-        tags: ['성별무관'],
-        timestamp: 1735689600000, // 예시 타임스탬프 (밀리초 단위)
-    };
-    const handleMorePress = () =>{
-        navigation.navigate('MyGaldaeHistory');
-    };
-    const handleSearchGaldae = () => {
-        navigation.navigate('CreateGaldae');
-      };
 
-      useEffect(() => {
-        dispatch(fetchFrequentRoutes());
-      }, [dispatch]);
-    return (
-      <View style={styles.container}>
-            <Header
-            leftButton={<SVGButton iconName="arrow_left_line" onPress={goBack}/>}
-            title={<BasicText text="내 갈대 기록" style={styles.headerText}/>}
-            />
+  useEffect(() => {
+    dispatch(fetchFrequentRoutes());
+  }, [dispatch]);
 
-            <View style={styles.content}>
 
-                <View style={styles.nowGaldaeTitle}>
-                    <BasicText text="3개의 경로" style={styles.nowGaldae}/>
-                    <SVGTextButton
-                    iconName="More"
-                    text="더보기"
-                    textStyle={styles.more}
-                    iconPosition="right"
-                    onPress={handleMorePress}
-                    enabledColors={{
-                      backgroundColor: 'transparent',
-                      textColor: theme.colors.gray1,
-                      borderColor: 'transparent',
-                    }}
-                    />
-                </View>
+  const handleMorePress = () => {
+    navigation.navigate('MyGaldaeHistory');
+  };
 
-                {item ? (
-                  //item이 존재하는 경우
-                  <GaldaeItem
-                    key={item.id}
-                    item={item}
-                    onPress={() => navigation.navigate('NowGaldaeDetail', { item })}
-                  />
-                ) : (
-                  // item이 없을 경우
-                  <View style={styles.borderBox}>
-                    <BasicText
-                      text="새로운 갈대를 생성해보세요."
-                      style={styles.noGaldaeText} // 필요하다면 스타일 정의
-                    />
-                  </View>
-                )}
+  // // 기존 갈대 아이템 예시 데이터 (여기서는 예시 아이템으로 GaldaeItem 사용)
+  // const item = {
+  //   id: 1,
+  //   owner: '하재연님의 갈대',
+  //   from: { main: '학교', sub: '정문' },
+  //   users: 2,
+  //   capacity: 4,
+  //   destination: { main: '학교', sub: '정문' },
+  //   time: '2025년 00월 00일 (0) 00 : 00',
+  //   timeAgreement: true,
+  //   tags: ['성별무관'],
+  //   timestamp: 1735689600000,
+  // };
+  // 내 갈대 기록은 Redux slice에서 관리 (state.myGaldae)
+  const { history: myGaldaeHistory} = useSelector(
+    (state: RootState) => state.myGaldaeSlice
+  );
+// 내 갈대 기록의 첫 번째 항목을 topItem으로 사용 (있다면)
+const topItem = myGaldaeHistory.length > 0 ? myGaldaeHistory[0] : null;
+  return (
+    <View style={styles.container}>
+      <Header
+        leftButton={<SVGButton iconName="arrow_left_line" onPress={() => navigation.goBack()} />}
+        title={<BasicText text="내 갈대 기록" style={styles.headerText} />}
+      />
 
-                <BasicText text="자주가는 경로" style={styles.freqText}/>
-                <FlatList
-                  style={styles.searchList}
-                  data={dummySearchHistory}
-                  keyExtractor={(routeItem) => routeItem.id.toString()}
-                  renderItem={({ item: routeItem }) => (
-                    <FrequentRouteItem key={routeItem.id} routeData={routeItem} />
-                  )}
-                  // 2) 리스트가 비었을 때 표시할 내용 (선택)
-                  ListEmptyComponent={
-                    <View style={styles.borderBox}>
-                      <BasicText
-                        text="기록이 없습니다."
-                        style={styles.noGaldaeText}
-                      />
-                    </View>
-                  }
-                />
+      <View style={styles.content}>
+        <View style={styles.nowGaldaeTitle}>
+          <BasicText text="3개의 경로" style={styles.nowGaldae} />
+          <SVGTextButton
+            iconName="More"
+            text="더보기"
+            textStyle={styles.more}
+            iconPosition="right"
+            onPress={handleMorePress}
+            enabledColors={{
+              backgroundColor: 'transparent',
+              textColor: theme.colors.gray1,
+              borderColor: 'transparent',
+            }}
+          />
+        </View>
 
-                <BasicButton
-                    text="갈대 생성하기"
-                    buttonStyle={styles.generateButton}
-                    textStyle={styles.generateText}
-                    onPress={handleSearchGaldae}
-                />
-            </View>
+        {topItem ? (
+          <MyGaldaeItem
+            item={topItem}
+            onPress={() => navigation.navigate('NowGaldaeDetail', { topItem })}
+          />
+        ) : (
+          <View style={styles.borderBox}>
+            <BasicText text="새로운 갈대를 생성해보세요." style={styles.noGaldaeText} />
+          </View>
+        )}
+
+        <BasicText text="자주가는 경로" style={styles.freqText} />
+        {loading ? (
+          <BasicText text="로딩중..." style={styles.noGaldaeText} />
+        ) : error ? (
+          <BasicText text={`오류: ${error}`} style={styles.noGaldaeText} />
+        ) : (
+          <FlatList
+            style={styles.searchList}
+            data={routes}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item }) => (
+              <FrequentRouteItem key={item.createdAt} routeData={item} />
+            )}
+            ListEmptyComponent={
+              <View style={styles.borderBox}>
+                <BasicText text="기록이 없습니다." style={styles.noGaldaeText} />
+              </View>
+            }
+          />
+        )}
+
+        <BasicButton
+          text="갈대 생성하기"
+          buttonStyle={styles.generateButton}
+          textStyle={styles.generateText}
+          onPress={() => navigation.navigate('CreateGaldae')}
+        />
       </View>
-    );
+    </View>
+  );
 };
 
 export default MyGaldae;
-

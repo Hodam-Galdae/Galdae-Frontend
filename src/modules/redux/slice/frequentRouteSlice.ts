@@ -2,9 +2,16 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { getFrequentRoutes } from '../../../api/membersApi';
 
+// API 응답에 맞는 데이터 타입 정의 (출발지와 도착지가 객체)
 export interface FrequentRoute {
-  departure: string;
-  arrival: string;
+  departure: {
+    majorPlace: string;
+    subPlace: string;
+  };
+  arrival: {
+    majorPlace: string;
+    subPlace: string;
+  };
   createdAt: string;
 }
 

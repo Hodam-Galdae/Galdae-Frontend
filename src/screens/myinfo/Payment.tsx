@@ -33,7 +33,6 @@ type RootStackParamList = {
       destinationLarge?:string,
       destinationSmall?:string,
     };
-    NowGaldaeDetail: { item: any };
     SetDestination:undefined;
     AccountRegister:undefined;
     Payment: { bank: string; account: string, svg: string } | undefined;

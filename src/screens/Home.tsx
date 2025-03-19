@@ -14,7 +14,7 @@ import FloatingButton from '../components/button/FloatingButton';
 import GaldaeItem from '../components/GaldaeItem';
 import CreateGaldaePopup from '../components/popup/CreateGaldaePopup';
 import {useNavigation} from '@react-navigation/native';
-import moment from 'moment-timezone';
+import moment from 'moment-timezone/builds/moment-timezone-with-data';
 import ToastPopup from '../components/popup/ToastPopup';
 
 //type
@@ -27,6 +27,15 @@ import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 //import { useSelector } from 'react-redux';
 //import { RootState } from '../modules/redux/RootReducer'; // store.ts에서 RootState 가져오기
 
+// type
+import { GetPostsRequest } from '../types/postTypes';
+import { GaldaeItemType } from '../types/getTypes';
+
+// redux
+import {  useSelector } from 'react-redux';
+import { useAppDispatch } from '../modules/redux/store';
+import { fetchGaldaePosts } from '../modules/redux/slice/galdaeSlice';
+import { RootState } from '../modules/redux/RootReducer';
 type RootStackParamList = {
   CreateGaldae: undefined;
   NowGaldae: undefined;
@@ -46,73 +55,75 @@ import FastGaldaeTimePopup, {
 
 type HomeProps = {
   navigation: any; // 실제 프로젝트에서는 proper type 사용 권장 (예: StackNavigationProp)
+  NowGaldaeDetail: { item: GaldaeItemType };
 };
 
 const Home: React.FC<HomeProps> = () => {
 
-  const dummyGaldaeData = [
-    {
-      id: 1,
-      owner: '하재연님의 갈대',
-      from: { main: '학교', sub: '정문', lat: 37.5665, lng: 126.9780 }, // 서울 시청 근처
-      users: 2,
-      capacity: 4,
-      destination: { main: '강남역', sub: '출구 1번', lat: 37.4980, lng: 127.0276 }, // 강남역
-      time: '2025년 00월 00일 (0) 00 : 00',
-      timeAgreement: true,
-      tags: ['성별무관'],
-      timestamp: 1735689600000,
-    },
-    {
-      id: 2,
-      owner: '김철수의 갈대',
-      from: { main: '후문', sub: '대학', lat: 37.5796, lng: 126.9770 }, // 광화문 근처
-      users: 1,
-      capacity: 3,
-      destination: { main: '스타벅스', sub: '시내', lat: 37.5650, lng: 126.9835 }, // 명동 스타벅스 근처
-      time: '2025년 01월 01일 (목) 10 : 30',
-      timeAgreement: false,
-      tags: ['남자만'],
-      timestamp: 1735689600001,
-    },
-    {
-      id: 3,
-      owner: '이영희의 갈대',
-      from: { main: '정문', sub: '회사', lat: 37.5112, lng: 127.0124 }, // 압구정 근처
-      users: 1,
-      capacity: 2,
-      destination: { main: '공원', sub: '주변', lat: 37.5281, lng: 127.0366 }, // 한강공원 근처
-      time: '2025년 02월 02일 (일) 14 : 00',
-      timeAgreement: true,
-      tags: ['성별무관'],
-      timestamp: 1735689600002,
-    },
-    {
-      id: 4,
-      owner: '최희연의 갈대',
-      from: { main: '호담', sub: '여기는어디야', lat: 37.6500, lng: 127.0160 }, // 노원구 근처
-      users: 1,
-      capacity: 3,
-      destination: { main: '가천대학교', sub: '무당이정거장', lat: 37.4504, lng: 127.1289 }, // 가천대 근처
-      time: '2025년 02월 13일 (일) 15 : 00',
-      timeAgreement: true,
-      tags: ['여자만'],
-      timestamp: 1735689600003,
-    },
-    {
-      id: 5,
-      owner: '이서준의 갈대',
-      from: { main: '호담', sub: '여기는어디야', lat: 37.6530, lng: 127.0190 }, // 노원구 근처
-      users: 1,
-      capacity: 3,
-      destination: { main: '가천대학교', sub: '무당이정거장', lat: 37.4492, lng: 127.1280 }, // 가천대 근처
-      time: '2025년 02월 13일 (일) 15 : 00',
-      timeAgreement: true,
-      tags: ['여자만'],
-      timestamp: 1735689600004,
-    },
-  ];
+  // const dummyGaldaeData = [
+  //   {
+  //     id: 1,
+  //     owner: '하재연님의 갈대',
+  //     from: { main: '학교', sub: '정문', lat: 37.5665, lng: 126.9780 }, // 서울 시청 근처
+  //     users: 2,
+  //     capacity: 4,
+  //     destination: { main: '강남역', sub: '출구 1번', lat: 37.4980, lng: 127.0276 }, // 강남역
+  //     time: '2025년 00월 00일 (0) 00 : 00',
+  //     timeAgreement: true,
+  //     tags: ['성별무관'],
+  //     timestamp: 1735689600000,
+  //   },
+  //   {
+  //     id: 2,
+  //     owner: '김철수의 갈대',
+  //     from: { main: '후문', sub: '대학', lat: 37.5796, lng: 126.9770 }, // 광화문 근처
+  //     users: 1,
+  //     capacity: 3,
+  //     destination: { main: '스타벅스', sub: '시내', lat: 37.5650, lng: 126.9835 }, // 명동 스타벅스 근처
+  //     time: '2025년 01월 01일 (목) 10 : 30',
+  //     timeAgreement: false,
+  //     tags: ['남자만'],
+  //     timestamp: 1735689600001,
+  //   },
+  //   {
+  //     id: 3,
+  //     owner: '이영희의 갈대',
+  //     from: { main: '정문', sub: '회사', lat: 37.5112, lng: 127.0124 }, // 압구정 근처
+  //     users: 1,
+  //     capacity: 2,
+  //     destination: { main: '공원', sub: '주변', lat: 37.5281, lng: 127.0366 }, // 한강공원 근처
+  //     time: '2025년 02월 02일 (일) 14 : 00',
+  //     timeAgreement: true,
+  //     tags: ['성별무관'],
+  //     timestamp: 1735689600002,
+  //   },
+  //   {
+  //     id: 4,
+  //     owner: '최희연의 갈대',
+  //     from: { main: '호담', sub: '여기는어디야', lat: 37.6500, lng: 127.0160 }, // 노원구 근처
+  //     users: 1,
+  //     capacity: 3,
+  //     destination: { main: '가천대학교', sub: '무당이정거장', lat: 37.4504, lng: 127.1289 }, // 가천대 근처
+  //     time: '2025년 02월 13일 (일) 15 : 00',
+  //     timeAgreement: true,
+  //     tags: ['여자만'],
+  //     timestamp: 1735689600003,
+  //   },
+  //   {
+  //     id: 5,
+  //     owner: '이서준의 갈대',
+  //     from: { main: '호담', sub: '여기는어디야', lat: 37.6530, lng: 127.0190 }, // 노원구 근처
+  //     users: 1,
+  //     capacity: 3,
+  //     destination: { main: '가천대학교', sub: '무당이정거장', lat: 37.4492, lng: 127.1280 }, // 가천대 근처
+  //     time: '2025년 02월 13일 (일) 15 : 00',
+  //     timeAgreement: true,
+  //     tags: ['여자만'],
+  //     timestamp: 1735689600004,
+  //   },
+  // ];
   const [loading, setLoading] = useState<boolean>(false);
+  const { posts } = useSelector((state: RootState) => state.galdaeSlice);
   const [createGaldaeLoading, setCreateGaldaeLoading] = useState<boolean>(false);
 
   const [generateLoading, setgenerateLoading] = useState<boolean>(false);
@@ -139,7 +150,7 @@ const Home: React.FC<HomeProps> = () => {
   const [myCreatedGaldaeList, setMyCreatedGaldaeList] = useState<MyCreatedPost[]>([]); // ✅ 내가 생성한 갈대 목록 상태 추가
   const [myCreatedGaldaeLoading, setMyCreatedGaldaeLoading] = useState<boolean>(true); // ✅ API 로딩 상태
   const [createGaldaeBoolean, setCreateGaldaeBoolean] = useState<boolean>(false);
-
+  const dispatch = useAppDispatch();
   // ✅ 내가 생성한 갈대 불러오기
   useEffect(() => {
     const fetchMyCreatedGaldae = async () => {
@@ -163,38 +174,43 @@ const Home: React.FC<HomeProps> = () => {
       setLoading(false);
     }, 2000);
   };
-
+useEffect(() => {
+    const params: GetPostsRequest = {
+      pageNumber: 0,
+      pageSize: 10,
+      direction: 'DESC',
+      properties: ['departureTime'],
+    };
+    dispatch(fetchGaldaePosts(params));
+  }, [dispatch]);
   const handleCreateGaldaeConfirm = async () => {
     setCreateGaldaeLoading(true);
 
-    // 🔹 출발일시를 ISO 8601 형식으로 변환
-    const formattedDepartureTime = moment()
-      .tz('Asia/Seoul') // 한국 시간 기준
-      .format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
+    // 사용자가 선택한 값들을 조합하여 ISO 8601 형식의 출발일시 생성
+    const formattedDepartureTime = getFormattedDepartureTime();
 
-    // 🔹 API 요청 형식에 맞게 데이터 변환
     const generateGaldaeData: CreatePostRequest = {
-      departure: departureSmall, // 출발지
-      arrival: destinationSmall, // 도착지
-      departureTime: formattedDepartureTime, // ISO 8601 형식 변환
-      passengerType: 'MALE', // 🚀 '성인'을 'MALE'로 변환 (추후 선택 가능하도록 수정)
-      arrangeTime: 'POSSIBLE', // 🚀 '5분'을 'POSSIBLE'로 변환 (필요시 수정 가능)
-      passengerCount: 4, // 기본값 4 (추후 사용자 입력으로 변경 가능)
-      isFavoriteRoute: false, // 기본값 false
+      subDepartureId: 1, // 예시 값 (실제 값에 맞게 수정)
+      majorDepartureId: 1,
+      majorArrivalId: 1,
+      subArrivalId: 1,
+      departureTime: formattedDepartureTime, // 선택한 출발일시 ISO 문자열
+      // passengerType: 'DONT_CARE',
+      // arrangeTime: 'POSSIBLE',
+      // passengerCount: 4,
+      // isFavoriteRoute: false,
     };
 
-    console.log('🚀 서버로 보낼 갈대 생성 데이터:', generateGaldaeData); // 디버깅용 콘솔 로그
+    console.log('🚀 서버로 보낼 갈대 생성 데이터:', generateGaldaeData);
 
     try {
-      await createPost(generateGaldaeData); // 🔹 `accessToken` 제거, 자동 추가됨
-
+      await createPost(generateGaldaeData);
       setCreateGaldaePopupVisible(false);
       setToastVisible(true);
-      // ✅ 2초 뒤 `setToastVisible(false)` 실행해서 자동으로 사라지도록 설정
       setCreateGaldaeBoolean(!createGaldaeBoolean);
-    setTimeout(() => {
-      setToastVisible(false);
-    }, 2000);
+      setTimeout(() => {
+        setToastVisible(false);
+      }, 2000);
     } catch (error) {
       console.error('❌ 갈대 생성 실패:', error);
     } finally {
@@ -216,6 +232,7 @@ const Home: React.FC<HomeProps> = () => {
     setDepartureAmPm(amPm);
     setDepartureHour(hour);
     setDepartureMinute(minute);
+    console.log( `${selectedDate}  ${amPm} ${hour} ${minute}`);
   };
   // 출발일시 문자열 포맷 함수
   const formatDepartureDateTime = () => {
@@ -243,7 +260,25 @@ const Home: React.FC<HomeProps> = () => {
     }`;
     return `${formattedDate} ${formattedTime}`;
   };
-
+// 출발일시를 ISO 8601 형식으로 변환하는 함수 예시
+const getFormattedDepartureTime = (): string => {
+  if (!departureDate) {return '';}
+  // 12시간 형식을 24시간 형식으로 변환
+  let hour24 = departureHour;
+  if (departureAmPm === '오후' && departureHour < 12) {
+    hour24 += 12;
+  } else if (departureAmPm === '오전' && departureHour === 12) {
+    hour24 = 0;
+  }
+  // 선택한 날짜와 시간 정보를 Asia/Seoul 타임존의 moment 객체로 생성
+  const selectedMoment = moment.utc(departureDate).set({
+    hour: hour24,
+    minute: departureMinute,
+    second: 0,
+    millisecond: 0,
+  });
+  return selectedMoment.toISOString(); // UTC 기준 ISO 문자열 반환
+};
   const toggleFastGaldaeStartPopup = () => {
     fastGaldaeStartPopupRef.current?.open();
   };
@@ -385,9 +420,9 @@ const Home: React.FC<HomeProps> = () => {
           </View>
 
           <View style={styles.nowGaldaeList}>
-            {dummyGaldaeData.map(item => (
+          {posts.slice(0, 3).map(item => (
               <GaldaeItem
-                key={item.id}
+                key={item.postId}
                 item={item}
                 onPress={() => navigation.navigate('NowGaldaeDetail', {item})}
               />

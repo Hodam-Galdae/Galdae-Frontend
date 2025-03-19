@@ -10,24 +10,39 @@ export interface MyCreatedPost {
  * 내 갈대 기록 조회 타입
  */
 export interface MyPostHistory {
-    departure: string; // 출발지
-    arrival: string; // 도착지
-    departureTime: string; // 출발 시간 (ISO 8601 형식)
-    arrangeTime: 'POSSIBLE' | 'IMPOSSIBLE'; // 시간 협의 가능 여부
-    passengerCount: number; // 탑승 인원
+  departure: {
+    majorPlace: string;
+    subPlace: string;
+  };
+  arrival: {
+    majorPlace: string;
+    subPlace: string;
+  };
+  departureTime: string; // ISO 8601 형식
+  arrangeTime: 'POSSIBLE' | 'IMPOSSIBLE';
+  totalPassengerCount: number;
+  passengerCount: number;
 }
 /**
- * 실시간 갈대 타입
+ * 실시간 갈대 타입 (수정 후)
  */
 export interface GaldaeItemType {
-    departure: string; // 출발지 (예: 중원도서관)
-    arrival: string; // 도착지 (예: 중원도서관)
-    departureTime: string; // 출발 시간 (ISO 8601 형식)
-    passengerGenderType: 'MALE' | 'FEMALE'; // 승객 성별 (MALE or FEMALE)
-    arrangeTime: 'POSSIBLE' | 'IMPOSSIBLE'; // 시간 협의 가능 여부
-    passengerCount: number | null; // 승객 수 (null일 수도 있음)
-    createdAt: string; // 생성 시간 (ISO 8601 형식)
-    userNickName: string | null; // 사용자 닉네임 (null일 수도 있음)
+  postId: string;
+  departure: {
+    majorPlace: string;
+    subPlace: string;
+  };
+  arrival: {
+    majorPlace: string;
+    subPlace: string;
+  };
+  departureTime: string; // ISO 8601 형식
+  passengerGenderType: 'SAME' | 'DONT_CARE';
+  arrangeTime: 'POSSIBLE' | 'IMPOSSIBLE';
+  totalPassengerCount: number;
+  passengerCount: number;
+  createdAt: string; // 생성 시간 (ISO 8601 형식)
+  userNickName: string | null;
 }
 /**
  * 실시간 갈대 API 조회 타입

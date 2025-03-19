@@ -12,14 +12,16 @@ import SVGTextButton from '../components/button/SVGTextButton';
 import moment from 'moment-timezone';
 import { theme } from '../styles/theme';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useDispatch, useSelector } from 'react-redux';
+import {  useSelector } from 'react-redux';
+import { useAppDispatch } from '../modules/redux/store';
 import { RootState } from '../modules/redux/RootReducer'; // RootState 타입 (store 설정에 따라 경로 수정)
 import { setUserInfo } from '../modules/redux/slice/myInfoSlice';
+import { fetchMyGaldaeHistory } from '../modules/redux/slice/myGaldaeSlice';
 //API
-import { getMyPostHistory, getUserInfo } from '../api/membersApi';
+import {  getUserInfo } from '../api/membersApi';
 
 //type
-import {MyPostHistory} from '../types/getTypes';
+import {} from '../types/getTypes';
 
 // 내비게이션 스택 타입 정의
 type RootStackParamList = {
@@ -60,19 +62,17 @@ const MyInfo: React.FC = () => {
     {text: 'FAQ/문의하기', onPress: ()=>{navigation.navigate('FAQ');}},
     {text: '로그아웃', onPress: ()=>{navigation.navigate('Logout');}},
   ];
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigation = useNavigation<nowGaldaeScreenNavigationProp>();
   const [loading, setLoading] = useState<boolean>(false);
   //const [profileImg, setProfileImg] = useState<string>('');
   const {imageUri, getImageByGallery} = useImagePicker();
-  // ✅ 사용자 정보 상태
-  //const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
-  //const [userLoading, setUserLoading] = useState<boolean>(true);
   // Redux에서 사용자 정보 가져오기
   const userInfo = useSelector((state: RootState) => state.myInfoSlice.userInfo);
-  // ✅ 내 갈대 기록 데이터 상태
-  const [myGaldaeHistory, setMyGaldaeHistory] = useState<MyPostHistory[]>([]);
-  const [historyLoading, setHistoryLoading] = useState<boolean>(true); // 로딩 상태 추가
+  // 내 갈대 기록은 Redux slice에서 관리 (state.myGaldae)
+  const { history: myGaldaeHistory, loading: historyLoading } = useSelector(
+    (state: RootState) => state.myGaldaeSlice
+  );
 
   // 사용자 정보 불러오기 (Redux 업데이트)
   const fetchUserInfo = useCallback(async () => {
@@ -85,7 +85,10 @@ const MyInfo: React.FC = () => {
       Alert.alert('오류', '사용자 정보를 불러오는데 실패했습니다.');
     }
   }, [dispatch]);
-
+// 내 갈대 기록 조회: Redux를 통해 관리하므로 useEffect로 thunk dispatch
+useEffect(() => {
+  dispatch(fetchMyGaldaeHistory());
+}, [dispatch]);
   useEffect(() => {
     fetchUserInfo();
   }, [fetchUserInfo]);
@@ -102,22 +105,6 @@ useFocusEffect(
     fetchUserInfo();
   }, [fetchUserInfo])
 );
-  // ✅ 내 갈대 기록 조회 API 호출
-  useEffect(() => {
-    const fetchMyPostHistory = async () => {
-      try {
-        const response = await getMyPostHistory();
-        console.log('내 갈대 기록 조회 API Response: ',response );
-        setMyGaldaeHistory(response); // 응답 데이터 상태 저장
-      } catch (error) {
-        console.error('❌ 내 갈대 기록 조회 실패:', error);
-      } finally {
-        setHistoryLoading(false); // 로딩 완료
-      }
-    };
-
-    fetchMyPostHistory();
-  }, []);
 
   const handlePress = () => {
 
@@ -138,14 +125,14 @@ useFocusEffect(
     const today = moment().startOf('day');
     // 서버에서 받은 출발 시간을 UTC 기준으로 로컬 날짜로 변환 후, 시간 제거
     const departureDate = moment.utc(departureTime).local().startOf('day');
-  
+
     // 콘솔에 오늘 날짜와 출발 날짜 출력
     console.log(`오늘 날짜: ${today.format('YYYY-MM-DD')}`);
     console.log(`출발 날짜: ${departureDate.format('YYYY-MM-DD')}`);
-  
+
     // 오늘 날짜와 출발 날짜 간 차이를 일(day) 단위로 계산
     const diffDays = today.diff(departureDate, 'days');
-  
+
     // 차이가 0이면 "오늘", 아니면 "X일 전"으로 반환
     return diffDays === 0 ? '오늘' : `${diffDays}일 전`;
   };
@@ -237,9 +224,9 @@ useFocusEffect(
               {myGaldaeHistory.map((list, index) => (
                 <View key={index} style={styles.newGaldaeList}>
                   <BasicText text={formatTimeAgo(list.departureTime)} style={styles.newGaldaeTimeText} />
-                  <BasicText text={`${list.departure}`} style={styles.newGaldaeDepartText} />
+                  <BasicText text={`${list.departure.subPlace}`} style={styles.newGaldaeDepartText} />
                   <SVG name="arrow_down_fill_gray2" style={styles.newGaldaeArrowIcon} />
-                  <BasicText text={`${list.arrival}`} style={styles.newGaldaeDestText} />
+                  <BasicText text={`${list.arrival.subPlace}`} style={styles.newGaldaeDestText} />
                 </View>
               ))}
             </ScrollView>
