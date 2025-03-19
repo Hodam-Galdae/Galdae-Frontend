@@ -113,3 +113,4 @@ export {default as Bank_Saemaul} from './Bank_Saemaul.svg';
 export {default as Google} from './Google.svg';
 export {default as Kakao} from './Kakao.svg';
 export {default as Apple} from './Apple.svg';
+export {default as profileImg} from './profileImg.svg';

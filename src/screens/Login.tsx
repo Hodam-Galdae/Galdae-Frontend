@@ -40,8 +40,13 @@ const Login: React.FC = () => {
       const response = await loginWithKakao(token);
       await EncryptedStorage.setItem('accessToken', response.accessToken);
       await EncryptedStorage.setItem('refreshToken', response.refreshToken || '');
-      console.log('access token : ' + response.accessToken);
-      console.log('refresh token : ' + response.accessToken);
+
+      // ✅ 저장된 토큰을 즉시 가져와서 비교
+    const savedToken = await EncryptedStorage.getItem('accessToken');
+    console.log('✅ 저장된 access token:', savedToken);
+    console.log('✅ API 응답 access token:', response.accessToken);
+      // console.log('access token : ' + response.accessToken);
+      // console.log('refresh token : ' + response.accessToken);
       handleGoToSignUp();
     } catch (err) {
       console.error('login err : ', err);

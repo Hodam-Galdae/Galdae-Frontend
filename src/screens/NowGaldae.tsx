@@ -17,8 +17,15 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import ArrayPopup, { FastGaldaeTimePopupRef } from '../components/popup/ArrayPopup';
 import FilterPopup from '../components/popup/FilterPopup';
 import { FlatList } from 'react-native-gesture-handler';
+
+//api
 import { getPosts } from '../api/postApi'; // ✅ 실시간 갈대 조회 API 추가
+
+
+//type
 import { GetPostsRequest } from '../types/postTypes'; // API 요청 타입 가져오기
+import {GaldaeItemType} from '../types/getTypes';
+
 type HomeProps = {
   navigation: any;
 };
@@ -39,9 +46,9 @@ type nowGaldaeScreenNavigationProp = NativeStackNavigationProp<RootStackParamLis
 
 const NowGaldae: React.FC<HomeProps> = () => {
   // ✅ API로 가져올 갈대 데이터
-  // const [galdaeList, setGaldaeList] = useState<any[]>([]);
-  // const [loading, setLoading] = useState<boolean>(true);
-  // const [error, setError] = useState<string | null>(null);
+  const [galdaeList, setGaldaeList] = useState<GaldaeItemType[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   const [filterOptions, setFilterOptions] = useState<{
     selectedDate: string | null;
@@ -134,33 +141,35 @@ const NowGaldae: React.FC<HomeProps> = () => {
     // 전달받은 검색 조건
     const { departureLarge, departureSmall,destinationLarge,destinationSmall } = route.params || {};
      // ✅ 실시간 갈대 목록 조회 API 호출
-    useEffect(() => {
+     useEffect(() => {
       const fetchGaldaeList = async () => {
-        //setLoading(true);
-        //setError(null);
-
+        setLoading(true);
+        setError(null);
+    
         const params: GetPostsRequest = {
-
           pageNumber: 0,
           pageSize: 10,
           direction: sortOrder === 'latest' ? 'DESC' : 'ASC',
-          properties: ['create_at'],
+          properties: ['departureTime'], // 출발 시간 기준 정렬
         };
-
+    
         try {
           const response = await getPosts(params);
-          console.log(response);
-          //setGaldaeList(response);
+          console.log('🚀 API 응답 데이터:', response);
+    
+    
+    
+          setGaldaeList(response.content);
         } catch (err) {
-          //setError('갈대 목록을 불러오는 데 실패했습니다.');
+          setError('갈대 목록을 불러오는 데 실패했습니다.');
           console.error('❌ 갈대 조회 실패:', err);
         } finally {
-          //setLoading(false);
+          setLoading(false);
         }
       };
-
+    
       fetchGaldaeList();
-    }, [ sortOrder]); // ✅ `sortOrder` 변경 시 다시 요청
+    }, [sortOrder]); // `sortOrder`가 변경될 때 다시 요청
     const handleFilterPress = ()=>{
       filterRef.current?.open();
     };
@@ -198,16 +207,16 @@ const NowGaldae: React.FC<HomeProps> = () => {
     });
   };
     // 우선 출발지/도착지 조건에 따른 필터링
-  const baseFilteredData =
-  departureLarge && destinationLarge && departureSmall && destinationSmall
-    ? dummyGaldaeData.filter(
-        (item) =>
-          item.from.main.includes(departureLarge) &&
-          item.from.sub.includes(departureSmall) &&
-          item.destination.main.includes(destinationLarge) &&
-          item.destination.sub.includes(destinationSmall)
-      )
-    : dummyGaldaeData;
+    const baseFilteredData =
+    departureLarge && destinationLarge && departureSmall && destinationSmall
+      ? galdaeList.filter(
+          (item) =>
+            item.from.main.includes(departureLarge) &&
+            item.from.sub.includes(departureSmall) &&
+            item.destination.main.includes(destinationLarge) &&
+            item.destination.sub.includes(destinationSmall)
+        )
+      : galdaeList;
 
   // 추가 필터(날짜/시간, 성별, 시간협의, 탑승인원) 적용
   let finalFilteredData = baseFilteredData;
@@ -342,14 +351,16 @@ const NowGaldae: React.FC<HomeProps> = () => {
               </View>
             </View>
 
-            {sortedData.length === 0 ? (
-
+            {loading ? (
+              <View >
+                <BasicText text="데이터 불러오는 중..." />
+              </View>
+            ) : sortedData.length === 0 ? (
               <View style={styles.noData}>
                 <SVG name="information_line" />
                 <BasicText text="해당 경로의 갈대가 없습니다." color={theme.colors.gray1} />
               </View>
             ) : (
-
               <FlatList
                 style={styles.scroll}
                 contentContainerStyle={styles.nowGaldaeList}

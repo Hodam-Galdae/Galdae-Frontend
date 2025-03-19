@@ -1,6 +1,6 @@
 import React,{ useState } from 'react';
 import {  View } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation ,useRoute, RouteProp} from '@react-navigation/native';
 import styles from '../../styles/NicknameChange.style';
 import Header from '../../components/Header';
 import SVGButton from '../../components/button/SVGButton';
@@ -9,6 +9,9 @@ import BasicButton from '../../components/button/BasicButton';
 import DeletePopup from '../../components/popup/DeletePopup';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import BasicInput from '../../components/BasicInput';
+
+//api
+import { updateNickname } from '../../api/membersApi'; // updateNickname API 임포트
 
 type HomeProps = {
   navigation: any; // 실제 프로젝트에서는 proper type 사용 권장 (예: StackNavigationProp)
@@ -27,19 +30,34 @@ type RootStackParamList = {
     NowGaldaeDetail: { item: any };
     SetDestination:undefined;
     MyGaldaeHistory:any;
+
+    NicknameChange: { nickname: string }; // 수정: 파라미터로 닉네임을 받음
 };
 
 type nowGaldaeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
+type NicknameChangeRouteProp = RouteProp<RootStackParamList, 'NicknameChange'>;
+
 const NicknameChange: React.FC<HomeProps> = () => {
-    const [nickname, setNickname] = useState<string>('하재연');
+  const route = useRoute<NicknameChangeRouteProp>();
+    // 전달받은 닉네임을 초기값으로 설정 (없으면 기본값 '하재연')
+    const initialNickname = route.params?.nickname || '하재연';
+    const [nickname, setNickname] = useState<string>(initialNickname);
     const [invalidPopupVisible, setInvalidPopupVisible] = useState<boolean>(false);
     const navigation = useNavigation<nowGaldaeScreenNavigationProp>();
     const goBack = () => navigation.goBack();
-    const handleChangeNickname = () =>{
+    const handleChangeNickname = async () => {
+      try {
+        // 닉네임 변경 API 호출
+        await updateNickname(nickname);
+        console.log('닉네임 변경 성공');
         setInvalidPopupVisible(false);
         goBack();
-
+      } catch (error) {
+        console.error('닉네임 변경 실패:', error);
+        // 필요 시 에러 메시지 출력 등의 추가 처리
+      }
     };
+
     return (
       <View style={styles.container}>
             <Header

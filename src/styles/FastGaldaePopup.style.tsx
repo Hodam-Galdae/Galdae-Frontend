@@ -154,7 +154,7 @@ export default StyleSheet.create({
       justifyContent:'center',
       alignItems:'center',
       alignSelf: 'center', // 가로 중앙 정렬
-      //position:'absolute',
+      position:'absolute',
       bottom:(20),
       color:theme.colors.white,
       fontSize:theme.fontSize.size14,

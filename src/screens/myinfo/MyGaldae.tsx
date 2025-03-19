@@ -1,4 +1,4 @@
-import React,{} from 'react';
+import React,{useEffect} from 'react';
 import {  View,FlatList } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from '../../styles/MyGaldae.style';
@@ -11,7 +11,9 @@ import BasicButton from '../../components/button/BasicButton';
 import GaldaeItem from '../../components/GaldaeItem';
 import FrequentRouteItem from '../../components/FrequentRouteItem';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchFrequentRoutes, FrequentRoute } from '../../modules/redux/slice/frequentRouteSlice';
+import { RootState } from '../../modules/redux/RootReducer';
 type HomeProps = {
   navigation: any; // 실제 프로젝트에서는 proper type 사용 권장 (예: StackNavigationProp)
 
@@ -33,6 +35,8 @@ type RootStackParamList = {
 
 type nowGaldaeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 const MyGaldae: React.FC<HomeProps> = () => {
+  // Redux에서 자주 가는 경로 데이터 가져오기
+  const { routes, loading, error } = useSelector((state: RootState) => state.frequentSlice);
     const dummySearchHistory = [
         {
           id: 1,
@@ -155,6 +159,7 @@ const MyGaldae: React.FC<HomeProps> = () => {
           end: { label: '도착지', main: '서울', sub: '종로' },
         },
       ];
+    const dispatch = useDispatch();
     const navigation = useNavigation<nowGaldaeScreenNavigationProp>();
     const goBack = () => navigation.goBack();
 
@@ -176,6 +181,10 @@ const MyGaldae: React.FC<HomeProps> = () => {
     const handleSearchGaldae = () => {
         navigation.navigate('CreateGaldae');
       };
+
+      useEffect(() => {
+        dispatch(fetchFrequentRoutes());
+      }, [dispatch]);
     return (
       <View style={styles.container}>
             <Header

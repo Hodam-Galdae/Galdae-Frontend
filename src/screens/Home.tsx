@@ -138,6 +138,7 @@ const Home: React.FC<HomeProps> = () => {
   const fastGaldaeTimePopupRef = useRef<FastGaldaeTimePopupRef>(null);
   const [myCreatedGaldaeList, setMyCreatedGaldaeList] = useState<MyCreatedPost[]>([]); // ✅ 내가 생성한 갈대 목록 상태 추가
   const [myCreatedGaldaeLoading, setMyCreatedGaldaeLoading] = useState<boolean>(true); // ✅ API 로딩 상태
+  const [createGaldaeBoolean, setCreateGaldaeBoolean] = useState<boolean>(false);
 
   // ✅ 내가 생성한 갈대 불러오기
   useEffect(() => {
@@ -153,7 +154,7 @@ const Home: React.FC<HomeProps> = () => {
     };
 
     fetchMyCreatedGaldae();
-  }, []);
+  }, [createGaldaeBoolean]);
 
   const handlePress = () => {
     setLoading(true);
@@ -189,6 +190,11 @@ const Home: React.FC<HomeProps> = () => {
 
       setCreateGaldaePopupVisible(false);
       setToastVisible(true);
+      // ✅ 2초 뒤 `setToastVisible(false)` 실행해서 자동으로 사라지도록 설정
+      setCreateGaldaeBoolean(!createGaldaeBoolean);
+    setTimeout(() => {
+      setToastVisible(false);
+    }, 2000);
     } catch (error) {
       console.error('❌ 갈대 생성 실패:', error);
     } finally {

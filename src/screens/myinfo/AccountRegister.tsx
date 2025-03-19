@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {  View ,TouchableOpacity,ScrollView} from 'react-native';
+import {  View ,TouchableOpacity,ScrollView,Alert} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from '../../styles/AccountRegister.style';
 import SVG from '../../components/SVG';
@@ -10,16 +10,18 @@ import BasicButton from '../../components/button/BasicButton';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import BasicInput from '../../components/BasicInput';
 import { theme } from '../../styles/theme';
-import * as svg from '../../assets/svg'; // svg 아이콘들이 export 된 모듈
+import { banks, BankOption } from '../../constants/bankOptions';
+import { useDispatch } from 'react-redux';
+//redux
+import { setUserInfo } from '../../modules/redux/slice/myInfoSlice';
+
+//api
+import { updateBankInfo } from '../../api/membersApi';
 
 type HomeProps = {
   navigation: any; // 실제 프로젝트에서는 proper type 사용 권장 (예: StackNavigationProp)
 };
-type BankOption = {
-    code: string;
-    name: string;
-    svg: keyof typeof svg;
-};
+
 // 내비게이션 스택 타입 정의
 type RootStackParamList = {
     CreateGaldae: undefined;
@@ -37,38 +39,7 @@ type RootStackParamList = {
 
 type nowGaldaeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 const AccountRegister: React.FC<HomeProps> = () => {
-    // 은행 옵션 배열 (은행 코드와 이름)
-    const banks:BankOption[] = [
-        { code: 'kb', name: 'KB 국민은행', svg:'Bank_KB' },
-        { code: 'kbin', name: 'KB 증권', svg:'Bank_KB' },
-        { code: 'shinhan', name: '신한은행', svg:'Bank_Jeju' },
-        { code: 'woori', name: '우리은행',svg:'Bank_Woori' },
-        { code: 'hana', name: '하나은행',svg:'Bank_Hana' },
-        { code: 'nh', name: 'NH 농협은행',svg:'Bank_NHINVESTMENT' },
-        { code: 'nhin', name: 'NH 투자증권',svg:'Bank_NHINVESTMENT' },
-        { code: 'ibk', name: 'IBK기업은행', svg: 'Bank_IBK' },
-        { code: 'jeju', name: '제주은행', svg: 'Bank_Jeju' },
-        { code: 'jeonbuk', name: '전북은행', svg: 'Bank_Jeonbuk' },
-        { code: 'k', name: 'K은행', svg: 'Bank_K' },
-        { code: 'keb', name: 'KEB외환은행', svg: 'Bank_KEB' },
-        { code: 'kakao', name: '카카오뱅크', svg: 'Bank_Kakao' },
-        { code: 'koreaInvestment', name: '한국투자은행', svg: 'Bank_KoreaInvestment' },
-        { code: 'kwangju', name: '광주은행', svg: 'Bank_KWANGJU' },
-        { code: 'nacufok', name: '신협은행', svg: 'Bank_NACUFOK' },
-        { code: 'Bank_Postbank', name: '우체국은행', svg: 'Bank_Postbank' },
-        { code: 'Bank_SavingsBank', name: '저축은행', svg: 'Bank_SavingsBank' },
-        { code: 'Bank_SBI', name: 'SBI저축', svg: 'Bank_SBI' },
-        { code: 'Bank_SC', name: 'SC제일', svg: 'Bank_SC' },
-        { code: 'Bank_Suhyup', name: '수협은행', svg: 'Bank_Suhyup' },
-        { code: 'busan', name: '부산은행', svg: 'Bank_Busan' },
-        { code: 'gyeongnam', name: '경남은행', svg: 'Bank_Busan' },
-        { code: 'Bank_Toss', name: '토스뱅크', svg: 'Bank_Toss' },
-        { code: 'citi', name: '씨티은행', svg: 'Bank_Citi' },
-        { code: 'daegu', name: '대구은행', svg: 'Bank_DaeGu' },
-        { code: 'forestry', name: '산림조합은행', svg: 'Bank_ForestryCooperative' },
-        { code: 'Bank_Saemaul', name: '새마을금고', svg: 'Bank_Saemaul' },
-        { code: 'Bank_KDB', name: 'KDB산업은행', svg: 'Bank_KDB' },
-    ];
+
     // 영어로 시작하는 은행과 한글로 시작하는 은행 분리 후 정렬
     const englishBanks = banks
     .filter(bank => /^[A-Za-z]/.test(bank.name))
@@ -77,23 +48,40 @@ const AccountRegister: React.FC<HomeProps> = () => {
     .filter(bank => !/^[A-Za-z]/.test(bank.name))
     .sort((a, b) => a.name.localeCompare(b.name, 'ko'));
     const sortedBanks = [...englishBanks, ...koreanBanks];
+    const [depositor, setDepositor] = useState<string>(''); // 예금주 입력 상태 추가
     const [account, setAccount] = useState<string>();
     const [selectedBank, setSelectedBank] = useState<string>(''); // 기본값 예: 'kb'
     const [dropdownVisible, setDropdownVisible] = useState<boolean>(false);
     const [editable , setEditable] = useState<boolean>(false);
+    const dispatch = useDispatch();
     const navigation = useNavigation<nowGaldaeScreenNavigationProp>();
     const goBack = () => navigation.goBack();
-    const handleComplete = () =>{
-        if (account && selectedBank) {
-            // 선택한 은행 객체를 가져옵니다.
-            const selectedBankObj = sortedBanks.find((bank) => bank.code === selectedBank);
-            // Payment 화면으로 은행 이름, 계좌, 그리고 svg 키 값을 전달합니다.
-            navigation.navigate('Payment', {
-              bank: selectedBankObj?.name,
-              account,
-              svg: selectedBankObj?.svg,
-            });
-          }
+    const handleComplete = async () => {
+      if (account && selectedBank && depositor) {
+        // 선택한 은행 객체를 가져옵니다.
+        const selectedBankObj = sortedBanks.find(bank => bank.code === selectedBank);
+        if (!selectedBankObj) {return;}
+
+        // Redux에 은행 정보 업데이트
+        dispatch(
+          setUserInfo({
+            bankType: selectedBankObj.name,
+            accountNumber: account,
+            depositor,
+
+          })
+        );
+
+        try {
+          // API 호출: 결제 정보 수정
+          await updateBankInfo(selectedBankObj.name, account, depositor);
+          // 성공 시 Payment 화면으로 이동
+          goBack();
+        } catch (error) {
+          Alert.alert('오류', '결제 정보 수정에 실패했습니다. 다시 시도해주세요.');
+          console.error(error);
+        }
+      }
     };
 
     return (
@@ -154,7 +142,15 @@ const AccountRegister: React.FC<HomeProps> = () => {
                 </View>
               )}
             </View>
-
+            <BasicText text="예금주" style={styles.title}/>
+            <BasicInput
+                text="예금주 입력"
+                style={styles.input}
+                value={depositor}
+                editable={editable}
+                onChangeText={setDepositor}
+                placeholderTextColor={theme.colors.gray2} // 원하는 색상으로 지정
+              />
             <BasicText text="계좌 정보" style={styles.title}/>
             <BasicInput
                 text="계좌 입력"
@@ -171,7 +167,7 @@ const AccountRegister: React.FC<HomeProps> = () => {
                 textStyle={styles.completeText}
                 //loading={loading}
                 onPress={handleComplete}
-                disabled={!account || !selectedBank}
+                disabled={!account || !selectedBank || !depositor}
                 disabledColors={
                   {
                       backgroundColor:theme.colors.lightGray,
