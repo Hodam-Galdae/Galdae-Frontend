@@ -8,6 +8,8 @@ import SVGButton from '../button/SVGButton';
 import SVG from '../SVG';
 import SettlementCostEditModal from './SettlementCostEditModal';
 import { ChatResponse, ChatroomResponse, MemberResponse } from '../../api/chatApi';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../modules/redux/RootReducer';
 
 enum Type {
   MESSAGE,
@@ -35,6 +37,7 @@ const SettlementRequestPopup = forwardRef<
   SettlementRequestPopupProps
 >(({onClose, chatRoomData, data, setData, member}, ref) => {
   const modalizeRef = useRef<Modalize>(null);
+  const userInfo = useSelector((state: RootState) => state.user);
 
   const handleSelectConfirm = () => {
     modalizeRef.current?.close();
@@ -67,7 +70,7 @@ const SettlementRequestPopup = forwardRef<
       {
         chatId: data[data.length - 1].chatId + 1,
         chatContent: settlementCost.toString(),
-        sender: 'donghyun',
+        sender: userInfo.nickname,
         time: new Date().toDateString(),
         chatType: Type.MONEY.toString(),
       },

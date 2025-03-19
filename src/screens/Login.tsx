@@ -13,6 +13,9 @@ import {login} from '@react-native-seoul/kakao-login';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {loginWithGoogle, loginWithKakao} from '../api/authApi';
 import EncryptedStorage from 'react-native-encrypted-storage';
+import { getUserInfo } from '../api/membersApi';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../modules/redux/slice/UserSlice';
 
 // 네비게이션 파라미터 타입 정의
 type RootStackParamList = {
@@ -39,6 +42,7 @@ interface AuthResponse {
 const Login: React.FC = () => {
   // useNavigation에 LoginScreenNavigationProp 제네릭을 적용합니다.
   const navigation = useNavigation<LoginScreenNavigationProp>();
+  const dispatch = useDispatch();
 
   const signInWithKakao = async (): Promise<void> => {
     try {
@@ -71,7 +75,7 @@ const Login: React.FC = () => {
     }
   };
 
-  const handleGoNextPage = (response: AuthResponse) => {
+  const handleGoNextPage = async (response: AuthResponse) => {
     // // 학생 인증 완료
     // if(response.isAuthenticate){
     //   navigation.replace('MainTab');
@@ -83,6 +87,9 @@ const Login: React.FC = () => {
     //   }
     // }
     // navigation.replace('SignUp', {data: response.isJoined});
+    const user = await getUserInfo();
+    const result = dispatch(setUser(user));
+    console.log(result);
     navigation.replace('MainTab');
 
   };

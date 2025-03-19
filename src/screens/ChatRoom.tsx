@@ -29,8 +29,9 @@ import ChatRoomExitModal from '../components/popup/ChatRoomExitModal';
 import ReportCheckModal from '../components/popup/ReportCheckModal';
 import useDidMountEffect from '../hooks/useDidMountEffect';
 import Header from '../components/Header';
-import { Client, IFrame, IMessage } from '@stomp/stompjs';
-import SockJS from 'sockjs-client';
+import { Client, IMessage } from '@stomp/stompjs';
+import { useSelector } from 'react-redux';
+import {RootState} from '../modules/redux/RootReducer';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import { ChatResponse, ChatroomResponse, getChats, getMembers, MemberResponse } from '../api/chatApi';
 
@@ -85,10 +86,10 @@ const ChatRoom: React.FC = () => {
   const [members, setMembers] = useState<MemberResponse[]>([]);
   const reportData = useRef({member: {memberId: '', memberName: '', memberImage: ''}, reason: ''});
   const chatRoomData = params.data;
-  const SERVER_URL = 'ws://15.164.118.59:8081/ws';
+  const userInfo = useSelector((state: RootState) => state.user);
+  const client = useRef<Client>();
   const PUB_ENDPOINT = '/send';
   const SUB_ENDPOINT = '/topic/chatroom';
-  const [wsClient, setWsClient] = useState<Client>();
 
   const panResponder = useRef(
     PanResponder.create({
@@ -110,122 +111,80 @@ const ChatRoom: React.FC = () => {
     }),
   ).current;
 
-  const fetchChats = useCallback(async() => {
-    const chatData = await getChats(chatRoomData.chatroomId);
-    setData(chatData);
-  }, [chatRoomData]);
-
   const fetchMembers = useCallback(async() => {
     const memberData = await getMembers(chatRoomData.chatroomId);
     setMembers(memberData);
   }, [chatRoomData]);
 
-  const client = new Client({
-    brokerURL: 'ws://15.164.118.59:8081/ws',
-    reconnectDelay: 5000,
-    heartbeatIncoming: 4000,
-    heartbeatOutgoing: 4000,
-  });
-
-  client.onConnect = (conn: IFrame) => {
-    console.log('[+] WebSocket 연결이 되었습니다.', conn);
-  };
-
-  client.onStompError = () => {
-    console.log('[+] WebSocket 에러');
-  };
-
-  // const stompHandler = (() => {
-	// 	return {
-	// 		/**
-	// 		 * STOMP 연결을 시도합니다.
-	// 		 * @returns
-	// 		 */
-	// 		connect: () => {
-	// 			// [STEP1] 연결 시 Client 객체를 생성합니다.
-	// 			const client = new Client({
-	// 				webSocketFactory: () => new SockJS(SERVER_URL),
-	// 				reconnectDelay: 5000,
-	// 				heartbeatIncoming: 4000,
-	// 				heartbeatOutgoing: 4000,
-
-	// 				// [STEP2] 웹 소켓 연결
-	// 				onConnect: (conn: IFrame) => {
-	// 					console.log('[+] WebSocket 연결이 되었습니다.', conn);
-	// 					client.subscribe(SUB_ENDPOINT + '/' + chatRoomData.chatroomId, (message: IMessage) => {
-	// 						const receiveData = JSON.parse(message.body);
-	// 						setData([
-	// 							...data,
-  //               {
-  //                 chatId: data[data.length - 1].chatId + 1,
-  //                 chatContent: receiveData.message,
-  //                 sender: receiveData.sender,
-  //                 chatType: receiveData.type,
-  //                 time: new Date().toDateString(),
-  //               },
-	// 						]);
-	// 					});
-	// 				},
-	// 				// 웹 소켓 연결 종료
-	// 				onWebSocketClose: (close) => {
-	// 					console.log('[-] WebSocket 연결이 종료 되었습니다.', close);
-	// 				},
-	// 				// 웹 소켓 연결 에러
-	// 				onWebSocketError: (error) => {
-	// 					console.error('[-] 웹 소켓 연결 오류가 발생하였습니다.', error);
-	// 				},
-	// 				// STOMP 프로토콜 에러
-	// 				onStompError: (frame) => {
-	// 					console.error('Broker reported error: ' + frame.headers['message']);
-	// 					console.error('Additional details: ' + frame.body);
-	// 				},
-	// 			});
-	// 			setWsClient(client); // 구성한 Client 객체를 상태 관리에 추가합니다.
-	// 			client.activate(); // Client를 활성화 합니다.
-
-	// 			return () => {
-	// 				stompHandler.disconnect(); // Socket 연결을 종료합니다.
-	// 			};
-	// 		},
-	// 		/**
-	// 		 * 웹 소켓 메시지를 전송합니다.
-	// 		 */
-	// 		sendMessage: async() => {
-	// 			if (wsClient && wsClient.connected) {
-	// 				// [WebSocket - Publish] 특정 엔드포인트로 메시지를 전송합니다.
-  //         const token = await EncryptedStorage.getItem('accessToken');
-	// 				wsClient.publish({
-	// 					destination: PUB_ENDPOINT + '/' + chatRoomData.chatroomId,
-  //           headers: {'Authorization' : `Bearer ${token}`},
-
-  //           //TODO: 추가
-	// 					body: JSON.stringify({ type: '', sender: '', message: ''}),
-	// 				});
-	// 			}
-	// 		},
-	// 		/**
-	// 		 * 웹 소켓 연결을 종료합니다.
-	// 		 */
-	// 		disconnect: () => {
-	// 			console.log('[-] 웹 소켓 연결을 종료합니다.');
-	// 			if (wsClient) {
-	// 				wsClient.deactivate();
-	// 				setWsClient(undefined);
-	// 			}
-	// 		},
-	// 	};
-	// })();
-
   useEffect(() => {
-    //웹소켓 연결
-    console.log("websocket");
-    client.activate();
-  }, []);
+    const fetchChats = async() => {
+      const chatData = await getChats(chatRoomData.chatroomId);
+      setData(chatData);
+    };
 
-
-  useEffect(()=> {
     fetchChats();
-  }, [fetchChats]);
+
+    client.current = new Client({
+      brokerURL: 'ws://15.164.118.59:8081/ws',
+      debug: (frame: any) => console.log(frame),
+      reconnectDelay: 5000,
+      heartbeatIncoming: 4000,
+      heartbeatOutgoing: 4000,
+      forceBinaryWSFrames: true,
+      appendMissingNULLonIncoming: true,
+    });
+    client.current.onConnect = () => {
+      console.log('connected websocket');
+      client.current!.subscribe(SUB_ENDPOINT + '/' + chatRoomData.chatroomId, (message: IMessage) => {
+        const receiveData = JSON.parse(message.body);
+        setData((prev) => [
+          ...prev,
+          {
+            chatId: prev[prev.length - 1].chatId + 1,
+            chatContent: receiveData.message,
+            sender: receiveData.sender,
+            chatType: receiveData.type,
+            time: new Date().toDateString(),
+          },
+        ]);
+      });
+    };
+    client.current.onDisconnect = error => {
+      console.log('disconnected websocket');
+      console.log(error);
+    };
+
+    client.current.activate();
+
+    return () => {
+      client.current?.deactivate();
+    };
+  }, [chatRoomData]);
+
+  const sendMessage = async () => {
+    if (client.current && client.current.connected && message.length !== 0) {
+      // [WebSocket - Publish] 특정 엔드포인트로 메시지를 전송합니다.
+      const token = await EncryptedStorage.getItem('accessToken');
+      client.current.publish({
+        destination: PUB_ENDPOINT + '/' + chatRoomData.chatroomId,
+        headers: {'Authorization' : `Bearer ${token}`},
+        //TODO: 추가
+        body: JSON.stringify({ type: '', sender: '', message: ''}),
+      });
+
+      setData([
+        ...data,
+        {
+          chatId: data[data.length - 1].chatId + 1,
+          chatContent: message,
+          sender: userInfo.nickname,
+          chatType: Type.MESSAGE.toString(),
+          time: new Date().toDateString(),
+        },
+      ]);
+      setMessage('');
+    }
+  };
 
   //키보드 이벤트 리스너
   useEffect(() => {
@@ -321,26 +280,6 @@ const ChatRoom: React.FC = () => {
     settlementRequestPopupRef.current?.open();
   };
 
-  //메시지 보내는 메서드
-  const sendMessage = () => {
-    //api 호출
-    if (message.length === 0) {
-      return;
-    }
-
-    setData([
-      ...data,
-      {
-        chatId: data[data.length - 1].chatId + 1,
-        chatContent: message,
-        sender: 'donghyun',
-        chatType: Type.MESSAGE.toString(),
-        time: new Date().toDateString(),
-      },
-    ]);
-    setMessage('');
-  };
-
   const renderItem = useCallback(
     ({item, index}: RenderItem) => {
       const isShowTime =
@@ -390,7 +329,7 @@ const ChatRoom: React.FC = () => {
         {
           chatId: data[data.length - 1].chatId + 1,
           chatContent: imageUri,
-          sender: 'donghyun',
+          sender: userInfo.nickname,
           time: new Date().toDateString(),
           chatType: Type.IMAGE.toString(),
         },
@@ -450,13 +389,13 @@ const ChatRoom: React.FC = () => {
                     style={styles.menuUserIcon}
                   />
                   <BasicText style={styles.menuUserText} text={e.memberName} />
-                  {e.memberName === 'donghyun' ? (
+                  {e.memberName === userInfo.nickname ? (
                     <View style={styles.menuUserMe}>
                       <BasicText style={styles.menuUserMeText} text="나" />
                     </View>
                   ) : null}
                 </View>
-                {e.memberName !== 'donghyun' ? (
+                {e.memberName !== userInfo.nickname ? (
                   <BasicButton
                     textStyle={styles.menuUserBtnText}
                     buttonStyle={styles.menuUserBtn}
