@@ -4,7 +4,7 @@ export interface ChatroomResponse {
   chatroomId: string;
   departPlace: string;
   arrivePlace: string;
-  departDate: Date;
+  departDate: string;
   maxMemberCount: number;
   currentMemberCount: number;
   gender: string
@@ -15,7 +15,7 @@ export interface ChatResponse {
   chatContent: string;
   chatType: string;
   sender: string;
-  time: Date;
+  time: string;
   memberImage?: string;
 }
 
@@ -40,7 +40,7 @@ export const getActiveChatroom = async (): Promise<ChatroomResponse[]> => {
 
 // ✅ 비활성 채팅방 가져오기
 export const getInActiveChatroom = async (): Promise<ChatroomResponse[]> => {
-  const response = await axiosInstance.get<ChatroomResponse[]>('/chat/active');
+  const response = await axiosInstance.get<ChatroomResponse[]>('/chat/inactive');
   return response.data;
 };
 

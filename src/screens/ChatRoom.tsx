@@ -225,7 +225,7 @@ const ChatRoom: React.FC = () => {
         chatContent: message,
         sender: 'donghyun',
         chatType: Type.MESSAGE.toString(),
-        time: new Date(),
+        time: new Date().toDateString(),
       },
     ]);
     setMessage('');
@@ -235,17 +235,17 @@ const ChatRoom: React.FC = () => {
     ({item, index}: RenderItem) => {
       const isShowTime =
         !(
-          data[index + 1]?.time.getMinutes() === item.time.getMinutes() &&
-          data[index + 1]?.time.getHours() === item.time.getHours()
+          new Date(data[index + 1]?.time).getMinutes() === new Date(item.time).getMinutes() &&
+          new Date(data[index + 1]?.time).getHours() === new Date(item.time).getHours()
         ) || data[index + 1]?.sender !== item.sender;
       const isShowProfile =
         data[index - 1]?.sender !== item.sender ||
         !(
-          data[index - 1]?.time.getMinutes() === item.time.getMinutes() &&
-          data[index - 1]?.time.getHours() === item.time.getHours()
+          new Date(data[index - 1]?.time).getMinutes() === new Date(item.time).getMinutes() &&
+          new Date(data[index - 1]?.time).getHours() === new Date(item.time).getHours()
         );
       return item.chatType !== Type.MONEY.toString() ? (
-        <ChatItem item={{id: item.chatId, content: item.chatContent, sender: item.sender, senderImage: item.memberImage, time: item.time, type: item.chatType.toString() , isShowProfile, isShowTime}} />
+        <ChatItem item={{id: item.chatId, content: item.chatContent, sender: item.sender, senderImage: item.memberImage, time: new Date(item.time), type: item.chatType.toString() , isShowProfile, isShowTime}} />
       ) : (
         <SettlementBox
           settlement={{
@@ -253,14 +253,14 @@ const ChatRoom: React.FC = () => {
             currentMemberCount: chatRoomData.currentMemberCount,
             cost: parseInt(item.chatContent),
             sender: item.sender,
-            time: item.time,
+            time: new Date(item.time),
             onPress: () =>
               navigation.navigate('Settlement', {
                 data: Object.freeze({
                   accountNumber: '0000-0000',
                   accountBank: '우리은행',
                   cost: Number.parseInt(item.chatContent),
-                  time: item.time,
+                  time: new Date(item.time),
                   id: chatRoomData.chatroomId,
                 }),
               }),
@@ -281,7 +281,7 @@ const ChatRoom: React.FC = () => {
           chatId: data[data.length - 1].chatId + 1,
           chatContent: imageUri,
           sender: 'donghyun',
-          time: new Date(),
+          time: new Date().toDateString(),
           chatType: Type.IMAGE.toString(),
         },
       ]);

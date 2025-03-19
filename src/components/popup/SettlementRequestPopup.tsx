@@ -68,7 +68,7 @@ const SettlementRequestPopup = forwardRef<
         chatId: data[data.length - 1].chatId + 1,
         chatContent: settlementCost.toString(),
         sender: 'donghyun',
-        time: new Date(),
+        time: new Date().toDateString(),
         chatType: Type.MONEY.toString(),
       },
     ]);
