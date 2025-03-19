@@ -82,7 +82,8 @@ const Login: React.FC = () => {
     //     navigation.replace('SignUp', { data: response.isJoined});
     //   }
     // }
-    navigation.replace('SignUp', {data: response.isJoined});
+    // navigation.replace('SignUp', {data: response.isJoined});
+    navigation.replace('MainTab');
 
   };
 

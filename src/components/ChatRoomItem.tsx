@@ -4,18 +4,12 @@ import styles from '../styles/ChatRoomItem.style';
 import BasicText from './BasicText';
 import SVG from './SVG';
 
-type Member = {
-  id: string,
-  image: string,
-  name: string,
-}
-
 interface Props {
     id: string,
-    time: string,
+    time: Date,
     from: string,
     to: string,
-    currentPerson: Member[],
+    currentPerson: number,
     maxPerson: number,
     message: number,
     onPress: (id: string) => void,
@@ -26,7 +20,7 @@ const ChatRoomItem = (props : Props) => {
     <TouchableOpacity onPress={() => props.onPress(props.id)}>
       <View style={styles.container}>
         <View style={styles.wrapper}>
-          <BasicText text={props.time} style={styles.timeText}/>
+          <BasicText text={props.time.getFullYear() + '년' + props.time.getMonth() + '월' + props.time.getDate() + '일' + props.time.getHours() + ':' + props.time.getMinutes()} style={styles.timeText}/>
           <View style={styles.message}>
               <BasicText style={styles.messageText} text={props.message.toString()}/>
           </View>
@@ -38,13 +32,13 @@ const ChatRoomItem = (props : Props) => {
           <BasicText text={props.to} style={styles.locationText}/>
         </View>
         <View style={styles.personWrapper}>
-          {[...Array(props.currentPerson.length)].map((e, i: number) => {
+          {[...Array(props.currentPerson)].map((e, i: number) => {
               return <SVG key={i} style={styles.personIcon} name="UserFill"/>;
           })}
-          {[...Array(props.maxPerson - props.currentPerson.length)].map((e, i: number) => {
+          {[...Array(props.maxPerson - props.currentPerson)].map((e, i: number) => {
               return <SVG key={i} style={styles.personIcon} name="UserFillLight"/>;
           })}
-          <BasicText style={styles.personText} text={'( ' + props.currentPerson.length + ' / ' + props.maxPerson + ' )'}/>
+          <BasicText style={styles.personText} text={'( ' + props.currentPerson + ' / ' + props.maxPerson + ' )'}/>
         </View>
       </View>
     </TouchableOpacity>

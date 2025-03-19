@@ -29,7 +29,7 @@ import ChatRoomExitModal from '../components/popup/ChatRoomExitModal';
 import ReportCheckModal from '../components/popup/ReportCheckModal';
 import useDidMountEffect from '../hooks/useDidMountEffect';
 import Header from '../components/Header';
-import SettlementCostEditModal from '../components/popup/SettlementCostEditModal';
+import { ChatResponse, ChatroomResponse, getChats, getMembers, MemberResponse } from '../api/chatApi';
 
 enum Type {
   MESSAGE,
@@ -39,59 +39,26 @@ enum Type {
   MONEY,
 }
 
-type Chat = {
-  id: string;
-  content: string;
-  sender: string;
-  time: Date;
-  senderImage?: string;
-  type: Type;
-  isShowProfile?: boolean;
-  isShowTime?: boolean;
-};
-
-type Member = {
-  id: string;
-  image: string;
-  name: string;
-  account?: Account;
-};
-
-type Account = {
-  bankName: string;
-  accountNumber: string;
-};
-
 type SettlementType = {
   accountNumber: String;
   accountBank: String;
   cost: number;
   time: Date;
-  members: Member[];
+  id: string;
 };
 
 type RenderItem = {
-  item: Chat;
+  item: ChatResponse;
   index: number;
 };
 
 type RootStackParamList = {
-  ChatRoom: {data: Readonly<ChatRoomType>};
+  ChatRoom: {data: Readonly<ChatroomResponse>};
   Settlement: {data: Readonly<SettlementType>};
 };
 
-type ChatRoomType = {
-  id: string;
-  time: string;
-  from: string;
-  to: string;
-  currentPerson: Member[];
-  maxPerson: number;
-  message: number;
-};
-
 const ChatRoom: React.FC = () => {
-  const [data, setData] = useState<Chat[]>([]);
+  const [data, setData] = useState<ChatResponse[]>([]);
   const [message, setMessage] = useState<string>('');
   const [showExtraView, setShowExtraView] = useState<boolean>(false);
   const [keyboardHeight, setKeyboardHeight] = useState<number>(0);
@@ -112,7 +79,8 @@ const ChatRoom: React.FC = () => {
   const translateX = useRef(new Animated.Value(SIDE_MENU_WIDTH)).current;
   const translateY = useRef(new Animated.Value(100)).current;
   const {params} = useRoute<RouteProp<RootStackParamList, 'ChatRoom'>>();
-  const reportData = useRef({member: {}, reason: ''});
+  const [members, setMembers] = useState<MemberResponse[]>([]);
+  const reportData = useRef({member: {memberId: '', memberName: '', memberImage: ''}, reason: ''});
   const chatRoomData = params.data;
 
   const panResponder = useRef(
@@ -135,82 +103,19 @@ const ChatRoom: React.FC = () => {
     }),
   ).current;
 
-  //임시 데이터
-  useEffect(() => {
-    setData([
-      {
-        id: '0',
-        content: '안녕',
-        sender: 'ass',
-        time: new Date(2025, 2, 18, 17, 23, 50),
-        type: Type.MESSAGE,
-      },
-      {
-        id: '1',
-        content: '안녕',
-        sender: 'ass',
-        time: new Date(2025, 2, 18, 17, 23, 50),
-        type: Type.MESSAGE,
-      },
-      {
-        id: '2',
-        content: '홍길동님이 들어왔습니다.',
-        sender: 'abs',
-        time: new Date(2025, 2, 18, 17, 23, 35),
-        type: Type.ENTER,
-      },
-      {
-        id: '50',
-        content: '철수님이 들어왔습니다.',
-        sender: 'abs',
-        time: new Date(2025, 2, 18, 17, 23, 35),
-        type: Type.ENTER,
-      },
-      {
-        id: '6',
-        content: '안녕ggg',
-        sender: 'ass',
-        time: new Date(2025, 2, 18, 17, 23, 37),
-        type: Type.MESSAGE,
-      },
-      {
-        id: '7',
-        content: '안녕하세요',
-        sender: 'lee',
-        time: new Date(2025, 2, 18, 17, 23, 37),
-        type: Type.MESSAGE,
-      },
-      {
-        id: '3',
-        content: '안녕3',
-        sender: 'ass',
-        time: new Date(2025, 2, 18, 17, 25, 30),
-        type: Type.MESSAGE,
-      },
-      {
-        id: '4',
-        content:
-          '안녕asdfasdfaasdfasdfasdfasdfasdfasdfasdfasdfasdfasfasdfasdfasdfasdfasdfasdfasdfasfasdfassdfa',
-        sender: 'donghyun',
-        time: new Date(2025, 2, 18, 17, 50, 30),
-        type: Type.MESSAGE,
-      },
-      {
-        id: '10',
-        content: 'ㅎㅎㅎㅎㅎ',
-        sender: 'donghyun',
-        time: new Date(2025, 2, 18, 17, 50, 35),
-        type: Type.MESSAGE,
-      },
-      {
-        id: '11',
-        content: '호우샷샷',
-        sender: 'donghyun',
-        time: new Date(2025, 2, 18, 17, 51, 35),
-        type: Type.MESSAGE,
-      },
-    ]);
-  }, []);
+  const fetchChats = useCallback(async() => {
+    const chatData = await getChats(chatRoomData.chatroomId);
+    setData(chatData);
+  }, [chatRoomData]);
+
+  const fetchMembers = useCallback(async() => {
+    const memberData = await getMembers(chatRoomData.chatroomId);
+    setMembers(memberData);
+  }, [chatRoomData]);
+
+  useEffect(()=> {
+    fetchChats();
+  }, [fetchChats]);
 
   //키보드 이벤트 리스너
   useEffect(() => {
@@ -266,6 +171,7 @@ const ChatRoom: React.FC = () => {
   };
 
   const openSideMenu = () => {
+    fetchMembers();
     Animated.timing(translateX, {
       toValue: 0,
       duration: 300,
@@ -293,13 +199,14 @@ const ChatRoom: React.FC = () => {
     // TODO: 신고하기
   };
 
-  const startReportUser = (member: Member) => {
+  const startReportUser = (member: MemberResponse) => {
     setIsVisibleReportPopup(true);
     reportData.current.member = member;
   };
 
-  const openSettlement = () => {
+  const openSettlement = async () => {
     //TODO: 방장만 열 수 있게
+    await fetchMembers();
     Keyboard.dismiss();
     settlementRequestPopupRef.current?.open();
   };
@@ -314,11 +221,11 @@ const ChatRoom: React.FC = () => {
     setData([
       ...data,
       {
-        id: data[data.length - 1].id + 1,
-        content: message,
+        chatId: data[data.length - 1].chatId + 1,
+        chatContent: message,
         sender: 'donghyun',
+        chatType: Type.MESSAGE.toString(),
         time: new Date(),
-        type: Type.MESSAGE,
       },
     ]);
     setMessage('');
@@ -337,14 +244,14 @@ const ChatRoom: React.FC = () => {
           data[index - 1]?.time.getMinutes() === item.time.getMinutes() &&
           data[index - 1]?.time.getHours() === item.time.getHours()
         );
-      return item.type !== Type.MONEY ? (
-        <ChatItem item={{...item, isShowProfile, isShowTime}} />
+      return item.chatType !== Type.MONEY.toString() ? (
+        <ChatItem item={{id: item.chatId, content: item.chatContent, sender: item.sender, senderImage: item.memberImage, time: item.time, type: item.chatType.toString() , isShowProfile, isShowTime}} />
       ) : (
         <SettlementBox
           settlement={{
-            id: item.id,
-            currentUser: chatRoomData.currentPerson,
-            cost: parseInt(item.content),
+            id: item.chatId,
+            currentMemberCount: chatRoomData.currentMemberCount,
+            cost: parseInt(item.chatContent),
             sender: item.sender,
             time: item.time,
             onPress: () =>
@@ -352,9 +259,9 @@ const ChatRoom: React.FC = () => {
                 data: Object.freeze({
                   accountNumber: '0000-0000',
                   accountBank: '우리은행',
-                  cost: Number.parseInt(item.content),
+                  cost: Number.parseInt(item.chatContent),
                   time: item.time,
-                  members: chatRoomData.currentPerson,
+                  id: chatRoomData.chatroomId,
                 }),
               }),
             isShowProfile,
@@ -371,11 +278,11 @@ const ChatRoom: React.FC = () => {
       setData([
         ...data,
         {
-          id: data[data.length - 1].id + 1,
-          content: imageUri,
+          chatId: data[data.length - 1].chatId + 1,
+          chatContent: imageUri,
           sender: 'donghyun',
           time: new Date(),
-          type: Type.IMAGE,
+          chatType: Type.IMAGE.toString(),
         },
       ]);
     }
@@ -395,14 +302,14 @@ const ChatRoom: React.FC = () => {
               style={styles.headerIcon}
               name="LocationBlack"
             />
-            <BasicText style={styles.headerText} text={chatRoomData.from} />
+            <BasicText style={styles.headerText} text={chatRoomData.departPlace} />
             <SVG
               width={22}
               height={22}
               style={styles.headerIcon}
               name="RightArrow"
             />
-            <BasicText style={styles.headerText} text={chatRoomData.to} />
+            <BasicText style={styles.headerText} text={chatRoomData.arrivePlace} />
           </View>
         }
         rightButton={<SVGButton onPress={openSideMenu} iconName="Kebab" />}
@@ -416,15 +323,15 @@ const ChatRoom: React.FC = () => {
         ]}>
         <BasicText style={styles.menuText}>
           {'참여자 목록 ( ' +
-            chatRoomData.currentPerson.length +
+            members.length +
             '/' +
-            chatRoomData.maxPerson +
+            chatRoomData.maxMemberCount +
             ' )'}
         </BasicText>
         <View style={styles.menuUserList}>
-          {chatRoomData.currentPerson.map(e => {
+          {members.map(e => {
             return (
-              <View key={e.id} style={styles.menuUserContainer}>
+              <View key={e.memberId} style={styles.menuUserContainer}>
                 <View style={styles.menuUserWrapper}>
                   <SVG
                     width={46}
@@ -432,14 +339,14 @@ const ChatRoom: React.FC = () => {
                     name="DefaultProfile"
                     style={styles.menuUserIcon}
                   />
-                  <BasicText style={styles.menuUserText} text={e.name} />
-                  {e.name === 'donghyun' ? (
+                  <BasicText style={styles.menuUserText} text={e.memberName} />
+                  {e.memberName === 'donghyun' ? (
                     <View style={styles.menuUserMe}>
                       <BasicText style={styles.menuUserMeText} text="나" />
                     </View>
                   ) : null}
                 </View>
-                {e.name !== 'donghyun' ? (
+                {e.memberName !== 'donghyun' ? (
                   <BasicButton
                     textStyle={styles.menuUserBtnText}
                     buttonStyle={styles.menuUserBtn}
@@ -466,7 +373,7 @@ const ChatRoom: React.FC = () => {
           scrollEnabled={true}
           contentContainerStyle={{flexGrow: 1}}
           keyboardShouldPersistTaps="handled"
-          keyExtractor={item => item.id}
+          keyExtractor={item => item.chatId.toString()}
           renderItem={renderItem}
           ListFooterComponent={<View style={{height: 30}} />}
           onContentSizeChange={() =>
@@ -538,6 +445,7 @@ const ChatRoom: React.FC = () => {
         <SettlementRequestPopup
           data={data}
           setData={setData}
+          member={members}
           chatRoomData={chatRoomData}
           ref={settlementRequestPopupRef}
         />
@@ -556,6 +464,7 @@ const ChatRoom: React.FC = () => {
         <ReportCheckModal
           visible={isVisibleReportCheckPopup}
           onConfirm={reportUser}
+          member={reportData.current.member}
           onCancel={() => setIsVisibleReportCheckPopup(false)}
         />
       </View>

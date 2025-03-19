@@ -1,24 +1,28 @@
 import axiosInstance from './axiosInstance';
 
-interface ChatroomResponse {
-  chatroomId: number;
+export interface ChatroomResponse {
+  chatroomId: string;
   departPlace: string;
   arrivePlace: string;
   departDate: Date;
-  maxUser: number;
+  maxMemberCount: number;
+  currentMemberCount: number;
   gender: string
 }
 
-interface ChatResponse {
+export interface ChatResponse {
+  chatId: number;
   chatContent: string;
   chatType: string;
   sender: string;
-  userImage: string;
+  time: Date;
+  memberImage?: string;
 }
 
-interface UserResponse {
-  userName: string;
-  userImage: string;
+export interface MemberResponse {
+  memberId: string;
+  memberName: string;
+  memberImage: string;
 }
 
 
@@ -41,8 +45,8 @@ export const getInActiveChatroom = async (): Promise<ChatroomResponse[]> => {
 };
 
 // ✅ 채팅방 인원 가져오기
-export const getMembers = async (chatroomId: string): Promise<UserResponse[]> => {
-  const response = await axiosInstance.get<UserResponse[]>('/chat/' + chatroomId + '/member');
+export const getMembers = async (chatroomId: string): Promise<MemberResponse[]> => {
+  const response = await axiosInstance.get<MemberResponse[]>('/chat/' + chatroomId + '/member');
   return response.data;
 };
 

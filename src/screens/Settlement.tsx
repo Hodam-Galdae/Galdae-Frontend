@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {TouchableOpacity, View} from 'react-native';
 import styles from '../styles/Settlement.style';
 import SVG from '../components/SVG';
@@ -8,15 +8,10 @@ import Header from '../components/Header';
 import SVGButton from '../components/button/SVGButton';
 import {theme} from '../styles/theme';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import { getMembers, MemberResponse } from '../api/chatApi';
 
 type RootStackParamList = {
   Settlement: {data: Readonly<SettlementType>};
-};
-
-type Member = {
-  id: string;
-  image: string;
-  name: string;
 };
 
 type SettlementType = {
@@ -24,16 +19,26 @@ type SettlementType = {
   accountBank: String;
   cost: number;
   time: Date;
-  members: Member[];
+  id: string;
 };
 
 const Settlement: React.FC = () => {
+  const [members, setMembers] = useState<MemberResponse[]>([]);
   const {params} = useRoute<RouteProp<RootStackParamList, 'Settlement'>>();
   const navigation =
     useNavigation<
       NativeStackNavigationProp<RootStackParamList, 'Settlement'>
     >();
   const data = params.data;
+
+  const fetchMembers = useCallback(async() => {
+      const memberData = await getMembers(data.id);
+      setMembers(memberData);
+  }, [data]);
+
+  useEffect(() => {
+    fetchMembers();
+  }, [fetchMembers]);
 
   return (
     <View style={styles.container}>
@@ -78,13 +83,13 @@ const Settlement: React.FC = () => {
         <BasicText style={styles.allCostText}>
           {'총 금액 ' + data.cost}
         </BasicText>
-        {data.members.map(e => {
+        {members.map(e => {
           return (
-            <View key={e.id} style={styles.userContainer}>
+            <View key={e.memberId} style={styles.userContainer}>
               <SVG name="DefaultProfile" style={styles.userIcon} />
-              <BasicText style={styles.userText} text={e.name} />
+              <BasicText style={styles.userText} text={e.memberName} />
               <BasicText style={styles.userText}>
-                {Math.ceil(data.cost / data.members.length) + '원'}
+                {Math.ceil(data.cost / members.length) + '원'}
               </BasicText>
             </View>
           );

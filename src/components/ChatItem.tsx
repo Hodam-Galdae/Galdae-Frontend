@@ -5,21 +5,13 @@ import BasicText from './BasicText';
 import SVG from './SVG';
 import {theme} from '../styles/theme';
 
-enum Type {
-  MESSAGE,
-  ENTER,
-  EXIT,
-  IMAGE,
-  MONEY,
-}
-
 type Chat = {
-  id: string;
+  id: number;
   content: string;
   sender: string;
   senderImage?: string;
   time: Date;
-  type: Type;
+  type: string;
   isShowProfile?: boolean;
   isShowTime?: boolean;
 };
@@ -29,7 +21,7 @@ const ChatItem: React.FC<{item: Chat}> = React.memo(({item}) => {
   const tempUser: string = 'donghyun';
   return (
     <View style={styles.container}>
-      {item.type === Type.ENTER || item.type === Type.EXIT ? (
+      {item.type === 'ENTER' || item.type === 'EXIT' ? (
         <BasicText text={item.content} style={styles.enterBox} />
       ) : (
         <View>
@@ -57,7 +49,7 @@ const ChatItem: React.FC<{item: Chat}> = React.memo(({item}) => {
                 text={item.time.getHours() + ':' + item.time.getMinutes()}
               />
             ) : null}
-            {item.type === Type.MESSAGE ? (
+            {item.type === 'MESSAGE' ? (
               <View
                 style={[
                   styles.messageContainer,
@@ -72,7 +64,7 @@ const ChatItem: React.FC<{item: Chat}> = React.memo(({item}) => {
                 ]}>
                 <BasicText style={styles.messageText} text={item.content} />
               </View>
-            ) : item.type === Type.IMAGE ? (
+            ) : item.type === 'IMAGE' ? (
               //TODO: item.content로 변경
               <Image style={styles.image} source={{uri: item.content}} />
             ) : null}
