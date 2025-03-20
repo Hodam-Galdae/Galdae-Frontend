@@ -38,8 +38,12 @@ export const loginWithApple = async (appleToken: string): Promise<AuthResponse> 
 };
 
 // ✅ 회원가입
-export const join = async (data: any): Promise<AuthResponse|undefined> => {
-  const response = await axiosInstance.post<AuthResponse>('/auth/join', data);
+export const join = async (form: any): Promise<AuthResponse|undefined> => {
+  const response = await axiosInstance.post<AuthResponse>('/auth/join', form, {
+    transformRequest: (data, headers) => {
+      return form;
+    },
+  });
   return response.data;
 
 };

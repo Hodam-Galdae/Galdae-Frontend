@@ -18,6 +18,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {ScrollView} from 'react-native-gesture-handler';
 import {checkNickname, join} from '../api/authApi';
 import useImagePicker from '../hooks/useImagePicker';
+import RNFS from 'react-native-fs';
 
 interface AgreeProps {
   setNextStep: (name: string) => void;
@@ -31,7 +32,7 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep}) => {
   const [accountName, setAccountName] = useState<string>('');
   const [alertNameText, setAlertNameText] = useState<string>('');
   const [alertGenderText, setAlertGenderText] = useState<string>('');
-  const {imageUri, imageName, getImageByCamera, getImageByGallery} = useImagePicker();
+  const {imageUri, imageName, imageType, getImageByCamera, getImageByGallery} = useImagePicker();
 
   const bankText = [
     '국민 은행',
@@ -78,13 +79,27 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep}) => {
     if (flag) {
       try {
         const formData = new FormData();
-        formData.append('nickname', name);
-        formData.append('gender', genderSelected === 0 ? 'FEMALE' : 'MALE');
-        formData.append('bankType', bankText[bankSelect]);
-        formData.append('accountNumber', accountNumber);
-        formData.append('depositor', accountName);
-        let image = {uri: imageUri, type: 'multipart/form-data', name: imageName};
-        formData.append('profileImage', image);
+        const data = {
+          nickname: name,
+          gender: genderSelected === 0 ? 'FEMALE' : 'MALE',
+          bankType: bankText[bankSelect],
+          accountNumber: accountNumber,
+          depositor: accountName,
+        };
+        const fileName = `${name}.json`;
+        const filePath = `${RNFS.TemporaryDirectoryPath}/${fileName}`;
+        await RNFS.writeFile(filePath, JSON.stringify(data), 'utf8');
+
+        formData.append('joinRequestCommand', {
+          uri: `file:///${filePath}`,
+          type: 'application/json',
+          name: fileName,
+        });
+
+        if(imageUri) {
+          let image = {uri: imageUri, type: imageType, name: imageName};
+          formData.append('profileImage', image);
+        }
 
         await join(formData);
         setNextStep('verifySchool');

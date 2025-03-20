@@ -91,6 +91,7 @@ const Login: React.FC = () => {
     const user = await getUserInfo();
     dispatch(setUser({...user, token: 'Bearer ' + response.accessToken}));
     navigation.replace('SignUp', {data: response.isJoined});
+    // navigation.replace('MainTab');
   };
 
   const images = [

@@ -25,7 +25,7 @@ axiosInstance.interceptors.request.use(
     else {
       config.headers['Content-Type'] = 'application/json';
     }
-
+    console.log(config);
     try {
       const token = await EncryptedStorage.getItem('accessToken');
       if (token) {

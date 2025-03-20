@@ -17,6 +17,7 @@ import {
 const useImagePicker = () => {
   const [imageUri, setImageUri] = useState<string>('');
   const [imageName, setImageName] = useState<string>('');
+  const [imageType, setImageType] = useState<string>('');
 
   // 권한 확인 및 요청 함수
   const checkAndRequestPermission = async (permission: Permission) => {
@@ -80,6 +81,7 @@ const useImagePicker = () => {
           } else if (response.assets !== undefined) {
             setImageUri(response.assets[0].uri ?? '');
             setImageName(response.assets[0].fileName ?? '');
+            setImageType(response.assets[0].type ?? '');
           }
         },
       );
@@ -129,6 +131,7 @@ const useImagePicker = () => {
           ) {
             setImageUri(response.assets[0].uri ?? '');
             setImageName(response.assets[0].fileName ?? '');
+            setImageType(response.assets[0].type ?? '');
           }
         },
       );
@@ -137,7 +140,7 @@ const useImagePicker = () => {
     }
   };
 
-  return {imageUri, imageName, getImageByCamera, getImageByGallery};
+  return {imageUri, imageName, imageType, getImageByCamera, getImageByGallery};
 };
 
 export default useImagePicker;
