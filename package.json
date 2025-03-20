@@ -47,7 +47,9 @@
     "react-native-web-swiper": "^2.2.4",
     "react-native-webview": "^13.13.2",
     "react-redux": "^9.2.0",
-    "redux-flipper": "^2.0.3"
+    "redux-flipper": "^2.0.3",
+    "sockjs-client": "^1.6.1",
+    "text-encoding": "^0.7.0"
   },
   "devDependencies": {
     "@babel/core": "^7.26.8",
@@ -67,6 +69,7 @@
     "@types/react-native": "^0.72.8",
     "@types/react-native-onboarding-swiper": "^1.1.9",
     "@types/react-test-renderer": "^18.0.0",
+    "@types/sockjs-client": "^1.5.4",
     "commitizen": "^4.3.1",
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^8.19.0",

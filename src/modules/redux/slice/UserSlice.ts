@@ -8,6 +8,7 @@ const initialState = {
   bankType: '',
   accountNumber: '',
   depositor: '',
+  token: '',
 };
 
 /**
@@ -23,6 +24,11 @@ const UserSlice = createSlice({
             state.bankType = action.payload.bankType;
             state.accountNumber = action.payload.accountNumber;
             state.depositor = action.payload.depositor;
+            state.token = action.payload.token;
+        },
+
+        setToken(state, action) {
+            state.token = action.payload;
         },
     },
 });
@@ -30,6 +36,6 @@ const UserSlice = createSlice({
 /**
  * Reducer 메서드를 정의하여 외부에서 Redux의 상태를 변경할 수 있도록 구성합니다.
  */
-export const { setUser } = UserSlice.actions;
+export const { setUser, setToken } = UserSlice.actions;
 
 export default UserSlice.reducer;

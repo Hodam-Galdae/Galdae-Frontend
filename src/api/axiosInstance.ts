@@ -2,9 +2,10 @@
 import axios from 'axios';
 import EncryptedStorage from 'react-native-encrypted-storage';
 
-const API_BASE_URL = 'http://15.164.118.59'; // 백엔드 API 주소
-
-const EXCLUDED_URLS = ['/auth/kakao', '/auth/google', '/auth/apple'];
+export const API_BASE_URL = 'http://15.164.118.59'; // 백엔드 API 주소
+export const PUB_ENDPOINT = '/send';
+export const SUB_ENDPOINT = '/topic/chatroom';
+const EXCLUDED_URLS = ['/auth/kakao', '/auth/google', '/auth/apple', '/ws'];
 
 const axiosInstance = axios.create({
   baseURL: API_BASE_URL,

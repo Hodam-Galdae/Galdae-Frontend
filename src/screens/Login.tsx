@@ -88,8 +88,7 @@ const Login: React.FC = () => {
     // }
     // navigation.replace('SignUp', {data: response.isJoined});
     const user = await getUserInfo();
-    const result = dispatch(setUser(user));
-    console.log(result);
+    dispatch(setUser({...user, token: 'Bearer ' + response.accessToken}));
     navigation.replace('MainTab');
 
   };

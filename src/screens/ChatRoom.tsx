@@ -32,8 +32,9 @@ import Header from '../components/Header';
 import { Client, IMessage } from '@stomp/stompjs';
 import { useSelector } from 'react-redux';
 import {RootState} from '../modules/redux/RootReducer';
-import EncryptedStorage from 'react-native-encrypted-storage';
 import { ChatResponse, ChatroomResponse, getChats, getMembers, MemberResponse } from '../api/chatApi';
+import SockJS from 'sockjs-client';
+import { API_BASE_URL, SUB_ENDPOINT, PUB_ENDPOINT } from '../api/axiosInstance';
 
 enum Type {
   MESSAGE,
@@ -88,8 +89,6 @@ const ChatRoom: React.FC = () => {
   const chatRoomData = params.data;
   const userInfo = useSelector((state: RootState) => state.user);
   const client = useRef<Client>();
-  const PUB_ENDPOINT = '/send';
-  const SUB_ENDPOINT = '/topic/chatroom';
 
   const panResponder = useRef(
     PanResponder.create({
@@ -124,14 +123,14 @@ const ChatRoom: React.FC = () => {
 
     fetchChats();
 
+    const socket = new SockJS(API_BASE_URL + '/ws');
     client.current = new Client({
-      brokerURL: 'ws://15.164.118.59:8081/ws',
       debug: (frame: any) => console.log(frame),
+      connectHeaders: {
+        Authorization: userInfo.token,
+      },
+      webSocketFactory: () => socket,
       reconnectDelay: 5000,
-      heartbeatIncoming: 4000,
-      heartbeatOutgoing: 4000,
-      forceBinaryWSFrames: true,
-      appendMissingNULLonIncoming: true,
     });
     client.current.onConnect = () => {
       console.log('connected websocket');
@@ -140,7 +139,7 @@ const ChatRoom: React.FC = () => {
         setData((prev) => [
           ...prev,
           {
-            chatId: prev[prev.length - 1].chatId + 1,
+            chatId: prev.length === 0 ? 0 : prev[prev.length - 1].chatId + 1,
             chatContent: receiveData.message,
             sender: receiveData.sender,
             chatType: receiveData.type,
@@ -148,6 +147,19 @@ const ChatRoom: React.FC = () => {
           },
         ]);
       });
+    };
+    client.current.onStompError = function (frame) {
+      console.log(`Broker reported error: ${frame.headers.message}`);
+      console.log(`Additional details: ${frame.body}`);
+      // 액세스 토큰 만료시
+      if (
+        frame.headers.message ===
+        'Failed to send message to ExecutorSubscribableChannel[clientInboundChannel]'
+      ) {
+        // 가지고 있던 리프레시 토큰으로 새 엑세스 토큰을 발급받아
+        // 세션 스토리지에 저장하고,
+        // setToken으로 token 상태 업데이트.
+      }
     };
     client.current.onDisconnect = error => {
       console.log('disconnected websocket');
@@ -159,29 +171,16 @@ const ChatRoom: React.FC = () => {
     return () => {
       client.current?.deactivate();
     };
-  }, [chatRoomData]);
+  }, [chatRoomData, userInfo]);
 
   const sendMessage = async () => {
-    if (client.current && client.current.connected && message.length !== 0) {
-      // [WebSocket - Publish] 특정 엔드포인트로 메시지를 전송합니다.
-      const token = await EncryptedStorage.getItem('accessToken');
+    if (client.current && message.length !== 0) {
       client.current.publish({
         destination: PUB_ENDPOINT + '/' + chatRoomData.chatroomId,
-        headers: {'Authorization' : `Bearer ${token}`},
-        //TODO: 추가
-        body: JSON.stringify({ type: '', sender: '', message: ''}),
+        headers: {'Authorization' : userInfo.token},
+        body: JSON.stringify({ type: 'MESSAGE', sender: userInfo.nickname, message: message}),
       });
 
-      setData([
-        ...data,
-        {
-          chatId: data[data.length - 1].chatId + 1,
-          chatContent: message,
-          sender: userInfo.nickname,
-          chatType: Type.MESSAGE.toString(),
-          time: new Date().toDateString(),
-        },
-      ]);
       setMessage('');
     }
   };
