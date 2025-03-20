@@ -4,36 +4,29 @@ import styles from '../styles/ChatItem.style';
 import BasicText from './BasicText';
 import SVG from './SVG';
 import {theme} from '../styles/theme';
-
-enum Type {
-  MESSAGE,
-  ENTER,
-  EXIT,
-  IMAGE,
-  MONEY,
-}
+import { useSelector } from 'react-redux';
+import {RootState} from '../modules/redux/RootReducer';
 
 type Chat = {
-  id: string;
+  id: number;
   content: string;
   sender: string;
   senderImage?: string;
   time: Date;
-  type: Type;
+  type: string;
   isShowProfile?: boolean;
   isShowTime?: boolean;
 };
 
 const ChatItem: React.FC<{item: Chat}> = React.memo(({item}) => {
-  //임시 이름
-  const tempUser: string = 'donghyun';
+  const userInfo = useSelector((state: RootState) => state.user);
   return (
     <View style={styles.container}>
-      {item.type === Type.ENTER || item.type === Type.EXIT ? (
+      {item.type === 'ENTER' || item.type === 'EXIT' ? (
         <BasicText text={item.content} style={styles.enterBox} />
       ) : (
         <View>
-          {item.sender !== tempUser && item.isShowProfile ? (
+          {item.sender !== userInfo.nickname && item.isShowProfile ? (
             <View style={styles.userWrapper}>
               {item.senderImage === undefined ? (
                 <SVG name="DefaultProfile" style={styles.userImage} />
@@ -48,35 +41,35 @@ const ChatItem: React.FC<{item: Chat}> = React.memo(({item}) => {
               styles.messageWrapper,
               {
                 justifyContent:
-                  item.sender === tempUser ? 'flex-end' : 'flex-start',
+                  item.sender === userInfo.nickname ? 'flex-end' : 'flex-start',
               },
             ]}>
-            {item.isShowTime && item.sender === tempUser ? (
+            {item.isShowTime && item.sender === userInfo.nickname ? (
               <BasicText
                 style={styles.timeText}
                 text={item.time.getHours() + ':' + item.time.getMinutes()}
               />
             ) : null}
-            {item.type === Type.MESSAGE ? (
+            {item.type === 'MESSAGE' ? (
               <View
                 style={[
                   styles.messageContainer,
                   {
                     alignSelf:
-                      item.sender === tempUser ? 'flex-end' : 'flex-start',
+                      item.sender === userInfo.nickname ? 'flex-end' : 'flex-start',
                     backgroundColor:
-                      item.sender === tempUser
+                      item.sender === userInfo.nickname
                         ? theme.colors.brandSubColor
                         : theme.colors.white,
                   },
                 ]}>
                 <BasicText style={styles.messageText} text={item.content} />
               </View>
-            ) : item.type === Type.IMAGE ? (
+            ) : item.type === 'IMAGE' ? (
               //TODO: item.content로 변경
               <Image style={styles.image} source={{uri: item.content}} />
             ) : null}
-            {item.isShowTime && item.sender !== tempUser ? (
+            {item.isShowTime && item.sender !== userInfo.nickname ? (
               <BasicText
                 style={styles.timeText}
                 text={item.time.getHours() + ':' + item.time.getMinutes()}

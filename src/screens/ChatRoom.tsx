@@ -29,7 +29,13 @@ import ChatRoomExitModal from '../components/popup/ChatRoomExitModal';
 import ReportCheckModal from '../components/popup/ReportCheckModal';
 import useDidMountEffect from '../hooks/useDidMountEffect';
 import Header from '../components/Header';
-import SettlementCostEditModal from '../components/popup/SettlementCostEditModal';
+import { Client, IMessage } from '@stomp/stompjs';
+import { useSelector } from 'react-redux';
+import {RootState} from '../modules/redux/RootReducer';
+import { ChatResponse, ChatroomResponse, getChats, getMembers, MemberResponse } from '../api/chatApi';
+import SockJS from 'sockjs-client';
+import { API_BASE_URL, SUB_ENDPOINT, PUB_ENDPOINT } from '../api/axiosInstance';
+import { createReport } from '../api/reportApi';
 
 enum Type {
   MESSAGE,
@@ -39,59 +45,26 @@ enum Type {
   MONEY,
 }
 
-type Chat = {
-  id: string;
-  content: string;
-  sender: string;
-  time: Date;
-  senderImage?: string;
-  type: Type;
-  isShowProfile?: boolean;
-  isShowTime?: boolean;
-};
-
-type Member = {
-  id: string;
-  image: string;
-  name: string;
-  account?: Account;
-};
-
-type Account = {
-  bankName: string;
-  accountNumber: string;
-};
-
 type SettlementType = {
   accountNumber: String;
   accountBank: String;
   cost: number;
   time: Date;
-  members: Member[];
+  id: string;
 };
 
 type RenderItem = {
-  item: Chat;
+  item: ChatResponse;
   index: number;
 };
 
 type RootStackParamList = {
-  ChatRoom: {data: Readonly<ChatRoomType>};
+  ChatRoom: {data: Readonly<ChatroomResponse>};
   Settlement: {data: Readonly<SettlementType>};
 };
 
-type ChatRoomType = {
-  id: string;
-  time: string;
-  from: string;
-  to: string;
-  currentPerson: Member[];
-  maxPerson: number;
-  message: number;
-};
-
 const ChatRoom: React.FC = () => {
-  const [data, setData] = useState<Chat[]>([]);
+  const [data, setData] = useState<ChatResponse[]>([]);
   const [message, setMessage] = useState<string>('');
   const [showExtraView, setShowExtraView] = useState<boolean>(false);
   const [keyboardHeight, setKeyboardHeight] = useState<number>(0);
@@ -112,8 +85,11 @@ const ChatRoom: React.FC = () => {
   const translateX = useRef(new Animated.Value(SIDE_MENU_WIDTH)).current;
   const translateY = useRef(new Animated.Value(100)).current;
   const {params} = useRoute<RouteProp<RootStackParamList, 'ChatRoom'>>();
-  const reportData = useRef({member: {}, reason: ''});
+  const [members, setMembers] = useState<MemberResponse[]>([]);
+  const reportData = useRef({member: {memberId: '', memberName: '', memberImage: ''}, reason: ''});
   const chatRoomData = params.data;
+  const userInfo = useSelector((state: RootState) => state.user);
+  const client = useRef<Client>();
 
   const panResponder = useRef(
     PanResponder.create({
@@ -135,82 +111,80 @@ const ChatRoom: React.FC = () => {
     }),
   ).current;
 
-  //임시 데이터
+  const fetchMembers = useCallback(async() => {
+    const memberData = await getMembers(chatRoomData.chatroomId);
+    setMembers(memberData);
+  }, [chatRoomData]);
+
   useEffect(() => {
-    setData([
-      {
-        id: '0',
-        content: '안녕',
-        sender: 'ass',
-        time: new Date(2025, 2, 18, 17, 23, 50),
-        type: Type.MESSAGE,
+    const fetchChats = async() => {
+      const chatData = await getChats(chatRoomData.chatroomId);
+      setData(chatData);
+    };
+
+    fetchChats();
+
+    const socket = new SockJS(API_BASE_URL + '/ws');
+    client.current = new Client({
+      debug: (frame: any) => console.log(frame),
+      connectHeaders: {
+        Authorization: userInfo.token,
       },
-      {
-        id: '1',
-        content: '안녕',
-        sender: 'ass',
-        time: new Date(2025, 2, 18, 17, 23, 50),
-        type: Type.MESSAGE,
-      },
-      {
-        id: '2',
-        content: '홍길동님이 들어왔습니다.',
-        sender: 'abs',
-        time: new Date(2025, 2, 18, 17, 23, 35),
-        type: Type.ENTER,
-      },
-      {
-        id: '50',
-        content: '철수님이 들어왔습니다.',
-        sender: 'abs',
-        time: new Date(2025, 2, 18, 17, 23, 35),
-        type: Type.ENTER,
-      },
-      {
-        id: '6',
-        content: '안녕ggg',
-        sender: 'ass',
-        time: new Date(2025, 2, 18, 17, 23, 37),
-        type: Type.MESSAGE,
-      },
-      {
-        id: '7',
-        content: '안녕하세요',
-        sender: 'lee',
-        time: new Date(2025, 2, 18, 17, 23, 37),
-        type: Type.MESSAGE,
-      },
-      {
-        id: '3',
-        content: '안녕3',
-        sender: 'ass',
-        time: new Date(2025, 2, 18, 17, 25, 30),
-        type: Type.MESSAGE,
-      },
-      {
-        id: '4',
-        content:
-          '안녕asdfasdfaasdfasdfasdfasdfasdfasdfasdfasdfasdfasfasdfasdfasdfasdfasdfasdfasdfasfasdfassdfa',
-        sender: 'donghyun',
-        time: new Date(2025, 2, 18, 17, 50, 30),
-        type: Type.MESSAGE,
-      },
-      {
-        id: '10',
-        content: 'ㅎㅎㅎㅎㅎ',
-        sender: 'donghyun',
-        time: new Date(2025, 2, 18, 17, 50, 35),
-        type: Type.MESSAGE,
-      },
-      {
-        id: '11',
-        content: '호우샷샷',
-        sender: 'donghyun',
-        time: new Date(2025, 2, 18, 17, 51, 35),
-        type: Type.MESSAGE,
-      },
-    ]);
-  }, []);
+      webSocketFactory: () => socket,
+      reconnectDelay: 5000,
+    });
+    client.current.onConnect = () => {
+      console.log('connected websocket');
+      client.current!.subscribe(SUB_ENDPOINT + '/' + chatRoomData.chatroomId, (message: IMessage) => {
+        const receiveData = JSON.parse(message.body);
+        setData((prev) => [
+          ...prev,
+          {
+            chatId: prev.length === 0 ? 0 : prev[prev.length - 1].chatId + 1,
+            chatContent: receiveData.message,
+            sender: receiveData.sender,
+            chatType: receiveData.type,
+            time: new Date().toDateString(),
+          },
+        ]);
+      });
+    };
+    client.current.onStompError = function (frame) {
+      console.log(`Broker reported error: ${frame.headers.message}`);
+      console.log(`Additional details: ${frame.body}`);
+      // 액세스 토큰 만료시
+      if (
+        frame.headers.message ===
+        'Failed to send message to ExecutorSubscribableChannel[clientInboundChannel]'
+      ) {
+        // 가지고 있던 리프레시 토큰으로 새 엑세스 토큰을 발급받아
+        // 세션 스토리지에 저장하고,
+        // setToken으로 token 상태 업데이트.
+      }
+    };
+    client.current.onDisconnect = error => {
+      console.log('disconnected websocket');
+      console.log(error);
+    };
+
+    client.current.activate();
+
+    return () => {
+      client.current?.deactivate();
+    };
+  }, [chatRoomData, userInfo]);
+
+  const sendMessage = async () => {
+    if (client.current && message.length !== 0) {
+      client.current.publish({
+        destination: PUB_ENDPOINT + '/' + chatRoomData.chatroomId,
+        headers: {'Authorization' : userInfo.token},
+        body: JSON.stringify({ type: 'MESSAGE', sender: userInfo.nickname, message: message}),
+      });
+
+      setMessage('');
+    }
+  };
 
   //키보드 이벤트 리스너
   useEffect(() => {
@@ -266,6 +240,7 @@ const ChatRoom: React.FC = () => {
   };
 
   const openSideMenu = () => {
+    fetchMembers();
     Animated.timing(translateX, {
       toValue: 0,
       duration: 300,
@@ -287,74 +262,60 @@ const ChatRoom: React.FC = () => {
     setIsVisibleReportCheckPopup(true);
   };
 
-  const reportUser = () => {
+  const reportUser = async() => {
     setIsVisibleReportCheckPopup(false);
     console.log(reportData.current);
-    // TODO: 신고하기
+
+    const formData = new FormData();
+    // formData.append('image', )
+    formData.append('reported', reportData.current.member.memberId);
+    formData.append('reportContent', reportData.current.reason);
+    await createReport(formData);
   };
 
-  const startReportUser = (member: Member) => {
+  const startReportUser = (member: MemberResponse) => {
     setIsVisibleReportPopup(true);
     reportData.current.member = member;
   };
 
-  const openSettlement = () => {
+  const openSettlement = async () => {
     //TODO: 방장만 열 수 있게
+    await fetchMembers();
     Keyboard.dismiss();
     settlementRequestPopupRef.current?.open();
-  };
-
-  //메시지 보내는 메서드
-  const sendMessage = () => {
-    //api 호출
-    if (message.length === 0) {
-      return;
-    }
-
-    setData([
-      ...data,
-      {
-        id: data[data.length - 1].id + 1,
-        content: message,
-        sender: 'donghyun',
-        time: new Date(),
-        type: Type.MESSAGE,
-      },
-    ]);
-    setMessage('');
   };
 
   const renderItem = useCallback(
     ({item, index}: RenderItem) => {
       const isShowTime =
         !(
-          data[index + 1]?.time.getMinutes() === item.time.getMinutes() &&
-          data[index + 1]?.time.getHours() === item.time.getHours()
+          new Date(data[index + 1]?.time).getMinutes() === new Date(item.time).getMinutes() &&
+          new Date(data[index + 1]?.time).getHours() === new Date(item.time).getHours()
         ) || data[index + 1]?.sender !== item.sender;
       const isShowProfile =
         data[index - 1]?.sender !== item.sender ||
         !(
-          data[index - 1]?.time.getMinutes() === item.time.getMinutes() &&
-          data[index - 1]?.time.getHours() === item.time.getHours()
+          new Date(data[index - 1]?.time).getMinutes() === new Date(item.time).getMinutes() &&
+          new Date(data[index - 1]?.time).getHours() === new Date(item.time).getHours()
         );
-      return item.type !== Type.MONEY ? (
-        <ChatItem item={{...item, isShowProfile, isShowTime}} />
+      return item.chatType !== Type.MONEY.toString() ? (
+        <ChatItem item={{id: item.chatId, content: item.chatContent, sender: item.sender, senderImage: item.memberImage, time: new Date(item.time), type: item.chatType.toString() , isShowProfile, isShowTime}} />
       ) : (
         <SettlementBox
           settlement={{
-            id: item.id,
-            currentUser: chatRoomData.currentPerson,
-            cost: parseInt(item.content),
+            id: item.chatId,
+            currentMemberCount: chatRoomData.currentMemberCount,
+            cost: parseInt(item.chatContent),
             sender: item.sender,
-            time: item.time,
+            time: new Date(item.time),
             onPress: () =>
               navigation.navigate('Settlement', {
                 data: Object.freeze({
                   accountNumber: '0000-0000',
                   accountBank: '우리은행',
-                  cost: Number.parseInt(item.content),
-                  time: item.time,
-                  members: chatRoomData.currentPerson,
+                  cost: Number.parseInt(item.chatContent),
+                  time: new Date(item.time),
+                  id: chatRoomData.chatroomId,
                 }),
               }),
             isShowProfile,
@@ -371,11 +332,11 @@ const ChatRoom: React.FC = () => {
       setData([
         ...data,
         {
-          id: data[data.length - 1].id + 1,
-          content: imageUri,
-          sender: 'donghyun',
-          time: new Date(),
-          type: Type.IMAGE,
+          chatId: data[data.length - 1].chatId + 1,
+          chatContent: imageUri,
+          sender: userInfo.nickname,
+          time: new Date().toDateString(),
+          chatType: Type.IMAGE.toString(),
         },
       ]);
     }
@@ -395,14 +356,14 @@ const ChatRoom: React.FC = () => {
               style={styles.headerIcon}
               name="LocationBlack"
             />
-            <BasicText style={styles.headerText} text={chatRoomData.from} />
+            <BasicText style={styles.headerText} text={chatRoomData.departPlace} />
             <SVG
               width={22}
               height={22}
               style={styles.headerIcon}
               name="RightArrow"
             />
-            <BasicText style={styles.headerText} text={chatRoomData.to} />
+            <BasicText style={styles.headerText} text={chatRoomData.arrivePlace} />
           </View>
         }
         rightButton={<SVGButton onPress={openSideMenu} iconName="Kebab" />}
@@ -416,15 +377,15 @@ const ChatRoom: React.FC = () => {
         ]}>
         <BasicText style={styles.menuText}>
           {'참여자 목록 ( ' +
-            chatRoomData.currentPerson.length +
+            members.length +
             '/' +
-            chatRoomData.maxPerson +
+            chatRoomData.maxMemberCount +
             ' )'}
         </BasicText>
         <View style={styles.menuUserList}>
-          {chatRoomData.currentPerson.map(e => {
+          {members.map(e => {
             return (
-              <View key={e.id} style={styles.menuUserContainer}>
+              <View key={e.memberId} style={styles.menuUserContainer}>
                 <View style={styles.menuUserWrapper}>
                   <SVG
                     width={46}
@@ -432,14 +393,14 @@ const ChatRoom: React.FC = () => {
                     name="DefaultProfile"
                     style={styles.menuUserIcon}
                   />
-                  <BasicText style={styles.menuUserText} text={e.name} />
-                  {e.name === 'donghyun' ? (
+                  <BasicText style={styles.menuUserText} text={e.memberName} />
+                  {e.memberName === userInfo.nickname ? (
                     <View style={styles.menuUserMe}>
                       <BasicText style={styles.menuUserMeText} text="나" />
                     </View>
                   ) : null}
                 </View>
-                {e.name !== 'donghyun' ? (
+                {e.memberName !== userInfo.nickname ? (
                   <BasicButton
                     textStyle={styles.menuUserBtnText}
                     buttonStyle={styles.menuUserBtn}
@@ -466,7 +427,7 @@ const ChatRoom: React.FC = () => {
           scrollEnabled={true}
           contentContainerStyle={{flexGrow: 1}}
           keyboardShouldPersistTaps="handled"
-          keyExtractor={item => item.id}
+          keyExtractor={item => item.chatId.toString()}
           renderItem={renderItem}
           ListFooterComponent={<View style={{height: 30}} />}
           onContentSizeChange={() =>
@@ -538,6 +499,7 @@ const ChatRoom: React.FC = () => {
         <SettlementRequestPopup
           data={data}
           setData={setData}
+          member={members}
           chatRoomData={chatRoomData}
           ref={settlementRequestPopupRef}
         />
@@ -556,6 +518,7 @@ const ChatRoom: React.FC = () => {
         <ReportCheckModal
           visible={isVisibleReportCheckPopup}
           onConfirm={reportUser}
+          member={reportData.current.member}
           onCancel={() => setIsVisibleReportCheckPopup(false)}
         />
       </View>

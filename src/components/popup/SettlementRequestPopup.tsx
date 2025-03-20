@@ -2,12 +2,14 @@ import React, {forwardRef, useImperativeHandle, useRef, useState} from 'react';
 import {View, TouchableOpacity} from 'react-native';
 import {Modalize} from 'react-native-modalize';
 import BasicText from '../BasicText';
-import {theme} from '../../styles/theme';
 import styles from '../../styles/SettlementRequestPopup.style';
 import BasicButton from '../button/BasicButton';
 import SVGButton from '../button/SVGButton';
 import SVG from '../SVG';
 import SettlementCostEditModal from './SettlementCostEditModal';
+import { ChatResponse, ChatroomResponse, MemberResponse } from '../../api/chatApi';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../modules/redux/RootReducer';
 
 enum Type {
   MESSAGE,
@@ -17,39 +19,6 @@ enum Type {
   MONEY,
 }
 
-type Chat = {
-  id: string;
-  content: string;
-  sender: string;
-  time: Date;
-  senderImage?: string;
-  type: Type;
-  isShowProfile?: boolean;
-  isShowTime?: boolean;
-};
-
-type ChatRoomType = {
-  id: string;
-  time: string;
-  from: string;
-  to: string;
-  currentPerson: Member[];
-  maxPerson: number;
-  message: number;
-};
-
-type Member = {
-  id: string;
-  image: string;
-  name: string;
-  account?: Account;
-};
-
-type Account = {
-  bankName: string;
-  accountNumber: string;
-};
-
 export interface SettlementRequestPopupRef {
   open: () => void;
   close: () => void;
@@ -57,16 +26,18 @@ export interface SettlementRequestPopupRef {
 
 export interface SettlementRequestPopupProps {
   onClose?: () => void;
-  chatRoomData: ChatRoomType;
-  data: Chat[];
-  setData: React.Dispatch<React.SetStateAction<Chat[]>>;
+  chatRoomData: ChatroomResponse;
+  data: ChatResponse[];
+  member: MemberResponse[];
+  setData: React.Dispatch<React.SetStateAction<ChatResponse[]>>;
 }
 
 const SettlementRequestPopup = forwardRef<
   SettlementRequestPopupRef,
   SettlementRequestPopupProps
->(({onClose, chatRoomData, data, setData}, ref) => {
+>(({onClose, chatRoomData, data, setData, member}, ref) => {
   const modalizeRef = useRef<Modalize>(null);
+  const userInfo = useSelector((state: RootState) => state.user);
 
   const handleSelectConfirm = () => {
     modalizeRef.current?.close();
@@ -97,11 +68,11 @@ const SettlementRequestPopup = forwardRef<
     setData([
       ...data,
       {
-        id: data[data.length - 1].id + 1,
-        content: settlementCost.toString(),
-        sender: 'donghyun',
-        time: new Date(),
-        type: Type.MONEY,
+        chatId: data[data.length - 1].chatId + 1,
+        chatContent: settlementCost.toString(),
+        sender: userInfo.nickname,
+        time: new Date().toDateString(),
+        chatType: Type.MONEY.toString(),
       },
     ]);
     //메시지 보내기
@@ -151,7 +122,7 @@ const SettlementRequestPopup = forwardRef<
             <View style={[styles.settlementCostContainer, {marginTop: 23}]}>
               <BasicText text="정산 금액" style={styles.settlementCostText} />
               <BasicText style={styles.settlementCostText}>
-                {Math.ceil(settlementCost / chatRoomData.currentPerson.length) +
+                {Math.ceil(settlementCost / member.length) +
                   '원'}
               </BasicText>
             </View>
@@ -180,7 +151,7 @@ const SettlementRequestPopup = forwardRef<
               />
               <BasicText
                 style={styles.settlementLocationText}
-                text={chatRoomData.from}
+                text={chatRoomData.departPlace}
               />
               <SVG
                 style={styles.settlementLocationIcon}
@@ -190,7 +161,7 @@ const SettlementRequestPopup = forwardRef<
               />
               <BasicText
                 style={styles.settlementLocationText}
-                text={chatRoomData.to}
+                text={chatRoomData.arrivePlace}
               />
             </View>
             <View style={styles.settlementLastCostContainer}>
@@ -201,7 +172,7 @@ const SettlementRequestPopup = forwardRef<
                     text="정산 인원"
                   />
                   <BasicText style={styles.settlementLastText}>
-                    {chatRoomData.currentPerson.length + '명'}
+                    {member.length + '명'}
                   </BasicText>
                 </View>
                 <View style={styles.settlementLastTextContainer}>
@@ -220,22 +191,22 @@ const SettlementRequestPopup = forwardRef<
                   />
                   <BasicText style={styles.settlementLastText}>
                     {Math.ceil(
-                      settlementCost / chatRoomData.currentPerson.length,
+                      settlementCost / member.length,
                     ) + '원'}
                   </BasicText>
                 </View>
               </View>
               <View style={styles.settlementLastCostBox}>
-                {chatRoomData.currentPerson.map(e => {
+                {member.map(e => {
                   return (
-                    <View key={e.id} style={styles.settlementLastTextContainer}>
+                    <View key={e.memberId} style={styles.settlementLastTextContainer}>
                       <BasicText
                         style={styles.settlementLastText}
-                        text={e.name}
+                        text={e.memberName}
                       />
                       <BasicText style={styles.settlementLastText}>
                         {Math.ceil(
-                          settlementCost / chatRoomData.currentPerson.length,
+                          settlementCost / member.length,
                         ) + '원'}
                       </BasicText>
                     </View>

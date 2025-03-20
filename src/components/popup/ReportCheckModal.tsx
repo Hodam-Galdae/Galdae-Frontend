@@ -5,13 +5,13 @@ import BasicText from '../../components/BasicText';
 import BasicButton from '../../components/button/BasicButton';
 import { theme } from '../../styles/theme';
 import styles from '../../styles/ReportCheckModal.style';
+import { MemberResponse } from '../../api/chatApi';
 
 export interface ReportCheckModalProps {
     visible: boolean;
     onCancel: () => void;
     onConfirm: () => void;
-    title?: string;
-    message?: string;
+    member: MemberResponse;
     containerStyle?: StyleProp<ViewStyle>;
   }
 
@@ -19,8 +19,7 @@ export interface ReportCheckModalProps {
     visible,
     onCancel,
     onConfirm,
-    title = '홍길동님을',
-    message = '정말 신고하겠습니까?',
+    member,
     containerStyle,
   }) => {
     return (
@@ -33,13 +32,13 @@ export interface ReportCheckModalProps {
             <View style={styles.textPopUpcontent}>
               <SVG name="Alert" style={{marginBottom: 20}}/>
               <BasicText
-                text={title}
+                text={member.memberName + '님 을'}
                 fontWeight={'500'}
                 fontSize={theme.fontSize.size16}
                 color={theme.colors.black}
               />
               <BasicText
-                text={message}
+                text={'정말 신고하겠습니까?'}
                 fontSize={theme.fontSize.size16}
                 fontWeight={'500'}
                 color={theme.colors.black}
