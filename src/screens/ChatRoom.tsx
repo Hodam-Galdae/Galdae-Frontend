@@ -35,6 +35,7 @@ import {RootState} from '../modules/redux/RootReducer';
 import { ChatResponse, ChatroomResponse, getChats, getMembers, MemberResponse } from '../api/chatApi';
 import SockJS from 'sockjs-client';
 import { API_BASE_URL, SUB_ENDPOINT, PUB_ENDPOINT } from '../api/axiosInstance';
+import { createReport } from '../api/reportApi';
 
 enum Type {
   MESSAGE,
@@ -261,10 +262,15 @@ const ChatRoom: React.FC = () => {
     setIsVisibleReportCheckPopup(true);
   };
 
-  const reportUser = () => {
+  const reportUser = async() => {
     setIsVisibleReportCheckPopup(false);
     console.log(reportData.current);
-    // TODO: 신고하기
+
+    const formData = new FormData();
+    // formData.append('image', )
+    formData.append('reported', reportData.current.member.memberId);
+    formData.append('reportContent', reportData.current.reason);
+    await createReport(formData);
   };
 
   const startReportUser = (member: MemberResponse) => {
