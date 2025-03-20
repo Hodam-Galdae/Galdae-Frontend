@@ -38,9 +38,10 @@ export const loginWithApple = async (appleToken: string): Promise<AuthResponse> 
 };
 
 // ✅ 회원가입
-export const join = async (data: JoinRequest): Promise<AuthResponse> => {
+export const join = async (data: any): Promise<AuthResponse|undefined> => {
   const response = await axiosInstance.post<AuthResponse>('/auth/join', data);
   return response.data;
+
 };
 
 // ✅ 닉네임 중복 체크

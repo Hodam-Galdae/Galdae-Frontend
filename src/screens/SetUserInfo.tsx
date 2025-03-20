@@ -17,6 +17,7 @@ import ItemSelector from '../components/ItemSelector';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {ScrollView} from 'react-native-gesture-handler';
 import {checkNickname, join} from '../api/authApi';
+import useImagePicker from '../hooks/useImagePicker';
 
 interface AgreeProps {
   setNextStep: (name: string) => void;
@@ -30,6 +31,7 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep}) => {
   const [accountName, setAccountName] = useState<string>('');
   const [alertNameText, setAlertNameText] = useState<string>('');
   const [alertGenderText, setAlertGenderText] = useState<string>('');
+  const {imageUri, imageName, getImageByCamera, getImageByGallery} = useImagePicker();
 
   const bankText = [
     '국민 은행',
@@ -75,13 +77,16 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep}) => {
     // 모든 조건 충족
     if (flag) {
       try {
-        await join({
-          nickname: name,
-          gender: genderSelected === 0 ? 'FEMALE' : 'MALE',
-          // bankType: bankText[bankSelect],
-          // accountNumber: accountNumber,
-          // depositor: accountName,
-        });
+        const formData = new FormData();
+        formData.append('nickname', name);
+        formData.append('gender', genderSelected === 0 ? 'FEMALE' : 'MALE');
+        formData.append('bankType', bankText[bankSelect]);
+        formData.append('accountNumber', accountNumber);
+        formData.append('depositor', accountName);
+        let image = {uri: imageUri, type: 'multipart/form-data', name: imageName};
+        formData.append('profileImage', image);
+
+        await join(formData);
         setNextStep('verifySchool');
       } catch (e) {
         console.log(e);
@@ -105,6 +110,7 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep}) => {
                     height={68}
                   />
                   <SVGButton
+                    onPress={getImageByGallery}
                     iconName="GalleryBlack"
                     SVGStyle={{width: 30, height: 30}}
                     buttonStyle={styles.camera}

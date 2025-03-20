@@ -2,17 +2,15 @@
 import axios from 'axios';
 import EncryptedStorage from 'react-native-encrypted-storage';
 
-export const API_BASE_URL = 'http://15.164.118.59'; // 백엔드 API 주소
+export const API_BASE_URL = 'http://192.168.0.158:8080'; // 백엔드 API 주소
 export const PUB_ENDPOINT = '/send';
 export const SUB_ENDPOINT = '/topic/chatroom';
 const EXCLUDED_URLS = ['/auth/kakao', '/auth/google', '/auth/apple', '/ws'];
+const MULTIPART_URLS = ['/auth/join'];
 
 const axiosInstance = axios.create({
   baseURL: API_BASE_URL,
   timeout: 5000, // 요청 제한 시간
-  headers: {
-    'Content-Type': 'application/json',
-  },
 });
 
 axiosInstance.interceptors.request.use(
@@ -21,6 +19,13 @@ axiosInstance.interceptors.request.use(
     if (EXCLUDED_URLS.includes(config.url || '')) {
       return config;
     }
+    if (MULTIPART_URLS.includes(config.url || '')) {
+      config.headers['Content-Type'] = 'multipart/form-data';
+    }
+    else {
+      config.headers['Content-Type'] = 'application/json';
+    }
+
     try {
       const token = await EncryptedStorage.getItem('accessToken');
       if (token) {
