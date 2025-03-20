@@ -4,13 +4,15 @@
  * 갈대 생성 요청 데이터 타입
  */
 export interface CreatePostRequest {
-    departure: string;
-    arrival: string;
-    departureTime: string;
-    passengerType: 'MALE' | 'FEMALE';
-    arrangeTime: 'POSSIBLE' | 'IMPOSSIBLE';
-    passengerCount: number;
-    isFavoriteRoute: boolean;
+  majorDepartureId: number;
+  subDepartureId: number;
+  majorArrivalId: number;
+  subArrivalId: number;
+  departureTime: string;
+  passengerType?: 'SAME'  | 'DONT_CARE'; // 예시에서는 "SAME"으로 내려오지만, 필요 시 다른 값도 허용 가능
+  arrangeTime?: 'POSSIBLE' | 'IMPOSSIBLE';
+  passengerCount?: number;
+  isFavoriteRoute?: boolean;
 }
 /**
  * 갈대 삭제 요청 타입

@@ -39,7 +39,7 @@ export default StyleSheet.create({
         fontSize:theme.fontSize.size14,
         color:theme.colors.gray2,
         fontWeight:'500',
-        marginBottom:8,
+        marginBottom:40,
     },
     // 은행 선택 드롭다운 스타일
   bankPickerContainer: {
@@ -72,7 +72,7 @@ export default StyleSheet.create({
     height:20,
   },
   bankDropdown: {
-    height:300,
+    height:150,
   },
   bankDropdownItem: {
     paddingVertical: 11,

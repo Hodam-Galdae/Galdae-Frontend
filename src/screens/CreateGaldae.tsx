@@ -92,10 +92,12 @@ const CreateGaldae: React.FC = () => {
       .format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
 
     const postData: CreatePostRequest = {
-      departure: departureSmall,
-      arrival: destinationSmall,
+      majorDepartureId: 1,
+      subDepartureId:1,
+      majorArrivalId:1,
+      subArrivalId:1,
       departureTime: formattedDepartureTime,
-      passengerType: selectedGender === 1 ? 'FEMALE' : 'MALE',
+      passengerType: selectedGender === 1 ? 'SAME' : 'DONT_CARE',
       arrangeTime: selectedTimeDiscuss === 0 ? 'POSSIBLE' : 'IMPOSSIBLE',
       passengerCount: passengerNumber,
       isFavoriteRoute: selectedChannel,
@@ -201,18 +203,11 @@ const CreateGaldae: React.FC = () => {
               onPress={() => setSelectedGender(0)}
             />
             <SelectTextButton
-              text="여자"
+              text="동성만"
               selected={selectedGender === 1}
               buttonStyle={styles.selectBtn}
               textStyle={styles.selectText}
               onPress={() => setSelectedGender(1)}
-            />
-            <SelectTextButton
-              text="남자"
-              selected={selectedGender === 2}
-              buttonStyle={styles.selectBtn}
-              textStyle={styles.selectText}
-              onPress={() => setSelectedGender(2)}
             />
           </View>
           <BasicText style={styles.subTitle} text="시간 협의 가능 여부를 선택해주세요."/>

@@ -29,7 +29,6 @@ type RootStackParamList = {
     destinationLarge?: string;
     destinationSmall?: string;
   };
-  NowGaldaeDetail: { item: any };
   SetDestination: undefined;
   FAQ: {
     tabIndex: number;
