@@ -1,5 +1,5 @@
 import axiosInstance from './axiosInstance';
-import { MyCreatedPost } from '../types/getTypes';
+import { MyCreatedPost,MyPostHistory } from '../types/getTypes';
 /**
  * 사용자 정보 조회 API
  */
@@ -35,11 +35,11 @@ export const getMyCreatedPosts = async (): Promise<MyCreatedPost[]> => {
 /**
  * 내 갈대 기록 조회 API
  */
-export const getMyPostHistory = async () => {
+export const getMyPostHistory = async () :Promise<MyPostHistory[]>=> {
   console.log('🚀 [내 갈대 기록 조회 요청] GET /members/history');
 
   try {
-    const response = await axiosInstance.get('/members/history');
+    const response = await axiosInstance.get<MyPostHistory[]>('/members/history');
     console.log('✅ [내 갈대 기록 조회 성공] 응답 데이터:', response.data);
     return response.data;
   } catch (error: any) {

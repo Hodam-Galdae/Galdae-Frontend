@@ -2,30 +2,27 @@ import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import BasicText from '../components/BasicText';
 import SVG from '../components/SVG';
-import TextTag from '../components/tag/TextTag';
-import moment from 'moment';
 import { theme } from '../styles/theme';
 import styles from '../styles/GaldaeItem.style';
-// Type
-import { GaldaeItemType } from '../types/getTypes';
+import moment from 'moment';
+// MyPostHistory 타입 사용 (출발/도착지가 객체 형태)
+import { MyPostHistory } from '../types/getTypes';
 
-interface GaldaeItemProps {
-  item: GaldaeItemType;
+interface MyGaldaeItemProps {
+  item: MyPostHistory;
   onPress: () => void;
   onLongPress?: () => void;
 }
 
-const GaldaeItem: React.FC<GaldaeItemProps> = ({ item, onPress, onLongPress }) => {
+const MyGaldaeItem: React.FC<MyGaldaeItemProps> = ({ item, onPress, onLongPress }) => {
+  // ISO 8601 형식의 출발일시를 포맷팅 (예: "2025년 03월 20일 (목) 01 : 00")
   const formatDepartureTime = (departureTime: string): string => {
-    return moment.utc(departureTime).format('YYYY년 MM월 DD일 (ddd) HH : mm');
+    return moment.utc(departureTime).local().format('YYYY년 MM월 DD일 (ddd) HH : mm');
   };
 
   return (
     <TouchableOpacity onPress={onPress} onLongPress={onLongPress}>
       <View style={styles.borderedListBox}>
-        {/* 사용자 닉네임 (null인 경우 익명 처리) */}
-        <BasicText text={item.userNickName || '익명'} style={styles.galdaeOwner} />
-
         {/* 출발지 정보 */}
         <View style={styles.fromContainer}>
           <SVG name="Car" />
@@ -33,7 +30,7 @@ const GaldaeItem: React.FC<GaldaeItemProps> = ({ item, onPress, onLongPress }) =
           <BasicText text={item.departure.subPlace} style={styles.fromSubLocation} />
         </View>
 
-        {/* 승객 수 아이콘 */}
+        {/* 탑승 인원 정보 */}
         <View style={styles.toContainer}>
           <View style={styles.fromToLine}>
             <SVG name="FromToLine" />
@@ -41,12 +38,12 @@ const GaldaeItem: React.FC<GaldaeItemProps> = ({ item, onPress, onLongPress }) =
           {Array(item.passengerCount)
             .fill(null)
             .map((_, idx) => (
-              <SVG key={`user-${item.postId}-${idx}`} name="User" />
+              <SVG key={`user-${idx}`} name="User" />
             ))}
           {Array(item.totalPassengerCount - item.passengerCount)
             .fill(null)
             .map((_, idx) => (
-              <SVG key={`disabled-${item.postId}-${idx}`} name="DisabledUser" />
+              <SVG key={`disabled-${idx}`} name="DisabledUser" />
             ))}
           <BasicText
             text={`(${item.passengerCount}/${item.totalPassengerCount})`}
@@ -81,21 +78,9 @@ const GaldaeItem: React.FC<GaldaeItemProps> = ({ item, onPress, onLongPress }) =
             />
           </View>
         </View>
-            {item.passengerGenderType && (
-              <View style={styles.tags}>
-                {item.passengerGenderType === 'SAME' ? (
-                  <TextTag text="동성만" />
-                ) : item.passengerGenderType === 'DONT_CARE' ? (
-                  <TextTag text="성별무관" />
-                ) : (
-                  <TextTag text="상관없음" />
-                )}
-              </View>
-            )}
-
       </View>
     </TouchableOpacity>
   );
 };
 
-export default GaldaeItem;
+export default MyGaldaeItem;

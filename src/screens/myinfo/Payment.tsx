@@ -1,6 +1,6 @@
 import React,{ useState } from 'react';
-import {  TouchableOpacity, View,FlatList } from 'react-native';
-import { useNavigation,useRoute, RouteProp } from '@react-navigation/native';
+import {  TouchableOpacity, View,FlatList,Alert } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import styles from '../../styles/Payment.style';
 import Header from '../../components/Header';
 import SVGButton from '../../components/button/SVGButton';
@@ -13,6 +13,13 @@ import LinearGradient from 'react-native-linear-gradient';
 import { theme } from '../../styles/theme';
 import * as SVGIcon from '../../assets/svg';
 import DeletePopup from '../../components/popup/DeletePopup';
+import { useSelector,useDispatch } from 'react-redux';
+import { RootState } from '../../modules/redux/RootReducer'; // 실제 store 경로에 맞게 수정
+import { banks, BankOption } from '../../constants/bankOptions';
+//api
+import { updateBankInfo } from '../../api/membersApi';
+//redux
+import { setUserInfo } from '../../modules/redux/slice/myInfoSlice';
 type HomeProps = {
   navigation: any; // 실제 프로젝트에서는 proper type 사용 권장 (예: StackNavigationProp)
 };
@@ -26,13 +33,13 @@ type RootStackParamList = {
       destinationLarge?:string,
       destinationSmall?:string,
     };
-    NowGaldaeDetail: { item: any };
     SetDestination:undefined;
     AccountRegister:undefined;
     Payment: { bank: string; account: string, svg: string } | undefined;
 };
 type nowGaldaeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 const Payment: React.FC<HomeProps> = () => {
+  const dispatch = useDispatch();
   const Settlements = [
     { id: 0, month: 10, date: 11, departure: '학교', destination: '호암동', settlement: 10000, bank: 'KB 국민은행', account: '3455-7568-67576-89' },
     { id: 1, month: 7, date: 6, departure: '중원도서관', destination: '베스킨라빈스', settlement: 18000, bank: '신한은행', account: '345-2341-2345-45' },
@@ -49,13 +56,14 @@ const Payment: React.FC<HomeProps> = () => {
   //   isAccountRegister :false,
   // };
   const navigation = useNavigation<nowGaldaeScreenNavigationProp>();
-  const goBack = () =>  navigation.navigate('MyInfo');
-  const route = useRoute<RouteProp<RootStackParamList, 'Payment'>>();
+  const goBack = () => navigation.goBack();
+  //const route = useRoute<RouteProp<RootStackParamList, 'Payment'>>();
   const [deletePopupVisible, setDeletePopupVisible] = useState<boolean>(false);
-  // 전달된 파라미터를 추출합니다.
-  const { bank, account, svg } = route.params || {};
-  // 전달된 정보가 있으면 계좌 등록이 완료된 것으로 처리합니다.
-  const isAccountRegister = Boolean(bank && account);
+    // Redux에 저장된 사용자 정보를 가져옵니다.
+    const userInfo = useSelector((state: RootState) => state.myInfoSlice.userInfo);
+
+  // 등록된 계좌 정보 여부를 Redux에서 확인합니다.
+  const isAccountRegister = Boolean(userInfo?.bankType && userInfo?.accountNumber);
   // FlatList의 renderItem 함수
   const renderSettlementItem = ({ item }: { item: Settlement }) => {
     return <SettlementItem item={item} />;
@@ -65,9 +73,32 @@ const Payment: React.FC<HomeProps> = () => {
   const handleRegisterAccount = () =>{
     navigation.navigate('AccountRegister');
   };
-  const handleDeleteConfirm = () =>{
+
+  const handleDeleteConfirm = async() =>{
+
+    dispatch(
+      setUserInfo({
+        bankType: '',
+        accountNumber: '',
+        depositor:'',
+      })
+    );
+    try {
+      // API 호출: 결제 정보 수정
+      await updateBankInfo('', '', '');
+      // 성공 시 Payment 화면으로 이동
+      goBack();
+    } catch (error) {
+      Alert.alert('오류', '결제 정보 수정에 실패했습니다. 다시 시도해주세요.');
+      console.error(error);
+    }
 
   };
+  // 서버에서 받은 bankType과 banks 배열의 name이 일치하는 항목을 찾습니다.
+  const bankOption: BankOption | undefined = banks.find(
+    (bank: BankOption) => bank.name === userInfo?.bankType
+  );
+
   return (
     <View style={styles.container}>
           <Header
@@ -86,10 +117,11 @@ const Payment: React.FC<HomeProps> = () => {
                     >
                     <View style={styles.hasAccountContainer}>
                       <View style={styles.bankContainer}>
-                        <SVG name={(svg ?? 'Bank_Busan') as keyof typeof SVGIcon} width={23}/>
-                        <BasicText text={bank} style={styles.bankText}/>
+                        {/* 서버에서 받은 bankType과 banks의 name이 일치하면 해당 bankOption의 svg 사용 */}
+                        <SVG name={(bankOption?.svg ?? 'Bank_Busan') as keyof typeof SVGIcon} width={23}/>
+                        <BasicText text={userInfo?.bankType} style={styles.bankText}/>
                       </View>
-                      <BasicText text={account} style={styles.accountText}/>
+                      <BasicText text={userInfo?.accountNumber} style={styles.accountText}/>
                     </View>
                   </LinearGradient>
                 ) : (

@@ -13,7 +13,9 @@ const ToastPopup: React.FC<ToastPopupProps> = ({ visible, text, onDismiss, conta
   useEffect(() => {
     if (visible) {
       const timer = setTimeout(() => {
-        onDismiss && onDismiss();
+        if (onDismiss) {
+          onDismiss(); // ✅ onDismiss가 존재할 때만 실행
+        }
       }, 2000);
       return () => clearTimeout(timer);
     }
