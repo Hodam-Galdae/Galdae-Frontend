@@ -19,6 +19,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {checkNickname, join} from '../api/authApi';
 import useImagePicker from '../hooks/useImagePicker';
 import RNFS from 'react-native-fs';
+import ImageResizer from '@bam.tech/react-native-image-resizer';
 
 interface AgreeProps {
   setNextStep: (name: string) => void;
@@ -32,7 +33,8 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep}) => {
   const [accountName, setAccountName] = useState<string>('');
   const [alertNameText, setAlertNameText] = useState<string>('');
   const [alertGenderText, setAlertGenderText] = useState<string>('');
-  const {imageUri, imageName, imageType, getImageByCamera, getImageByGallery} = useImagePicker();
+  const {imageUri, imageName, imageType, getImageByCamera, getImageByGallery} =
+    useImagePicker();
 
   const bankText = [
     '국민 은행',
@@ -43,6 +45,21 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep}) => {
     '제주 은행',
     '광주 은행',
   ];
+
+  const resizeImage = async () => {
+    const image = await ImageResizer.createResizedImage(
+      imageUri,
+      50,
+      50,
+      'JPEG',
+      100,
+      undefined,
+      imageName,
+      undefined,
+      undefined,
+    );
+    return image;
+  };
 
   const clickEvent = async () => {
     const regex = /^[가-힣0-9]{2,8}$/;
@@ -89,16 +106,16 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep}) => {
         const fileName = `${name}.json`;
         const filePath = `${RNFS.TemporaryDirectoryPath}/${fileName}`;
         await RNFS.writeFile(filePath, JSON.stringify(data), 'utf8');
-
         formData.append('joinRequestCommand', {
           uri: `file:///${filePath}`,
           type: 'application/json',
           name: fileName,
         });
 
-        if(imageUri) {
-          let image = {uri: imageUri, type: imageType, name: imageName};
-          formData.append('profileImage', image);
+        if (imageUri) {
+          const image = await resizeImage();
+          let imageFile = {uri: image.uri, type: 'jpeg', name: image.name};
+          formData.append('profileImage', imageFile);
         }
 
         await join(formData);
