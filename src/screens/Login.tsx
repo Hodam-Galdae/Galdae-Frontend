@@ -37,6 +37,7 @@ interface AuthResponse {
   refreshToken: string;
   expiredIn: number;
   isJoined: boolean;
+  isAuthenticate: boolean;
 }
 
 const Login: React.FC = () => {
@@ -77,21 +78,17 @@ const Login: React.FC = () => {
   };
 
   const handleGoNextPage = async (response: AuthResponse) => {
-    // // 학생 인증 완료
-    // if(response.isAuthenticate){
-    //   navigation.replace('MainTab');
-    // }
-    // else {
-    //   // 학생증 인증 중
-    //   if(response.isJoined) {
-    //     navigation.replace('SignUp', { data: response.isJoined});
-    //   }
-    // }
-    // navigation.replace('SignUp', {data: response.isJoined});
     const user = await getUserInfo();
     dispatch(setUser({...user, token: 'Bearer ' + response.accessToken}));
-    navigation.replace('SignUp', {data: response.isJoined});
-    // navigation.replace('MainTab');
+    // 학생 인증 완료
+    if(response.isAuthenticate){
+      navigation.replace('MainTab');
+    }
+    else {
+      // 학생증 인증 중
+      // if(isAuthenticating)
+      navigation.replace('SignUp', { data: response.isJoined});
+    }
   };
 
   const images = [

@@ -9,6 +9,7 @@ const initialState = {
   accountNumber: '',
   depositor: '',
   token: '',
+  university: '',
 };
 
 /**
@@ -30,12 +31,16 @@ const UserSlice = createSlice({
         setToken(state, action) {
             state.token = action.payload;
         },
+
+        setUniversity(state, action) {
+            state.university = action.payload;
+        },
     },
 });
 
 /**
  * Reducer 메서드를 정의하여 외부에서 Redux의 상태를 변경할 수 있도록 구성합니다.
  */
-export const { setUser, setToken } = UserSlice.actions;
+export const { setUser, setToken, setUniversity } = UserSlice.actions;
 
 export default UserSlice.reducer;
