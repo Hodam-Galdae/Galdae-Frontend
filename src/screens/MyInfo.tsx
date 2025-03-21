@@ -18,7 +18,7 @@ import { RootState } from '../modules/redux/RootReducer'; // RootState 타입 (s
 import { setUserInfo } from '../modules/redux/slice/myInfoSlice';
 import { fetchMyGaldaeHistory } from '../modules/redux/slice/myGaldaeSlice';
 //API
-import {  getUserInfo } from '../api/membersApi';
+import {  getUserInfo,updateMemberImage } from '../api/membersApi';
 
 //type
 import {} from '../types/getTypes';
@@ -138,12 +138,25 @@ useFocusEffect(
   };
 
 
-  useEffect(() => {
-      if (imageUri !== undefined) {
-        //setProfileImg(imageUri);
-
+   //imageUri가 변경될 때 updateMemberImage API 호출
+   useEffect(() => {
+    const updateImage = async () => {
+      try {
+        if (imageUri) {
+          console.log(` imageUri :${imageUri}`)
+          const result = await updateMemberImage(imageUri);
+          console.log('✅ 이미지 업데이트 성공:', result);
+          // 이미지 업데이트 후 사용자 정보를 재갱신
+          fetchUserInfo();
+        }
+      } catch (error) {
+        console.error('❌ 이미지 업데이트 실패:', error);
+        Alert.alert('오류', '프로필 이미지를 업데이트하는데 실패했습니다.');
       }
-    }, [imageUri]);
+    };
+
+    updateImage();
+  }, [imageUri, fetchUserInfo]);
   return (
     <View>
       <ScrollView>
