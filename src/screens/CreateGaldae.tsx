@@ -1,7 +1,7 @@
 // CreateGaldae.tsx
 import React, { useState, useRef } from 'react';
 import moment from 'moment-timezone/builds/moment-timezone-with-data';
-import { TouchableOpacity, View, ScrollView } from 'react-native';
+import { TouchableOpacity, View, ScrollView, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from '../styles/CreateGaldae.style';
 import BasicText from '../components/BasicText';
@@ -41,14 +41,14 @@ const CreateGaldae: React.FC = () => {
   const [departureDate, setDepartureDate] = useState<string | null>(null); // "YYYY-MM-DD" 형식
   const [departureAmPm, setDepartureAmPm] = useState<'오전' | '오후'>('오전');
   // 출발지 상태 (이름과 ID)
-  const [departureLargeName, setDepartureLargeName] = useState<string>('출발지 선택');
+  const [departureLargeName, setDepartureLargeName] = useState<'출발지 선택'|string>('출발지 선택');
   const [departureLargeId, setDepartureLargeId] = useState<number>(0);
-  const [departureSmallName, setDepartureSmallName] = useState<string>('출발지 선택');
+  const [departureSmallName, setDepartureSmallName] = useState<'출발지 선택' |string>('출발지 선택');
   const [departureSmallId, setDepartureSmallId] = useState<number>(0);
   // 도착지 상태 (이름과 ID)
-  const [destinationLargeName, setDestinationLargeName] = useState<string>('도착지 선택');
+  const [destinationLargeName, setDestinationLargeName] = useState<'도착지 선택' | string>('도착지 선택');
   const [destinationLargeId, setDestinationLargeId] = useState<number>(0);
-  const [destinationSmallName, setDestinationSmallName] = useState<string>('도착지 선택');
+  const [destinationSmallName, setDestinationSmallName] = useState<'도착지 선택' | string>('도착지 선택');
   const [destinationSmallId, setDestinationSmallId] = useState<number>(0);
   const [departureHour, setDepartureHour] = useState<number>(0);
   const [departureMinute, setDepartureMinute] = useState<number>(0);
@@ -67,8 +67,11 @@ const CreateGaldae: React.FC = () => {
 
   // ✅ 갈대 생성 API 호출 함수
   const handleCreateGaldaeConfirm = async () => {
+    if(departureLargeName === '출발지 선택' || departureSmallName === '출발지 선택' || destinationLargeName === '도착지 선택' || destinationSmallName === '도착지 선택'){
+      Alert.alert('출발지 또는 도착지를 제대로 선택해주세요!');
+      return;
+   }
     setLoading(true);
-
     // 출발 일시를 Asia/Seoul 타임존의 ISO 8601 형식으로 변환
     const formattedDepartureTime = moment()
       .tz('Asia/Seoul')

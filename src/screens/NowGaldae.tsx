@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { View, FlatList,ActivityIndicator } from 'react-native';
+import { View, FlatList,ActivityIndicator,RefreshControl } from 'react-native';
 import moment from 'moment';
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
 import styles from '../styles/NowGaldae.style';
@@ -53,6 +53,7 @@ const NowGaldae: React.FC<HomeProps> = () => {
   const reduxPosts = useSelector((state: RootState) => state.galdaeSlice.posts);
   const reduxLoading = useSelector((state: RootState) => state.galdaeSlice.loading);
   const dispatch = useAppDispatch();
+  const [refreshing, setRefreshing] = useState(false);
   // 출/도착지 검색 결과를 저장할 로컬 상태 (검색이 없으면 null)
   const [searchResults, setSearchResults] = useState<GaldaeApiResponse | null>(null);
   const [pageNumber, setPageNumber] = useState(0);
@@ -109,7 +110,11 @@ const NowGaldae: React.FC<HomeProps> = () => {
         !departureLargeName ||
         !departureSmallName ||
         !destinationLargeName ||
-        !destinationSmallName
+        !destinationSmallName ||
+        departureLargeName === '출발지 선택' ||
+        departureSmallName === '출발지 선택' ||
+        destinationLargeName === '도착지 선택' ||
+        destinationSmallName === '도착지 선택'
       ) {
         // 검색 조건이 없으면 searchResults를 초기화하고 로딩 상태 해제
         setSearchResults(null);
@@ -240,6 +245,14 @@ const NowGaldae: React.FC<HomeProps> = () => {
       passengerNumber: 0,
     });
   };
+  const onRefresh = async () => {
+    setRefreshing(true);
+    // 필터 초기화 및 전체 데이터 리셋
+    handleCancelSearch();
+    // 필요한 경우 추가 데이터 호출 로직을 넣어줍니다.
+    setRefreshing(false);
+  };
+
   // 표시할 데이터: searchResults가 있으면 searchResults.content, 없으면 reduxPosts 사용
   const displayedPosts: GaldaeItemType[] = searchResults ? searchResults.content : reduxPosts;
 
@@ -433,6 +446,9 @@ const NowGaldae: React.FC<HomeProps> = () => {
           <FlatList
             style={styles.scroll}
             contentContainerStyle={styles.nowGaldaeList}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
             data={finalFilteredData}
             keyExtractor={(item) => item.postId}
             onEndReached={loadMoreData}

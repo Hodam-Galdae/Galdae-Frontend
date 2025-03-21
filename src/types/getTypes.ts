@@ -87,3 +87,11 @@ export interface UserInfo {
     accountNumber:string;
     isAuthenticated:boolean;
   }
+/**
+ * 사용자 프로필 이미지 변경 api
+ */
+export interface ImageFile {
+  uri: string;
+  type: string;
+  name: string;
+}

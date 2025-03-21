@@ -1,6 +1,6 @@
 // Home.tsx 테스트
 import React, {useState, useRef,useEffect} from 'react';
-import {ScrollView, View, TouchableOpacity,ActivityIndicator,RefreshControl} from 'react-native';
+import {ScrollView, View, TouchableOpacity,ActivityIndicator,RefreshControl,Alert} from 'react-native';
 import { CreatePostRequest } from '../types/postTypes'; // API 요청 타입 가져오기
 import styles from '../styles/Home.style';
 import BasicButton from '../components/button/BasicButton';
@@ -159,8 +159,8 @@ useEffect(() => {
 // };
 
   const handleCreateGaldaeConfirm = async () => {
-    setCreateGaldaeLoading(true);
 
+    setCreateGaldaeLoading(true);
     // 사용자가 선택한 값들을 조합하여 ISO 8601 형식의 출발일시 생성
     const formattedDepartureTime = getFormattedDepartureTime();
 
@@ -269,6 +269,10 @@ const getFormattedDepartureTime = (): string => {
   };
 
   const openCreateGaldaePopup = () => {
+    if(departureLargeName === '출발지 선택' || departureSmallName === '출발지 선택' || destinationLargeName === '도착지 선택' || destinationSmallName === '도착지 선택'){
+      Alert.alert('출발지 또는 도착지를 제대로 선택해주세요!');
+      return;
+   }
     setgenerateLoading(true);
     setgenerateLoading(false);
     setCreateGaldaePopupVisible(true);
@@ -278,9 +282,14 @@ const getFormattedDepartureTime = (): string => {
   };
 
   const handleCreateCaledaeConfirm = () => {
+    if(departureLargeName === '출발지 선택' || departureSmallName === '출발지 선택' || destinationLargeName === '도착지 선택' || destinationSmallName === '도착지 선택'){
+      Alert.alert('출발지 또는 도착지를 제대로 선택해주세요!');
+      return;
+   }else{
     handleCreateGaldaeConfirm();
     closeCreateGaldaePopup();
     setToastVisible(true);
+   }
   };
 
   const handleSwitch = () => {
