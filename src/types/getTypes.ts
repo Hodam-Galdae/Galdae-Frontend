@@ -118,3 +118,4 @@ export interface UncheckedNotificationResponse {
 export interface CheckNotificationRequest {
   notificationId: number;
 }
+

@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {useEffect, forwardRef, useImperativeHandle, useRef,useState,useContext } from 'react';
 import { View,KeyboardAvoidingView } from 'react-native';
 import { Modalize } from 'react-native-modalize';
@@ -39,7 +40,7 @@ const FastGaldaePopup = forwardRef<FastGaldaeEndPopupRef, FastGaldaePopupProps>(
     const placesLoading = useSelector((state: RootState) => state.placesSlice.loading);
     const placesError = useSelector((state: RootState) => state.placesSlice.error);
 
-    
+
     const { setIsTabBarVisible } = useContext(TabBarVisibilityContext);
 
      // 컴포넌트 마운트 시 Redux를 통해 places 데이터 불러오기
@@ -56,7 +57,7 @@ const FastGaldaePopup = forwardRef<FastGaldaeEndPopupRef, FastGaldaePopupProps>(
     const pressedLargeCategory = (majorPlace:any) =>{
       setLargeCategoryName(majorPlace.majorPlace);
       setLargeCategoryId(majorPlace.majorPlaceId);
- 
+
      };
      const pressedSubPlace = (subPlace: any)=>{
       setSmallCategoryName(subPlace.subPlace);
