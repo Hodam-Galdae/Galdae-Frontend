@@ -88,10 +88,33 @@ export interface UserInfo {
     isAuthenticated:boolean;
   }
 /**
- * 사용자 프로필 이미지 변경 api
+ * 사용자 프로필 이미지 변경 api 타입
  */
 export interface ImageFile {
   uri: string;
   type: string;
   name: string;
+}
+/**
+ * 알림 목록 조회 API 타입
+ */
+export interface Notification {
+  notificationId: number;
+  title: string;
+  isChecked: boolean;
+  daysBetween: number;
+}
+
+/**
+ * 안읽은 알림 유무 API 타입
+ */
+export interface UncheckedNotificationResponse {
+  postId: string;
+  chatroomId: number;
+}
+/**
+ * 알림 확인 API 타입
+ */
+export interface CheckNotificationRequest {
+  notificationId: number;
 }
