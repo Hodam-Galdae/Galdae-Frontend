@@ -30,6 +30,7 @@ type RootStackParamList = {
   };
   SetDestination: undefined;
   MyGaldaeHistory: any;
+  NowGaldaeDetail: { postId: string };
 };
 
 type nowGaldaeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -97,7 +98,7 @@ const topItem = myGaldaeHistory.length > 0 ? myGaldaeHistory[0] : null;
         {topItem ? (
           <MyGaldaeItem
             item={topItem}
-            onPress={() => navigation.navigate('NowGaldaeDetail', { topItem })}
+            //onPress={() => navigation.navigate('NowGaldaeDetail', {postId: topItem.postId})}
           />
         ) : (
           <View style={styles.borderBox}>

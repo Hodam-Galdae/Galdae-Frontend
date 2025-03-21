@@ -49,13 +49,15 @@ const TimePicker: React.FC<TimePickerProps> = ({ onTimeChange, isToday = false,s
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // 오전/오후 선택 핸들러
   const handleSelectAmPm = (amPm: '오전' | '오후') => {
-    // 새로 선택한 amPm 값으로 12시간 값을 24시간 값으로 변환해서 비교
     const convertedHour = amPm === '오전' ? (selectedHour % 12) : ((selectedHour % 12) + 12);
+    console.log(`
+      ⭐️amPm: ${amPm}
+      ⭐️convertedHour : ${convertedHour}
+      `);
     if (isToday) {
       const now = moment();
-      const chosenTime = moment().set({ hour: convertedHour, minute: selectedMinute, second: 0, millisecond: 0 });
+      const chosenTime = moment().startOf('day').set({ hour: convertedHour, minute: selectedMinute, second: 0, millisecond: 0 });
       if (chosenTime.isBefore(now)) {
         setInvalidPopupVisible(true);
         return;
@@ -65,13 +67,17 @@ const TimePicker: React.FC<TimePickerProps> = ({ onTimeChange, isToday = false,s
     setDropdownOpen(null);
     onTimeChange && onTimeChange(amPm, selectedHour, selectedMinute);
   };
-  // 시간 선택 핸들러
   const handleSelectHour = (hour: number) => {
-    // 12시간 값을 24시간 값으로 변환해서 비교
+    // 12시간 값을 24시간 값으로 변환
     const convertedHour = selectedAmPm === '오전' ? (hour % 12) : ((hour % 12) + 12);
+    console.log(`
+      🌸amPm: ${hour}
+      🌸convertedHour : ${convertedHour}
+      `);
     if (isToday) {
       const now = moment();
-      const chosenTime = moment().set({ hour: convertedHour, minute: selectedMinute, second: 0, millisecond: 0 });
+      // 오늘 날짜의 시작을 기준으로 선택한 시간 설정 (날짜는 오늘)
+      const chosenTime = moment().startOf('day').set({ hour: convertedHour, minute: selectedMinute, second: 0, millisecond: 0 });
       if (chosenTime.isBefore(now)) {
         setInvalidPopupVisible(true);
         return;
@@ -82,21 +88,25 @@ const TimePicker: React.FC<TimePickerProps> = ({ onTimeChange, isToday = false,s
     onTimeChange && onTimeChange(selectedAmPm, hour, selectedMinute);
   };
 
-  // 분 선택 핸들러
-  const handleSelectMinute = (minute: number) => {
-    const convertedHour = selectedAmPm === '오전' ? (selectedHour % 12) : ((selectedHour % 12) + 12);
-    if (isToday) {
-      const now = moment();
-      const chosenTime = moment().set({ hour: convertedHour, minute, second: 0, millisecond: 0 });
-      if (chosenTime.isBefore(now)) {
-        setInvalidPopupVisible(true);
-        return;
-      }
+
+const handleSelectMinute = (minute: number) => {
+  const convertedHour = selectedAmPm === '오전' ? (selectedHour % 12) : ((selectedHour % 12) + 12);
+  console.log(`
+    🐤amPm: ${minute}
+    🐤convertedHour : ${convertedHour}
+    `);
+  if (isToday) {
+    const now = moment();
+    const chosenTime = moment().startOf('day').set({ hour: convertedHour, minute, second: 0, millisecond: 0 });
+    if (chosenTime.isBefore(now)) {
+      setInvalidPopupVisible(true);
+      return;
     }
-    setSelectedMinute(minute);
-    setDropdownOpen(null);
-    onTimeChange && onTimeChange(selectedAmPm, selectedHour, minute);
-  };
+  }
+  setSelectedMinute(minute);
+  setDropdownOpen(null);
+  onTimeChange && onTimeChange(selectedAmPm, selectedHour, minute);
+};
 
   return (
    <View style={style}>

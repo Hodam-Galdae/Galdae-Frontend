@@ -1,4 +1,4 @@
-import React, { forwardRef, useImperativeHandle, useRef,useState,useContext } from 'react';
+import React, {useEffect, forwardRef, useImperativeHandle, useRef,useState,useContext } from 'react';
 import { View,KeyboardAvoidingView } from 'react-native';
 import { Modalize } from 'react-native-modalize';
 import BasicText from '../BasicText';
@@ -11,6 +11,10 @@ import BasicButton from '../button/BasicButton';
 import SelectTextButton from '../button/SelectTextButton';
 import BigPictureModal from './BigPictureModal';
 import {TabBarVisibilityContext} from '../../utils/TabBarVisibilityContext';
+import { useSelector } from 'react-redux';
+import { useAppDispatch } from '../../modules/redux/store';
+import { RootState } from '../../modules/redux/RootReducer';
+import { fetchPlaces } from '../../modules/redux/slice/placesSlice';
 export interface FastGaldaeEndPopupRef {
   open: () => void;
   close: () => void;
@@ -18,25 +22,45 @@ export interface FastGaldaeEndPopupRef {
 
 export interface FastGaldaePopupProps {
   onClose?: () => void;
-  onConfirm?: (largeCategory: string, smallCategory: string) => void;
+  onConfirm?: (largeCategoryName: string,largeCategoryId:number,  smallCategoryName: string, smallCategoryId:number) => void;
 }
 
 const FastGaldaePopup = forwardRef<FastGaldaeEndPopupRef, FastGaldaePopupProps>(
   ({ onClose,onConfirm }, ref) => {
     const modalizeRef = useRef<Modalize>(null);
     const pictureModalRef = useRef<Modalize>(null);
-    // 대분류와 소분류 선택 상태 (더미 데이터)
-    const [largeCategory, setLargeCategory] = useState<string>('');
-    const [smallCategory, setSmallCategory] = useState<string>('');
+   // 대분류와 소분류 선택 상태 (더미 데이터)
+    const [largeCategoryName, setLargeCategoryName] = useState<string>('');
+    const [smallCategoryName, setSmallCategoryName] = useState<string>('');
+    const [largeCategoryId, setLargeCategoryId] = useState<number>(0);
+    const [smallCategoryId, setSmallCategoryId] = useState<number>(0);
+    const dispatch = useAppDispatch();
+    const places = useSelector((state: RootState) => state.placesSlice.places);
+    const placesLoading = useSelector((state: RootState) => state.placesSlice.loading);
+    const placesError = useSelector((state: RootState) => state.placesSlice.error);
+
+    
     const { setIsTabBarVisible } = useContext(TabBarVisibilityContext);
+
+     // 컴포넌트 마운트 시 Redux를 통해 places 데이터 불러오기
+     useEffect(() => {
+      if (!places || places.length === 0) {
+        dispatch(fetchPlaces());
+      }
+    }, [dispatch, places]);
     const handleSelectConfirm = () =>{
-      onConfirm && onConfirm(largeCategory, smallCategory);
+      onConfirm && onConfirm(largeCategoryName,largeCategoryId, smallCategoryName, smallCategoryId);
       modalizeRef.current?.close();
     };
 
-    const toggleLargeCategory = (name: string) =>{
-     setLargeCategory(name);
-
+    const pressedLargeCategory = (majorPlace:any) =>{
+      setLargeCategoryName(majorPlace.majorPlace);
+      setLargeCategoryId(majorPlace.majorPlaceId);
+ 
+     };
+     const pressedSubPlace = (subPlace: any)=>{
+      setSmallCategoryName(subPlace.subPlace);
+      setSmallCategoryId(subPlace.subPlaceId);
     };
     const handlePicturePress = () => {
       // SVGButton 클릭 시 큰 사진 팝업 열기
@@ -105,104 +129,81 @@ const FastGaldaePopup = forwardRef<FastGaldaeEndPopupRef, FastGaldaePopupProps>(
                   borderColor:theme.colors.transparent,
                 }}
               />
-              <BasicText text={smallCategory || '정문'} fontSize={theme.fontSize.size24} style={styles.title}/>
-              <BasicText text={largeCategory || '학교'} fontSize={theme.fontSize.size16} color={theme.colors.gray1} style={styles.subTitle}/>
+              <BasicText text={smallCategoryName || '정문'} fontSize={theme.fontSize.size24} style={styles.title}/>
+              <BasicText text={largeCategoryName || '학교'} fontSize={theme.fontSize.size16} color={theme.colors.gray1} style={styles.subTitle}/>
             </View>
 
           </View>
 
           <View style={styles.selects}>
-            {/** 대분류 */}
-            <ScrollView style={styles.selectContainer}>
-              <View style={styles.select}>
-                <SelectTextButton text={'학교'} onPress={()=>toggleLargeCategory('학교')}
-                selected={largeCategory === '학교'}
-                unselectedColors={
-                  {
-                    backgroundColor:theme.colors.transparent,
-                    textColor:theme.colors.gray1,
-                    borderColor:theme.colors.transparent,
-                  }
-                }
-                selectedColors={
-                  {
-                    backgroundColor:theme.colors.brandColor,
-                    textColor:theme.colors.white,
-                    borderColor:theme.colors.transparent,
-                  }
-                }
-                buttonStyle={styles.selectBtn}
-                textStyle={styles.selectText}/>
-                <SelectTextButton text={'모시래'} onPress={() => toggleLargeCategory('모시래')}
-                selected={largeCategory === '모시래'}
-                unselectedColors={
-                  {
-                    backgroundColor:theme.colors.transparent,
-                    textColor:theme.colors.gray1,
-                    borderColor:theme.colors.transparent,
-                  }
-                }
-                selectedColors={
-                  {
-                    backgroundColor:theme.colors.brandColor,
-                    textColor:theme.colors.white,
-                    borderColor:theme.colors.transparent,
-                  }
-                }
-                buttonStyle={styles.selectBtn}
-                textStyle={styles.selectText}/>
+                {/** 대분류 */}
+                <ScrollView style={styles.selectContainer}>
+                  <View style={styles.select}>
+                    {placesLoading ? (
+                      <BasicText text="Loading..." />
+                    ) : placesError ? (
+                      <BasicText text={`Error: ${placesError}`} />
+                    ) : (
+                      places.map((majorPlace) => (
+                        <SelectTextButton
+                          key={majorPlace.majorPlaceId}
+                          text={majorPlace.majorPlace}
+                          onPress={() => pressedLargeCategory(majorPlace)}
+                          selected={largeCategoryName === majorPlace.majorPlace}
+                          unselectedColors={{
+                            backgroundColor: theme.colors.transparent,
+                            textColor: theme.colors.gray1,
+                            borderColor: theme.colors.transparent,
+                          }}
+                          selectedColors={{
+                            backgroundColor: theme.colors.brandColor,
+                            textColor: theme.colors.white,
+                            borderColor: theme.colors.transparent,
+                          }}
+                          buttonStyle={styles.selectBtn}
+                          textStyle={styles.selectText}
+                        />
+                      ))
+                    )}
+                  </View>
+                </ScrollView>
+                {/** 소분류 */}
+                <ScrollView style={styles.selectContainer}>
+                  <View style={styles.select}>
+                    {(() => {
+                      const selectedMajor = places.find((p) => p.majorPlace === largeCategoryName);
+                      if (selectedMajor && selectedMajor.subPlaceList) {
+                        return selectedMajor.subPlaceList.map((subPlace) => (
+                          <SelectTextButton
+                            key={subPlace.subPlaceId}
+                            text={subPlace.subPlace}
+                            onPress={() => pressedSubPlace(subPlace)}
+                            selected={smallCategoryName === subPlace.subPlace}
+                            unselectedColors={{
+                              backgroundColor: theme.colors.transparent,
+                              textColor: theme.colors.gray1,
+                              borderColor: theme.colors.transparent,
+                            }}
+                            selectedColors={{
+                              backgroundColor: theme.colors.brandColor,
+                              textColor: theme.colors.white,
+                              borderColor: theme.colors.transparent,
+                            }}
+                            buttonStyle={styles.selectBtn}
+                            textStyle={styles.selectText}
+                          />
+                        ));
+                      }
+                      return null;
+                    })()}
+                  </View>
+                </ScrollView>
               </View>
-
-            </ScrollView>
-            {/** 소분류 */}
-            <ScrollView style={styles.selectContainer}>
-                <View style={styles.select}>
-                <SelectTextButton text={'정문'}  onPress={() => setSmallCategory('정문')}
-                selected={smallCategory === '정문'}
-                unselectedColors={
-                  {
-                    backgroundColor:theme.colors.transparent,
-                    textColor:theme.colors.gray1,
-                    borderColor:theme.colors.transparent,
-                  }
-                }
-                selectedColors={
-                  {
-                    backgroundColor:theme.colors.brandColor,
-                    textColor:theme.colors.white,
-                    borderColor:theme.colors.transparent,
-                  }
-                }
-                buttonStyle={styles.selectBtn}
-                textStyle={styles.selectText}/>
-
-              <SelectTextButton text={'후문'}  onPress={() => setSmallCategory('후문')}
-                selected={smallCategory === '후문'}
-                unselectedColors={
-                  {
-                    backgroundColor:theme.colors.transparent,
-                    textColor:theme.colors.gray1,
-                    borderColor:theme.colors.transparent,
-                  }
-                }
-                selectedColors={
-                  {
-                    backgroundColor:theme.colors.brandColor,
-                    textColor:theme.colors.white,
-                    borderColor:theme.colors.transparent,
-                  }
-                }
-                buttonStyle={styles.selectBtn}
-                textStyle={styles.selectText}/>
-                </View>
-            </ScrollView>
-
-          </View>
 
           <View style={styles.confirmBtnContainer}>
             <BasicButton
                  text="완료"
-                 disabled={!(largeCategory && smallCategory)}
+                 disabled={!(largeCategoryName && smallCategoryName && largeCategoryId && smallCategoryId)}
                  onPress={handleSelectConfirm}
                  buttonStyle={styles.confirmButton}
                  textStyle={styles.confirmText}
@@ -219,7 +220,7 @@ const FastGaldaePopup = forwardRef<FastGaldaeEndPopupRef, FastGaldaePopupProps>(
                />
             </View>
         </View>
-             
+
           </ScrollView>
         </KeyboardAvoidingView>
 

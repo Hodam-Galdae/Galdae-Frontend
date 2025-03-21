@@ -63,7 +63,22 @@ export const getFrequentRoutes = async () => {
     throw error;
   }
 };
-
+/**
+ * 회원 이미지 변경 API 호출 함수
+ * @param image 변경할 이미지 URL 또는 base64 문자열
+ * @returns API 응답 데이터
+ */
+export const updateMemberImage = async (image: string): Promise<any> => {
+  const requestUrl = '/members/image';
+  try {
+    const response = await axiosInstance.post(requestUrl, { image });
+    console.log('✅ 이미지 변경 성공:', response.data);
+    return response.data;
+  } catch (error: any) {
+    console.error('❌ 이미지 변경 실패:', error.response ? error.response.data : error);
+    throw error;
+  }
+};
 /**
  * 닉네임 변경 API
  */

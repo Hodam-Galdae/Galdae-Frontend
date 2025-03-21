@@ -9,6 +9,7 @@ import moment from 'moment';
 import SVGButton from '../button/SVGButton';
 import SelectTextButton from '../button/SelectTextButton';
 import TimePicker from '../TimePicker';
+import Calendar from '../Calendar';
 export interface FastGaldaeTimePopupRef {
   open: () => void;
   close: () => void;
@@ -17,11 +18,8 @@ export interface FastGaldaeTimePopupRef {
 export interface FastGaldaePopupProps {
   onClose?: () => void;
   onConfirm?: (
-    selectedDate: string,
-    selectedAmPm: '오전' | '오후',
-    selectedHour: number,
-    selectedMinute: number,
-    selectedGender: number,       // 0: 성별무관, 1: 여자, 2: 남자
+    formattedDepartureTime: string,
+    selectedGender: 'SAME' | 'DONT_CARE',
     selectedTimeDiscuss: number,  // 0: 가능, 1: 불가능
     passengerNumber: number
   ) => void;
@@ -33,9 +31,9 @@ const FilterPopup = forwardRef<FastGaldaeTimePopupRef, FastGaldaePopupProps>(
     const [selectedAmPm, setSelectedAmPm] = useState<'오전' | '오후'>('오전');
     const [selectedHour, setSelectedHour] = useState<number>(0);
     const [selectedMinute, setSelectedMinute] = useState<number>(0);
-    const [selectedGender, setSelectedGender] = useState<number>(0);
+    const [selectedGender, setSelectedGender] = useState<'SAME'| 'DONT_CARE'>('DONT_CARE');
     const [selectedTimeDiscuss, setSelectedTimeDiscuss] = useState<number>(0);
-    const [passengerNumber, setPassengerNumber] = useState<number>(0);
+    const [passengerNumber, setPassengerNumber] = useState<number>(2);
     const modalizeRef = useRef<Modalize>(null);
     const passengerNumberHandler = (type: String) => {
         if(type === 'PLUS' && passengerNumber < 4){
@@ -74,21 +72,24 @@ const FilterPopup = forwardRef<FastGaldaeTimePopupRef, FastGaldaePopupProps>(
       console.log(hour ,nextMinute );
     };
 
+    // 🔧 handleSelectConfirm: ISO 형식의 날짜시간 문자열로 변환 후 onConfirm 호출
     const handleSelectConfirm = () => {
-        if (selectedDate) {
-          onConfirm &&
-            onConfirm(
-              selectedDate,
-              selectedAmPm,
-              selectedHour,
-              selectedMinute,
-              selectedGender,
-              selectedTimeDiscuss,
-              passengerNumber
-            );
+      if (selectedDate) {
+        // 12시간 형식을 24시간 형식으로 변환
+        let hour24 = selectedHour;
+        if (selectedAmPm === '오후' && selectedHour < 12) {
+          hour24 += 12;
+        } else if (selectedAmPm === '오전' && selectedHour === 12) {
+          hour24 = 0;
         }
-        modalizeRef.current?.close();
-      };
+        const formattedDepartureTime = moment
+        .utc(`${selectedDate} ${hour24}:${selectedMinute}`, 'YYYY-MM-DD H:mm')
+        .format('YYYY-MM-DD[T]HH:mm:ss[Z]');
+
+        onConfirm && onConfirm(formattedDepartureTime, selectedGender, selectedTimeDiscuss, passengerNumber);
+      }
+      modalizeRef.current?.close();
+    };
 
     return (
       <Modalize
@@ -115,12 +116,29 @@ const FilterPopup = forwardRef<FastGaldaeTimePopupRef, FastGaldaePopupProps>(
             />
             <View style={styles.line} />
 
-            <BasicText
+            {/* <BasicText
               text="시간대"
               fontSize={theme.fontSize.size16}
               color={theme.colors.black}
               style={styles.time}
-            />
+            /> */}
+          <BasicText
+            text="출발 일시"
+            fontSize={theme.fontSize.size16}
+            color={theme.colors.black}
+            style={styles.time}
+          />
+
+          <View style={styles.datePicker}>
+            <Calendar onSelectDate={setSelectedDate} selected={selectedDate} />
+          </View>
+
+          <BasicText
+            text="시간 선택"
+            fontSize={theme.fontSize.size16}
+            color={theme.colors.black}
+            style={styles.start}
+          />
 
             {/* 시간 선택 컴포넌트 추가 */}
             <TimePicker
@@ -129,29 +147,24 @@ const FilterPopup = forwardRef<FastGaldaeTimePopupRef, FastGaldaePopupProps>(
                   setSelectedHour(hour);
                   setSelectedMinute(minute);
                 }}
-                isToday={true}
+                isToday={selectedDate === moment().format('YYYY-MM-DD')}
             />
 
             <BasicText style={styles.selectGender} text="동승자 성별을 선택해주세요." fontSize={theme.fontSize.size16}/>
             <View style={styles.buttonWrapper}>
               <SelectTextButton
                 text="성별무관"
-                selected={selectedGender === 0}
+                selected={selectedGender === 'DONT_CARE'}
                 buttonStyle={styles.selectBtn}
-                onPress={() => setSelectedGender(0)}
+                onPress={() => setSelectedGender('DONT_CARE')}
               />
               <SelectTextButton
-                text="여자"
-                selected={selectedGender === 1}
+                text="동성만"
+                selected={selectedGender === 'SAME'}
                 buttonStyle={styles.selectBtn}
-                onPress={() => setSelectedGender(1)}
+                onPress={() => setSelectedGender('SAME')}
               />
-              <SelectTextButton
-                text="남자"
-                selected={selectedGender === 2}
-                buttonStyle={styles.selectBtn}
-                onPress={() => setSelectedGender(2)}
-              />
+
             </View>
             <BasicText style={styles.selectTime} text="시간 협의 가능 여부를 선택해주세요." fontSize={theme.fontSize.size16}/>
             <View style={styles.buttonWrapper}>

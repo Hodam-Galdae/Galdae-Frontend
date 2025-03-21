@@ -77,6 +77,7 @@ export default StyleSheet.create({
       justifyContent:'center',
       alignItems:'center',
       gap:23,
+      //backgroundColor:theme.colors.gray0,
     },
     selectContainer:{
       width: '100%',
@@ -84,13 +85,21 @@ export default StyleSheet.create({
       borderRadius:10,
       borderWidth:2,
       borderColor:theme.colors.lightGray,
+      //backgroundColor:theme.colors.black,
     },
     select:{
       alignItems:'center',
       marginTop:20,
       gap:13,
       justifyContent:'center',
+      //backgroundColor:theme.colors.red,
+      width:'100%',
     },
+    selectBtn:{
+      paddingVertical:6,
+      paddingHorizontal:22,
+      //backgroundColor:theme.colors.caption1,
+  },
     selectText:{
       fontSize:theme.fontSize.size18,
       fontWeight:'500',
@@ -251,8 +260,5 @@ export default StyleSheet.create({
       fontWeight:'500',
       marginBottom:8,
     },
-    selectBtn:{
-      paddingVertical:6,
-      paddingHorizontal:22,
-  },
+    
   });

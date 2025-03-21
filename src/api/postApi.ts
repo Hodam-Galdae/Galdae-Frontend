@@ -80,8 +80,24 @@ export const searchPosts = async (params: SearchPostsRequest) => {
   console.log('🚀 [갈대 검색 요청] GET /posts/search');
   console.log('📌 요청 파라미터:', params);
 
+  // 모든 파라미터 값을 문자열로 변환
+  const formattedParams: Record<string, string> = {
+    pageNumber: String(params.pageNumber ?? ''),
+    pageSize: String(params.pageSize ?? ''),
+    direction: params.direction ?? '',
+    properties: params.properties?.join(',') ?? '',
+    majorDepartment: String(params.majorDepartment ?? ''),
+    subDepartment: String(params.subDepartment ?? ''),
+    majorArrival: String(params.majorArrival ?? ''),
+    subArrival: String(params.subArrival ?? ''),
+  };
+
+  // 쿼리 문자열 생성
+  const queryString = new URLSearchParams(formattedParams).toString();
+  console.log(`🚀 요청 URL: /posts/search?${queryString}`);
+
   try {
-    const response = await axiosInstance.get('/posts/search', { params });
+    const response = await axiosInstance.get('/posts/search', { params: formattedParams });
     console.log('✅ [갈대 검색 성공] 응답 데이터:', response.data);
     return response.data;
   } catch (error: any) {

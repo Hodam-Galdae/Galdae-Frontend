@@ -11,7 +11,7 @@ export interface FastGaldaeTimePopupRef {
 }
 
 export interface FastGaldaePopupProps {
-    onConfirm: (selectedSortOrder: 'latest' | 'soon') => void;
+    onConfirm: (selectedSortOrder: 'latest' | 'departureTime') => void;
     onClose?: () => void;
 }
 
@@ -19,7 +19,7 @@ const ArrayPopup = forwardRef<FastGaldaeTimePopupRef, FastGaldaePopupProps>(
   ({ onClose,onConfirm },ref ) => {
 
     const modalizeRef = useRef<Modalize>(null);
-    const [selectedSortOrder, setSelectedSortOrder] = useState<'latest' | 'soon'>('latest');
+    const [selectedSortOrder, setSelectedSortOrder] = useState<'latest' | 'departureTime'>('latest');
     useImperativeHandle(ref, () => ({
         open: () => {
           modalizeRef.current?.open();
@@ -29,7 +29,7 @@ const ArrayPopup = forwardRef<FastGaldaeTimePopupRef, FastGaldaePopupProps>(
         },
       }));
 
-      const handleSelect = (order: 'latest' | 'soon') => {
+      const handleSelect = (order: 'latest' | 'departureTime') => {
         onConfirm(order);
         setSelectedSortOrder(order);
         //modalizeRef.current?.close();
@@ -56,20 +56,16 @@ const ArrayPopup = forwardRef<FastGaldaeTimePopupRef, FastGaldaePopupProps>(
                 <SVGButton
                onPress={() => handleSelect('latest')}
                 iconName={selectedSortOrder === 'latest' ? 'check_circle_fill' : 'check_circle_line'}
-                // buttonStyle={styles.closeButton}
-                // SVGStyle={styles.closeButtonIcon}
                 />
 
                 <BasicText text="최신순" style={styles.font} color={selectedSortOrder === 'latest' ? theme.colors.black : theme.colors.gray2}  onPress={() => handleSelect('latest')}/>
             </View>
             <View style={styles.latest}>
                 <SVGButton
-                onPress={() => handleSelect('soon')}
-                iconName={selectedSortOrder === 'soon' ? 'check_circle_fill' : 'check_circle_line'}
-                // buttonStyle={styles.closeButton}
-                // SVGStyle={styles.closeButtonIcon}
+                onPress={() => handleSelect('departureTime')}
+                iconName={selectedSortOrder === 'departureTime' ? 'check_circle_fill' : 'check_circle_line'}
                 />
-                <BasicText text="시간임박순" style={styles.font} color={selectedSortOrder === 'soon' ? theme.colors.black : theme.colors.gray2}  onPress={() => handleSelect('soon')}/>
+                <BasicText text="시간임박순" style={styles.font} color={selectedSortOrder === 'departureTime' ? theme.colors.black : theme.colors.gray2}  onPress={() => handleSelect('departureTime')}/>
             </View>
 
         </View>
