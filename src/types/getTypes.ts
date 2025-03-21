@@ -1,5 +1,5 @@
 /**
- * 실시간 갈대 조회 타입
+ * 내 갈대 조회 타입 (홈화면)
  */
 export interface MyCreatedPost {
     departure: string; // 출발지
@@ -24,7 +24,7 @@ export interface MyPostHistory {
   passengerCount: number;
 }
 /**
- * 실시간 갈대 타입 (수정 후)
+ * 실시간 갈대 타입
  */
 export interface GaldaeItemType {
   postId: string;

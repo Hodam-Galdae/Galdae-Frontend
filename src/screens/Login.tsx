@@ -53,7 +53,7 @@ const Login: React.FC = () => {
     console.log('✅ API 응답 access token:', response.accessToken);
       // console.log('access token : ' + response.accessToken);
       // console.log('refresh token : ' + response.accessToken);
-      handleGoToSignUp();
+      handleGoNextPage(response);
     } catch (err) {
       console.error('login err : ', err);
     }
@@ -77,6 +77,7 @@ const Login: React.FC = () => {
   };
 
   const handleGoNextPage = (response: AuthResponse) => {
+    navigation.replace('MainTab');
     // // 학생 인증 완료
     // if(response.isAuthenticate){
     //   navigation.replace('MainTab');
@@ -87,7 +88,7 @@ const Login: React.FC = () => {
     //     navigation.replace('SignUp', { data: response.isJoined});
     //   }
     // }
-    navigation.replace('SignUp', {data: response.isJoined});
+    //navigation.replace('SignUp', {data: response.isJoined});
 
   };
 

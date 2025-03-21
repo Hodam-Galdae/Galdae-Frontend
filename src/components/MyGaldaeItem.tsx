@@ -10,7 +10,7 @@ import { MyPostHistory } from '../types/getTypes';
 
 interface MyGaldaeItemProps {
   item: MyPostHistory;
-  onPress: () => void;
+  onPress?: () => void;
   onLongPress?: () => void;
 }
 

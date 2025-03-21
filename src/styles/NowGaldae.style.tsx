@@ -24,7 +24,7 @@ export default StyleSheet.create({
     filters:{
         flexDirection:'row',
         alignItems:'center',
-        gap:(8),
+        gap:(4),
 
     },
     arrayBtn:{
