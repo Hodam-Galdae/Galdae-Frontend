@@ -1,5 +1,5 @@
 import React from 'react';
-import {  View } from 'react-native';
+import {  View ,Alert} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from '../../styles/Logout.style';
 import Header from '../../components/Header';
@@ -8,7 +8,7 @@ import BasicText from '../../components/BasicText';
 import BasicButton from '../../components/button/BasicButton';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { theme } from '../../styles/theme';
-
+import { logoutMember } from '../../api/membersApi';
 type HomeProps = {
   navigation: any; // 실제 프로젝트에서는 proper type 사용 권장 (예: StackNavigationProp)
 };
@@ -25,14 +25,24 @@ type RootStackParamList = {
 
     SetDestination:undefined;
     WithDraw:undefined;
+    Login: undefined;
 };
 
 type nowGaldaeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 const Logout: React.FC<HomeProps> = () => {
     const navigation = useNavigation<nowGaldaeScreenNavigationProp>();
     const goBack = () => navigation.goBack();
-    const handleLogout = () =>{
-
+    const handleLogout = async () => {
+      // 실제 프로젝트에서는 토큰을 Redux나 AsyncStorage 등에서 가져옵니다.
+      const token = 'Bearer your-access-token'; // 실제 엑세스 토큰으로 대체
+      try {
+        await logoutMember(token);
+        // 로그아웃 성공 시, 상태 초기화 후 로그인 화면으로 이동하거나 적절히 처리합니다.
+        Alert.alert('로그아웃', '정상적으로 로그아웃 되었습니다.');
+        navigation.navigate('Login');
+      } catch (error) {
+        Alert.alert('로그아웃 실패', '로그아웃에 실패하였습니다. 다시 시도해주세요.');
+      }
     };
     const handleWithDraw = () =>{
       navigation.navigate('WithDraw');

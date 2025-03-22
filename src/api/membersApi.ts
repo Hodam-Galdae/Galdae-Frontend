@@ -138,3 +138,26 @@ export const updateBankInfo = async (bankType: string, accountNumber: string, de
     throw error;
   }
 };
+/**
+ * 로그아웃 API 호출 함수
+ * @param token 엑세스 토큰
+ * @returns API 응답 데이터
+ */
+export const logoutMember = async (token: string): Promise<any> => {
+  try {
+    const response = await axiosInstance.post(
+      '/members/logout',
+      null, // 요청 본문이 필요 없으므로 null 전달
+      {
+        headers: {
+          Authorization: token, // 헤더에 엑세스 토큰 설정
+        },
+      }
+    );
+    console.log('✅로그아웃 성공:', response.data);
+    return response.data;
+  } catch (error: any) {
+    console.error('❌로그아웃 실패:', error.response ? error.response.data : error);
+    throw error;
+  }
+};
