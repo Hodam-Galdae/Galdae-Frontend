@@ -2,12 +2,12 @@ import axios from 'axios';
 import axiosInstance from './axiosInstance';
 import RNFS from 'react-native-fs';
 
-interface AuthResponse {
+export interface AuthResponse {
   accessToken: string;
   refreshToken: string;
   expiredIn: number;
   isJoined: boolean;
-  isAuthenticate: boolean;
+  isAuthenticate: string;
 }
 
 interface CheckNicknameResponse {
