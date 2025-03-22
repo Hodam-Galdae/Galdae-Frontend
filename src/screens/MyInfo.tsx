@@ -37,23 +37,7 @@ type RootStackParamList = {
 
 type nowGaldaeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 const MyInfo: React.FC = () => {
-  // const newGaldaeList = [
-  //   { time: '방금전', dest: '충주 터미널', depart: '정문' },
-  //   { time: '1일전', dest: '충주역', depart: '학교' },
-  //   { time: '2일전', dest: '시청', depart: '정문' },
-  //   { time: '3일전', dest: '마트', depart: '학교' },
-  //   { time: '4일전', dest: '공원', depart: '후문' },
-  //   { time: '5일전', dest: '카페', depart: '도서관' },
-  //   { time: '6일전', dest: '병원', depart: '정문' },
-  //   { time: '7일전', dest: '은행', depart: '학교' },
-  //   { time: '8일전', dest: '백화점', depart: '후문' },
-  //   { time: '9일전', dest: '기차역', depart: '정문' },
-  //   { time: '10일전', dest: '공항', depart: '터미널' },
-  //   { time: '11일전', dest: '도서관', depart: '후문' },
-  //   { time: '12일전', dest: '박물관', depart: '정문' },
-  //   { time: '13일전', dest: '호텔', depart: '학교' },
-  //   { time: '14일전', dest: '극장', depart: '정문' },
-  // ];
+
   const myInfoMenu = [
     {text: '결제 · 정산관리', onPress: ()=>{navigation.navigate('Payment');}},
     {text: '공지 사항', onPress: ()=>{navigation.navigate('Announcement');}},
@@ -64,6 +48,7 @@ const MyInfo: React.FC = () => {
   ];
   const [refreshing, setRefreshing] = useState(false);
   const dispatch = useAppDispatch();
+  const [isImageLoading, setIsImageLoading] = useState(false); // 이미지 업데이트 로딩 상태
   const navigation = useNavigation<nowGaldaeScreenNavigationProp>();
   //const [profileImg, setProfileImg] = useState<string>('');
   const {imageUri, getImageByGallery} = useImagePicker();
@@ -137,6 +122,7 @@ useFocusEffect(
     const updateImage = async () => {
       try {
         if (imageUri) {
+          setIsImageLoading(true);
           console.log(`imageUri: ${imageUri}`);
           const result = await updateMemberImage(imageUri);
           console.log('✅ 이미지 업데이트 성공:', result);
@@ -146,6 +132,8 @@ useFocusEffect(
       } catch (error) {
         console.error('❌ 이미지 업데이트 실패:', error);
         Alert.alert('오류', '프로필 이미지를 업데이트하는데 실패했습니다.');
+      }finally{
+        setIsImageLoading(false);
       }
     };
 
@@ -178,21 +166,17 @@ useFocusEffect(
           <View style={styles.userInfoBox}>
             <View style={styles.userInfos}>
               <View style={styles.profile}>
-              {profileImg ? (
-                <Image
-                  source={{ uri: profileImg }}
-                  style={styles.profileImg}
-                  resizeMode="cover"
-                />
-              ) : imageUri ? (
-                <Image
-                  source={{ uri: imageUri }}
-                  style={styles.profileImg}
-                  resizeMode="cover"
-                />
-              ) : (
-                <SVG name="profileImg" style={styles.profileImg} />
-              )}
+              {isImageLoading ? (
+                  <View style={[styles.profileImg, { justifyContent: 'center', alignItems: 'center' }]}>
+                    <ActivityIndicator size="small" color={theme.colors.brandColor} />
+                  </View>
+                ) : profileImg ? (
+                  <Image source={{ uri: profileImg }} style={styles.profileImg} resizeMode="cover" />
+                ) : imageUri ? (
+                  <Image source={{ uri: imageUri }} style={styles.profileImg} resizeMode="cover" />
+                ) : (
+                  <SVG name="profileImg" style={styles.profileImg} />
+                )}
                 <SVGButton iconName="camera_2_line" buttonStyle={styles.profileCamera} onPress={getImageByGallery}/>
               </View>
               <View style={styles.userInfoText}>
