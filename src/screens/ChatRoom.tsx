@@ -32,10 +32,11 @@ import Header from '../components/Header';
 import { Client, IMessage } from '@stomp/stompjs';
 import { useSelector } from 'react-redux';
 import {RootState} from '../modules/redux/RootReducer';
-import { ChatResponse, ChatroomResponse, getChats, getMembers, MemberResponse } from '../api/chatApi';
+import { ChatResponse, ChatroomResponse, getChats, getMembers, MemberResponse, sendImage } from '../api/chatApi';
 import SockJS from 'sockjs-client';
 import { API_BASE_URL, SUB_ENDPOINT, PUB_ENDPOINT } from '../api/axiosInstance';
 import { createReport } from '../api/reportApi';
+import { resizeImage } from '../utils/ImageResizer';
 
 enum Type {
   MESSAGE,
@@ -74,7 +75,7 @@ const ChatRoom: React.FC = () => {
     useState<boolean>(false);
   const [isVisibleExitPopup, setIsVisibleExitPopup] = useState<boolean>(false);
   const chatListRef = useRef<FlatList>(null);
-  const {imageUri, getImageByCamera, getImageByGallery} = useImagePicker();
+  const {imageUri, imageName, getImageByCamera, getImageByGallery} = useImagePicker();
   const navigation =
     useNavigation<
       NativeStackNavigationProp<RootStackParamList, 'Settlement'>
@@ -328,18 +329,25 @@ const ChatRoom: React.FC = () => {
   );
 
   useDidMountEffect(() => {
-    if (imageUri !== '') {
-      setData([
-        ...data,
-        {
-          chatId: data[data.length - 1].chatId + 1,
-          chatContent: imageUri,
-          sender: userInfo.nickname,
-          time: new Date().toDateString(),
-          chatType: Type.IMAGE.toString(),
-        },
-      ]);
-    }
+    const send = async() => {
+      if (imageUri !== '') {
+        const formData = new FormData();
+        const image = await resizeImage(imageUri, 200, 200, imageName);
+        let imageFile = {uri: image.uri, type: 'jpeg', name: image.name};
+        formData.append('image', imageFile);
+        const url = await sendImage(formData);
+
+        if (client.current) {
+          client.current.publish({
+            destination: PUB_ENDPOINT + '/' + chatRoomData.chatroomId,
+            headers: {'Authorization' : userInfo.token},
+            body: JSON.stringify({ type: 'IMAGE', sender: userInfo.nickname, message: url}),
+          });
+        }
+      }
+    };
+
+    send();
   }, [imageUri]);
 
   return (

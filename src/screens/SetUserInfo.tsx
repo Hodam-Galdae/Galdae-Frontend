@@ -20,6 +20,7 @@ import {checkNickname, join} from '../api/authApi';
 import useImagePicker from '../hooks/useImagePicker';
 import RNFS from 'react-native-fs';
 import ImageResizer from '@bam.tech/react-native-image-resizer';
+import { resizeImage } from '../utils/ImageResizer';
 
 interface AgreeProps {
   setNextStep: (name: string) => void;
@@ -45,21 +46,6 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep}) => {
     '제주 은행',
     '광주 은행',
   ];
-
-  const resizeImage = async () => {
-    const image = await ImageResizer.createResizedImage(
-      imageUri,
-      50,
-      50,
-      'JPEG',
-      100,
-      undefined,
-      imageName,
-      undefined,
-      undefined,
-    );
-    return image;
-  };
 
   const clickEvent = async () => {
     const regex = /^[가-힣0-9]{2,8}$/;
@@ -113,7 +99,7 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep}) => {
         });
 
         if (imageUri) {
-          const image = await resizeImage();
+          const image = await resizeImage(imageUri, 50, 50, imageName);
           let imageFile = {uri: image.uri, type: 'jpeg', name: image.name};
           formData.append('profileImage', imageFile);
         }

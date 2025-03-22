@@ -25,6 +25,9 @@ export interface MemberResponse {
   memberImage: string;
 }
 
+export interface ImageResponse {
+  url: string;
+}
 
 // ✅ 채팅 가져오기
 export const getChats = async (chatroomId: string): Promise<ChatResponse[]> => {
@@ -53,4 +56,14 @@ export const getMembers = async (chatroomId: string): Promise<MemberResponse[]> 
 // ✅ 채팅방 나가기
 export const exitChatroom = async (chatroomId: string): Promise<void> => {
   await axiosInstance.delete('/chat/' + chatroomId);
+};
+
+
+export const sendImage = async (image: FormData): Promise<string> => {
+  const response = await axiosInstance.post('/chat/image', image, {
+    transformRequest: (data, headers) => {
+      return image;
+    },
+  });
+  return response.data.url;
 };
