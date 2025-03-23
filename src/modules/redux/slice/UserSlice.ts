@@ -4,6 +4,7 @@ import { createSlice } from '@reduxjs/toolkit';
  * UserSlice의 관리하는 상태값(State)을 정의합니다.
  */
 const initialState = {
+  id: '',
   nickname: '',
   bankType: '',
   accountNumber: '',

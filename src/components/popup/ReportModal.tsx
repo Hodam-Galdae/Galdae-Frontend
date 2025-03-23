@@ -12,6 +12,8 @@ import BasicText from '../../components/BasicText';
 import styles from '../../styles/ReportModal.style';
 import ItemSelector from '../ItemSelector';
 import SVGButton from '../button/SVGButton';
+import useImagePicker from '../../hooks/useImagePicker';
+import useDidMountEffect from '../../hooks/useDidMountEffect';
 
 export interface ReportPopupProps {
   visible: boolean;
@@ -20,16 +22,24 @@ export interface ReportPopupProps {
   title?: string;
   message?: string;
   containerStyle?: StyleProp<ViewStyle>;
+  setImage: React.Dispatch<React.SetStateAction<{ uri: string; name: string; }>>;
 }
 
 const ReportPopup: React.FC<ReportPopupProps> = ({
   visible,
   onCancel,
   onConfirm,
+  setImage,
 }) => {
   const [selected, setSelected] = useState<number>(-1);
   const [reason, setReason] = useState<string>('');
   const reportText = ['사유 선택1', '사유 선택2', '사유 선택3', '직접 입력'];
+  const {imageUri, imageName, getImageByGallery} = useImagePicker();
+
+  useDidMountEffect(() => {
+    const image = {uri: imageUri, name: imageName};
+    setImage(image);
+  }, [imageUri]);
 
   return (
     <Modal transparent={true} visible={visible} animationType="fade">
@@ -61,7 +71,7 @@ const ReportPopup: React.FC<ReportPopupProps> = ({
             ) : null}
           </View>
           <View style={styles.wrapper}>
-            <SVGButton iconName="PictureGray" buttonStyle={styles.pictureBtn} />
+            <SVGButton onPress={getImageByGallery} iconName="PictureGray" buttonStyle={styles.pictureBtn} />
             <TouchableOpacity
               onPress={() =>
                 onConfirm(

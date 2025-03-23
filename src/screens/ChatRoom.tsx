@@ -37,6 +37,7 @@ import SockJS from 'sockjs-client';
 import { API_BASE_URL, SUB_ENDPOINT, PUB_ENDPOINT } from '../api/axiosInstance';
 import { createReport } from '../api/reportApi';
 import { resizeImage } from '../utils/ImageResizer';
+import RNFS from 'react-native-fs';
 
 enum Type {
   MESSAGE,
@@ -87,6 +88,7 @@ const ChatRoom: React.FC = () => {
   const translateY = useRef(new Animated.Value(100)).current;
   const {params} = useRoute<RouteProp<RootStackParamList, 'ChatRoom'>>();
   const [members, setMembers] = useState<MemberResponse[]>([]);
+  const [reportImage, setReportImage] = useState({uri: '', name: ''});
   const reportData = useRef({member: {memberId: '', memberName: '', memberImage: ''}, reason: ''});
   const chatRoomData = params.data;
   const userInfo = useSelector((state: RootState) => state.user);
@@ -130,6 +132,7 @@ const ChatRoom: React.FC = () => {
       debug: (frame: any) => console.log(frame),
       connectHeaders: {
         Authorization: userInfo.token,
+        chatroomId: chatRoomData.chatroomId,
       },
       webSocketFactory: () => socket,
       reconnectDelay: 5000,
@@ -265,12 +268,27 @@ const ChatRoom: React.FC = () => {
 
   const reportUser = async() => {
     setIsVisibleReportCheckPopup(false);
-    console.log(reportData.current);
 
     const formData = new FormData();
-    // formData.append('image', )
-    formData.append('reported', reportData.current.member.memberId);
-    formData.append('reportContent', reportData.current.reason);
+    const data = {
+      reported: reportData.current.member.memberId,
+      reportContent: reportData.current.reason,
+    };
+    const fileName = `${reportData.current.member.memberId}.json`;
+    const filePath = `${RNFS.TemporaryDirectoryPath}/${fileName}`;
+    await RNFS.writeFile(filePath, JSON.stringify(data), 'utf8');
+    formData.append('reportRequestDto', {
+      uri: `file:///${filePath}`,
+      type: 'application/json',
+      name: fileName,
+    });
+
+    if (reportImage.uri !== '') {
+      const image = await resizeImage(reportImage.uri, 50, 50, reportImage.name);
+      let imageFile = {uri: image.uri, type: 'jpeg', name: image.name};
+      formData.append('profileImage', imageFile);
+    }
+
     await createReport(formData);
   };
 
@@ -522,6 +540,7 @@ const ChatRoom: React.FC = () => {
           visible={isVisibleReportPopup}
           onConfirm={checkReportUser}
           onCancel={() => setIsVisibleReportPopup(false)}
+          setImage={setReportImage}
         />
         <ReportCheckModal
           visible={isVisibleReportCheckPopup}
