@@ -5,6 +5,7 @@ import {
   TextInput,
   TouchableWithoutFeedback,
   Keyboard,
+  Image,
 } from 'react-native';
 import styles from '../styles/SetUserInfo.style';
 import BasicText from '../components/BasicText';
@@ -17,6 +18,9 @@ import ItemSelector from '../components/ItemSelector';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {ScrollView} from 'react-native-gesture-handler';
 import {checkNickname, join} from '../api/authApi';
+import useImagePicker from '../hooks/useImagePicker';
+import RNFS from 'react-native-fs';
+import { resizeImage } from '../utils/ImageResizer';
 
 interface AgreeProps {
   setNextStep: (name: string) => void;
@@ -30,6 +34,8 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep}) => {
   const [accountName, setAccountName] = useState<string>('');
   const [alertNameText, setAlertNameText] = useState<string>('');
   const [alertGenderText, setAlertGenderText] = useState<string>('');
+  const {imageUri, imageName, imageType, getImageByCamera, getImageByGallery} =
+    useImagePicker();
 
   const bankText = [
     '국민 은행',
@@ -75,13 +81,30 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep}) => {
     // 모든 조건 충족
     if (flag) {
       try {
-        await join({
+        const formData = new FormData();
+        const data = {
           nickname: name,
           gender: genderSelected === 0 ? 'FEMALE' : 'MALE',
-          // bankType: bankText[bankSelect],
-          // accountNumber: accountNumber,
-          // depositor: accountName,
+          bankType: bankText[bankSelect],
+          accountNumber: accountNumber,
+          depositor: accountName,
+        };
+        const fileName = `${name}.json`;
+        const filePath = `${RNFS.TemporaryDirectoryPath}/${fileName}`;
+        await RNFS.writeFile(filePath, JSON.stringify(data), 'utf8');
+        formData.append('joinRequestCommand', {
+          uri: `file:///${filePath}`,
+          type: 'application/json',
+          name: fileName,
         });
+
+        if (imageUri) {
+          const image = await resizeImage(imageUri, 50, 50, imageName);
+          let imageFile = {uri: image.uri, type: 'jpeg', name: image.name};
+          formData.append('profileImage', imageFile);
+        }
+
+        await join(formData);
         setNextStep('verifySchool');
       } catch (e) {
         console.log(e);
@@ -98,13 +121,18 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep}) => {
               <BasicText text="유저 정보 입력" style={styles.title} />
               <View style={styles.profileContainer}>
                 <View style={styles.profileWrapper}>
-                  <SVG
-                    style={styles.profile}
-                    name="DefaultProfile"
-                    width={68}
-                    height={68}
-                  />
+                  {imageUri ?
+                    <Image style={styles.profile} source={{uri: imageUri}}/> :
+                    <SVG
+                      style={styles.profile}
+                      name="DefaultProfile"
+                      width={68}
+                      height={68}
+                    />
+                  }
+
                   <SVGButton
+                    onPress={getImageByGallery}
                     iconName="GalleryBlack"
                     SVGStyle={{width: 30, height: 30}}
                     buttonStyle={styles.camera}

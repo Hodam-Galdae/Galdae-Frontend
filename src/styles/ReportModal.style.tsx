@@ -30,7 +30,7 @@ export default StyleSheet.create({
     height: 40,
     backgroundColor: theme.colors.lightGray,
     borderRadius: 10,
-    marginBottom: 10,
+    marginRight: 10,
   },
   cancelIcon: {
     // 아이콘 자체의 크기나 추가 스타일이 필요하면 여기에 지정합니다.

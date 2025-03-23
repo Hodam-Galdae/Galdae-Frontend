@@ -6,14 +6,17 @@ import {theme} from '../styles/theme';
 import styles from '../styles/VerifySchool.style';
 import BasicText from '../components/BasicText';
 import ItemSelector from '../components/ItemSelector';
+import { useDispatch } from 'react-redux';
+import { setUniversity } from '../modules/redux/slice/UserSlice';
 
 interface VerifySchoolProps {
   setNextStep: (name: string) => void;
 }
-
+ 
 const VerifySchool: React.FC<VerifySchoolProps> = ({setNextStep}) => {
   const [schoolSelected, setSchoolSelected] = useState<number>(-1);
   const [methodSelected, setMethodSelected] = useState<number>(-1);
+  const dispatch = useDispatch();
   const [isVisibleSchoolSelect, setIsVisibleSchoolSelect] =
     useState<boolean>(false);
   const [isVisibleMethodSelect, setIsVisibleMethodSelect] =
@@ -26,6 +29,8 @@ const VerifySchool: React.FC<VerifySchoolProps> = ({setNextStep}) => {
     '단국대학교 천안캠퍼스',
     '백석문화대학교',
     '상명대학교 천안캠퍼스',
+    '한양대학교',
+    '건국대학교(글로컬)',
   ];
 
   const clickEvent = () => {
@@ -48,6 +53,7 @@ const VerifySchool: React.FC<VerifySchoolProps> = ({setNextStep}) => {
       if (methodSelected === 0) {
         setNextStep('schoolCardVerify');
       } else {
+        dispatch(setUniversity(schools[schoolSelected]));
         setNextStep('emailVerify');
       }
     }

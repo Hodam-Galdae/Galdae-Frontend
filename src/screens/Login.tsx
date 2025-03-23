@@ -11,7 +11,7 @@ import BasicText from '../components/BasicText';
 import SVG from '../components/SVG';
 import {login} from '@react-native-seoul/kakao-login';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
-import {loginWithGoogle, loginWithKakao} from '../api/authApi';
+import {loginWithGoogle, loginWithKakao, AuthResponse} from '../api/authApi';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import { getUserInfo } from '../api/membersApi';
 import { useDispatch } from 'react-redux';
@@ -19,8 +19,7 @@ import { setUser } from '../modules/redux/slice/UserSlice';
 
 // 네비게이션 파라미터 타입 정의
 type RootStackParamList = {
-  Onboarding: undefined;
-  CreateGaldae: undefined;
+  ReviewInProgress: undefined;
   Login: undefined;
   SignUp: {data: Readonly<boolean>};
   MainTab: undefined; // 메인 탭 네비게이터 화면
@@ -31,13 +30,6 @@ type LoginScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
   'Login'
 >;
-
-interface AuthResponse {
-  accessToken: string;
-  refreshToken: string;
-  expiredIn: number;
-  isJoined: boolean;
-}
 
 const Login: React.FC = () => {
   // useNavigation에 LoginScreenNavigationProp 제네릭을 적용합니다.
@@ -77,21 +69,24 @@ const Login: React.FC = () => {
   };
 
   const handleGoNextPage = async (response: AuthResponse) => {
-    // // 학생 인증 완료
-    // if(response.isAuthenticate){
-    //   navigation.replace('MainTab');
-    // }
-    // else {
-    //   // 학생증 인증 중
-    //   if(response.isJoined) {
-    //     navigation.replace('SignUp', { data: response.isJoined});
-    //   }
-    // }
-    // navigation.replace('SignUp', {data: response.isJoined});
     const user = await getUserInfo();
     dispatch(setUser({...user, token: 'Bearer ' + response.accessToken}));
-    navigation.replace('MainTab');
 
+    // 학생 인증 완료
+    if(response.isAuthenticate === 'CERTIFIED'){
+      navigation.replace('MainTab');
+      return;
+    }
+
+    if(response.isAuthenticate === 'NOT_CERTIFIED ') {
+      navigation.replace('SignUp', { data: response.isJoined});
+      return;
+    }
+
+    if(response.isAuthenticate === 'PENDING') {
+      navigation.replace('ReviewInProgress');
+      return;
+    }
   };
 
   const images = [

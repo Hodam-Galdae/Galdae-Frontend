@@ -10,6 +10,9 @@ import BasicText from '../components/BasicText';
 import styles from '../styles/EmailVerify.style';
 import {theme} from '../styles/theme';
 import {TextInput} from 'react-native-gesture-handler';
+import { certifyUniv, emailVerify } from '../api/authApi';
+import { useSelector } from 'react-redux';
+import {RootState} from '../modules/redux/RootReducer';
 
 interface AgreeProps {
   setNextStep: () => void;
@@ -21,6 +24,7 @@ const EmailVerify: React.FC<AgreeProps> = ({setNextStep}) => {
   const [isVisibleNumberInput, setIsVisibleNumberInput] =
     useState<boolean>(false);
   const [number, setNumber] = useState<string>('');
+  const userInfo = useSelector((state: RootState) => state.user);
 
   const clickEvent = () => {
     if (!isVisibleNumberInput) {
@@ -30,25 +34,46 @@ const EmailVerify: React.FC<AgreeProps> = ({setNextStep}) => {
     }
   };
 
-  const sendEmail = () => {
+  const sendEmail = async () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (emailRegex.test(email) && email.length > 0) {
       //이메일 보내기
-      setIsVisibleNumberInput(true);
-      setIsVisibleAlert(false);
+      try{
+        // 대학 인증 메일 발송 api
+        const isSuccess = await certifyUniv(userInfo.university, email);
+        if(isSuccess){ // 성공했을 시
+          setIsVisibleNumberInput(true);
+          setIsVisibleAlert(false);
+        }
+        else { // 실패
+          setIsVisibleAlert(false);
+        }
+      }
+      catch(err) { // 실패
+        setIsVisibleAlert(true);
+      }
     } else {
       setIsVisibleAlert(true);
     }
   };
 
-  const verify = () => {
+  const verify = async () => {
     if (number.length === 0) {
       return;
     }
-    //인증
 
-    setNextStep();
+    try{
+      const result = await emailVerify(number, userInfo.university, email);
+      console.log(result);
+      if(result === "이메일 인증완료"){
+        setNextStep();
+      }
+    }
+    catch(err) {
+
+    }
+
   };
 
   return (
@@ -63,10 +88,11 @@ const EmailVerify: React.FC<AgreeProps> = ({setNextStep}) => {
           <TextInput
             style={styles.input}
             placeholder="이메일 입력"
+            editable={!isVisibleNumberInput}
             value={email}
             onChangeText={setEmail}
           />
-          {isVisibleAlert ? (
+          {isVisibleAlert && !isVisibleNumberInput ? (
             <BasicText
               style={styles.alert}
               text="*정확한 대학교 이메일을 입력해주세요."
@@ -78,6 +104,12 @@ const EmailVerify: React.FC<AgreeProps> = ({setNextStep}) => {
               placeholder="인증 번호 입력"
               value={number}
               onChangeText={setNumber}
+            />
+          ) : null}
+          {isVisibleAlert && isVisibleNumberInput ? (
+            <BasicText
+              style={styles.alert}
+              text="*정확한 코드를 입력해주세요."
             />
           ) : null}
           {isVisibleNumberInput ? (
