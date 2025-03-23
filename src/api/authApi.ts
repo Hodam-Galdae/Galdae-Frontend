@@ -7,7 +7,7 @@ export interface AuthResponse {
   refreshToken: string;
   expiredIn: number;
   isJoined: boolean;
-  isAuthenticate: string;
+  isAuthenticated: string;
 }
 
 interface CheckNicknameResponse {

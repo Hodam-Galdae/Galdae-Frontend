@@ -73,17 +73,17 @@ const Login: React.FC = () => {
     dispatch(setUser({...user, token: 'Bearer ' + response.accessToken}));
 
     // 학생 인증 완료
-    if(response.isAuthenticate === 'CERTIFIED'){
+    if(response.isAuthenticated === 'CERTIFIED'){
       navigation.replace('MainTab');
       return;
     }
 
-    if(response.isAuthenticate === 'NOT_CERTIFIED ') {
+    if(response.isAuthenticated === 'NOT_CERTIFIED') {
       navigation.replace('SignUp', { data: response.isJoined});
       return;
     }
 
-    if(response.isAuthenticate === 'PENDING') {
+    if(response.isAuthenticated === 'PENDING') {
       navigation.replace('ReviewInProgress');
       return;
     }
