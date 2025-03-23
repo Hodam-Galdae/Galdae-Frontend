@@ -15,25 +15,37 @@ interface CheckNicknameResponse {
 }
 
 // ✅ 카카오 로그인
-export const loginWithKakao = async (kakaoToken: string): Promise<AuthResponse> => {
-  const response = await axiosInstance.post<AuthResponse>('/auth/kakao', {'token': kakaoToken});
+export const loginWithKakao = async (
+  kakaoToken: string,
+): Promise<AuthResponse> => {
+  const response = await axiosInstance.post<AuthResponse>('/auth/kakao', {
+    token: kakaoToken,
+  });
   return response.data;
 };
 
 // ✅ 구글 로그인
-export const loginWithGoogle = async (googleToken: string): Promise<AuthResponse> => {
-  const response = await axiosInstance.post<AuthResponse>('/auth/google', {'token': googleToken});
+export const loginWithGoogle = async (
+  googleToken: string,
+): Promise<AuthResponse> => {
+  const response = await axiosInstance.post<AuthResponse>('/auth/google', {
+    token: googleToken,
+  });
   return response.data;
 };
 
 // ✅ 애플 로그인
-export const loginWithApple = async (appleToken: string): Promise<AuthResponse> => {
-  const response = await axiosInstance.post<AuthResponse>('/auth/apple', { 'token': appleToken });
+export const loginWithApple = async (
+  appleToken: string,
+): Promise<AuthResponse> => {
+  const response = await axiosInstance.post<AuthResponse>('/auth/apple', {
+    token: appleToken,
+  });
   return response.data;
 };
 
 // ✅ 회원가입
-export const join = async (form: any): Promise<AuthResponse|undefined> => {
+export const join = async (form: any): Promise<AuthResponse | undefined> => {
   const response = await axiosInstance.post<AuthResponse>('/auth/join', form, {
     transformRequest: (data, headers) => {
       return form;
@@ -43,12 +55,50 @@ export const join = async (form: any): Promise<AuthResponse|undefined> => {
 };
 
 // ✅ 닉네임 중복 체크
-export const checkNickname = async (nickname: string): Promise<CheckNicknameResponse> => {
-  const response = await axiosInstance.post<CheckNicknameResponse>('/auth/check/nickname', { nickname });
+export const checkNickname = async (
+  nickname: string,
+): Promise<CheckNicknameResponse> => {
+  const response = await axiosInstance.post<CheckNicknameResponse>(
+    '/auth/check/nickname',
+    {nickname},
+  );
   return response.data;
 };
 
-export const emailVerify = async (code: string, univName: string, email: string): Promise<string> => {
+export const certifyCard = async (univName: string, image): Promise<void> => {
+  const form = new FormData();
+  const universityAuthCommand = {
+    university: univName,
+    universityAuthType: 'STUDENT_CARD',
+    email: '',
+    code: '',
+    studentCard: '',
+  };
+  const fileName = `${univName}.json`;
+  const filePath = `${RNFS.TemporaryDirectoryPath}/${fileName}`;
+  await RNFS.writeFile(filePath, JSON.stringify(universityAuthCommand), 'utf8');
+
+  form.append('universityAuthCommand', {
+    uri: `file:///${filePath}`,
+    type: 'application/json',
+    name: fileName,
+  });
+
+  let imageFile = {uri: image.uri, type: 'jpeg', name: image.name};
+  form.append('studentCard', imageFile);
+
+  const response = await axiosInstance.post<string>('/auth/university', form, {
+    transformRequest: (data, headers) => {
+      return form;
+    },
+  });
+};
+
+export const emailVerify = async (
+  code: string,
+  univName: string,
+  email: string,
+): Promise<string> => {
   const form = new FormData();
   const universityAuthCommand = {
     university: univName,
@@ -76,13 +126,19 @@ export const emailVerify = async (code: string, univName: string, email: string)
   return response.data;
 };
 
-export const certifyUniv = async (univName: string, email: string): Promise<boolean> => {
+export const certifyUniv = async (
+  univName: string,
+  email: string,
+): Promise<boolean> => {
   const data = {
-    'key' : '07085e01-05e6-47ea-b14b-5446a66c1fb1',
+    key: '07085e01-05e6-47ea-b14b-5446a66c1fb1',
     email,
     univName,
-    'univ_check': true,
+    univ_check: true,
   };
-  const response = await axios.post('https://univcert.com/api/v1/certify', data);
+  const response = await axios.post(
+    'https://univcert.com/api/v1/certify',
+    data,
+  );
   return response.data.success;
 };
