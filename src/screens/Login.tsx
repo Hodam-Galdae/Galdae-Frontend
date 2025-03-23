@@ -13,9 +13,9 @@ import {login} from '@react-native-seoul/kakao-login';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {loginWithGoogle, loginWithKakao, AuthResponse} from '../api/authApi';
 import EncryptedStorage from 'react-native-encrypted-storage';
-import { getUserInfo } from '../api/membersApi';
-import { useDispatch } from 'react-redux';
-import { setUser } from '../modules/redux/slice/UserSlice';
+import {getUserInfo} from '../api/membersApi';
+import {useDispatch} from 'react-redux';
+import {setUser} from '../modules/redux/slice/UserSlice';
 
 // 네비게이션 파라미터 타입 정의
 type RootStackParamList = {
@@ -41,11 +41,13 @@ const Login: React.FC = () => {
       const token = (await login()).accessToken;
       const response = await loginWithKakao(token);
       await EncryptedStorage.setItem('accessToken', response.accessToken);
-      await EncryptedStorage.setItem('refreshToken', response.refreshToken || '');
+      await EncryptedStorage.setItem(
+        'refreshToken',
+        response.refreshToken || '',
+      );
       console.log('access token : ' + response.accessToken);
       console.log('refresh token : ' + response.accessToken);
       handleGoNextPage(response);
-
     } catch (err) {
       console.error('login err : ', err);
     }
@@ -73,17 +75,17 @@ const Login: React.FC = () => {
     dispatch(setUser({...user, token: 'Bearer ' + response.accessToken}));
 
     // 학생 인증 완료
-    if(response.isAuthenticated === 'CERTIFIED'){
+    if (response.isAuthenticated === 'CERTIFIED') {
       navigation.replace('MainTab');
       return;
     }
 
-    if(response.isAuthenticated === 'NOT_CERTIFIED') {
-      navigation.replace('SignUp', { data: response.isJoined});
+    if (response.isAuthenticated === 'NOT_CERTIFIED') {
+      navigation.replace('SignUp', {data: response.isJoined});
       return;
     }
 
-    if(response.isAuthenticated === 'PENDING') {
+    if (response.isAuthenticated === 'PENDING') {
       navigation.replace('ReviewInProgress');
       return;
     }

@@ -9,6 +9,10 @@ import SVG from '../components/SVG';
 import SVGButton from '../components/button/SVGButton';
 import useImagePicker from '../hooks/useImagePicker';
 import BigPictureModal from '../components/popup/BigPictureModal';
+import {resizeImage} from '../utils/ImageResizer';
+import {certifyCard} from '../api/authApi';
+import {useSelector} from 'react-redux';
+import {RootState} from '../modules/redux/RootReducer';
 
 interface SchoolCardVerifyProps {
   setNextStep: () => void;
@@ -16,11 +20,15 @@ interface SchoolCardVerifyProps {
 
 const SchoolCardVerify: React.FC<SchoolCardVerifyProps> = ({setNextStep}) => {
   const width = Dimensions.get('window').width;
-  const {imageUri, getImageByCamera, getImageByGallery} = useImagePicker();
+  const {imageUri, imageName, getImageByCamera, getImageByGallery} =
+    useImagePicker();
   const pictureModalRef = useRef<Modalize>(null);
+  const userInfo = useSelector((state: RootState) => state.user);
 
-  const clickEvent = () => {
+  const clickEvent = async () => {
     if (imageUri.length !== 0) {
+      const image = await resizeImage(imageUri, 200, 200, imageName);
+      await certifyCard(userInfo.university, image);
       setNextStep();
     }
   };
