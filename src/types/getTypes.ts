@@ -118,4 +118,15 @@ export interface UncheckedNotificationResponse {
 export interface CheckNotificationRequest {
   notificationId: number;
 }
-
+/**
+ * 내 문의 목록 조회 API 타입
+ */
+export interface QuestionItem {
+  questionId: number;
+  tag: string;
+  title: string;
+  content: string;
+  responseContent: string;
+  image: string;
+  faqStatus: 'PENDING' | 'COMPLETE'; // 상태가 명확할 경우 리터럴 타입으로 고정
+}

@@ -8,7 +8,7 @@ import BasicText from '../../components/BasicText';
 import BasicButton from '../../components/button/BasicButton';
 import DeletePopup from '../../components/popup/DeletePopup';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-
+import { withdrawMember } from '../../api/membersApi';
 type HomeProps = {
   navigation: any; // 실제 프로젝트에서는 proper type 사용 권장 (예: StackNavigationProp)
 };
@@ -32,8 +32,20 @@ const WithDraw: React.FC<HomeProps> = () => {
     const navigation = useNavigation<nowGaldaeScreenNavigationProp>();
     const goBack = () => navigation.goBack();
 
-    const handleWithDraw = () =>{
+    const handleWithDraw = async () => {
+      try {
+        const result = await withdrawMember(); // 탈퇴 API 호출
+        console.log('탈퇴 성공:', result);
+
+        // ✅ 필요 시 로그아웃 처리나 초기 화면 이동 등 추가
+        // 예시: navigation.reset({ index: 0, routes: [{ name: 'Login' }] });
+
         setInvalidPopupVisible(false);
+      } catch (error) {
+        console.error('탈퇴 실패:', error);
+        // TODO: 사용자에게 에러 알림 (예: 토스트)
+        setInvalidPopupVisible(false);
+      }
     };
     return (
       <View style={styles.container}>

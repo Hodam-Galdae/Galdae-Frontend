@@ -161,3 +161,19 @@ export const logoutMember = async (token: string): Promise<any> => {
     throw error;
   }
 };
+/**
+ * 회원 탈퇴 API 호출 함수
+ * @returns API 응답 데이터
+ */
+export const withdrawMember = async (): Promise<any> => {
+  console.log('🚀 [회원 탈퇴 요청] POST /members/withdraw');
+
+  try {
+    const response = await axiosInstance.post('/members/withdraw');
+    console.log('✅ [회원 탈퇴 성공] 응답 데이터:', response.data);
+    return response.data;
+  } catch (error: any) {
+    console.error('❌ [회원 탈퇴 실패] 오류 발생:', error.response ? error.response.data : error);
+    throw error;
+  }
+};

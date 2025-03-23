@@ -12,7 +12,7 @@ import BasicButton from '../../components/button/BasicButton';
 import useImagePicker from '../../hooks/useImagePicker';
 import BasicInput from '../../components/BasicInput';
 import Clipboard from '@react-native-clipboard/clipboard';
-
+import { createQuestion } from '../../api/questionApi';
 type HomeProps = {
   navigation: any; // 실제 프로젝트에서는 proper type 사용 권장 (예: StackNavigationProp)
 };
@@ -54,9 +54,24 @@ const Inquiry: React.FC<HomeProps> = () => {
 
       }
     }, [imageUri]);
-    const handleInquiry = () =>{
-        setLoading(true);
+
+    const handleInquiry = async () => {
+      if (!title.trim() || !content.trim()) {
+        Alert.alert('입력 확인', '제목과 내용을 모두 입력해주세요.');
+        return;
+      }
+
+      setLoading(true);
+      try {
+        await createQuestion('USER', title, content, img); // "USER"는 문의 태그 예시
+        Alert.alert('문의 완료', '문의가 성공적으로 접수되었습니다.');
         navigation.navigate('FAQ', { tabIndex: 1 });
+      } catch (error) {
+        console.error('문의 등록 실패:', error);
+        Alert.alert('오류', '문의 등록 중 문제가 발생했습니다. 잠시 후 다시 시도해주세요.');
+      } finally {
+        setLoading(false);
+      }
     };
     return (
       <View style={styles.container}>

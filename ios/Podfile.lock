@@ -128,6 +128,7 @@ PODS:
     - React-RCTText (= 0.77.0)
     - React-RCTVibration (= 0.77.0)
   - React-callinvoker (0.77.0)
+  - React-Codegen (0.1.0)
   - React-Core (0.77.0):
     - glog
     - hermes-engine
@@ -1314,6 +1315,28 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - react-native-image-resizer (3.0.11):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.11.18.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
   - react-native-safe-area-context (5.2.0):
     - DoubleConversion
     - glog
@@ -1821,6 +1844,8 @@ PODS:
   - RNFBApp (21.12.0):
     - Firebase/CoreOnly (= 11.8.0)
     - React-Core
+  - RNFS (2.20.0):
+    - React-Core
   - RNGestureHandler (2.23.1):
     - DoubleConversion
     - glog
@@ -2108,6 +2133,7 @@ DEPENDENCIES:
   - React-microtasksnativemodule (from `../node_modules/react-native/ReactCommon/react/nativemodule/microtasks`)
   - react-native-encrypted-storage (from `../node_modules/react-native-encrypted-storage`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
+  - "react-native-image-resizer (from `../node_modules/@bam.tech/react-native-image-resizer`)"
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-video (from `../node_modules/react-native-video`)
   - react-native-webview (from `../node_modules/react-native-webview`)
@@ -2144,6 +2170,7 @@ DEPENDENCIES:
   - "RNCClipboard (from `../node_modules/@react-native-clipboard/clipboard`)"
   - "RNCPicker (from `../node_modules/@react-native-picker/picker`)"
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
+  - RNFS (from `../node_modules/react-native-fs`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - "RNGoogleSignin (from `../node_modules/@react-native-google-signin/google-signin`)"
   - RNPermissions (from `../node_modules/react-native-permissions`)
@@ -2166,6 +2193,7 @@ SPEC REPOS:
     - KakaoSDKAuth
     - KakaoSDKCommon
     - KakaoSDKUser
+    - React-Codegen
     - SocketRocket
 
 EXTERNAL SOURCES:
@@ -2250,6 +2278,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-encrypted-storage"
   react-native-image-picker:
     :path: "../node_modules/react-native-image-picker"
+  react-native-image-resizer:
+    :path: "../node_modules/@bam.tech/react-native-image-resizer"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-video:
@@ -2322,6 +2352,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-picker/picker"
   RNFBApp:
     :path: "../node_modules/@react-native-firebase/app"
+  RNFS:
+    :path: "../node_modules/react-native-fs"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
   RNGoogleSignin:
@@ -2365,6 +2397,7 @@ SPEC CHECKSUMS:
   RCTTypeSafety: 50d6ec72a3d13cf77e041ff43a0617050fb98e3f
   React: e46fdbd82d2de942970c106677056f3bdd438d82
   React-callinvoker: b027ad895934b5f27ce166d095ed0d272d7df619
+  React-Codegen: 4b8b4817cea7a54b83851d4c1f91f79aa73de30a
   React-Core: 92733c8280b1642afed7ebfb3c523feaec946ece
   React-CoreModules: e2dfd87b6fdb9d969b16871655885a4d89a2a9f4
   React-cxxreact: d1a70e78543bb5b159fdaf6c52cadd33c1ae3244
@@ -2390,6 +2423,7 @@ SPEC CHECKSUMS:
   React-microtasksnativemodule: 51e7813abf875408a0f367e473a65bbab6aa8481
   react-native-encrypted-storage: 569d114e329b1c2c2d9f8c84bcdbe4478dda2258
   react-native-image-picker: f3cc69601f2b7bcaf56bec64261fde8f3dbc067a
+  react-native-image-resizer: 9e24efe3828c08a8d5553393f33695a086406340
   react-native-safe-area-context: 7e513d737b0b5c1d10bbe0e5fcc9f925a7be144c
   react-native-video: 80b56ba42f736957ee5865b60a34486c24931fa2
   react-native-webview: 449c3f27cdb926086a5eff7993421fd096cc5ae3
@@ -2426,6 +2460,7 @@ SPEC CHECKSUMS:
   RNCClipboard: 43008eed69827e56e1fbeb06473208fdebed8f5f
   RNCPicker: cfb51a08c6e10357d9a65832e791825b0747b483
   RNFBApp: 5e27e8311042d41fa8350f1751ab42e042c39d52
+  RNFS: 89de7d7f4c0f6bafa05343c578f61118c8282ed8
   RNGestureHandler: 63273d6c9936df3da2461766615eade82284adac
   RNGoogleSignin: 5e115ab981ba1a9f5fae37000f49cd996c394df0
   RNPermissions: d12e0123681982b93065c3c252791ce46f5daf06
@@ -2435,6 +2470,6 @@ SPEC CHECKSUMS:
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   Yoga: 78d74e245ed67bb94275a1316cdc170b9b7fe884
 
-PODFILE CHECKSUM: 73e8d1d3448ff67902b9efcd8a11339c642165ce
+PODFILE CHECKSUM: 8f6468f4aaf197a095a8d14e618a4a7c165c7d9a
 
 COCOAPODS: 1.16.2
