@@ -26,15 +26,19 @@ export interface DeletePostRequest {
 export interface GetPostsRequest {
   pageNumber?: number;
   pageSize?: number;
-  direction?: 'ASC' | 'DESC';
+  direction?: string;
   properties?: string[];
 }
 /**
  * 갈대 검색 요청 타입
+ * 출발지와 도착지의 이름은 필수이며,
+ * 추가적으로 대분류와 소분류 ID도 전달할 수 있습니다.
  */
 export interface SearchPostsRequest extends GetPostsRequest {
-  department: string;
-  arrival: string;
+  majorDepartment: number; // 출발지 대분류 ID
+  subDepartment: number;   // 출발지 소분류 ID
+  majorArrival: number;    // 도착지 대분류 ID
+  subArrival: number;      // 도착지 소분류 ID
 }
 /**
  * 갈대 상세 조회 요청 타입

@@ -1,7 +1,8 @@
+/* eslint-disable react-native/no-inline-styles */
 // NowGaldaeDetail.tsx
-import React,{useState,useEffect} from 'react';
-import { View,Image } from 'react-native';
-import { WebView } from 'react-native-webview'; // 추가
+import React, { useEffect } from 'react';
+import { View, Image, ActivityIndicator } from 'react-native';
+import { WebView } from 'react-native-webview';
 import BasicText from '../components/BasicText';
 import SVGButton from '../components/button/SVGButton';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
@@ -13,9 +14,12 @@ import { theme } from '../styles/theme';
 import TextTag from '../components/tag/TextTag';
 import BasicButton from '../components/button/BasicButton';
 import { ScrollView } from 'react-native-gesture-handler';
-import { getPostDetail } from '../api/postApi';
+import { useSelector } from 'react-redux';
+import { fetchPostDetail } from '../modules/redux/slice/postDetailSlice';
+import type { RootState } from '../modules/redux/RootReducer';
+import { useAppDispatch } from '../modules/redux/store';
+import moment from 'moment';
 
-// 내비게이션 스택 타입 정의 (이전과 동일)
 type RootStackParamList = {
   CreateGaldae: undefined;
   NowGaldae: undefined;
@@ -28,85 +32,93 @@ type NowGaldaeDetailRouteProp = RouteProp<RootStackParamList, 'NowGaldaeDetail'>
 const NowGaldaeDetail: React.FC = () => {
   const navigation = useNavigation<NowGaldaeDetailScreenNavigationProp>();
   const route = useRoute<NowGaldaeDetailRouteProp>();
-  const [loading, setLoading] = useState<boolean>(false);
-  const { postId } = route.params; // ✅ 전달받은 postId
-  const [galdaeDetail, setGaldaeDetail] = useState<any>(null);
+  const { postId } = route.params; // 전달받은 postId
 
-  //const mapUrl = `https://galdae-kakao-map.vercel.app/?startLat=${galdaeDetail.from.lat}&startLng=${galdaeDetail.from.lng}&endLat=${galdaeDetail.destination.lat}&endLng=${galdaeDetail.destination.lng}`;
-  //console.log(`mapUrl: `,mapUrl);
+  const { postDetail, loading, error } = useSelector((state: RootState) => state.postDetailSlice);
+  const dispatch = useAppDispatch();
+
+  // 컴포넌트 마운트 시 Redux를 통해 상세 정보를 불러옴
+  useEffect(() => {
+    dispatch(fetchPostDetail(postId));
+  }, [dispatch, postId]);
+
   const goBack = () => navigation.goBack();
-  const handleParticipateGaldae = () =>{
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-    },200);
+  const handleParticipateGaldae = () => {
+    // 참여 로직 처리
   };
-
-   // ✅ postId로 상세 정보 조회
-   useEffect(() => {
-    const fetchPostDetail = async () => {
-      try {
-        const response = await getPostDetail({ postId });
-        console.log('✅ 가져온 갈대 상세 정보:', response);
-        setGaldaeDetail(response); // API 응답을 상태로 저장
-      } catch (error) {
-        console.error('❌ 갈대 상세 조회 실패:', error);
-      }
-    };
-
-    fetchPostDetail();
-  }, [postId]);
-  if (!galdaeDetail) {
+const formatDepartureTime = (departureTime: string): string => {
+    return moment.utc(departureTime).format('YYYY년 MM월 DD일 (ddd) HH : mm');
+  };
+  if (loading) {
     return (
-      <View >
-        <BasicText text="로딩 중..." />
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color={theme.colors.brandColor} />
       </View>
     );
   }
-  const mapUrl = `https://galdae-kakao-map.vercel.app/?startLat=${galdaeDetail.from.lat}&startLng=${galdaeDetail.from.lng}&endLat=${galdaeDetail.destination.lat}&endLng=${galdaeDetail.destination.lng}`;
 
+  if (error) {
+    return (
+      <View style={{ padding: 16 }}>
+        <BasicText text={`오류 발생: ${error}`} />
+      </View>
+    );
+  }
+
+  if (!postDetail) {
+    return (
+      <View style={{ padding: 16 }}>
+        <BasicText text="상세 정보가 없습니다." />
+      </View>
+    );
+  }
+
+  // 지도 URL은 departure와 arrival의 좌표를 사용
+  const mapUrl = `https://galdae-kakao-map.vercel.app/?startLat=${postDetail.departure.latitude}&startLng=${postDetail.departure.longtitude}&endLat=${postDetail.arrival.latitude}&endLng=${postDetail.arrival.longtitude}`;
+  //const mapUrl = 'https://galdae-kakao-map.vercel.app/?startLat=37.5665&startLng=126.9780&endLat=37.4979&endLng=127.0276';
+  console.log(`mapUrl: ${mapUrl}`);
   return (
     <View style={styles.main}>
       <Header
         leftButton={<SVGButton iconName="arrow_left_line" onPress={goBack} />}
         title={
-        <View style={styles.headerTitle}>
-            <SVG name="location_line"  width={22} height={22}/>
-            <BasicText text={galdaeDetail.from.main} style={styles.headerText} />
-            <SVG name="arrow_right_line" width={22} height={22}/>
-            <BasicText text={galdaeDetail.destination.main} style={styles.headerText} />
-        </View>
+          <View style={styles.headerTitle}>
+            <SVG name="location_line" width={22} height={22} />
+            <BasicText text={postDetail.departure.majorPlace} style={styles.headerText} />
+            <SVG name="arrow_right_line" width={22} height={22} />
+            <BasicText text={postDetail.arrival.majorPlace} style={styles.headerText} />
+          </View>
         }
       />
       <ScrollView style={styles.content}>
-
         <View style={styles.advertiseBox}>
-            <BasicText text="advertiseBox"/>
+          <BasicText text="advertiseBox" />
         </View>
 
-        <View key={galdaeDetail.id} style={styles.borderedListBox}>
-          <BasicText text={galdaeDetail.owner} style={styles.galdaeOwner} />
+        <View key={postDetail.departureTime} style={styles.borderedListBox}>
+          {/**postDetail.userInfo?.name || */}
+          <BasicText text={ `${postDetail.userInfo?.nickname}님의 갈대`  || '작성자'} style={styles.galdaeOwner} />
           <View style={styles.fromContainer}>
             <SVG name="Car" />
-            <BasicText text={galdaeDetail.from.main} style={styles.fromMainLocation} />
-            <BasicText text={galdaeDetail.from.sub} style={styles.fromSubLocation} />
+            <BasicText text={postDetail.departure.majorPlace} style={styles.fromMainLocation} />
+            <BasicText text={postDetail.departure.subPlace} style={styles.fromSubLocation} />
           </View>
           <View style={styles.toContainer}>
             <View style={styles.fromToLine}>
               <SVG name="FromToLine" />
             </View>
-            {Array(galdaeDetail.users)
+            {Array(postDetail.passengerCount)
               .fill(null)
               .map((_, idx) => (
-                <SVG key={`user-${galdaeDetail.id}-${idx}`} name="User" />
+                <SVG key={`user-${postDetail.departureTime}-${idx}`} name="User" />
               ))}
-            {Array(galdaeDetail.capacity - galdaeDetail.users)
+            {Array(postDetail.totalPassengerCount - postDetail.passengerCount)
               .fill(null)
               .map((_, idx) => (
-                <SVG key={`disabled-${galdaeDetail.id}-${idx}`} name="DisabledUser" />
+                <SVG key={`disabled-${postDetail.departureTime}-${idx}`} name="DisabledUser" />
               ))}
             <BasicText
-              text={`(${galdaeDetail.users}/${galdaeDetail.capacity})`}
+              text={`(${postDetail.passengerCount}/${postDetail.totalPassengerCount})`}
               fontWeight={500}
               fontSize={theme.fontSize.size16}
               color={theme.colors.gray1}
@@ -114,20 +126,20 @@ const NowGaldaeDetail: React.FC = () => {
           </View>
           <View style={styles.toContainer}>
             <SVG name="Location" />
-            <BasicText text={galdaeDetail.destination.main} style={styles.fromMainLocation} />
-            <BasicText text={galdaeDetail.destination.sub} style={styles.fromSubLocation} />
+            <BasicText text={postDetail.arrival.majorPlace} style={styles.fromMainLocation} />
+            <BasicText text={postDetail.arrival.subPlace} style={styles.fromSubLocation} />
           </View>
           <View style={styles.timeContainer}>
             <SVG name="Clock" />
             <View>
               <BasicText
-                text={galdaeDetail.timeAgreement ? '시간 협의가능' : '시간 협의불가'}
+                text={postDetail.arrangeTime === 'POSSIBLE' ? '시간 협의가능' : '시간 협의불가'}
                 style={styles.fromMainLocation}
                 color={theme.colors.gray2}
                 fontSize={theme.fontSize.size10}
               />
               <BasicText
-                text={galdaeDetail.time}
+                text={formatDepartureTime(postDetail.departureTime)}
                 style={styles.fromSubLocation}
                 color={theme.colors.black}
                 fontSize={theme.fontSize.size14}
@@ -135,43 +147,49 @@ const NowGaldaeDetail: React.FC = () => {
             </View>
           </View>
           <View style={styles.tags}>
-            {galdaeDetail.tags.map((tag:string, index:number) =>
-               <TextTag key={index} text={tag} />
-            )}
+          {postDetail.passengerGenderType === 'SAME' ? (
+                  <TextTag text="동성만" />
+                ) : postDetail.passengerGenderType === 'DONT_CARE' ? (
+                  <TextTag text="성별무관" />
+                ) : (
+                  <TextTag text="상관없음" />
+                )}
           </View>
         </View>
 
         <View style={styles.map}>
-          <WebView source={{ uri: mapUrl }} style={styles.map}/>
+          <WebView source={{ uri: mapUrl }} style={styles.map} />
         </View>
 
         <BasicText text="유저정보" style={styles.userInfo} />
 
         <View style={styles.userInfoBox}>
-            <View style={styles.userInfos}>
-              <View style={styles.profile}>
-                <Image
-                  source={require('../assets/test.jpg')}
-                  style={styles.profileImg}
-                  resizeMode="cover"
-                />
-              </View>
-              <View style={styles.userInfoText}>
-                <BasicText text="건국대 글로컬캠퍼스" style={styles.universityText}/>
-                <BasicText text="하재연" style={styles.nameText}/>
-              </View>
+          <View style={styles.userInfos}>
+            <View style={styles.profile}>
+              <Image
+                source={require('../assets/test.jpg')}
+                style={styles.profileImg}
+                resizeMode="cover"
+              />
             </View>
-            <SVG name="Badge" style={styles.badge}/>
+            <View style={styles.userInfoText}>
+              <BasicText text={postDetail.userInfo.university} style={styles.universityText} />
+              <BasicText text={postDetail.userInfo.nickname} style={styles.nameText} />
+            </View>
+          </View>
+          {
+            postDetail.userInfo.isAuthenticated && <SVG name="Badge" style={styles.badge} />
+          }
         </View>
 
         <View style={styles.participateContainer}>
           <BasicButton
-              text="참여하기"
-              buttonStyle={styles.participateBtn}
-              textStyle={styles.participateText}
-              loading={loading}
-              onPress={handleParticipateGaldae}
-            />
+            text="참여하기"
+            buttonStyle={styles.participateBtn}
+            textStyle={styles.participateText}
+            loading={false}
+            onPress={handleParticipateGaldae}
+          />
         </View>
       </ScrollView>
     </View>

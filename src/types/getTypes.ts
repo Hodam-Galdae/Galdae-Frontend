@@ -1,5 +1,5 @@
 /**
- * 실시간 갈대 조회 타입
+ * 내 갈대 조회 타입 (홈화면)
  */
 export interface MyCreatedPost {
     departure: string; // 출발지
@@ -24,7 +24,7 @@ export interface MyPostHistory {
   passengerCount: number;
 }
 /**
- * 실시간 갈대 타입 (수정 후)
+ * 실시간 갈대 타입
  */
 export interface GaldaeItemType {
   postId: string;
@@ -87,3 +87,35 @@ export interface UserInfo {
     accountNumber:string;
     isAuthenticated:boolean;
   }
+/**
+ * 사용자 프로필 이미지 변경 api 타입
+ */
+export interface ImageFile {
+  uri: string;
+  type: string;
+  name: string;
+}
+/**
+ * 알림 목록 조회 API 타입
+ */
+export interface Notification {
+  notificationId: number;
+  title: string;
+  isChecked: boolean;
+  daysBetween: number;
+}
+
+/**
+ * 안읽은 알림 유무 API 타입
+ */
+export interface UncheckedNotificationResponse {
+  postId: string;
+  chatroomId: number;
+}
+/**
+ * 알림 확인 API 타입
+ */
+export interface CheckNotificationRequest {
+  notificationId: number;
+}
+

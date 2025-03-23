@@ -1,5 +1,6 @@
-import React, {useState,useRef} from 'react';
+import React, {useEffect,useState,useRef} from 'react';
 import {  View, ScrollView } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import styles from '../styles/SetDestination.style';
 import BasicText from '../components/BasicText';
@@ -16,145 +17,56 @@ import { theme } from '../styles/theme';
 // 내비게이션 스택 타입 정의
 type RootStackParamList = {
   NowGaldae: {
-    departureLarge:string,
-    departureSmall:string,
-    destinationLarge:string,
-    destinationSmall:string,
+    departureLargeName:string,
+    departureLargeId:number,
+    departureSmallName:string,
+    departureSmallId:number,
+    destinationLargeName:string,
+    destinationLargeId:number,
+    destinationSmallName:string,
+    destinationSmallId:number,
   };
 };
+// 저장할 때 사용할 key 정의
+const STORAGE_KEY = 'SEARCH_HISTORY';
+// 검색 기록 저장 함수
+const saveSearchHistory = async (history: any[]) => {
+  try {
+    await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(history));
+  } catch (error) {
+    console.error('검색 기록 저장 실패:', error);
+  }
+};
 
-
+// 검색 기록 불러오기 함수
+const loadSearchHistory = async (): Promise<any[]> => {
+  try {
+    const jsonValue = await AsyncStorage.getItem(STORAGE_KEY);
+    return jsonValue ? JSON.parse(jsonValue) : [];
+  } catch (error) {
+    console.error('검색 기록 불러오기 실패:', error);
+    return [];
+  }
+};
 const SetDestination: React.FC = () => {
-    const dummySearchHistory = [
-        {
-          id: 1,
-          date: '3일전',
-          start: { label: '출발지', main: '학교', sub: '중원도서관' },
-          end: { label: '도착지', main: '충주 터미널', sub: '하이마트앞' },
-        },
-        {
-          id: 2,
-          date: '5일전',
-          start: { label: '출발지', main: '역', sub: '서울역' },
-          end: { label: '도착지', main: '백화점', sub: '롯데백화점' },
-        },
-        {
-          id: 3,
-          date: '일주일전',
-          start: { label: '출발지', main: '카페', sub: '강남카페' },
-          end: { label: '도착지', main: '공원', sub: '한강공원' },
-        },
-        {
-          id: 4,
-          date: '2일전',
-          start: { label: '출발지', main: '집', sub: '우리집' },
-          end: { label: '도착지', main: '마트', sub: '이마트' },
-        },
-        {
-          id: 5,
-          date: '오늘',
-          start: { label: '출발지', main: '학교', sub: '도서관' },
-          end: { label: '도착지', main: '카페', sub: '스타벅스' },
-        },
-        {
-          id: 6,
-          date: '어제',
-          start: { label: '출발지', main: '역', sub: '부산역' },
-          end: { label: '도착지', main: '공원', sub: '부산시민공원' },
-        },
-        {
-          id: 7,
-          date: '4일전',
-          start: { label: '출발지', main: '회사', sub: '사옥' },
-          end: { label: '도착지', main: '호텔', sub: '그랜드호텔' },
-        },
-        {
-          id: 8,
-          date: '6일전',
-          start: { label: '출발지', main: '학교', sub: '정문' },
-          end: { label: '도착지', main: '도서관', sub: '중앙도서관' },
-        },
-        {
-          id: 9,
-          date: '8일전',
-          start: { label: '출발지', main: '카페', sub: '이디야' },
-          end: { label: '도착지', main: '백화점', sub: '현대백화점' },
-        },
-        {
-          id: 10,
-          date: '9일전',
-          start: { label: '출발지', main: '홈', sub: '내집' },
-          end: { label: '도착지', main: '시장', sub: '재래시장' },
-        },
-        {
-          id: 11,
-          date: '2주전',
-          start: { label: '출발지', main: '공항', sub: '김포공항' },
-          end: { label: '도착지', main: '호텔', sub: '인터컨티넨탈' },
-        },
-        {
-          id: 12,
-          date: '3주전',
-          start: { label: '출발지', main: '역', sub: '부산역' },
-          end: { label: '도착지', main: '센터', sub: '코엑스' },
-        },
-        {
-          id: 13,
-          date: '한달전',
-          start: { label: '출발지', main: '학교', sub: '대학' },
-          end: { label: '도착지', main: '공원', sub: '서울숲' },
-        },
-        {
-          id: 14,
-          date: '2달전',
-          start: { label: '출발지', main: '병원', sub: '서울병원' },
-          end: { label: '도착지', main: '약국', sub: 'CU약국' },
-        },
-        {
-          id: 15,
-          date: '3달전',
-          start: { label: '출발지', main: '오피스', sub: '작업실' },
-          end: { label: '도착지', main: '식당', sub: '한식당' },
-        },
-        {
-          id: 16,
-          date: '4달전',
-          start: { label: '출발지', main: '노원', sub: '서울' },
-          end: { label: '도착지', main: '강남', sub: '서울' },
-        },
-        {
-          id: 17,
-          date: '5달전',
-          start: { label: '출발지', main: '부산', sub: '부산역' },
-          end: { label: '도착지', main: '울산', sub: '울산역' },
-        },
-        {
-          id: 18,
-          date: '6달전',
-          start: { label: '출발지', main: '대구', sub: '대구역' },
-          end: { label: '도착지', main: '광주', sub: '광주역' },
-        },
-        {
-          id: 19,
-          date: '7달전',
-          start: { label: '출발지', main: '청주', sub: '청주역' },
-          end: { label: '도착지', main: '전주', sub: '전주역' },
-        },
-        {
-          id: 20,
-          date: '8달전',
-          start: { label: '출발지', main: '인천', sub: '인천공항' },
-          end: { label: '도착지', main: '서울', sub: '종로' },
-        },
-      ];
 
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const goBack = () => navigation.goBack();
   const [loading, setLoading] = useState<boolean>(false);
-  const [departureLarge, setDepartureLarge] = useState<string>('학교');
-  const [departureSmall, setDepartureSmall] = useState<string>('중원도서관');
-  const [destinationLarge, setDestinationLarge] = useState<string>('학교');
-  const [destinationSmall, setDestinationSmall] = useState<string>('중원도서관');
+  const [departureLargeName, setDepartureLargeName] = useState<string>('출발지 선택');
+  const [departureLargeId, setDepartureLargeId] = useState<number>(0);
+
+  const [departureSmallName, setDepartureSmallName] = useState<string>('출발지 선택');
+  const [departureSmallId, setDepartureSmallId] = useState<number>(0);
+
+  const [destinationLargeName, setDestinationLargeName] = useState<string>('도착지 선택');
+  const [destinationLargeId, setDestinationLargeId] = useState<number>(0);
+
+  const [destinationSmallName, setDestinationSmallName] = useState<string>('도착지 선택');
+  const [destinationSmallId, setDestinationSmallId] = useState<number>(0);
+
+  const [searchHistory, setSearchHistory] = useState<any[]>([]);
+
   const fastGaldaeStartPopupRef = useRef<FastGaldaeStartPopupRef>(null);
   const fastGaldaeEndPopupRef = useRef<FastGaldaeEndPopupRef>(null);
   const toggleFastGaldaeStartPopup = () =>{
@@ -165,21 +77,61 @@ const SetDestination: React.FC = () => {
     fastGaldaeEndPopupRef.current?.open();
   };
 
+  // 컴포넌트 마운트 시 저장된 검색 기록 불러오기
+  useEffect(() => {
+    (async () => {
+      const history = await loadSearchHistory();
+      setSearchHistory(history);
+    })();
+  }, []);
 
-
-  const handleSearchGaldae = () => {
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      navigation.navigate('NowGaldae', {
-        departureLarge,
-        departureSmall,
-        destinationLarge,
-        destinationSmall,
-      });
-    }, 200);
+  // 새로운 검색 기록 추가 함수 예시
+  const addSearchHistoryItem = async (newItem: any) => {
+    const updatedHistory = [newItem, ...searchHistory];
+    setSearchHistory(updatedHistory);
+    await saveSearchHistory(updatedHistory);
   };
 
+  const handleSearchGaldae = async () => {
+    setLoading(true);
+    navigation.navigate('NowGaldae', {
+      departureLargeName,
+      departureLargeId,
+      departureSmallName,
+      departureSmallId,
+      destinationLargeName,
+      destinationLargeId,
+      destinationSmallName,
+      destinationSmallId,
+    });
+    // 새로운 검색 기록 객체 생성: timestamp를 저장합니다.
+  const newSearchRecord = {
+    id: Date.now(), // 고유 id로 사용
+    timestamp: Date.now(), // 검색 시각 저장
+    start: {
+      label: '출발지',
+      main: departureLargeName,
+      sub: departureSmallName,
+    },
+    end: {
+      label: '도착지',
+      main: destinationLargeName,
+      sub: destinationSmallName,
+    },
+  };
+
+    // 검색 기록 추가 및 AsyncStorage에 저장
+    await addSearchHistoryItem(newSearchRecord);
+    setLoading(false);
+  };
+  // 단순한 상대 시간 포맷 함수 예제
+  const formatRelativeTime = (timestamp: number): string => {
+    const now = Date.now();
+    const diff = now - timestamp;
+    const diffDays = Math.floor(diff / (1000 * 60 * 60 * 24));
+    // 0일이면 '오늘', 1일이면 '1일전', 그 이상이면 'n일전'
+    return diffDays === 0 ? '오늘' : `${diffDays}일전`;
+  };
   return (
 
     <View style={styles.mainContainer}>
@@ -191,22 +143,22 @@ const SetDestination: React.FC = () => {
         <View style={styles.container}>
 
           <View style={styles.positionBox}>
-            <PositionBox title={departureLarge} subTitle={departureSmall} isOrigin={true} onPress={toggleFastGaldaeStartPopup}/>
+            <PositionBox title={departureLargeName} subTitle={departureSmallName} isOrigin={true} onPress={toggleFastGaldaeStartPopup}/>
             <SVGButton
               iconName="Switch"
               buttonStyle={styles.switchBtn}
               SVGStyle={styles.switchIcon}
             />
-            <PositionBox title={destinationLarge} subTitle={destinationSmall} isOrigin={false} onPress={toggleFastGaldaeEndPopup}/>
+            <PositionBox title={destinationLargeName} subTitle={destinationSmallName} isOrigin={false} onPress={toggleFastGaldaeEndPopup}/>
           </View>
 
           <BasicText style={styles.title} text="최근 검색 기록"/>
 
           <ScrollView style={styles.searchList}>
-            {dummySearchHistory.map((item) => (
+            {searchHistory.map((item) => (
               <View key={item.id} style={styles.searchListWrapper}>
                 <BasicText
-                  text={item.date}
+                  text={formatRelativeTime(item.timestamp)}
                   style={styles.searchDate}
                   color={theme.colors.gray1}
                   fontSize={theme.fontSize.size12}
@@ -242,7 +194,6 @@ const SetDestination: React.FC = () => {
                     <BasicText text={item.end.sub} style={styles.subPosName} />
                   </View>
                 </View>
-                
               </View>
             ))}
           </ScrollView>
@@ -259,18 +210,22 @@ const SetDestination: React.FC = () => {
 
         <FastGaldaeStartPopup
           ref={fastGaldaeStartPopupRef}
-          onConfirm={(large, small) => {
-            setDepartureLarge(large);
-            setDepartureSmall(small);
+          onConfirm={(largeName, largeId, smallName, smallId) => {
+            setDepartureLargeName(largeName);
+            setDepartureLargeId(largeId);
+            setDepartureSmallName(smallName);
+            setDepartureSmallId(smallId);
           }}
           onClose={() => console.log('팝업 닫힘')}
         />
 
         <FastGaldaeEndPopup
         ref={fastGaldaeEndPopupRef}
-        onConfirm={(large, small) => {
-          setDestinationLarge(large);
-          setDestinationSmall(small);
+        onConfirm={(largeName, largeId, smallName, smallId) => {
+          setDestinationLargeName(largeName);
+          setDestinationLargeId(largeId);
+          setDestinationSmallId(smallId);
+          setDestinationSmallName(smallName);
         }}
         onClose={() => console.log('팝업 닫힘')}
         />

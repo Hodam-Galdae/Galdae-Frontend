@@ -1,6 +1,6 @@
 // MyInfo.tsx 테스트
 import React,{useState,useEffect,useCallback} from 'react';
-import { View,ScrollView,Image ,ActivityIndicator,Alert} from 'react-native';
+import { View,ScrollView,Image ,ActivityIndicator,Alert,RefreshControl} from 'react-native';
 import SVG from '../components/SVG';
 import styles from '../styles/MyInfo.style';
 import { useNavigation,useFocusEffect } from '@react-navigation/native';
@@ -18,7 +18,7 @@ import { RootState } from '../modules/redux/RootReducer'; // RootState 타입 (s
 import { setUserInfo } from '../modules/redux/slice/myInfoSlice';
 import { fetchMyGaldaeHistory } from '../modules/redux/slice/myGaldaeSlice';
 //API
-import {  getUserInfo } from '../api/membersApi';
+import {  getUserInfo,updateMemberImage } from '../api/membersApi';
 
 //type
 import {} from '../types/getTypes';
@@ -37,23 +37,7 @@ type RootStackParamList = {
 
 type nowGaldaeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 const MyInfo: React.FC = () => {
-  // const newGaldaeList = [
-  //   { time: '방금전', dest: '충주 터미널', depart: '정문' },
-  //   { time: '1일전', dest: '충주역', depart: '학교' },
-  //   { time: '2일전', dest: '시청', depart: '정문' },
-  //   { time: '3일전', dest: '마트', depart: '학교' },
-  //   { time: '4일전', dest: '공원', depart: '후문' },
-  //   { time: '5일전', dest: '카페', depart: '도서관' },
-  //   { time: '6일전', dest: '병원', depart: '정문' },
-  //   { time: '7일전', dest: '은행', depart: '학교' },
-  //   { time: '8일전', dest: '백화점', depart: '후문' },
-  //   { time: '9일전', dest: '기차역', depart: '정문' },
-  //   { time: '10일전', dest: '공항', depart: '터미널' },
-  //   { time: '11일전', dest: '도서관', depart: '후문' },
-  //   { time: '12일전', dest: '박물관', depart: '정문' },
-  //   { time: '13일전', dest: '호텔', depart: '학교' },
-  //   { time: '14일전', dest: '극장', depart: '정문' },
-  // ];
+
   const myInfoMenu = [
     {text: '결제 · 정산관리', onPress: ()=>{navigation.navigate('Payment');}},
     {text: '공지 사항', onPress: ()=>{navigation.navigate('Announcement');}},
@@ -62,13 +46,16 @@ const MyInfo: React.FC = () => {
     {text: 'FAQ/문의하기', onPress: ()=>{navigation.navigate('FAQ');}},
     {text: '로그아웃', onPress: ()=>{navigation.navigate('Logout');}},
   ];
+  const [refreshing, setRefreshing] = useState(false);
   const dispatch = useAppDispatch();
+  const [isImageLoading, setIsImageLoading] = useState(false); // 이미지 업데이트 로딩 상태
   const navigation = useNavigation<nowGaldaeScreenNavigationProp>();
-  const [loading, setLoading] = useState<boolean>(false);
   //const [profileImg, setProfileImg] = useState<string>('');
   const {imageUri, getImageByGallery} = useImagePicker();
+
   // Redux에서 사용자 정보 가져오기
   const userInfo = useSelector((state: RootState) => state.myInfoSlice.userInfo);
+  const profileImg = userInfo?.image || '';
   // 내 갈대 기록은 Redux slice에서 관리 (state.myGaldae)
   const { history: myGaldaeHistory, loading: historyLoading } = useSelector(
     (state: RootState) => state.myGaldaeSlice
@@ -106,14 +93,6 @@ useFocusEffect(
   }, [fetchUserInfo])
 );
 
-  const handlePress = () => {
-
-    setLoading(true);
-    // 버튼 클릭 시 원하는 로직을 수행하고, 완료 후 로딩 상태를 false로 전환합니다.
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000);
-  };
   const handleMorePress = () =>{
     navigation.navigate('MyGaldae');
   };
@@ -138,19 +117,46 @@ useFocusEffect(
   };
 
 
-  useEffect(() => {
-      if (imageUri !== undefined) {
-        //setProfileImg(imageUri);
-
+   // imageUri가 변경되면 imageBase64를 사용해서 updateMemberImage API 호출
+   useEffect(() => {
+    const updateImage = async () => {
+      try {
+        if (imageUri) {
+          setIsImageLoading(true);
+          console.log(`imageUri: ${imageUri}`);
+          const result = await updateMemberImage(imageUri);
+          console.log('✅ 이미지 업데이트 성공:', result);
+          // 이미지 업데이트 후 사용자 정보를 재갱신
+          fetchUserInfo();
+        }
+      } catch (error) {
+        console.error('❌ 이미지 업데이트 실패:', error);
+        Alert.alert('오류', '프로필 이미지를 업데이트하는데 실패했습니다.');
+      }finally{
+        setIsImageLoading(false);
       }
-    }, [imageUri]);
+    };
+
+    updateImage();
+  }, [imageUri, fetchUserInfo]);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    fetchUserInfo();
+    dispatch(fetchMyGaldaeHistory());
+    setRefreshing(false);
+  };
   return (
     <View>
-      <ScrollView>
+      <ScrollView
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+      >
         <BasicButton
           text="어플 공지사항/안내"
-          onPress={handlePress}
-          loading={loading}
+          //onPress={handlePress}
+          //loading={loading}
           buttonStyle={styles.notiButton}
           textStyle={styles.notiText}
         />
@@ -160,19 +166,17 @@ useFocusEffect(
           <View style={styles.userInfoBox}>
             <View style={styles.userInfos}>
               <View style={styles.profile}>
-              {(imageUri || userInfo?.image) ? (
-                <Image
-                  source={
-                    imageUri
-                      ? { uri: imageUri }
-                      : { uri: userInfo!.image! }
-                  }
-                  style={styles.profileImg}
-                  resizeMode="cover"
-                />
-              ) : (
-                <SVG name="profileImg" style={styles.profileImg} />
-              )}
+              {isImageLoading ? (
+                  <View style={[styles.profileImg, { justifyContent: 'center', alignItems: 'center' }]}>
+                    <ActivityIndicator size="small" color={theme.colors.brandColor} />
+                  </View>
+                ) : profileImg ? (
+                  <Image source={{ uri: profileImg }} style={styles.profileImg} resizeMode="cover" />
+                ) : imageUri ? (
+                  <Image source={{ uri: imageUri }} style={styles.profileImg} resizeMode="cover" />
+                ) : (
+                  <SVG name="profileImg" style={styles.profileImg} />
+                )}
                 <SVGButton iconName="camera_2_line" buttonStyle={styles.profileCamera} onPress={getImageByGallery}/>
               </View>
               <View style={styles.userInfoText}>

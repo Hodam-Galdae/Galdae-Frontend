@@ -34,7 +34,7 @@ function App(): React.JSX.Element {
               tabBarStyle: {
                 display: isTabBarVisible ? 'flex' : 'none',
                 height: Platform.select({
-                  ios: 54,
+                  ios: 64,
                   android: 54,
                 }),
                 borderTopLeftRadius: 20,

@@ -1,5 +1,6 @@
 import axiosInstance from './axiosInstance';
-import { MyCreatedPost,MyPostHistory } from '../types/getTypes';
+import axios from 'axios';
+import { MyCreatedPost,MyPostHistory,ImageFile } from '../types/getTypes';
 /**
  * 사용자 정보 조회 API
  */
@@ -63,7 +64,43 @@ export const getFrequentRoutes = async () => {
     throw error;
   }
 };
+/**
+ * 회원 이미지 변경 API 호출 함수 (Form-Data 방식)
+ * @param imageUri 로컬 이미지 파일 경로 (예: file:///... 형식)
+ * @returns API 응답 데이터
+ */
+export const updateMemberImage = async (imageUri: string): Promise<unknown> => {
+  const requestUrl = '/members/image';
+  const formData = new FormData();
 
+  const file: ImageFile = {
+    uri: imageUri,
+    type: 'image/jpeg', // 실제 이미지 형식에 맞게 설정 (예: image/png)
+    name: 'profile.jpg',
+  };
+
+  // React Native에서는 FormData에 { uri, type, name } 형태의 객체를 전달할 수 있음
+  // TypeScript에서는 Blob 타입과 맞지 않으므로, unknown을 통해 Blob으로 캐스팅합니다.
+  formData.append('image', file as unknown as Blob);
+
+
+  try {
+    const response = await axiosInstance.post(requestUrl, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    console.log('✅ 이미지 변경 성공:', response.data);
+    return response.data;
+  } catch (error: any) {
+    if (axios.isAxiosError(error)) {
+      console.error('❌ 이미지 변경 실패:', error.response ? error.response.data : error);
+    } else {
+      console.error('❌ 이미지 변경 실패:', error);
+    }
+    throw error;
+  }
+};
 /**
  * 닉네임 변경 API
  */
@@ -98,6 +135,29 @@ export const updateBankInfo = async (bankType: string, accountNumber: string, de
     return response.data;
   } catch (error: any) {
     console.error('❌ [결제 정보 수정 실패] 오류 발생:', error.response ? error.response.data : error);
+    throw error;
+  }
+};
+/**
+ * 로그아웃 API 호출 함수
+ * @param token 엑세스 토큰
+ * @returns API 응답 데이터
+ */
+export const logoutMember = async (token: string): Promise<any> => {
+  try {
+    const response = await axiosInstance.post(
+      '/members/logout',
+      null, // 요청 본문이 필요 없으므로 null 전달
+      {
+        headers: {
+          Authorization: token, // 헤더에 엑세스 토큰 설정
+        },
+      }
+    );
+    console.log('✅로그아웃 성공:', response.data);
+    return response.data;
+  } catch (error: any) {
+    console.error('❌로그아웃 실패:', error.response ? error.response.data : error);
     throw error;
   }
 };

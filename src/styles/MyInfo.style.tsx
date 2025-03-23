@@ -29,7 +29,7 @@ export default StyleSheet.create({
     width:62,
     height:62,
     borderRadius:999,
-    backgroundColor:theme.colors.brandColor,
+    backgroundColor:theme.colors.white,
     position:'relative',
   },
   profileImg:{

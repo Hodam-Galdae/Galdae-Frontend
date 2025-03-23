@@ -120,7 +120,7 @@ const FastGaldaeTimePopup = forwardRef<FastGaldaeTimePopupRef, FastGaldaePopupPr
                 setSelectedHour(hour);
                 setSelectedMinute(minute);
               }}
-              isToday={true}
+              isToday={selectedDate === moment().format('YYYY-MM-DD')}
               style={styles.timePicker}
             />
 

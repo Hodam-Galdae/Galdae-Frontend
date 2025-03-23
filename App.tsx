@@ -41,7 +41,7 @@ import store from './src/modules/redux/store/index';
 function App() {
   useEffect(() => {
     if (Platform.OS === 'android') {
-      // StatusBar.setBackgroundColor('transparent');
+      StatusBar.setBackgroundColor('transparent');
       StatusBar.setTranslucent(true);
     }
     StatusBar.setBarStyle('dark-content');
