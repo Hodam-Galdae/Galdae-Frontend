@@ -6,6 +6,7 @@ import {
   StyleProp,
   ViewStyle,
   TextInput,
+  Image,
 } from 'react-native';
 import SVG from '../../components/SVG';
 import BasicText from '../../components/BasicText';
@@ -71,7 +72,13 @@ const ReportPopup: React.FC<ReportPopupProps> = ({
             ) : null}
           </View>
           <View style={styles.wrapper}>
-            <SVGButton onPress={getImageByGallery} iconName="PictureGray" buttonStyle={styles.pictureBtn} />
+            <View style={{flexDirection: 'row', marginBottom: 10,}}>
+              <SVGButton onPress={getImageByGallery} iconName="PictureGray" buttonStyle={styles.pictureBtn} />
+              {imageUri ?
+                <Image source={{uri: imageUri}}/> :
+                null
+              }
+            </View>
             <TouchableOpacity
               onPress={() =>
                 onConfirm(

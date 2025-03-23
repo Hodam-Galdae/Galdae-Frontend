@@ -5,6 +5,7 @@ import {
   TextInput,
   TouchableWithoutFeedback,
   Keyboard,
+  Image,
 } from 'react-native';
 import styles from '../styles/SetUserInfo.style';
 import BasicText from '../components/BasicText';
@@ -19,7 +20,6 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {checkNickname, join} from '../api/authApi';
 import useImagePicker from '../hooks/useImagePicker';
 import RNFS from 'react-native-fs';
-import ImageResizer from '@bam.tech/react-native-image-resizer';
 import { resizeImage } from '../utils/ImageResizer';
 
 interface AgreeProps {
@@ -121,12 +121,16 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep}) => {
               <BasicText text="유저 정보 입력" style={styles.title} />
               <View style={styles.profileContainer}>
                 <View style={styles.profileWrapper}>
-                  <SVG
-                    style={styles.profile}
-                    name="DefaultProfile"
-                    width={68}
-                    height={68}
-                  />
+                  {imageUri ?
+                    <Image style={styles.profile} source={{uri: imageUri}}/> :
+                    <SVG
+                      style={styles.profile}
+                      name="DefaultProfile"
+                      width={68}
+                      height={68}
+                    />
+                  }
+
                   <SVGButton
                     onPress={getImageByGallery}
                     iconName="GalleryBlack"
