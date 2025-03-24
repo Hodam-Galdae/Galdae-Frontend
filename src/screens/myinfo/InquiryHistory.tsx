@@ -32,24 +32,7 @@ const InquiryHistory = () => {
   const navigation = useNavigation<nowGaldaeScreenNavigationProp>();
   const [questionList, setQuestionList] = useState<QuestionItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  // const FAQHistory:FAQHistory[] = [
-  //   {
-  //     id:0,
-  //     question:'유저 신고하는 방법 알려주세요.',
-  //     questionDetail:'폭력성이 드러나는 말을 쓰는 유저 신고룰 하고 싶은데요, 방법 알려주세요.',
-  //     answer:'이용에 불편을 드려 죄송합니다.',
-  //     answered:true,
 
-  //   },
-  //   {
-  //     id:1,
-  //     question:'내 갈대 기록 보고 싶은데요',
-  //     questionDetail:'어디서 어떻게 봐야할지 모르겠어요ㅜ 알려주세요',
-  //     answer:'내 갈대 기록을 보고 싶다면, 마이페이지 -> 내 갈대 -> 더보기 하시면 됩니다. ',
-  //     answered:false,
-
-  //   },
-  // ];
   useEffect(() => {
     const fetchMyQuestions = async () => {
       try {

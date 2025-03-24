@@ -1,5 +1,5 @@
 import axiosInstance from './axiosInstance';
-
+import RNFS from 'react-native-fs';
 /**
  * 내 문의 목록 조회 API
  * GET /question/my-list
@@ -39,35 +39,52 @@ export const getFaqList = async (tag: string) => {
 };
 
 /**
- * 문의하기 API
+ * 문의하기 API (RNFS로 JSON 파일 생성해서 전송)
  * POST /question
- * @param tag 태그
- * @param title 제목
- * @param content 내용
- * @param questionImage (선택) 이미지 URL 문자열
  */
 export const createQuestion = async (
   tag: string,
   title: string,
   content: string,
-  questionImage?: string
+  imageUri?: string
 ) => {
-  console.log('🚀 [문의하기 요청] POST /question');
-  console.log('📌 요청 데이터:', { tag, title, content, questionImage });
+  const formData = new FormData();
 
+  // 1. JSON 파일 생성
+  const jsonData = { tag, title, content };
+  const fileName = `question_${Date.now()}.json`;
+  const filePath = `${RNFS.TemporaryDirectoryPath}/${fileName}`;
+  await RNFS.writeFile(filePath, JSON.stringify(jsonData), 'utf8');
+
+  // 2. JSON 파일 FormData에 추가
+  formData.append('questionCreateRequest', {
+    uri: `file://${filePath}`,
+    type: 'application/json',
+    name: fileName,
+  } as any);
+
+  // 3. 이미지 추가
+  if (imageUri && imageUri.startsWith('file://')) {
+    formData.append('questionImage', {
+      uri: imageUri,
+      type: 'image/png',
+      name: 'question.png',
+    } as any);
+  }
+
+  // 4. 디버깅용 로그
+  const unsafeFormData = formData as any;
+  for (const part of unsafeFormData._parts) {
+    console.log('📦 formData:', part[0], part[1]);
+  }
+
+  // 5. 요청
   try {
-    const response = await axiosInstance.post('/question', {
-      questionCreateRequest: {
-        tag,
-        title,
-        content,
-      },
-      questionImage: questionImage ?? null,
-    });
-    console.log('✅ [문의하기 성공] 응답 데이터:', response.data);
+    const response = await axiosInstance.post('/question', formData);
+    console.log('✅ [문의하기 성공]', response.data);
     return response.data;
   } catch (error: any) {
-    console.error('❌ [문의하기 실패] 오류 발생:', error.response ? error.response.data : error);
+    console.error('❌ [문의하기 실패]', error.response?.data || error);
     throw error;
   }
 };

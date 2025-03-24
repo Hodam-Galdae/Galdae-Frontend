@@ -130,3 +130,12 @@ export interface QuestionItem {
   image: string;
   faqStatus: 'PENDING' | 'COMPLETE'; // 상태가 명확할 경우 리터럴 타입으로 고정
 }
+/**
+ * 공지사항 조회 api 타입
+ */
+export interface Term {
+  termId: number;
+  tag: string;
+  title: string;
+  content: string;
+}

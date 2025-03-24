@@ -87,6 +87,7 @@ const Login: React.FC = () => {
       navigation.replace('ReviewInProgress');
       return;
     }
+        //navigation.replace('MainTab');
   };
 
   const images = [
