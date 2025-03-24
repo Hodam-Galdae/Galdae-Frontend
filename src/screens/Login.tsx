@@ -45,8 +45,6 @@ const Login: React.FC = () => {
         'refreshToken',
         response.refreshToken || '',
       );
-      console.log('access token : ' + response.accessToken);
-      console.log('refresh token : ' + response.accessToken);
       handleGoNextPage(response);
     } catch (err) {
       console.error('login err : ', err);
