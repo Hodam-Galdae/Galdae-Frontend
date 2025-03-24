@@ -304,7 +304,7 @@ const getFormattedDepartureTime = (): string => {
     setDestinationSmallName(departureSmallName);
   };
   return (
-    <View>
+    <View style={{height:'100%'}}>
       <ScrollView refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }>

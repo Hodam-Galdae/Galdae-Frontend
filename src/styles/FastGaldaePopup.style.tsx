@@ -30,7 +30,7 @@ export default StyleSheet.create({
         marginBottom: 33, // ✅ 여백을 추가하여 쉽게 터치 가능
     },
     content: {
-      height:'100%',
+      //height:'100%',
       //position:'relative',
     },
     start:{

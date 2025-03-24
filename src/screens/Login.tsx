@@ -72,22 +72,22 @@ const Login: React.FC = () => {
     const user = await getUserInfo();
     dispatch(setUser({...user, token: 'Bearer ' + response.accessToken}));
 
-    // // 학생 인증 완료
-    // if (response.isAuthenticated === 'CERTIFIED') {
-    //   navigation.replace('MainTab');
-    //   return;
-    // }
+    // 학생 인증 완료
+    if (response.isAuthenticated === 'CERTIFIED') {
+      navigation.replace('MainTab');
+      return;
+    }
 
-    // if (response.isAuthenticated === 'NOT_CERTIFIED') {
-    //   navigation.replace('SignUp', {data: response.isJoined});
-    //   return;
-    // }
+    if (response.isAuthenticated === 'NOT_CERTIFIED') {
+      navigation.replace('SignUp', {data: response.isJoined});
+      return;
+    }
 
-    // if (response.isAuthenticated === 'PENDING') {
-    //   navigation.replace('ReviewInProgress');
-    //   return;
-    // }
-        navigation.replace('MainTab');
+    if (response.isAuthenticated === 'PENDING') {
+      navigation.replace('ReviewInProgress');
+      return;
+    }
+        //navigation.replace('MainTab');
   };
 
   const images = [

@@ -88,8 +88,8 @@ const FastGaldaeStartPopup = forwardRef<FastGaldaeStartPopupRef, FastGaldaePopup
     return (
       <Modalize
         ref={modalizeRef}
-        //adjustToContentHeight={true} // ✅ 컨텐츠 크기에 따라 높이 자동 조절
-          
+        adjustToContentHeight={true} // ✅ 컨텐츠 크기에 따라 높이 자동 조절
+        
         onOpened={() => {
           setIsTabBarVisible(false);
         }}
@@ -105,7 +105,7 @@ const FastGaldaeStartPopup = forwardRef<FastGaldaeStartPopupRef, FastGaldaePopup
         }}
         {...({ swipeToClose: true, swipeThreshold: 100 } as any)}
       >
-        <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
+        <KeyboardAvoidingView behavior="padding">
            {/* 팝업 안쪽에 커스텀 핸들 추가 */}
            <View style={styles.handleContainer}>
                 <View style={styles.handle} />
