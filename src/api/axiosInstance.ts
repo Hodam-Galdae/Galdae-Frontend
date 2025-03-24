@@ -6,7 +6,7 @@ export const API_BASE_URL = 'http://15.164.118.59'; // 백엔드 API 주소
 export const PUB_ENDPOINT = '/send';
 export const SUB_ENDPOINT = '/topic/chatroom';
 const EXCLUDED_URLS = ['/auth/kakao', '/auth/google', '/auth/apple', '/ws'];
-const MULTIPART_URLS = ['/auth/join', '/auth/university'];
+const MULTIPART_URLS = ['/auth/join', '/auth/university','/members/image'];
 
 const axiosInstance = axios.create({
   baseURL: API_BASE_URL,
@@ -21,9 +21,10 @@ axiosInstance.interceptors.request.use(
     }
     if (MULTIPART_URLS.includes(config.url || '')) {
       config.headers['Content-Type'] = 'multipart/form-data';
-    } else {
-      config.headers['Content-Type'] = 'application/json';
     }
+    // else {
+    //   config.headers['Content-Type'] = 'application/json';
+    // }
     console.log(config);
     try {
       const token = await EncryptedStorage.getItem('accessToken');

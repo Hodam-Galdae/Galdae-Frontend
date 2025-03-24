@@ -1,5 +1,5 @@
 import React,{useState} from 'react';
-import {  View } from 'react-native';
+import {  View ,Alert} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from '../../styles/Logout.style';
 import Header from '../../components/Header';
@@ -15,6 +15,7 @@ type HomeProps = {
 
 // 내비게이션 스택 타입 정의
 type RootStackParamList = {
+  Login: undefined;
     CreateGaldae: undefined;
     NowGaldae: {
       departureLarge?:string,
@@ -41,6 +42,8 @@ const WithDraw: React.FC<HomeProps> = () => {
         // 예시: navigation.reset({ index: 0, routes: [{ name: 'Login' }] });
 
         setInvalidPopupVisible(false);
+        Alert.alert('회원탈퇴', '정상적으로 회원탈퇴 되었습니다.');
+        navigation.navigate('Login');
       } catch (error) {
         console.error('탈퇴 실패:', error);
         // TODO: 사용자에게 에러 알림 (예: 토스트)

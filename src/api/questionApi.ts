@@ -39,35 +39,46 @@ export const getFaqList = async (tag: string) => {
 };
 
 /**
- * 문의하기 API
+ * 문의하기 API (이미지 포함 FormData 방식)
  * POST /question
  * @param tag 태그
  * @param title 제목
  * @param content 내용
- * @param questionImage (선택) 이미지 URL 문자열
+ * @param imageUri 이미지 경로 (file:///...)
  */
 export const createQuestion = async (
-  tag: string,
-  title: string,
-  content: string,
-  questionImage?: string
-) => {
-  console.log('🚀 [문의하기 요청] POST /question');
-  console.log('📌 요청 데이터:', { tag, title, content, questionImage });
+    tag: string,
+    title: string,
+    content: string,
+    imageUri?: string
+  ) => {
+    const formData = new FormData();
 
-  try {
-    const response = await axiosInstance.post('/question', {
-      questionCreateRequest: {
-        tag,
-        title,
-        content,
-      },
-      questionImage: questionImage ?? null,
-    });
-    console.log('✅ [문의하기 성공] 응답 데이터:', response.data);
-    return response.data;
-  } catch (error: any) {
-    console.error('❌ [문의하기 실패] 오류 발생:', error.response ? error.response.data : error);
-    throw error;
-  }
-};
+    // 👉 그냥 문자열로 append (Blob ❌)
+    formData.append(
+      'questionCreateRequest',
+      JSON.stringify({ tag, title, content }) as any
+    );
+
+    // 이미지 파일 append
+    if (imageUri && imageUri.startsWith('file://')) {
+      formData.append('questionImage', {
+        uri: imageUri,
+        type: 'image/png',
+        name: 'question.png',
+      } as any);
+    }
+    const unsafeFormData = formData as any;
+
+for (const part of unsafeFormData._parts) {
+  console.log('📦 formData:', part[0], part[1]);
+}
+    try {
+      const response = await axiosInstance.post('/question', formData);
+      console.log('✅ [문의하기 성공]', response.data);
+      return response.data;
+    } catch (error: any) {
+      console.error('❌ [문의하기 실패]', error.response?.data || error);
+      throw error;
+    }
+  };

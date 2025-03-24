@@ -1,5 +1,5 @@
 import React ,{useState,useEffect } from 'react';
-import {  View,Alert,TouchableOpacity,Image } from 'react-native';
+import { Keyboard,KeyboardAvoidingView,Platform, TouchableWithoutFeedback, View,Alert,TouchableOpacity,Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from '../../styles/Inquiry.style';
 import { theme } from '../../styles/theme';
@@ -60,7 +60,6 @@ const Inquiry: React.FC<HomeProps> = () => {
         Alert.alert('입력 확인', '제목과 내용을 모두 입력해주세요.');
         return;
       }
-
       setLoading(true);
       try {
         await createQuestion('USER', title, content, img); // "USER"는 문의 태그 예시
@@ -74,6 +73,11 @@ const Inquiry: React.FC<HomeProps> = () => {
       }
     };
     return (
+      <KeyboardAvoidingView
+    style={{ flex: 1 }}
+    behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+  >
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
             <Header
             leftButton={<SVGButton iconName="arrow_left_line" onPress={goBack}/>}
@@ -131,6 +135,8 @@ const Inquiry: React.FC<HomeProps> = () => {
                 </View>
             </View>
       </View>
+      </TouchableWithoutFeedback>
+  </KeyboardAvoidingView>
     );
 };
 

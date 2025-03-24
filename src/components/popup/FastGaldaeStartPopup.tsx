@@ -88,8 +88,8 @@ const FastGaldaeStartPopup = forwardRef<FastGaldaeStartPopupRef, FastGaldaePopup
     return (
       <Modalize
         ref={modalizeRef}
-        adjustToContentHeight={true} // ✅ 컨텐츠 크기에 따라 높이 자동 조절
-
+        //adjustToContentHeight={true} // ✅ 컨텐츠 크기에 따라 높이 자동 조절
+          
         onOpened={() => {
           setIsTabBarVisible(false);
         }}
