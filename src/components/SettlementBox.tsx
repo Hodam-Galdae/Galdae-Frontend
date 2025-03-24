@@ -1,26 +1,52 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { View, Image } from 'react-native';
 import styles from '../styles/SettlementBox.style';
 import BasicText from './BasicText';
 import BasicButton from './button/BasicButton';
 import SVG from './SVG';
 import { useSelector } from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
+import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootState} from '../modules/redux/RootReducer';
+import { getPayment, PaymentResponse } from '../api/chatApi';
+
+type RootStackParamList = {
+  Settlement: {data: PaymentResponse};
+};
 
 type Settlement = {
-    id: number,
-    currentMemberCount: number,
-    cost: number,
-    sender?: string,
-    senderImage?: string,
+    sender: string,
+    senderImage: string | undefined,
     time: Date,
-    isShowProfile?: boolean,
-    isShowTime?: boolean
-    onPress: ()=>void
+    isShowProfile: boolean,
+    isShowTime: boolean
+    chatroomId: string
 }
 
-const ChatItem: React.FC<{settlement: Settlement}> = React.memo(({settlement}) => {
+const SettlementBox: React.FC<{settlement: Settlement}> = React.memo(({settlement}) => {
+    const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList, 'Settlement'>>();
     const userInfo = useSelector((state: RootState) => state.user);
+    const [paymentData, setPaymentData] = useState<PaymentResponse>({
+        id: 0,
+        totalCost: 0,
+        personalCost: 0,
+        depositor: '',
+        accountNumber: '',
+        bankType: '',
+        requestTime: new Date(),
+        members: [
+            {id: '',name: '', image: ''},
+        ],
+    });
+
+    useEffect(() => {
+        const getSettlement = async() => {
+            const data = await getPayment(settlement.chatroomId);
+            setPaymentData(data);
+        };
+
+        getSettlement();
+    }, [settlement]);
 
     return (
         <View style={styles.container}>
@@ -38,8 +64,8 @@ const ChatItem: React.FC<{settlement: Settlement}> = React.memo(({settlement}) =
                     <View style={styles.backImage}>
 
                     </View>
-                    <BasicText style={styles.text}>{'갈대 정산을 요청합니다.\n\n' + '정산 인원 : ' + settlement.currentMemberCount.toString() + '명\n' + '총 금액 : ' + settlement.cost.toString() + '원\n\n' + '정산 요청 금액 (1/N)\n1인 : ' + Math.ceil(settlement.cost / settlement.currentMemberCount) + '원\n\n' + '계좌 확인 후 송금해주세요.'}</BasicText>
-                    <BasicButton text="정산 상세" buttonStyle={styles.button} textStyle={styles.buttonText} onPress={settlement.onPress}/>
+                    <BasicText style={styles.text}>{'갈대 정산을 요청합니다.\n\n' + '정산 인원 : ' + paymentData?.members.length + '명\n' + '총 금액 : ' + paymentData?.totalCost.toString() + '원\n\n' + '정산 요청 금액 (1/N)\n1인 : ' + paymentData?.personalCost.toString() + '원\n\n' + '계좌 확인 후 송금해주세요.'}</BasicText>
+                    <BasicButton text="정산 상세" buttonStyle={styles.button} textStyle={styles.buttonText} onPress={()=>navigation.navigate('Settlement', { data: paymentData})}/>
                 </View>
                 {settlement.isShowTime && settlement.sender !== userInfo.nickname ? (
                     <BasicText style={styles.timeText} text={settlement.time.getHours() + ':' + settlement.time.getMinutes()}/>
@@ -49,4 +75,4 @@ const ChatItem: React.FC<{settlement: Settlement}> = React.memo(({settlement}) =
     );
 });
 
-export default ChatItem;
+export default SettlementBox;

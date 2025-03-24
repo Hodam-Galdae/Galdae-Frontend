@@ -46,14 +46,6 @@ import {createReport} from '../api/reportApi';
 import {resizeImage} from '../utils/ImageResizer';
 import RNFS from 'react-native-fs';
 
-enum Type {
-  MESSAGE,
-  ENTER,
-  EXIT,
-  IMAGE,
-  MONEY,
-}
-
 type SettlementType = {
   accountNumber: String;
   accountBank: String;
@@ -191,6 +183,20 @@ const ChatRoom: React.FC = () => {
       client.current?.deactivate();
     };
   }, [chatRoomData, userInfo]);
+
+  const sendPayment = async (settlementCost: string) => {
+    if (client.current?.connected) {
+      client.current.publish({
+        destination: PUB_ENDPOINT + '/' + chatRoomData.chatroomId,
+        headers: {Authorization: userInfo.token},
+        body: JSON.stringify({
+          type: 'MONEY',
+          sender: userInfo.nickname,
+          message: settlementCost,
+        }),
+      });
+    }
+  };
 
   const sendMessage = async () => {
     if (client.current && message.length !== 0) {
@@ -338,7 +344,7 @@ const ChatRoom: React.FC = () => {
           new Date(data[index - 1]?.time).getHours() ===
             new Date(item.time).getHours()
         );
-      return item.chatType !== Type.MONEY.toString() ? (
+      return item.chatType !== 'MONEY' ? (
         <ChatItem
           item={{
             id: item.chatId,
@@ -354,28 +360,17 @@ const ChatRoom: React.FC = () => {
       ) : (
         <SettlementBox
           settlement={{
-            id: item.chatId,
-            currentMemberCount: chatRoomData.currentMemberCount,
-            cost: parseInt(item.chatContent),
             sender: item.sender,
+            senderImage: item.memberImage,
+            chatroomId: chatRoomData.chatroomId,
             time: new Date(item.time),
-            onPress: () =>
-              navigation.navigate('Settlement', {
-                data: Object.freeze({
-                  accountNumber: '0000-0000',
-                  accountBank: '우리은행',
-                  cost: Number.parseInt(item.chatContent),
-                  time: new Date(item.time),
-                  id: chatRoomData.chatroomId,
-                }),
-              }),
             isShowProfile,
             isShowTime,
           }}
         />
       );
     },
-    [data, chatRoomData, navigation],
+    [data, chatRoomData],
   );
 
   useDidMountEffect(() => {
@@ -568,7 +563,7 @@ const ChatRoom: React.FC = () => {
           member={members}
           chatRoomData={chatRoomData}
           ref={settlementRequestPopupRef}
-          client={client}
+          sendPayment={sendPayment}
         />
 
         <ChatRoomExitModal

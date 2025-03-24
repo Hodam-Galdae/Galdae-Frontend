@@ -25,6 +25,23 @@ export interface MemberResponse {
   memberImage: string;
 }
 
+export interface PaymentResponse {
+  id: number,
+  totalCost: number,
+  personalCost: number,
+  depositor: string,
+  accountNumber: string,
+  bankType: string,
+  requestTime: Date,
+  members: PaymentUserReponse[]
+}
+
+export interface PaymentUserReponse {
+  id: string,
+  name: string,
+  image: string,
+}
+
 export interface ImageResponse {
   url: string;
 }
@@ -51,6 +68,7 @@ export const getInActiveChatroom = async (): Promise<ChatroomResponse[]> => {
   return response.data;
 };
 
+// 채팅방 참여여
 export const joinChatroom = async (postId: string): Promise<ChatroomResponse> => {
   const response = await axiosInstance.get<ChatroomResponse>(`/chat/${postId}/join`);
   return response.data;
@@ -78,4 +96,16 @@ export const sendImage = async (image: FormData): Promise<string> => {
     },
   });
   return response.data.url;
+};
+
+// 정산 내역 가져오기
+export const getPayment = async (chatroomId: string): Promise<PaymentResponse> => {
+  const response = await axiosInstance.get<PaymentResponse>(`/chat/${chatroomId}/payment`);
+  return response.data;
+};
+
+// 정산 내역 유저 가져오기
+export const getPaymentUser = async (chatroomId: string): Promise<PaymentUserReponse[]> => {
+  const response = await axiosInstance.get<PaymentUserReponse[]>(`/chat/${chatroomId}/payment/user`);
+  return response.data;
 };

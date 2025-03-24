@@ -8,22 +8,9 @@ import SVGButton from '../button/SVGButton';
 import SVG from '../SVG';
 import SettlementCostEditModal from './SettlementCostEditModal';
 import {
-  ChatResponse,
   ChatroomResponse,
   MemberResponse,
 } from '../../api/chatApi';
-import {useSelector} from 'react-redux';
-import {RootState} from '../../modules/redux/RootReducer';
-import {Client} from '@stomp/stompjs';
-import {PUB_ENDPOINT} from '../../api/axiosInstance';
-
-enum Type {
-  MESSAGE,
-  ENTER,
-  EXIT,
-  IMAGE,
-  MONEY,
-}
 
 export interface SettlementRequestPopupRef {
   open: () => void;
@@ -34,19 +21,14 @@ export interface SettlementRequestPopupProps {
   onClose?: () => void;
   chatRoomData: ChatroomResponse;
   member: MemberResponse[];
-  client: React.MutableRefObject<Client | undefined>;
+  sendPayment: (settlementCost: string) => void;
 }
 
 const SettlementRequestPopup = forwardRef<
   SettlementRequestPopupRef,
   SettlementRequestPopupProps
->(({onClose, chatRoomData, member, client}, ref) => {
+>(({chatRoomData, member, sendPayment}, ref) => {
   const modalizeRef = useRef<Modalize>(null);
-  const userInfo = useSelector((state: RootState) => state.user);
-
-  const handleSelectConfirm = () => {
-    modalizeRef.current?.close();
-  };
 
   // 외부에서 open/close 함수를 사용할 수 있도록 함
   useImperativeHandle(ref, () => ({
@@ -70,17 +52,7 @@ const SettlementRequestPopup = forwardRef<
     }
     modalizeRef.current?.close();
 
-    if (client.current?.connected) {
-      client.current.publish({
-        destination: PUB_ENDPOINT + '/' + chatRoomData.chatroomId,
-        headers: {Authorization: userInfo.token},
-        body: JSON.stringify({
-          type: 'MONEY',
-          sender: userInfo.nickname,
-          message: Math.ceil(settlementCost / member.length),
-        }),
-      });
-    }
+    sendPayment(settlementCost.toString());
   };
 
   const setCost = (cost: number) => {

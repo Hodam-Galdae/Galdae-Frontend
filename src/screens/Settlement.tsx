@@ -1,5 +1,5 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import {TouchableOpacity, View} from 'react-native';
+import React from 'react';
+import {View} from 'react-native';
 import styles from '../styles/Settlement.style';
 import SVG from '../components/SVG';
 import BasicText from '../components/BasicText';
@@ -8,38 +8,19 @@ import Header from '../components/Header';
 import SVGButton from '../components/button/SVGButton';
 import {theme} from '../styles/theme';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import { getMembers, MemberResponse } from '../api/chatApi';
+import { PaymentResponse } from '../api/chatApi';
 
 type RootStackParamList = {
-  Settlement: {data: Readonly<SettlementType>};
-};
-
-type SettlementType = {
-  accountNumber: String;
-  accountBank: String;
-  cost: number;
-  time: Date;
-  id: string;
+  Settlement: {data: PaymentResponse};
 };
 
 const Settlement: React.FC = () => {
-  const [members, setMembers] = useState<MemberResponse[]>([]);
   const {params} = useRoute<RouteProp<RootStackParamList, 'Settlement'>>();
   const navigation =
     useNavigation<
       NativeStackNavigationProp<RootStackParamList, 'Settlement'>
     >();
-  const data = params.data;
-
-  const fetchMembers = useCallback(async() => {
-      const memberData = await getMembers(data.id);
-      setMembers(memberData);
-  }, [data]);
-
-  useEffect(() => {
-    fetchMembers();
-  }, [fetchMembers]);
-
+  const data: PaymentResponse = params.data;
   return (
     <View style={styles.container}>
       <Header
@@ -61,14 +42,14 @@ const Settlement: React.FC = () => {
         <View style={styles.account}>
           <SVG name="Bank" width={26} height={26} style={styles.accountIcon} />
           <BasicText style={styles.accountText}>
-            {data.accountBank + ' ' + data.accountNumber}
+            {data.bankType + ' ' + data.accountNumber}
           </BasicText>
         </View>
-        <BasicText style={styles.costTitle}>{data.cost + '원'}</BasicText>
+        <BasicText style={styles.costTitle}>{data.totalCost + '원'}</BasicText>
         <BasicText style={styles.costSubTitle}>
-          {'요청일 : ' + data.time}
+          {'요청일 : ' + `${new Date(data.requestTime).getFullYear()}년 ${new Date(data.requestTime).getMonth()}월 ${new Date(data.requestTime).getDay()}일 ${new Date(data.requestTime).getHours()}:${new Date(data.requestTime).getMinutes()}`}
         </BasicText>
-        <TouchableOpacity>
+        {/* <TouchableOpacity>
           <View style={styles.galleryBtn}>
             <SVG
               style={styles.galleryIcon}
@@ -78,18 +59,18 @@ const Settlement: React.FC = () => {
             />
             <BasicText style={styles.galleryText} text="사진 등록" />
           </View>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <View style={styles.divider} />
         <BasicText style={styles.allCostText}>
-          {'총 금액 ' + data.cost}
+          {'총 금액 ' + data.totalCost}
         </BasicText>
-        {members.map(e => {
+        {data.members.map(e => {
           return (
-            <View key={e.memberId} style={styles.userContainer}>
+            <View key={e.id} style={styles.userContainer}>
               <SVG name="DefaultProfile" style={styles.userIcon} />
-              <BasicText style={styles.userText} text={e.memberName} />
+              <BasicText style={styles.userText} text={e.name} />
               <BasicText style={styles.userText}>
-                {Math.ceil(data.cost / members.length) + '원'}
+                {data.personalCost + '원'}
               </BasicText>
             </View>
           );
