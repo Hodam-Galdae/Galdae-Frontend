@@ -7,9 +7,15 @@ import BasicButton from '../button/BasicButton';
 import SVGButton from '../button/SVGButton';
 import SVG from '../SVG';
 import SettlementCostEditModal from './SettlementCostEditModal';
-import { ChatResponse, ChatroomResponse, MemberResponse } from '../../api/chatApi';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../modules/redux/RootReducer';
+import {
+  ChatResponse,
+  ChatroomResponse,
+  MemberResponse,
+} from '../../api/chatApi';
+import {useSelector} from 'react-redux';
+import {RootState} from '../../modules/redux/RootReducer';
+import {Client} from '@stomp/stompjs';
+import {PUB_ENDPOINT} from '../../api/axiosInstance';
 
 enum Type {
   MESSAGE,
@@ -27,15 +33,14 @@ export interface SettlementRequestPopupRef {
 export interface SettlementRequestPopupProps {
   onClose?: () => void;
   chatRoomData: ChatroomResponse;
-  data: ChatResponse[];
   member: MemberResponse[];
-  setData: React.Dispatch<React.SetStateAction<ChatResponse[]>>;
+  client: React.MutableRefObject<Client | undefined>;
 }
 
 const SettlementRequestPopup = forwardRef<
   SettlementRequestPopupRef,
   SettlementRequestPopupProps
->(({onClose, chatRoomData, data, setData, member}, ref) => {
+>(({onClose, chatRoomData, member, client}, ref) => {
   const modalizeRef = useRef<Modalize>(null);
   const userInfo = useSelector((state: RootState) => state.user);
 
@@ -63,19 +68,19 @@ const SettlementRequestPopup = forwardRef<
       setIsLastSettlement(true);
       return;
     }
-    //api 호출
     modalizeRef.current?.close();
-    setData([
-      ...data,
-      {
-        chatId: data[data.length - 1].chatId + 1,
-        chatContent: settlementCost.toString(),
-        sender: userInfo.nickname,
-        time: new Date().toDateString(),
-        chatType: Type.MONEY.toString(),
-      },
-    ]);
-    //메시지 보내기
+
+    if (client.current?.connected) {
+      client.current.publish({
+        destination: PUB_ENDPOINT + '/' + chatRoomData.chatroomId,
+        headers: {Authorization: userInfo.token},
+        body: JSON.stringify({
+          type: 'MONEY',
+          sender: userInfo.nickname,
+          message: Math.ceil(settlementCost / member.length),
+        }),
+      });
+    }
   };
 
   const setCost = (cost: number) => {
@@ -122,8 +127,7 @@ const SettlementRequestPopup = forwardRef<
             <View style={[styles.settlementCostContainer, {marginTop: 23}]}>
               <BasicText text="정산 금액" style={styles.settlementCostText} />
               <BasicText style={styles.settlementCostText}>
-                {Math.ceil(settlementCost / member.length) +
-                  '원'}
+                {Math.ceil(settlementCost / member.length) + '원'}
               </BasicText>
             </View>
             <View style={styles.bankContainer}>
@@ -190,24 +194,22 @@ const SettlementRequestPopup = forwardRef<
                     text="정산 금액"
                   />
                   <BasicText style={styles.settlementLastText}>
-                    {Math.ceil(
-                      settlementCost / member.length,
-                    ) + '원'}
+                    {Math.ceil(settlementCost / member.length) + '원'}
                   </BasicText>
                 </View>
               </View>
               <View style={styles.settlementLastCostBox}>
                 {member.map(e => {
                   return (
-                    <View key={e.memberId} style={styles.settlementLastTextContainer}>
+                    <View
+                      key={e.memberId}
+                      style={styles.settlementLastTextContainer}>
                       <BasicText
                         style={styles.settlementLastText}
                         text={e.memberName}
                       />
                       <BasicText style={styles.settlementLastText}>
-                        {Math.ceil(
-                          settlementCost / member.length,
-                        ) + '원'}
+                        {Math.ceil(settlementCost / member.length) + '원'}
                       </BasicText>
                     </View>
                   );

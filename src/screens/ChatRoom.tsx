@@ -29,14 +29,21 @@ import ChatRoomExitModal from '../components/popup/ChatRoomExitModal';
 import ReportCheckModal from '../components/popup/ReportCheckModal';
 import useDidMountEffect from '../hooks/useDidMountEffect';
 import Header from '../components/Header';
-import { Client, IMessage } from '@stomp/stompjs';
-import { useSelector } from 'react-redux';
+import {Client, IMessage} from '@stomp/stompjs';
+import {useSelector} from 'react-redux';
 import {RootState} from '../modules/redux/RootReducer';
-import { ChatResponse, ChatroomResponse, getChats, getMembers, MemberResponse, sendImage } from '../api/chatApi';
+import {
+  ChatResponse,
+  ChatroomResponse,
+  getChats,
+  getMembers,
+  MemberResponse,
+  sendImage,
+} from '../api/chatApi';
 import SockJS from 'sockjs-client';
-import { API_BASE_URL, SUB_ENDPOINT, PUB_ENDPOINT } from '../api/axiosInstance';
-import { createReport } from '../api/reportApi';
-import { resizeImage } from '../utils/ImageResizer';
+import {API_BASE_URL, SUB_ENDPOINT, PUB_ENDPOINT} from '../api/axiosInstance';
+import {createReport} from '../api/reportApi';
+import {resizeImage} from '../utils/ImageResizer';
 import RNFS from 'react-native-fs';
 
 enum Type {
@@ -76,7 +83,8 @@ const ChatRoom: React.FC = () => {
     useState<boolean>(false);
   const [isVisibleExitPopup, setIsVisibleExitPopup] = useState<boolean>(false);
   const chatListRef = useRef<FlatList>(null);
-  const {imageUri, imageType, imageName, getImageByCamera, getImageByGallery} = useImagePicker();
+  const {imageUri, imageType, imageName, getImageByCamera, getImageByGallery} =
+    useImagePicker();
   const navigation =
     useNavigation<
       NativeStackNavigationProp<RootStackParamList, 'Settlement'>
@@ -89,7 +97,10 @@ const ChatRoom: React.FC = () => {
   const {params} = useRoute<RouteProp<RootStackParamList, 'ChatRoom'>>();
   const [members, setMembers] = useState<MemberResponse[]>([]);
   const [reportImage, setReportImage] = useState({uri: '', name: ''});
-  const reportData = useRef({member: {memberId: '', memberName: '', memberImage: ''}, reason: ''});
+  const reportData = useRef({
+    member: {memberId: '', memberName: '', memberImage: ''},
+    reason: '',
+  });
   const chatRoomData = params.data;
   const userInfo = useSelector((state: RootState) => state.user);
   const client = useRef<Client>();
@@ -114,13 +125,13 @@ const ChatRoom: React.FC = () => {
     }),
   ).current;
 
-  const fetchMembers = useCallback(async() => {
+  const fetchMembers = useCallback(async () => {
     const memberData = await getMembers(chatRoomData.chatroomId);
     setMembers(memberData);
   }, [chatRoomData]);
 
   useEffect(() => {
-    const fetchChats = async() => {
+    const fetchChats = async () => {
       const chatData = await getChats(chatRoomData.chatroomId);
       setData(chatData);
     };
@@ -139,19 +150,22 @@ const ChatRoom: React.FC = () => {
     });
     client.current.onConnect = () => {
       console.log('connected websocket');
-      client.current!.subscribe(SUB_ENDPOINT + '/' + chatRoomData.chatroomId, (message: IMessage) => {
-        const receiveData = JSON.parse(message.body);
-        setData((prev) => [
-          ...prev,
-          {
-            chatId: prev.length === 0 ? 0 : prev[prev.length - 1].chatId + 1,
-            chatContent: receiveData.message,
-            sender: receiveData.sender,
-            chatType: receiveData.type,
-            time: new Date().toDateString(),
-          },
-        ]);
-      });
+      client.current!.subscribe(
+        SUB_ENDPOINT + '/' + chatRoomData.chatroomId,
+        (message: IMessage) => {
+          const receiveData = JSON.parse(message.body);
+          setData(prev => [
+            ...prev,
+            {
+              chatId: prev.length === 0 ? 0 : prev[prev.length - 1].chatId + 1,
+              chatContent: receiveData.message,
+              sender: receiveData.sender,
+              chatType: receiveData.type,
+              time: new Date().toDateString(),
+            },
+          ]);
+        },
+      );
     };
     client.current.onStompError = function (frame) {
       console.log(`Broker reported error: ${frame.headers.message}`);
@@ -182,8 +196,12 @@ const ChatRoom: React.FC = () => {
     if (client.current && message.length !== 0) {
       client.current.publish({
         destination: PUB_ENDPOINT + '/' + chatRoomData.chatroomId,
-        headers: {'Authorization' : userInfo.token},
-        body: JSON.stringify({ type: 'MESSAGE', sender: userInfo.nickname, message: message}),
+        headers: {Authorization: userInfo.token},
+        body: JSON.stringify({
+          type: 'MESSAGE',
+          sender: userInfo.nickname,
+          message: message,
+        }),
       });
 
       setMessage('');
@@ -266,7 +284,7 @@ const ChatRoom: React.FC = () => {
     setIsVisibleReportCheckPopup(true);
   };
 
-  const reportUser = async() => {
+  const reportUser = async () => {
     setIsVisibleReportCheckPopup(false);
 
     const formData = new FormData();
@@ -307,17 +325,32 @@ const ChatRoom: React.FC = () => {
     ({item, index}: RenderItem) => {
       const isShowTime =
         !(
-          new Date(data[index + 1]?.time).getMinutes() === new Date(item.time).getMinutes() &&
-          new Date(data[index + 1]?.time).getHours() === new Date(item.time).getHours()
+          new Date(data[index + 1]?.time).getMinutes() ===
+            new Date(item.time).getMinutes() &&
+          new Date(data[index + 1]?.time).getHours() ===
+            new Date(item.time).getHours()
         ) || data[index + 1]?.sender !== item.sender;
       const isShowProfile =
         data[index - 1]?.sender !== item.sender ||
         !(
-          new Date(data[index - 1]?.time).getMinutes() === new Date(item.time).getMinutes() &&
-          new Date(data[index - 1]?.time).getHours() === new Date(item.time).getHours()
+          new Date(data[index - 1]?.time).getMinutes() ===
+            new Date(item.time).getMinutes() &&
+          new Date(data[index - 1]?.time).getHours() ===
+            new Date(item.time).getHours()
         );
       return item.chatType !== Type.MONEY.toString() ? (
-        <ChatItem item={{id: item.chatId, content: item.chatContent, sender: item.sender, senderImage: item.memberImage, time: new Date(item.time), type: item.chatType.toString() , isShowProfile, isShowTime}} />
+        <ChatItem
+          item={{
+            id: item.chatId,
+            content: item.chatContent,
+            sender: item.sender,
+            senderImage: item.memberImage,
+            time: new Date(item.time),
+            type: item.chatType.toString(),
+            isShowProfile,
+            isShowTime,
+          }}
+        />
       ) : (
         <SettlementBox
           settlement={{
@@ -346,7 +379,7 @@ const ChatRoom: React.FC = () => {
   );
 
   useDidMountEffect(() => {
-    const send = async() => {
+    const send = async () => {
       if (imageUri !== '') {
         const formData = new FormData();
         const image = await resizeImage(imageUri, 200, 200, imageName);
@@ -357,8 +390,12 @@ const ChatRoom: React.FC = () => {
         if (client.current) {
           client.current.publish({
             destination: PUB_ENDPOINT + '/' + chatRoomData.chatroomId,
-            headers: {'Authorization' : userInfo.token},
-            body: JSON.stringify({ type: 'IMAGE', sender: userInfo.nickname, message: url}),
+            headers: {Authorization: userInfo.token},
+            body: JSON.stringify({
+              type: 'IMAGE',
+              sender: userInfo.nickname,
+              message: url,
+            }),
           });
         }
       }
@@ -381,14 +418,20 @@ const ChatRoom: React.FC = () => {
               style={styles.headerIcon}
               name="LocationBlack"
             />
-            <BasicText style={styles.headerText} text={chatRoomData.departPlace} />
+            <BasicText
+              style={styles.headerText}
+              text={chatRoomData.departPlace}
+            />
             <SVG
               width={22}
               height={22}
               style={styles.headerIcon}
               name="RightArrow"
             />
-            <BasicText style={styles.headerText} text={chatRoomData.arrivePlace} />
+            <BasicText
+              style={styles.headerText}
+              text={chatRoomData.arrivePlace}
+            />
           </View>
         }
         rightButton={<SVGButton onPress={openSideMenu} iconName="Kebab" />}
@@ -522,11 +565,10 @@ const ChatRoom: React.FC = () => {
           </View>
         </View>
         <SettlementRequestPopup
-          data={data}
-          setData={setData}
           member={members}
           chatRoomData={chatRoomData}
           ref={settlementRequestPopupRef}
+          client={client}
         />
 
         <ChatRoomExitModal
