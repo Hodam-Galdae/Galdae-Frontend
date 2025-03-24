@@ -97,10 +97,9 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep}) => {
           type: 'application/json',
           name: fileName,
         });
-
         if (imageUri) {
-          const image = await resizeImage(imageUri, 50, 50, imageName);
-          let imageFile = {uri: image.uri, type: 'jpeg', name: image.name};
+          console.log("hi");
+          let imageFile = {uri: imageUri, type: imageType, name: imageName};
           formData.append('profileImage', imageFile);
         }
 
