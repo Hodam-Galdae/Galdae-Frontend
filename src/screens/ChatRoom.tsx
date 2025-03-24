@@ -76,7 +76,7 @@ const ChatRoom: React.FC = () => {
     useState<boolean>(false);
   const [isVisibleExitPopup, setIsVisibleExitPopup] = useState<boolean>(false);
   const chatListRef = useRef<FlatList>(null);
-  const {imageUri, imageName, getImageByCamera, getImageByGallery} = useImagePicker();
+  const {imageUri, imageType, imageName, getImageByCamera, getImageByGallery} = useImagePicker();
   const navigation =
     useNavigation<
       NativeStackNavigationProp<RootStackParamList, 'Settlement'>
@@ -284,8 +284,7 @@ const ChatRoom: React.FC = () => {
     });
 
     if (reportImage.uri !== '') {
-      const image = await resizeImage(reportImage.uri, 50, 50, reportImage.name);
-      let imageFile = {uri: image.uri, type: 'jpeg', name: image.name};
+      let imageFile = {uri: imageUri, type: imageType, name: imageName};
       formData.append('profileImage', imageFile);
     }
 
