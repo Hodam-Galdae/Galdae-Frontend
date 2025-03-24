@@ -19,12 +19,13 @@ import {fetchPostDetail} from '../modules/redux/slice/postDetailSlice';
 import type {RootState} from '../modules/redux/RootReducer';
 import {useAppDispatch} from '../modules/redux/store';
 import moment from 'moment';
-import {joinChatroom} from '../api/chatApi';
+import {joinChatroom, ChatroomResponse} from '../api/chatApi';
 
 type RootStackParamList = {
   CreateGaldae: undefined;
   NowGaldae: undefined;
   NowGaldaeDetail: {postId: string};
+  ChatRoom: { data : Readonly<ChatroomResponse> },
 };
 
 type NowGaldaeDetailScreenNavigationProp = NativeStackNavigationProp<
@@ -52,8 +53,10 @@ const NowGaldaeDetail: React.FC = () => {
   }, [dispatch, postId]);
 
   const goBack = () => navigation.goBack();
-  const handleParticipateGaldae = () => {
-    joinChatroom(postId);
+
+  const handleParticipateGaldae = async() => {
+    const tagetRoom = await joinChatroom(postId);
+    navigation.navigate('ChatRoom', { data: Object.freeze(tagetRoom)});
     // 참여 로직 처리
   };
   const formatDepartureTime = (departureTime: string): string => {

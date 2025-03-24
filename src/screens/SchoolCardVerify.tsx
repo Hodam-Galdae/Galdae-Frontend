@@ -13,6 +13,7 @@ import {resizeImage} from '../utils/ImageResizer';
 import {certifyCard} from '../api/authApi';
 import {useSelector} from 'react-redux';
 import {RootState} from '../modules/redux/RootReducer';
+import RNFS from 'react-native-fs';
 
 interface SchoolCardVerifyProps {
   setNextStep: () => void;
@@ -20,15 +21,34 @@ interface SchoolCardVerifyProps {
 
 const SchoolCardVerify: React.FC<SchoolCardVerifyProps> = ({setNextStep}) => {
   const width = Dimensions.get('window').width;
-  const {imageUri, imageName, getImageByCamera, getImageByGallery} =
+  const {imageUri, imageName, imageType, getImageByCamera, getImageByGallery} =
     useImagePicker();
   const pictureModalRef = useRef<Modalize>(null);
   const userInfo = useSelector((state: RootState) => state.user);
 
   const clickEvent = async () => {
     if (imageUri.length !== 0) {
-      const image = await resizeImage(imageUri, 200, 200, imageName);
-      await certifyCard(userInfo.university, image);
+      const form = new FormData();
+      const universityAuthCommand = {
+        university: userInfo.university,
+        universityAuthType: 'STUDENT_CARD',
+        email: '',
+        code: '',
+        studentCard: '',
+      };
+      const fileName = `${userInfo}.json`;
+      const filePath = `${RNFS.TemporaryDirectoryPath}/${fileName}`;
+      await RNFS.writeFile(filePath, JSON.stringify(universityAuthCommand), 'utf8');
+
+      form.append('universityAuthCommand', {
+        uri: `file:///${filePath}`,
+        type: 'application/json',
+        name: fileName,
+      });
+
+      let imageFile = {uri: imageUri, type: imageType, name: imageName};
+      form.append('studentCard', imageFile);
+      await certifyCard(form);
       setNextStep();
     }
   };

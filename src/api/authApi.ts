@@ -65,28 +65,7 @@ export const checkNickname = async (
   return response.data;
 };
 
-export const certifyCard = async (univName: string, image): Promise<void> => {
-  const form = new FormData();
-  const universityAuthCommand = {
-    university: univName,
-    universityAuthType: 'STUDENT_CARD',
-    email: '',
-    code: '',
-    studentCard: '',
-  };
-  const fileName = `${univName}.json`;
-  const filePath = `${RNFS.TemporaryDirectoryPath}/${fileName}`;
-  await RNFS.writeFile(filePath, JSON.stringify(universityAuthCommand), 'utf8');
-
-  form.append('universityAuthCommand', {
-    uri: `file:///${filePath}`,
-    type: 'application/json',
-    name: fileName,
-  });
-
-  let imageFile = {uri: image.uri, type: 'jpeg', name: image.name};
-  form.append('studentCard', imageFile);
-
+export const certifyCard = async (form: FormData): Promise<void> => {
   const response = await axiosInstance.post<string>('/auth/university', form, {
     transformRequest: (data, headers) => {
       return form;

@@ -51,8 +51,9 @@ export const getInActiveChatroom = async (): Promise<ChatroomResponse[]> => {
   return response.data;
 };
 
-export const joinChatroom = async (postId: string): Promise<void> => {
-  const response = await axiosInstance.post(`/chat/${postId}/join`);
+export const joinChatroom = async (postId: string): Promise<ChatroomResponse> => {
+  const response = await axiosInstance.get<ChatroomResponse>(`/chat/${postId}/join`);
+  return response.data;
 };
 
 // ✅ 채팅방 인원 가져오기
