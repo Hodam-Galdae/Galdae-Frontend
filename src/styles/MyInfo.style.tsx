@@ -148,7 +148,7 @@ export default StyleSheet.create({
     height:18,
   },
   myInfos:{
-    gap:24,
+    gap:30,
   },
   more:{
     fontSize:theme.fontSize.size14,

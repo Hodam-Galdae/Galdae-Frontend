@@ -14,11 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "1034543222691-tiatjv47fjr25f7s7iot3tsf7ekqgrfd.apps.googleusercontent.com",
+          "client_id": "1034543222691-s2q1bpn9pqviq7fplcc5nm4461gp5n78.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.galdae",
-            "certificate_hash": "6dfd56fb2ee81ed591bc1a4ebddd05f6c9ecd83e"
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
           }
         },
         {
