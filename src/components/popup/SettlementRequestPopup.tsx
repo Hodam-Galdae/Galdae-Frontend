@@ -1,4 +1,4 @@
-import React, {forwardRef, useImperativeHandle, useRef, useState} from 'react';
+import React, {forwardRef, useImperativeHandle, useRef, useState, useEffect} from 'react';
 import {View, TouchableOpacity} from 'react-native';
 import {Modalize} from 'react-native-modalize';
 import BasicText from '../BasicText';
@@ -6,11 +6,14 @@ import styles from '../../styles/SettlementRequestPopup.style';
 import BasicButton from '../button/BasicButton';
 import SVGButton from '../button/SVGButton';
 import SVG from '../SVG';
+import {useNavigation} from '@react-navigation/native';
 import SettlementCostEditModal from './SettlementCostEditModal';
+import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {
   ChatroomResponse,
   MemberResponse,
 } from '../../api/chatApi';
+import { getUserInfo } from '../../api/membersApi';
 
 export interface SettlementRequestPopupRef {
   open: () => void;
@@ -24,12 +27,16 @@ export interface SettlementRequestPopupProps {
   sendPayment: (settlementCost: string) => void;
 }
 
+type RootStackParamList = {
+  Payment: undefined;
+};
+
 const SettlementRequestPopup = forwardRef<
   SettlementRequestPopupRef,
   SettlementRequestPopupProps
 >(({chatRoomData, member, sendPayment}, ref) => {
   const modalizeRef = useRef<Modalize>(null);
-
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList, 'Payment'>>();
   // 외부에서 open/close 함수를 사용할 수 있도록 함
   useImperativeHandle(ref, () => ({
     open: () => {
@@ -44,6 +51,15 @@ const SettlementRequestPopup = forwardRef<
   const [isLastSettlement, setIsLastSettlement] = useState(false);
   const [isVisibleCostEditPopup, setIsVisibleCostEditPopup] =
     useState<boolean>(false);
+  const [myData, setMyData] = useState({
+    'nickname': '',
+    'image': '',
+    'university': '',
+    'isAuthenticated': '',
+    'bankType': '',
+    'accountNumber': '',
+    'depositor': '',
+  });
   //정산 요청 메서드
   const requestSettlement = () => {
     if (!isLastSettlement) {
@@ -60,10 +76,21 @@ const SettlementRequestPopup = forwardRef<
     setIsVisibleCostEditPopup(false);
   };
 
+  const editAccount = () => {
+    close();
+    navigation.navigate('Payment');
+  };
+
   const close = () => {
     setIsLastSettlement(false);
     modalizeRef.current?.close();
   };
+
+  useEffect(() => {
+    getUserInfo().then(data => {
+      setMyData(data);
+    });
+  }, []);
 
   return (
     <Modalize
@@ -105,10 +132,10 @@ const SettlementRequestPopup = forwardRef<
             <View style={styles.bankContainer}>
               <SVG width={26} height={26} style={styles.bankIcon} name="Bank" />
               <BasicText style={styles.bankText}>
-                {'KB 국민은행 000-0000-0000-00'}
+                {`${myData.bankType} ${myData.accountNumber}`}
               </BasicText>
             </View>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={editAccount}>
               <BasicText text="정산 계좌 변경하기" style={styles.bankEdit} />
             </TouchableOpacity>
           </View>

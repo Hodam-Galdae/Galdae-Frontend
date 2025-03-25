@@ -39,11 +39,11 @@ import {
   getMembers,
   MemberResponse,
   sendImage,
+  exitChatroom,
 } from '../api/chatApi';
 import SockJS from 'sockjs-client';
 import {API_BASE_URL, SUB_ENDPOINT, PUB_ENDPOINT} from '../api/axiosInstance';
 import {createReport} from '../api/reportApi';
-import {resizeImage} from '../utils/ImageResizer';
 import RNFS from 'react-native-fs';
 
 type SettlementType = {
@@ -122,6 +122,11 @@ const ChatRoom: React.FC = () => {
     setMembers(memberData);
   }, [chatRoomData]);
 
+  const exitChat = async() => {
+    await exitChatroom(chatRoomData.chatroomId);
+    navigation.pop();
+  };
+
   useEffect(() => {
     const fetchChats = async () => {
       const chatData = await getChats(chatRoomData.chatroomId);
@@ -139,6 +144,8 @@ const ChatRoom: React.FC = () => {
       },
       webSocketFactory: () => socket,
       reconnectDelay: 5000,
+      heartbeatIncoming: 4000,
+ 			heartbeatOutgoing: 4000,
     });
     client.current.onConnect = () => {
       console.log('connected websocket');
@@ -153,7 +160,7 @@ const ChatRoom: React.FC = () => {
               chatContent: receiveData.message,
               sender: receiveData.sender,
               chatType: receiveData.type,
-              time: new Date().toDateString(),
+              time: new Date().toISOString(),
             },
           ]);
         },
@@ -377,8 +384,7 @@ const ChatRoom: React.FC = () => {
     const send = async () => {
       if (imageUri !== '') {
         const formData = new FormData();
-        const image = await resizeImage(imageUri, 200, 200, imageName);
-        let imageFile = {uri: image.uri, type: 'jpeg', name: image.name};
+        let imageFile = {uri: imageUri, type: imageType, name: imageName};
         formData.append('image', imageFile);
         const url = await sendImage(formData);
 
@@ -543,7 +549,8 @@ const ChatRoom: React.FC = () => {
                   />
                   <BasicText text="카메라" style={styles.extraViewItemText} />
                 </View>
-                <View style={styles.extraViewContainer}>
+                {chatRoomData.isRoomManager ? (
+                  <View style={styles.extraViewContainer}>
                   <SVGButton
                     onPress={openSettlement}
                     iconName="Money"
@@ -555,6 +562,7 @@ const ChatRoom: React.FC = () => {
                     style={styles.extraViewItemText}
                   />
                 </View>
+                ) : null}
               </View>
             ) : null}
           </View>
@@ -568,7 +576,7 @@ const ChatRoom: React.FC = () => {
 
         <ChatRoomExitModal
           visible={isVisibleExitPopup}
-          onConfirm={() => setIsVisibleExitPopup(false)}
+          onConfirm={() => exitChat()}
           onCancel={() => setIsVisibleExitPopup(false)}
         />
 

@@ -7,6 +7,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import { FlatList } from 'react-native-gesture-handler';
 import { ChatroomResponse, getActiveChatroom, getInActiveChatroom } from '../api/chatApi';
+import { useFocusEffect } from '@react-navigation/native';
 
 type RootStackParamList = {
   ChatRoom: { data : Readonly<ChatroomResponse> },
@@ -19,20 +20,20 @@ const Chat: React.FC = () => {
   const [chatRoomData, setChatRoomData] = useState<ChatroomResponse[]>([]);
   const [tab, setTab] = useState(0);
 
-  const getChatroom = useCallback(async() => {
-    if(tab === 0) { // 참여중인 갈대 탭
-      const data = await getActiveChatroom();
-      setChatRoomData(data);
-    }
-    else { // 완료된 갈대 탭
-      const data = await getInActiveChatroom();
-      setChatRoomData(data);
-    }
-  }, [tab]);
-
-  useEffect(()=> {
-    getChatroom();
-  }, [getChatroom]);
+  useFocusEffect(
+    useCallback(() => {
+      if(tab === 0) { // 참여중인 갈대 탭
+        getActiveChatroom().then(data => {
+          setChatRoomData(data);
+        });
+      }
+      else { // 완료된 갈대 탭
+        getInActiveChatroom().then(data => {
+          setChatRoomData(data);
+        });
+      }
+    }, [tab]
+  ));
 
   const navigate = (id: string) => {
     const tagetRoom = chatRoomData.find(item => item.chatroomId === id);
