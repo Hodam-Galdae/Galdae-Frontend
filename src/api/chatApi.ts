@@ -8,6 +8,7 @@ export interface ChatroomResponse {
   maxMemberCount: number;
   currentMemberCount: number;
   gender: string;
+  isRoomManager: boolean;
 }
 
 export interface ChatResponse {
