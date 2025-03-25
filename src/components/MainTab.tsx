@@ -5,7 +5,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useNavigation } from '@react-navigation/native';
 import { TabBarVisibilityContext } from '../utils/TabBarVisibilityContext';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { Platform } from 'react-native';
+import { Platform,View } from 'react-native';
 import Home from '../screens/Home';
 import MyInfo from '../screens/MyInfo';
 import Chat from '../screens/Chat';
@@ -32,9 +32,10 @@ function App(): React.JSX.Element {
               tabBarActiveTintColor: theme.colors.black,
               tabBarInactiveTintColor: theme.colors.gray1,
               tabBarStyle: {
+
                 display: isTabBarVisible ? 'flex' : 'none',
                 height: Platform.select({
-                  ios: 64,
+                  ios: 80,
                   android: 54,
                 }),
                 borderTopLeftRadius: 20,
@@ -49,10 +50,19 @@ function App(): React.JSX.Element {
                 shadowRadius: 10,
                 // Android용 그림자
                 elevation: 4,
-              },
-              tabBarItemStyle: {
                 justifyContent: 'center',
                 alignItems: 'center',
+              },
+              tabBarItemStyle: {
+                height: Platform.select({
+                  ios: 80,
+                  android: 54,
+                }),
+                //backgroundColor:theme.colors.black,
+                justifyContent: 'center',
+                alignItems: 'center',
+                paddingTop: 10, // ← 아이콘을 아래로 조금 내림
+                paddingBottom: 10,
               },
               tabBarLabelStyle: {
                 textAlign: 'center',
@@ -65,7 +75,11 @@ function App(): React.JSX.Element {
               options={{
                 tabBarIcon: ({ focused, size }) => {
                   const iconName = focused ? 'ClickedMyInfoIcon' : 'MyInfoIcon';
-                  return <SVG name={iconName} width={size} height={size}/>;
+                  return (
+                    <View style={{ paddingHorizontal: 30,paddingVertical:20, }}>
+                      <SVG name={iconName} width={size} height={size} />
+                    </View>
+                  );
                 },
               }}
             />
@@ -75,7 +89,11 @@ function App(): React.JSX.Element {
               options={{
                 tabBarIcon: ({ focused, size }) => {
                   const iconName = focused ? 'ClickedHomeIcon' : 'HomeIcon';
-                  return <SVG name={iconName} width={size} height={size}/>;
+                  return (
+                    <View style={{ paddingHorizontal: 30,paddingVertical:20,}}>
+                      <SVG name={iconName} width={size} height={size} />
+                    </View>
+                  );
                 },
               }}
             />
@@ -85,7 +103,11 @@ function App(): React.JSX.Element {
               options={{
                 tabBarIcon: ({ focused, size }) => {
                   const iconName = focused ? 'ClickedChatIcon' : 'ChatIcon';
-                  return <SVG name={iconName} width={size} height={size}/>;
+                  return (
+                    <View style={{ paddingHorizontal: 30,paddingVertical:20,}}>
+                      <SVG name={iconName} width={size} height={size} />
+                    </View>
+                  );
                 },
               }}
             />
