@@ -20,7 +20,6 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {checkNickname, join} from '../api/authApi';
 import useImagePicker from '../hooks/useImagePicker';
 import RNFS from 'react-native-fs';
-import { resizeImage } from '../utils/ImageResizer';
 
 interface AgreeProps {
   setNextStep: (name: string) => void;
@@ -34,6 +33,7 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep}) => {
   const [accountName, setAccountName] = useState<string>('');
   const [alertNameText, setAlertNameText] = useState<string>('');
   const [alertGenderText, setAlertGenderText] = useState<string>('');
+  const [alertAccountText, setAlertAccountText] = useState<string>('');
   const {imageUri, imageName, imageType, getImageByCamera, getImageByGallery} =
     useImagePicker();
 
@@ -59,15 +59,19 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep}) => {
       setAlertNameText('*닉네임은 한글, 숫자 2~8자로 제한됩니다.');
       flag = false;
     } else {
-      setAlertNameText('');
-    }
-    const isAvailable = await checkNickname(name);
-
-    if (!isAvailable) {
-      setAlertNameText('*중복되는 닉네임입니다.');
-      flag = false;
-    } else {
-      setAlertNameText('');
+      try{
+        const isAvailalbeNickname = !await checkNickname(name);
+        console.log(isAvailalbeNickname);
+        if(isAvailalbeNickname){
+          setAlertNameText('*중복되는 닉네임입니다.');
+          flag = false;
+        } else {
+          setAlertNameText('');
+        }
+      } catch(err) {
+        setAlertNameText('*중복되는 닉네임입니다.');
+        flag = false;
+      }
     }
 
     // 성별 확인
@@ -76,6 +80,13 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep}) => {
       flag = false;
     } else {
       setAlertGenderText('');
+    }
+
+    if (bankSelect === -1 || accountName.length === 0 || accountNumber.length === 0){
+      setAlertAccountText('*결제·정산정보를 모두 입력해주세요요');
+      flag = false;
+    } else {
+      setAlertAccountText('');
     }
 
     // 모든 조건 충족
@@ -202,6 +213,12 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep}) => {
                 onChangeText={setAccountName}
               />
             </View>
+            {alertAccountText.length !== 0 ? (
+                  <BasicText style={{fontSize: theme.fontSize.size12,
+                    fontWeight: '500',
+                    color: theme.colors.red,
+                    marginTop: 6,}} text={alertAccountText} />
+                ) : null}
             <BasicButton
               text="다음"
               onPress={clickEvent}
