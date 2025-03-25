@@ -1,4 +1,5 @@
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+
 import {Platform, StatusBar} from 'react-native';
 import React, {useEffect} from 'react';
 import {DefaultTheme, NavigationContainer} from '@react-navigation/native';

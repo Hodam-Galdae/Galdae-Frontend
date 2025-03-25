@@ -1,4 +1,5 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
   <!-- 안드로이드 13(API 33) 이상 이미지 권한 -->
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     
@@ -21,6 +22,18 @@
       android:theme="@style/AppTheme"
       android:usesCleartextTraffic="true"
       android:supportsRtl="true">
+      <!-- FCM 기본 서비스 등록 -->
+    <service
+    android:name="io.invertase.firebase.messaging.ReactNativeFirebaseMessagingService"
+    android:exported="true"
+    tools:replace="android:exported">
+    <intent-filter>
+        <action android:name="com.google.firebase.MESSAGING_EVENT" />
+    </intent-filter>
+</service>
+
+    <!-- 포그라운드 메시지 수신 처리 -->
+    <service android:name="io.invertase.firebase.messaging.ReactNativeFirebaseMessagingHeadlessService" />
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"
