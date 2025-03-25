@@ -11,12 +11,18 @@ import BasicText from '../components/BasicText';
 import SVG from '../components/SVG';
 import {login} from '@react-native-seoul/kakao-login';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
-import {loginWithGoogle, loginWithKakao, AuthResponse} from '../api/authApi';
+import {
+  loginWithGoogle,
+  loginWithKakao,
+  AuthResponse,
+  loginWithApple,
+} from '../api/authApi';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {getUserInfo} from '../api/membersApi';
 import {useDispatch} from 'react-redux';
 import {setUser} from '../modules/redux/slice/UserSlice';
 import Loading from '../components/Loading';
+import appleAuth from '@invertase/react-native-apple-authentication';
 
 // 네비게이션 파라미터 타입 정의
 type RootStackParamList = {
@@ -76,6 +82,36 @@ const Login: React.FC = () => {
     }
   };
 
+  const signInWithApple = async (): Promise<void> => {
+    try {
+      setIsLoading(true);
+      const appleAuthRequestResponse = await appleAuth.performRequest({
+        nonceEnabled: false,
+        requestedOperation: appleAuth.Operation.LOGIN,
+        requestedScopes: [appleAuth.Scope.FULL_NAME, appleAuth.Scope.EMAIL],
+      });
+
+      const credentialState = await appleAuth.getCredentialStateForUser(
+        appleAuthRequestResponse.user,
+      );
+
+      if (credentialState === appleAuth.State.AUTHORIZED) {
+        const {fullName, authorizationCode, email} = appleAuthRequestResponse;
+        const response = await loginWithApple(authorizationCode || '');
+        await EncryptedStorage.setItem('accessToken', response.accessToken);
+        await EncryptedStorage.setItem(
+          'refreshToken',
+          response.refreshToken || '',
+        );
+        handleGoNextPage(response);
+      }
+    } catch (err) {
+      console.error('login err : ', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleGoNextPage = async (response: AuthResponse) => {
     const user = await getUserInfo();
     dispatch(setUser({...user, token: 'Bearer ' + response.accessToken}));
@@ -95,7 +131,7 @@ const Login: React.FC = () => {
       navigation.replace('ReviewInProgress');
       return;
     }
-        //navigation.replace('MainTab');
+    //navigation.replace('MainTab');
   };
 
   const images = [
@@ -114,7 +150,7 @@ const Login: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      {isLoading && <Loading/>}
+      {isLoading && <Loading />}
       <View style={styles.allImagesImage}>
         <Swiper
           controlsProps={{
@@ -147,7 +183,7 @@ const Login: React.FC = () => {
       </View>
 
       <View style={{marginBottom: 30}}>
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity onPress={signInWithApple}>
           <View style={[styles.button, {backgroundColor: theme.colors.black}]}>
             <SVG style={styles.icon} name="Apple" />
             <BasicText
