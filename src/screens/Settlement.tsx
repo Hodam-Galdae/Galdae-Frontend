@@ -9,6 +9,7 @@ import SVGButton from '../components/button/SVGButton';
 import {theme} from '../styles/theme';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import { PaymentResponse } from '../api/chatApi';
+import { banks, BankOption } from '../constants/bankOptions';
 
 type RootStackParamList = {
   Settlement: {data: PaymentResponse};
@@ -40,7 +41,8 @@ const Settlement: React.FC = () => {
       />
       <View style={styles.wrapper}>
         <View style={styles.account}>
-          <SVG name="Bank" width={26} height={26} style={styles.accountIcon} />
+          <SVG width={26} height={26} style={styles.accountIcon} name={
+                                         banks.find((bank: BankOption) => bank.name === data.bankType)?.svg || 'Bank_KB'}/>
           <BasicText style={styles.accountText}>
             {data.bankType + ' ' + data.accountNumber}
           </BasicText>

@@ -14,6 +14,7 @@ import {
   MemberResponse,
 } from '../../api/chatApi';
 import { getUserInfo } from '../../api/membersApi';
+import { banks, BankOption } from '../../constants/bankOptions';
 
 export interface SettlementRequestPopupRef {
   open: () => void;
@@ -130,7 +131,8 @@ const SettlementRequestPopup = forwardRef<
               </BasicText>
             </View>
             <View style={styles.bankContainer}>
-              <SVG width={26} height={26} style={styles.bankIcon} name="Bank" />
+              <SVG width={26} height={26} style={styles.bankIcon} name={
+                               banks.find((bank: BankOption) => bank.name === myData.bankType)?.svg || 'Bank_KB'} />
               <BasicText style={styles.bankText}>
                 {`${myData.bankType} ${myData.accountNumber}`}
               </BasicText>
@@ -143,7 +145,7 @@ const SettlementRequestPopup = forwardRef<
           <View>
             <BasicText style={styles.settlementTitle} text="최종 확인" />
             <BasicText style={styles.settlementTime}>
-              {new Date().toDateString()}
+              {`${new Date().getFullYear()}년 ${new Date().getMonth()}월 ${new Date().getDay()}일 ${new Date().getHours()}:${new Date().getMinutes()}`}
             </BasicText>
             <View style={styles.settlementLoactionContainer}>
               <SVG
