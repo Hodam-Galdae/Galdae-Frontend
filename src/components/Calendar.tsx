@@ -9,11 +9,13 @@ import {
 import moment, { Moment } from 'moment';
 import DateComponent from './Date';
 import styles from '../styles/Calendar.style';
-
+import { Dimensions } from 'react-native';
 interface CalendarProps {
   onSelectDate: (date: string) => void;
   selected: string | null;
 }
+
+const screenWidth = Dimensions.get('window').width;
 
 const Calendar: React.FC<CalendarProps> = ({ onSelectDate, selected }) => {
   const [dates, setDates] = useState<Moment[]>([]);
@@ -36,16 +38,38 @@ const Calendar: React.FC<CalendarProps> = ({ onSelectDate, selected }) => {
 
   const getCurrentMonth = useCallback((): void => {
     if (dates.length === 0) {return;}
-    const daysOffset = scrollPosition / 80; // 80픽셀마다 하루로 계산
-    const month = moment(dates[0])
-      .add(daysOffset, 'days')
-      .format('YYYY년 M월'); // 년도와 월을 함께 포맷팅
-    setCurrentMonth(month);
+
+    const startIdx = Math.floor(scrollPosition / 80);
+    const endIdx = startIdx + Math.ceil(screenWidth / 80);
+
+    let current = dates[startIdx]?.month(); // 현재 월
+    let displayMonth = dates[startIdx]?.format('YYYY년 M월') || '';
+
+    for (let i = startIdx; i <= endIdx; i++) {
+      const thisDate = dates[i];
+      if (!thisDate) {continue;}
+
+      if (thisDate.month() !== current) {
+        displayMonth = thisDate.format('YYYY년 M월');
+        break;
+      }
+    }
+
+    setCurrentMonth(displayMonth);
   }, [dates, scrollPosition]);
 
   useEffect(() => {
     getCurrentMonth();
   }, [getCurrentMonth]);
+
+
+// 📌 날짜 선택 시에도 currentMonth 업데이트
+useEffect(() => {
+  if (selected) {
+    const selectedMoment = moment(selected);
+    setCurrentMonth(selectedMoment.format('YYYY년 M월'));
+  }
+}, [selected]);
 
   return (
     <View>

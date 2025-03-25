@@ -177,3 +177,19 @@ export const withdrawMember = async (): Promise<any> => {
     throw error;
   }
 };
+/**
+ * 정산 내역 조회 api 타입
+ * @returns
+ */
+export const getPaymentList = async () => {
+  console.log('🚀 [정산 내역 조회 요청] GET /members/payment');
+
+  try {
+    const response = await axiosInstance.get('/members/payment');
+    console.log('✅ [정산 내역 조회 성공] 응답 데이터:', response.data);
+    return response.data;
+  } catch (error: any) {
+    console.error('❌ [정산 내역 조회 실패] 오류 발생:', error.response?.data || error);
+    throw error;
+  }
+};

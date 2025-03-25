@@ -3,6 +3,7 @@ import React, {useEffect, forwardRef, useImperativeHandle, useRef,useState,useCo
 import { View,KeyboardAvoidingView } from 'react-native';
 import { Modalize } from 'react-native-modalize';
 import BasicText from '../BasicText';
+import { Image } from 'react-native';
 import { theme } from '../../styles/theme';
 import styles from '../../styles/FastGaldaePopup.style';
 import SVGButton from '../button/SVGButton';
@@ -36,6 +37,7 @@ const FastGaldaePopup = forwardRef<FastGaldaeEndPopupRef, FastGaldaePopupProps>(
     const [largeCategoryId, setLargeCategoryId] = useState<number>(0);
     const [smallCategoryId, setSmallCategoryId] = useState<number>(0);
     const dispatch = useAppDispatch();
+    const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const places = useSelector((state: RootState) => state.placesSlice.places);
     const placesLoading = useSelector((state: RootState) => state.placesSlice.loading);
     const placesError = useSelector((state: RootState) => state.placesSlice.error);
@@ -59,9 +61,10 @@ const FastGaldaePopup = forwardRef<FastGaldaeEndPopupRef, FastGaldaePopupProps>(
       setLargeCategoryId(majorPlace.majorPlaceId);
 
      };
-     const pressedSubPlace = (subPlace: any)=>{
+     const pressedSubPlace = (subPlace: any) => {
       setSmallCategoryName(subPlace.subPlace);
       setSmallCategoryId(subPlace.subPlaceId);
+      setSelectedImage(subPlace.image); // 📌 여기서 image 필드 사용 (백엔드에서 내려주는 key에 따라 조정)
     };
     const handlePicturePress = () => {
       // SVGButton 클릭 시 큰 사진 팝업 열기
@@ -112,13 +115,16 @@ const FastGaldaePopup = forwardRef<FastGaldaeEndPopupRef, FastGaldaePopupProps>(
 
           <View style={styles.landMarkContainer}>
 
-            <View style={styles.picture}>
-              <SVGButton
-                iconName="ToBigPic"
-                onPress={handlePicturePress}
-                buttonStyle={styles.toBigPicIcon}
-              />
-            </View>
+          <View style={styles.picture}>
+                  {selectedImage &&
+                    <Image source={{ uri: selectedImage }} style={{ width: '100%', height: 150, borderRadius: 10 }} resizeMode="cover" />
+                  }
+                    <SVGButton
+                      iconName="ToBigPic"
+                      onPress={handlePicturePress}
+                      buttonStyle={styles.toBigPicIcon}
+                    />
+                  </View>
 
             <View style={styles.landMark}>
               <TextTag

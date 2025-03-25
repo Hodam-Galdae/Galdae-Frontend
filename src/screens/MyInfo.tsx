@@ -111,9 +111,13 @@ useFocusEffect(
 
     // 오늘 날짜와 출발 날짜 간 차이를 일(day) 단위로 계산
     const diffDays = today.diff(departureDate, 'days');
+    if(diffDays < 0){
+      return `${departureDate.diff(today, 'days')}일 후`;
+    }else{
+        // 차이가 0이면 "오늘", 아니면 "X일 전"으로 반환
+        return diffDays === 0 ? '오늘' : `${diffDays}일 전`;
+    }
 
-    // 차이가 0이면 "오늘", 아니면 "X일 전"으로 반환
-    return diffDays === 0 ? '오늘' : `${diffDays}일 전`;
   };
 
 
@@ -227,7 +231,7 @@ useFocusEffect(
             <ScrollView horizontal showsHorizontalScrollIndicator={false} scrollEventThrottle={16}>
               {myGaldaeHistory.map((list, index) => (
                 <View key={index} style={styles.newGaldaeList}>
-                  <BasicText text={formatTimeAgo(list.departureTime)} style={styles.newGaldaeTimeText} />
+                  <BasicText text={formatTimeAgo(list.createAt)} style={styles.newGaldaeTimeText} />
                   <BasicText text={`${list.departure.subPlace}`} style={styles.newGaldaeDepartText} />
                   <SVG name="arrow_down_fill_gray2" style={styles.newGaldaeArrowIcon} />
                   <BasicText text={`${list.arrival.subPlace}`} style={styles.newGaldaeDestText} />

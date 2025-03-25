@@ -38,21 +38,22 @@ export default StyleSheet.create({
     },
     landMarkContainer:{
       flexDirection:'row',
-      justifyContent:'center',
+      justifyContent:'space-between',
       gap:23,
     },
     picture:{
-      width: '100%',
+      width: 150,
       height:150,
       backgroundColor:theme.colors.lightGray,
       borderRadius:10,
       marginTop:21,
-      justifyContent:'flex-end',
-      alignItems:'flex-end',
+      position:'relative',
+      overflow: 'hidden', // ✅ 이거 추가
     },
     toBigPicIcon:{
-      marginBottom:12,
-      marginRight:12,
+      bottom:10,
+      right:10,
+      position:'absolute',
 
     },
     landMarkTag:{
@@ -61,7 +62,7 @@ export default StyleSheet.create({
       borderRadius:30,
     },
     landMark:{
-      width: '100%',
+      width: 150,
       marginTop:32,
     },
     title:{

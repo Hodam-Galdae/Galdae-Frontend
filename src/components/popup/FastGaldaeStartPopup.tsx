@@ -4,6 +4,7 @@ import React, {useEffect, forwardRef, useImperativeHandle, useRef,useState,useCo
 import {TabBarVisibilityContext} from '../../utils/TabBarVisibilityContext';
 import { View,KeyboardAvoidingView } from 'react-native';
 import { Modalize } from 'react-native-modalize';
+import { Image } from 'react-native';
 //import { useNavigation } from '@react-navigation/native';
 import BasicText from '../BasicText';
 import { theme } from '../../styles/theme';
@@ -43,6 +44,7 @@ const FastGaldaeStartPopup = forwardRef<FastGaldaeStartPopupRef, FastGaldaePopup
     const places = useSelector((state: RootState) => state.placesSlice.places);
     const placesLoading = useSelector((state: RootState) => state.placesSlice.loading);
     const placesError = useSelector((state: RootState) => state.placesSlice.error);
+    const [selectedImage, setSelectedImage] = useState<string | null>(null);
     // 대분류와 소분류 선택 상태 (더미 데이터)
     const [largeCategoryName, setLargeCategoryName] = useState<string>('');
     const [smallCategoryName, setSmallCategoryName] = useState<string>('');
@@ -81,15 +83,16 @@ const FastGaldaeStartPopup = forwardRef<FastGaldaeStartPopupRef, FastGaldaePopup
         modalizeRef.current?.close();
       },
     }));
-    const pressedSubPlace = (subPlace: any)=>{
+    const pressedSubPlace = (subPlace: any) => {
       setSmallCategoryName(subPlace.subPlace);
       setSmallCategoryId(subPlace.subPlaceId);
+      setSelectedImage(subPlace.image); // 📌 여기서 image 필드 사용 (백엔드에서 내려주는 key에 따라 조정)
     };
     return (
       <Modalize
         ref={modalizeRef}
         adjustToContentHeight={true} // ✅ 컨텐츠 크기에 따라 높이 자동 조절
-        
+
         onOpened={() => {
           setIsTabBarVisible(false);
         }}
@@ -123,6 +126,9 @@ const FastGaldaeStartPopup = forwardRef<FastGaldaeStartPopupRef, FastGaldaePopup
                 <View style={styles.landMarkContainer}>
 
                   <View style={styles.picture}>
+                  {selectedImage &&
+                    <Image source={{ uri: selectedImage }} style={{ width: '100%', height: 150, borderRadius: 10 }} resizeMode="cover" />
+                  }
                     <SVGButton
                       iconName="ToBigPic"
                       onPress={handlePicturePress}
