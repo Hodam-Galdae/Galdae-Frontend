@@ -1,4 +1,3 @@
-// MyInfo.tsx 테스트
 import React, {useState} from 'react';
 import {
   View,
@@ -20,13 +19,14 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {checkNickname, join} from '../api/authApi';
 import useImagePicker from '../hooks/useImagePicker';
 import RNFS from 'react-native-fs';
-import { BankOption, banks } from '../constants/bankOptions';
+import { banks } from '../constants/bankOptions';
 
 interface AgreeProps {
   setNextStep: (name: string) => void;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const SetUserInfo: React.FC<AgreeProps> = ({setNextStep}) => {
+const SetUserInfo: React.FC<AgreeProps> = ({setNextStep, setIsLoading}) => {
   const [genderSelected, setGenderSelected] = useState<number>(-1);
   const [bankSelect, setBankSelect] = useState<number>(-1);
   const [name, setName] = useState<string>('');
@@ -35,7 +35,7 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep}) => {
   const [alertNameText, setAlertNameText] = useState<string>('');
   const [alertGenderText, setAlertGenderText] = useState<string>('');
   const [alertAccountText, setAlertAccountText] = useState<string>('');
-  const {imageUri, imageName, imageType, getImageByCamera, getImageByGallery} =
+  const {imageUri, imageName, imageType, getImageByGallery} =
     useImagePicker();
   const englishBanks = banks
   .filter(bank => /^[A-Za-z]/.test(bank.name))
@@ -102,6 +102,7 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep}) => {
     // 모든 조건 충족
     if (flag) {
       try {
+        setIsLoading(true);
         const formData = new FormData();
         const data = {
           nickname: name,
@@ -128,6 +129,8 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep}) => {
         setNextStep('verifySchool');
       } catch (e) {
         console.log(e);
+      } finally {
+        setIsLoading(false);
       }
     }
   };

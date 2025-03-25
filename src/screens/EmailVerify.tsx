@@ -16,9 +16,10 @@ import {RootState} from '../modules/redux/RootReducer';
 
 interface AgreeProps {
   setNextStep: () => void;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const EmailVerify: React.FC<AgreeProps> = ({setNextStep}) => {
+const EmailVerify: React.FC<AgreeProps> = ({setNextStep, setIsLoading}) => {
   const [email, setEmail] = useState<string>('');
   const [isVisibleAlert, setIsVisibleAlert] = useState<boolean>(false);
   const [isVisibleNumberInput, setIsVisibleNumberInput] =
@@ -40,6 +41,7 @@ const EmailVerify: React.FC<AgreeProps> = ({setNextStep}) => {
     if (emailRegex.test(email) && email.length > 0) {
       //이메일 보내기
       try{
+        setIsLoading(true);
         // 대학 인증 메일 발송 api
         const isSuccess = await certifyUniv(userInfo.university, email);
         if(isSuccess){ // 성공했을 시
@@ -53,6 +55,9 @@ const EmailVerify: React.FC<AgreeProps> = ({setNextStep}) => {
       catch(err) { // 실패
         setIsVisibleAlert(true);
       }
+      finally {
+        setIsLoading(false);
+      }
     } else {
       setIsVisibleAlert(true);
     }
@@ -64,6 +69,7 @@ const EmailVerify: React.FC<AgreeProps> = ({setNextStep}) => {
     }
 
     try{
+      setIsLoading(true);
       const result = await emailVerify(number, userInfo.university, email);
       console.log(result);
       if(result === "이메일 인증완료"){
@@ -72,6 +78,8 @@ const EmailVerify: React.FC<AgreeProps> = ({setNextStep}) => {
     }
     catch(err) {
 
+    } finally {
+      setIsLoading(false);
     }
 
   };

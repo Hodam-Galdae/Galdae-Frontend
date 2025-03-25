@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useRef} from 'react';
 import {View, Dimensions, Image, TouchableOpacity} from 'react-native';
 import styles from '../styles/SchoolCardVerify.style';
 import {Modalize} from 'react-native-modalize';
@@ -9,7 +9,6 @@ import SVG from '../components/SVG';
 import SVGButton from '../components/button/SVGButton';
 import useImagePicker from '../hooks/useImagePicker';
 import BigPictureModal from '../components/popup/BigPictureModal';
-import {resizeImage} from '../utils/ImageResizer';
 import {certifyCard} from '../api/authApi';
 import {useSelector} from 'react-redux';
 import {RootState} from '../modules/redux/RootReducer';
@@ -17,9 +16,10 @@ import RNFS from 'react-native-fs';
 
 interface SchoolCardVerifyProps {
   setNextStep: () => void;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const SchoolCardVerify: React.FC<SchoolCardVerifyProps> = ({setNextStep}) => {
+const SchoolCardVerify: React.FC<SchoolCardVerifyProps> = ({setNextStep, setIsLoading}) => {
   const width = Dimensions.get('window').width;
   const {imageUri, imageName, imageType, getImageByCamera, getImageByGallery, resetImage} =
     useImagePicker();
@@ -28,28 +28,36 @@ const SchoolCardVerify: React.FC<SchoolCardVerifyProps> = ({setNextStep}) => {
 
   const clickEvent = async () => {
     if (imageUri.length !== 0) {
-      const form = new FormData();
-      const universityAuthCommand = {
-        university: userInfo.university,
-        universityAuthType: 'STUDENT_CARD',
-        email: '',
-        code: '',
-        studentCard: '',
-      };
-      const fileName = `${userInfo}.json`;
-      const filePath = `${RNFS.TemporaryDirectoryPath}/${fileName}`;
-      await RNFS.writeFile(filePath, JSON.stringify(universityAuthCommand), 'utf8');
+      try{
+        setIsLoading(true);
+        const form = new FormData();
+        const universityAuthCommand = {
+          university: userInfo.university,
+          universityAuthType: 'STUDENT_CARD',
+          email: '',
+          code: '',
+          studentCard: '',
+        };
+        const fileName = `${userInfo}.json`;
+        const filePath = `${RNFS.TemporaryDirectoryPath}/${fileName}`;
+        await RNFS.writeFile(filePath, JSON.stringify(universityAuthCommand), 'utf8');
+  
+        form.append('universityAuthCommand', {
+          uri: `file:///${filePath}`,
+          type: 'application/json',
+          name: fileName,
+        });
+  
+        let imageFile = {uri: imageUri, type: imageType, name: imageName};
+        form.append('studentCard', imageFile);
+        await certifyCard(form);
+        setNextStep();
+      } catch(err) {
 
-      form.append('universityAuthCommand', {
-        uri: `file:///${filePath}`,
-        type: 'application/json',
-        name: fileName,
-      });
-
-      let imageFile = {uri: imageUri, type: imageType, name: imageName};
-      form.append('studentCard', imageFile);
-      await certifyCard(form);
-      setNextStep();
+      } finally {
+        setIsLoading(false);
+      }
+      
     }
   };
 

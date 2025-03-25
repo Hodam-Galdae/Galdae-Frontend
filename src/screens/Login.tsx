@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 // Login.tsx
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Image, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -16,6 +16,7 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 import {getUserInfo} from '../api/membersApi';
 import {useDispatch} from 'react-redux';
 import {setUser} from '../modules/redux/slice/UserSlice';
+import Loading from '../components/Loading';
 
 // 네비게이션 파라미터 타입 정의
 type RootStackParamList = {
@@ -35,9 +36,11 @@ const Login: React.FC = () => {
   // useNavigation에 LoginScreenNavigationProp 제네릭을 적용합니다.
   const navigation = useNavigation<LoginScreenNavigationProp>();
   const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(false);
 
   const signInWithKakao = async (): Promise<void> => {
     try {
+      setIsLoading(true);
       const token = (await login()).accessToken;
       const response = await loginWithKakao(token);
       await EncryptedStorage.setItem('accessToken', response.accessToken);
@@ -48,11 +51,14 @@ const Login: React.FC = () => {
       handleGoNextPage(response);
     } catch (err) {
       console.error('login err : ', err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const signInWithGoogle = async (): Promise<void> => {
     try {
+      setIsLoading(true);
       await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
       await GoogleSignin.signIn();
       const token = (await GoogleSignin.getTokens()).accessToken;
@@ -65,6 +71,8 @@ const Login: React.FC = () => {
       handleGoNextPage(response);
     } catch (err) {
       console.error('login err : ', err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -106,6 +114,7 @@ const Login: React.FC = () => {
 
   return (
     <View style={styles.container}>
+      {isLoading && <Loading/>}
       <View style={styles.allImagesImage}>
         <Swiper
           controlsProps={{

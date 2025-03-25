@@ -45,6 +45,7 @@ import SockJS from 'sockjs-client';
 import {API_BASE_URL, SUB_ENDPOINT, PUB_ENDPOINT} from '../api/axiosInstance';
 import {createReport} from '../api/reportApi';
 import RNFS from 'react-native-fs';
+import Loading from '../components/Loading';
 
 type SettlementType = {
   accountNumber: String;
@@ -66,6 +67,7 @@ type RootStackParamList = {
 
 const ChatRoom: React.FC = () => {
   const [data, setData] = useState<ChatResponse[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [message, setMessage] = useState<string>('');
   const [showExtraView, setShowExtraView] = useState<boolean>(false);
   const [keyboardHeight, setKeyboardHeight] = useState<number>(0);
@@ -149,6 +151,7 @@ const ChatRoom: React.FC = () => {
     });
     client.current.onConnect = () => {
       console.log('connected websocket');
+      setIsLoading(false);
       client.current!.subscribe(
         SUB_ENDPOINT + '/' + chatRoomData.chatroomId,
         (message: IMessage) => {
@@ -167,6 +170,7 @@ const ChatRoom: React.FC = () => {
       );
     };
     client.current.onStompError = function (frame) {
+      setIsLoading(true);
       console.log(`Broker reported error: ${frame.headers.message}`);
       console.log(`Additional details: ${frame.body}`);
       // 액세스 토큰 만료시
@@ -180,6 +184,7 @@ const ChatRoom: React.FC = () => {
       }
     };
     client.current.onDisconnect = error => {
+      setIsLoading(true);
       console.log('disconnected websocket');
       console.log(error);
     };
@@ -383,21 +388,28 @@ const ChatRoom: React.FC = () => {
   useDidMountEffect(() => {
     const send = async () => {
       if (imageUri !== '') {
-        const formData = new FormData();
-        let imageFile = {uri: imageUri, type: imageType, name: imageName};
-        formData.append('image', imageFile);
-        const url = await sendImage(formData);
+        try{
+          setIsLoading(true);
+          const formData = new FormData();
+          let imageFile = {uri: imageUri, type: imageType, name: imageName};
+          formData.append('image', imageFile);
+          const url = await sendImage(formData);
 
-        if (client.current) {
-          client.current.publish({
-            destination: PUB_ENDPOINT + '/' + chatRoomData.chatroomId,
-            headers: {Authorization: userInfo.token},
-            body: JSON.stringify({
-              type: 'IMAGE',
-              sender: userInfo.nickname,
-              message: url,
-            }),
-          });
+          if (client.current) {
+            client.current.publish({
+              destination: PUB_ENDPOINT + '/' + chatRoomData.chatroomId,
+              headers: {Authorization: userInfo.token},
+              body: JSON.stringify({
+                type: 'IMAGE',
+                sender: userInfo.nickname,
+                message: url,
+              }),
+            });
+          }
+        } catch (err) {
+
+        } finally {
+          setIsLoading(false);
         }
       }
     };
@@ -488,6 +500,7 @@ const ChatRoom: React.FC = () => {
         />
       </Animated.View>
       <View style={styles.container}>
+        {isLoading && <Loading/>}
         <FlatList
           ref={chatListRef}
           style={styles.list}

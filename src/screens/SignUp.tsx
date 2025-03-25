@@ -13,6 +13,7 @@ import VerifySchool from './VerifySchool';
 import SchoolCardVerify from './SchoolCardVerify';
 import EmailVerify from './EmailVerify';
 import {RouteProp, useRoute} from '@react-navigation/native';
+import Loading from '../components/Loading';
 
 type RootStackParamList = {
   SignUp: {data: Readonly<boolean>};
@@ -34,6 +35,7 @@ const SignUp: React.FC = () => {
   const [nowPageName, setNowPageName] = useState<string>('agree');
   const loaderValue = useRef(new Animated.Value(0)).current;
   const isJoinedRef = useRef(params.data);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const setNextStepByName = (name: string) => {
     setNowPageName(name);
@@ -92,12 +94,13 @@ const SignUp: React.FC = () => {
       setNextStep={setNextStepByName}
       goTermsDetailPage={goToTermsDetail}
     />,
-    <SetUserInfo setNextStep={setNextStepByName} />,
+    <SetUserInfo setIsLoading={setIsLoading} setNextStep={setNextStepByName} />,
     <VerifySchool setNextStep={setNextStepByName} />,
     <SchoolCardVerify
+      setIsLoading={setIsLoading}
       setNextStep={() => navigation.replace('ReviewInProgress')}
     />,
-    <EmailVerify setNextStep={() => navigation.replace('MainTab')} />,
+    <EmailVerify setIsLoading={setIsLoading} setNextStep={() => navigation.replace('MainTab')} />,
   ];
 
   const displayPage = (pageName: string) => {
@@ -128,6 +131,7 @@ const SignUp: React.FC = () => {
 
   return (
     <View style={styles.container}>
+      {isLoading && <Loading/>}
       <Header
         title={<SVG name="GaldaeLogo" />}
         leftButton={

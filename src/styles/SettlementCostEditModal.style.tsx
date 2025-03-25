@@ -11,12 +11,13 @@ export default StyleSheet.create({
   },
   textPopUp: {
     width: 250,
-    height: 208,
+    // height: 208,
     position: 'relative',
     backgroundColor: theme.colors.white,
     borderRadius: theme.borderRadius.size10,
     alignItems: 'center',
     paddingHorizontal: 20,
+    paddingVertical: 20,
   },
   // 취소 아이콘은 터치 영역을 위해 wrapper로 사용합니다.
   cancelIconWrapper: {
@@ -35,7 +36,7 @@ export default StyleSheet.create({
     fontWeight: '500',
     marginBottom: 21,
     width: '100%',
-    marginTop: 57,
+    marginTop: 37,
     textAlign: 'center',
   },
   input: {
@@ -55,7 +56,7 @@ export default StyleSheet.create({
     textAlign: 'center',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 20,
+    // marginBottom: 20,
   },
   btnText: {
     color: theme.colors.white,
