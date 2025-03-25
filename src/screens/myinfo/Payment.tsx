@@ -58,6 +58,16 @@ useEffect(() => {
   const fetchSettlements = async () => {
     try {
       const data = await getPaymentList();
+      console.log(`
+        
+        
+        
+        정산 내역 불러오기
+        
+        
+        
+        
+        `,data)
       setSettlements(data); // 서버 응답을 상태에 저장
     } catch (error) {
       Alert.alert('정산 내역 조회 실패', '다시 시도해주세요.');
@@ -111,7 +121,7 @@ useEffect(() => {
           title={<BasicText text="결제 · 정산관리" style={styles.headerText}/>}
           />
           <View style={styles.content}>
-              <BasicText text="현재 정산 계좌" style={styles.title}/>
+              <BasicText text="현재 정산 계좌2" style={styles.title}/>
               {
                 isAccountRegister ? (
                   <LinearGradient
