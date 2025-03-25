@@ -1,4 +1,4 @@
-import React, {forwardRef, useImperativeHandle, useRef, useState} from 'react';
+import React, {forwardRef, useEffect, useImperativeHandle, useRef, useState} from 'react';
 import {View, TouchableOpacity} from 'react-native';
 import {Modalize} from 'react-native-modalize';
 import BasicText from '../BasicText';
@@ -11,6 +11,7 @@ import {
   ChatroomResponse,
   MemberResponse,
 } from '../../api/chatApi';
+import { getUserInfo } from '../../api/membersApi';
 
 export interface SettlementRequestPopupRef {
   open: () => void;
@@ -42,6 +43,15 @@ const SettlementRequestPopup = forwardRef<
 
   const [settlementCost, setSettlementCost] = useState<number>(0);
   const [isLastSettlement, setIsLastSettlement] = useState(false);
+  const [myData, setMyData] = useState({
+    'nickname': '',
+    'image': '',
+    'university': '',
+    'isAuthenticated': '',
+    'bankType': '',
+    'accountNumber': '',
+    'depositor': '',
+  });
   const [isVisibleCostEditPopup, setIsVisibleCostEditPopup] =
     useState<boolean>(false);
   //정산 요청 메서드
@@ -64,6 +74,12 @@ const SettlementRequestPopup = forwardRef<
     setIsLastSettlement(false);
     modalizeRef.current?.close();
   };
+
+  useEffect(() => {
+    getUserInfo().then(data => {
+      setMyData(data);
+    });
+  }, []);
 
   return (
     <Modalize
@@ -105,10 +121,10 @@ const SettlementRequestPopup = forwardRef<
             <View style={styles.bankContainer}>
               <SVG width={26} height={26} style={styles.bankIcon} name="Bank" />
               <BasicText style={styles.bankText}>
-                {'KB 국민은행 000-0000-0000-00'}
+                {`${myData.bankType} ${myData.accountNumber}`}
               </BasicText>
             </View>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => {}}>
               <BasicText text="정산 계좌 변경하기" style={styles.bankEdit} />
             </TouchableOpacity>
           </View>

@@ -96,7 +96,6 @@ const ChatRoom: React.FC = () => {
   const chatRoomData = params.data;
   const userInfo = useSelector((state: RootState) => state.user);
   const client = useRef<Client>();
-  console.log(chatRoomData);
 
   const panResponder = useRef(
     PanResponder.create({
