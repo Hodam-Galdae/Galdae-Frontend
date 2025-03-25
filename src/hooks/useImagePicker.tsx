@@ -33,6 +33,12 @@ const useImagePicker = () => {
     }
   };
 
+  const resetImage = () => {
+    setImageName('');
+    setImageUri('');
+    setImageType('');
+  };
+
   // 사진 촬영
   const getImageByCamera = async () => {
     let hasCameraPermission = false;
@@ -140,7 +146,7 @@ const useImagePicker = () => {
     }
   };
 
-  return {imageUri, imageName, imageType, getImageByCamera, getImageByGallery};
+  return {imageUri, imageName, imageType, getImageByCamera, getImageByGallery, resetImage};
 };
 
 export default useImagePicker;

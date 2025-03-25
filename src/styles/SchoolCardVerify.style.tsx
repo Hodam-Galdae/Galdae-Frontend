@@ -11,11 +11,11 @@ export default StyleSheet.create({
   imageZoom: {
     position: 'absolute',
     right: 4,
-    bottom: 18,
+    top: 4,
   },
   image: {
-    width: 100,
-    height: 75,
+    width: 186,
+    height: 116,
     borderRadius: 10,
     marginBottom: 14,
   },

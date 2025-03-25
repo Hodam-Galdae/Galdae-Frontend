@@ -1,6 +1,6 @@
 // SignUp.tsx 테스트
 import React, {useRef, useState, useEffect, useCallback} from 'react';
-import {View, Animated, SafeAreaView} from 'react-native';
+import {View, Animated} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import styles from '../styles/SignUp.style';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';

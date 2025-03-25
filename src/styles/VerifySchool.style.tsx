@@ -27,7 +27,7 @@ export default StyleSheet.create({
     marginBottom: 12,
   },
   selector: {
-    marginBottom: 70,
+    // marginBottom: 70,
   },
   selectorBox: {
     height: 55,

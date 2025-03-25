@@ -20,6 +20,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {checkNickname, join} from '../api/authApi';
 import useImagePicker from '../hooks/useImagePicker';
 import RNFS from 'react-native-fs';
+import { BankOption, banks } from '../constants/bankOptions';
 
 interface AgreeProps {
   setNextStep: (name: string) => void;
@@ -36,6 +37,15 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep}) => {
   const [alertAccountText, setAlertAccountText] = useState<string>('');
   const {imageUri, imageName, imageType, getImageByCamera, getImageByGallery} =
     useImagePicker();
+  const englishBanks = banks
+  .filter(bank => /^[A-Za-z]/.test(bank.name))
+  .map(bank => bank.name)
+  .sort((a, b) => a.localeCompare(b));
+  const koreanBanks = banks
+  .filter(bank => !/^[A-Za-z]/.test(bank.name))
+  .map(bank => bank.name)
+  .sort((a, b) => a.localeCompare(b, 'ko'));
+  const sortedBanks = [...englishBanks, ...koreanBanks];
 
   const bankText = [
     '국민 은행',
@@ -191,7 +201,7 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep}) => {
               <View style={styles.bankSelector}>
                 <ItemSelector
                   hint="은행 선택"
-                  items={bankText}
+                  items={sortedBanks}
                   selected={bankSelect}
                   setSelected={setBankSelect}
                   style={{position: 'absolute', zIndex: 999}}

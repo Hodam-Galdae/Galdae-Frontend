@@ -21,7 +21,7 @@ interface SchoolCardVerifyProps {
 
 const SchoolCardVerify: React.FC<SchoolCardVerifyProps> = ({setNextStep}) => {
   const width = Dimensions.get('window').width;
-  const {imageUri, imageName, imageType, getImageByCamera, getImageByGallery} =
+  const {imageUri, imageName, imageType, getImageByCamera, getImageByGallery, resetImage} =
     useImagePicker();
   const pictureModalRef = useRef<Modalize>(null);
   const userInfo = useSelector((state: RootState) => state.user);
@@ -97,16 +97,8 @@ const SchoolCardVerify: React.FC<SchoolCardVerifyProps> = ({setNextStep}) => {
 
       <View>
         <View style={{alignItems: 'center'}}>
-          <TouchableOpacity onPress={handlePicturePress}>
-            <Image style={styles.image} source={{uri: imageUri}} />
-            <SVG
-              name="ClosePic"
-              width={22}
-              height={22}
-              style={styles.imageZoom}
-            />
-          </TouchableOpacity>
-          <View style={styles.btnWrapper}>
+          {!imageUri ? (
+            <View style={styles.btnWrapper}>
             <SVGButton
               onPress={getImageByCamera}
               iconName="Camera"
@@ -118,6 +110,17 @@ const SchoolCardVerify: React.FC<SchoolCardVerifyProps> = ({setNextStep}) => {
               buttonStyle={styles.svgBtn}
             />
           </View>
+          ) : (
+          <TouchableOpacity onPress={resetImage}>
+            <Image style={styles.image} source={{uri: imageUri}} />
+            <SVG
+              name="Cancel"
+              width={22}
+              height={22}
+              style={styles.imageZoom}
+            />
+          </TouchableOpacity>
+          )}
         </View>
 
         <BasicText
