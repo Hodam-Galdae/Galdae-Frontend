@@ -1,35 +1,34 @@
-// SettlementItem.tsx
 import React from 'react';
 import { View } from 'react-native';
-import BasicText from '../components/BasicText';
-import SVG from '../components/SVG';
-import styles from '../styles/SettlementItem.style'; // 예: Payment용 스타일
-
-// 결제/정산 항목 데이터 구조
+import BasicText from './BasicText';
+import SVG from './SVG';
+import styles from '../styles/SettlementItem.style';
+import moment from 'moment';
+// SettlementItem.tsx
 export interface Settlement {
   id: number;
-  month: number;
-  date: number;
+  departureTime: string;
   departure: string;
-  destination: string;
-  settlement: number;
-  bank: string;
-  account: string;
+  arrival: string;
+  totalCost: number;
+  personalCost: number;
+  depositor: string;
+  accountNumber: string;
+  bankType: string | null;
 }
-
 interface SettlementItemProps {
   item: Settlement;
 }
 
 const SettlementItem: React.FC<SettlementItemProps> = ({ item }) => {
+  const date = moment.utc(item.departureTime);
+  const formattedDate = date.format('M월 D일');
+  console.log(`item: `, item);
   return (
     <View key={item.id}>
       {/* 날짜 표시 */}
       <View style={styles.dateContainer}>
-        <BasicText
-          text={`${item.month}월 ${item.date}일`}
-          style={styles.dateText}
-        />
+        <BasicText text={formattedDate} style={styles.dateText} />
       </View>
 
       {/* 정산 정보 영역 */}
@@ -39,19 +38,23 @@ const SettlementItem: React.FC<SettlementItemProps> = ({ item }) => {
           <SVG name="location_line" />
           <BasicText text={item.departure} style={styles.position} />
           <SVG name="arrow_right_line" />
-          <BasicText text={item.destination} style={styles.position} />
+          <BasicText text={item.arrival} style={styles.position} />
         </View>
 
         {/* 금액, 은행/계좌 */}
         <View style={styles.bankContainer}>
           <BasicText
-            text={`${item.settlement}원`}
+            text={`${item.personalCost.toLocaleString()}원`}
             style={styles.settleText}
           />
-          <BasicText
-            text={`${item.bank} ${item.account}`}
-            style={styles.accountText}
-          />
+          {item.bankType && item.accountNumber ? (
+            <BasicText
+              text={`${item.bankType} ${item.accountNumber}`}
+              style={styles.accountText}
+            />
+          ) : (
+            <BasicText text="정산 정보 없음" style={styles.accountText} />
+          )}
         </View>
       </View>
     </View>
