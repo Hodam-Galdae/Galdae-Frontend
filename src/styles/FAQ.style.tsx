@@ -28,7 +28,7 @@ export default StyleSheet.create({
       marginRight: 6,
     },
     btnStyle:{
-        paddingHorizontal:22,
+        paddingHorizontal:18,
     },
     textStyle:{
         fontSize:theme.fontSize.size14,

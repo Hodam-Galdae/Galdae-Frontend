@@ -1,4 +1,4 @@
-import React,{ useState } from 'react';
+import React,{ useState,useEffect } from 'react';
 import {  TouchableOpacity, View,FlatList,Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from '../../styles/Payment.style';
@@ -18,6 +18,7 @@ import { RootState } from '../../modules/redux/RootReducer'; // 실제 store 경
 import { banks, BankOption } from '../../constants/bankOptions';
 //api
 import { updateBankInfo } from '../../api/membersApi';
+import { getPaymentList } from '../../api/membersApi'; // 여기에 정의한 API 함수 임포트
 //redux
 import { setUserInfo } from '../../modules/redux/slice/myInfoSlice';
 type HomeProps = {
@@ -40,18 +41,9 @@ type RootStackParamList = {
 type nowGaldaeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 const Payment: React.FC<HomeProps> = () => {
   const dispatch = useDispatch();
-  const Settlements = [
-    { id: 0, month: 10, date: 11, departure: '학교', destination: '호암동', settlement: 10000, bank: 'KB 국민은행', account: '3455-7568-67576-89' },
-    { id: 1, month: 7, date: 6, departure: '중원도서관', destination: '베스킨라빈스', settlement: 18000, bank: '신한은행', account: '345-2341-2345-45' },
-    { id: 2, month: 5, date: 20, departure: '기숙사', destination: '터미널', settlement: 15000, bank: '우리은행', account: '1234-567-890123' },
-    { id: 3, month: 3, date: 1, departure: '회사', destination: '집', settlement: 9000, bank: '하나은행', account: '444-222-1111-00' },
-    { id: 4, month: 11, date: 2, departure: '역', destination: '공항', settlement: 22000, bank: 'NH 농협', account: '5678-999-8888' },
-    { id: 5, month: 9, date: 15, departure: '도서관', destination: '미용실', settlement: 13000, bank: 'KB 국민은행', account: '8888-555-777777' },
-    { id: 6, month: 8, date: 29, departure: '호암동', destination: '카페', settlement: 5000, bank: '신한은행', account: '9999-5555-3333' },
-    { id: 7, month: 2, date: 10, departure: '정문', destination: '후문', settlement: 4000, bank: '기업은행', account: '11-222-333-44' },
-    { id: 8, month: 4, date: 18, departure: '강남', destination: '종로', settlement: 16000, bank: '카카오뱅크', account: '1234-12-567890' },
-    { id: 9, month: 12, date: 30, departure: '집', destination: '마트', settlement: 7000, bank: '토스뱅크', account: '000-111-222-333' },
-  ];
+
+  const [settlements, setSettlements] = useState<Settlement[]>([]); // 🔥 서버에서 불러온 정산 내역
+
   // const accountInfo = {
   //   isAccountRegister :false,
   // };
@@ -61,6 +53,19 @@ const Payment: React.FC<HomeProps> = () => {
   const [deletePopupVisible, setDeletePopupVisible] = useState<boolean>(false);
     // Redux에 저장된 사용자 정보를 가져옵니다.
     const userInfo = useSelector((state: RootState) => state.myInfoSlice.userInfo);
+// 🔥 정산 내역 불러오기
+useEffect(() => {
+  const fetchSettlements = async () => {
+    try {
+      const data = await getPaymentList();
+      setSettlements(data); // 서버 응답을 상태에 저장
+    } catch (error) {
+      Alert.alert('정산 내역 조회 실패', '다시 시도해주세요.');
+    }
+  };
+
+  fetchSettlements();
+}, []);
 
   // 등록된 계좌 정보 여부를 Redux에서 확인합니다.
   const isAccountRegister = Boolean(userInfo?.bankType && userInfo?.accountNumber);
@@ -166,7 +171,7 @@ const Payment: React.FC<HomeProps> = () => {
 
               <BasicText text="정산 내역" style={styles.settleText}/>
               <FlatList
-                data={Settlements}
+                data={settlements}
                 renderItem={renderSettlementItem}
                 keyExtractor={keyExtractor}
                 // 필요하다면 스타일 지정

@@ -18,6 +18,7 @@ export interface MyPostHistory {
     majorPlace: string;
     subPlace: string;
   };
+  createAt: string;
   departureTime: string; // ISO 8601 형식
   arrangeTime: 'POSSIBLE' | 'IMPOSSIBLE';
   totalPassengerCount: number;

@@ -233,13 +233,32 @@ const NowGaldaeDetail: React.FC = () => {
         </View>
 
         <View style={styles.participateContainer}>
-          <BasicButton
+          {
+            postDetail.isParticipated ? (
+              <BasicButton
+              text="이미 참여한 갈대입니다."
+              buttonStyle={styles.participateBtn}
+              textStyle={styles.participateText}
+              loading={false}
+              disabled={true}
+              //onPress={handleParticipateGaldae}
+              disabledColors={
+                {
+                  backgroundColor:theme.colors.lightGray,
+                  textColor:theme.colors.black,
+                }
+              }
+            />
+            ) : (
+              <BasicButton
             text="참여하기"
             buttonStyle={styles.participateBtn}
             textStyle={styles.participateText}
             loading={false}
             onPress={handleParticipateGaldae}
           />
+            )
+          }
         </View>
       </ScrollView>
     </View>

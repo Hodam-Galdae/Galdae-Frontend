@@ -26,7 +26,7 @@ const stylesheet = StyleSheet.create({
     smallBorderTextBtn:{
         borderWidth:1,
         paddingHorizontal:(10),
-        paddingVertical:(1),
+        paddingVertical:(5),
         alignItems:'center',
         justifyContent:'center',
         borderRadius:theme.borderRadius.size30,
