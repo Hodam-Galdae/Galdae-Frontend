@@ -131,12 +131,12 @@ export default StyleSheet.create({
       alignItems: 'center',
     },
     closeContainer:{
-      //position: 'absolute',
+      position: 'absolute',
       bottom: 96,   // 원하는 위치로 조정 (예: 모달 컨텐츠 상단 바깥쪽)
       right:18, // 원하는 위치로 조정 (예: 모달 컨텐츠 우측 바깥쪽)
     },
     closeButton: {
-      
+
     },
     closeButtonIcon: {
       width: 30,

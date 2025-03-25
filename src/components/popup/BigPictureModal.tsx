@@ -1,6 +1,6 @@
 // BigPictureModal.tsx
 import React, { forwardRef, useImperativeHandle, useState } from 'react';
-import { Modal, View, Image, ImageSourcePropType } from 'react-native';
+import { Modal, View, Image, ImageSourcePropType, TouchableOpacity } from 'react-native';
 import SVGButton from '../button/SVGButton';
 import styles from '../../styles/FastGaldaePopup.style';
 
@@ -32,7 +32,7 @@ const BigPictureModal = forwardRef<BigPictureModalRef, BigPictureModalProps>(({ 
       animationType="fade"
       onRequestClose={handleClose}
     >
-      <View style={styles.modalOverlay}>
+      <TouchableOpacity style={styles.modalOverlay} onPress={handleClose}>
         <View style={styles.modalContent}>
             <Image
               source={imageSource}
@@ -49,7 +49,7 @@ const BigPictureModal = forwardRef<BigPictureModalRef, BigPictureModalProps>(({ 
             SVGStyle={styles.closeButtonIcon}
           />
         </View>
-      </View>
+      </TouchableOpacity>
     </Modal>
   );
 });

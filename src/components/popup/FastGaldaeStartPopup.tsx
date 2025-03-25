@@ -2,7 +2,7 @@
 import React, {useEffect, forwardRef, useImperativeHandle, useRef,useState,useContext } from 'react';
 //import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {TabBarVisibilityContext} from '../../utils/TabBarVisibilityContext';
-import { View,KeyboardAvoidingView } from 'react-native';
+import { View,KeyboardAvoidingView, TouchableOpacity } from 'react-native';
 import { Modalize } from 'react-native-modalize';
 import { Image } from 'react-native';
 //import { useNavigation } from '@react-navigation/native';
@@ -125,7 +125,7 @@ const FastGaldaeStartPopup = forwardRef<FastGaldaeStartPopupRef, FastGaldaePopup
 
                 <View style={styles.landMarkContainer}>
 
-                  <View style={styles.picture}>
+                  <TouchableOpacity style={styles.picture} onPress={handlePicturePress}>
                   {selectedImage &&
                     <Image source={{ uri: selectedImage }} style={{ width: '100%', height: 150, borderRadius: 10 }} resizeMode="cover" />
                   }
@@ -134,7 +134,7 @@ const FastGaldaeStartPopup = forwardRef<FastGaldaeStartPopupRef, FastGaldaePopup
                       onPress={handlePicturePress}
                       buttonStyle={styles.toBigPicIcon}
                     />
-                  </View>
+                  </TouchableOpacity>
 
                   <View style={styles.landMark}>
                     <TextTag
@@ -238,10 +238,12 @@ const FastGaldaeStartPopup = forwardRef<FastGaldaeStartPopupRef, FastGaldaePopup
 
               </View>
 
-              <BigPictureModal
-              ref={pictureModalRef}
-              imageSource={require('../../assets/test.jpg')}
-            />
+              {selectedImage && (
+                <BigPictureModal
+                  ref={pictureModalRef}
+                  imageSource={{ uri: selectedImage }}
+                />
+              )}
           </ScrollView>
         </KeyboardAvoidingView>
 
