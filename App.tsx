@@ -37,7 +37,9 @@ import Notification from './src/screens/Notification';
 import {TabBarVisibilityProvider} from './src/utils/TabBarVisibilityContext';
 import {Provider} from 'react-redux';
 import store from './src/modules/redux/store/index';
-
+import messaging from '@react-native-firebase/messaging';
+import { requestUserPermission } from './src/utils/notification';
+import notifee from '@notifee/react-native';
 function App() {
   useEffect(() => {
     if (Platform.OS === 'android') {
@@ -52,7 +54,33 @@ function App() {
       setInterceptor();
     };
   }, []);
+  useEffect(() => {
+    const setup = async () => {
+      await notifee.createChannel({
+        id: 'default',
+        name: '기본 알림 채널',
+      });
+    };
+    setup();
+    // 알림 권한 요청 및 토큰 획득
+    requestUserPermission();
 
+    // 포그라운드에서 수신된 알림 처리
+    const unsubscribe = messaging().onMessage(async remoteMessage => {
+      console.log('🔥 포그라운드 알림 수신:', remoteMessage);
+
+      // 로컬 알림 띄우기 (notifee 이용)
+      await notifee.displayNotification({
+        title: remoteMessage.notification?.title || '알림',
+        body: remoteMessage.notification?.body || '',
+        android: {
+          channelId: 'default',
+        },
+      });
+    });
+
+    return unsubscribe;
+  }, []);
   const Stack = createNativeStackNavigator();
 
   const theme = {
