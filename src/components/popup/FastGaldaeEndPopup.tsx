@@ -89,6 +89,11 @@ const FastGaldaePopup = forwardRef<FastGaldaeEndPopupRef, FastGaldaePopupProps>(
         }}
         onClosed={() => {
           setIsTabBarVisible(true);
+          setLargeCategoryName('');
+          setLargeCategoryId(0);
+          setSmallCategoryName('');
+          setSmallCategoryId(0);
+          setSelectedImage(null);
           onClose && onClose();
         }}
         scrollViewProps={{
@@ -136,8 +141,8 @@ const FastGaldaePopup = forwardRef<FastGaldaeEndPopupRef, FastGaldaePopupProps>(
                   borderColor:theme.colors.transparent,
                 }}
               />
-              <BasicText text={smallCategoryName || '정문'} fontSize={theme.fontSize.size24} style={styles.title}/>
-              <BasicText text={largeCategoryName || '학교'} fontSize={theme.fontSize.size16} color={theme.colors.gray1} style={styles.subTitle}/>
+              <BasicText text={smallCategoryName || '도착지 선택'} fontSize={theme.fontSize.size24} style={styles.title}/>
+              <BasicText text={largeCategoryName || '도착지 선택'} fontSize={theme.fontSize.size16} color={theme.colors.gray1} style={styles.subTitle}/>
             </View>
 
           </View>

@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 // Home.tsx 테스트
 import React, {useState, useRef,useEffect} from 'react';
 import {ScrollView, View, TouchableOpacity,ActivityIndicator,RefreshControl,Alert} from 'react-native';
@@ -325,12 +326,12 @@ const getFormattedDepartureTime = (): string => {
             ) : (
               <ScrollView horizontal showsHorizontalScrollIndicator={false} scrollEventThrottle={16}>
                 {myCreatedGaldaeList.map((item, index) => (
-                  <View key={index} style={styles.newGaldaeList}>
+                  <TouchableOpacity key={index} style={styles.newGaldaeList} onPress={()=>navigation.navigate('NowGaldaeDetail', {postId: item.postId})}>
                     <BasicText text={moment(item.createdAt).fromNow()} style={styles.newGaldaeTimeText} />
                     <BasicText text={`${item.departure}`} style={styles.newGaldaeDepartText} />
                     <SVG name="arrow_down_fill" style={styles.newGaldaeArrowIcon} />
                     <BasicText text={`${item.arrival}`} style={styles.newGaldaeDestText} />
-                  </View>
+                  </TouchableOpacity>
                 ))}
               </ScrollView>
             )}

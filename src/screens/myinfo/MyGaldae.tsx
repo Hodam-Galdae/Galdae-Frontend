@@ -66,7 +66,7 @@ const MyGaldae: React.FC<HomeProps> = () => {
   //   timestamp: 1735689600000,
   // };
   // 내 갈대 기록은 Redux slice에서 관리 (state.myGaldae)
-  const { history: myGaldaeHistory} = useSelector(
+  const { history: myGaldaeHistory, totalCount} = useSelector(
     (state: RootState) => state.myGaldaeSlice
   );
 // 내 갈대 기록의 첫 번째 항목을 topItem으로 사용 (있다면)
@@ -80,7 +80,7 @@ const topItem = myGaldaeHistory.length > 0 ? myGaldaeHistory[0] : null;
 
       <View style={styles.content}>
         <View style={styles.nowGaldaeTitle}>
-          <BasicText text="3개의 경로" style={styles.nowGaldae} />
+          <BasicText text={`${totalCount}개의 경로`} style={styles.nowGaldae} />
           <SVGTextButton
             iconName="More"
             text="더보기"
@@ -98,7 +98,7 @@ const topItem = myGaldaeHistory.length > 0 ? myGaldaeHistory[0] : null;
         {topItem ? (
           <MyGaldaeItem
             item={topItem}
-            //onPress={() => navigation.navigate('NowGaldaeDetail', {postId: topItem.postId})}
+            onPress={() => navigation.navigate('NowGaldaeDetail', {postId: topItem.postId})}
           />
         ) : (
           <View style={styles.borderBox}>

@@ -133,7 +133,7 @@ const MyGaldaeHistory: React.FC<HomeProps> = () => {
           setSelectedItem(item);
           setDeletePopupVisible(true);
         }}
-        //onPress={() => navigation.navigate('NowGaldaeDetail', { item })}
+        onPress={() => navigation.navigate('NowGaldaeDetail', {postId: item.postId})}
       />
     );
   return (

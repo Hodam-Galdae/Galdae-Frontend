@@ -2,6 +2,7 @@
  * 내 갈대 조회 타입 (홈화면)
  */
 export interface MyCreatedPost {
+    postId:string;
     departure: string; // 출발지
     arrival: string; // 도착지
     createdAt: string; // 생성 시간 (ISO 8601 형식)
@@ -10,6 +11,7 @@ export interface MyCreatedPost {
  * 내 갈대 기록 조회 타입
  */
 export interface MyPostHistory {
+  postId:string;
   departure: {
     majorPlace: string;
     subPlace: string;

@@ -83,6 +83,14 @@ export default StyleSheet.create({
         height:180,
         backgroundColor:theme.colors.brandColor,
         borderRadius:theme.borderRadius.size10,
+        position:'relative',
+      },
+      toBigPicIcon:{
+        bottom:10,
+        right:10,
+        padding:10,
+        position:'absolute',
+        // backgroundColor:theme.colors.brandColor,
       },
       userInfo:{
         fontSize:theme.fontSize.size20,
