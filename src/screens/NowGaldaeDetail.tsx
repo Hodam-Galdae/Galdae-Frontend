@@ -106,12 +106,12 @@ const NowGaldaeDetail: React.FC = () => {
           <View style={styles.headerTitle}>
             <SVG name="location_line" width={22} height={22} />
             <BasicText
-              text={postDetail.departure.majorPlace}
+              text={postDetail.departure.subPlace}
               style={styles.headerText}
             />
             <SVG name="arrow_right_line" width={22} height={22} />
             <BasicText
-              text={postDetail.arrival.majorPlace}
+              text={postDetail.arrival.subPlace}
               style={styles.headerText}
             />
           </View>
@@ -131,11 +131,11 @@ const NowGaldaeDetail: React.FC = () => {
           <View style={styles.fromContainer}>
             <SVG name="Car" />
             <BasicText
-              text={postDetail.departure.majorPlace}
+              text={postDetail.departure.subPlace}
               style={styles.fromMainLocation}
             />
             <BasicText
-              text={postDetail.departure.subPlace}
+              text={postDetail.departure.majorPlace}
               style={styles.fromSubLocation}
             />
           </View>
@@ -169,11 +169,11 @@ const NowGaldaeDetail: React.FC = () => {
           <View style={styles.toContainer}>
             <SVG name="Location" />
             <BasicText
-              text={postDetail.arrival.majorPlace}
+              text={postDetail.arrival.subPlace}
               style={styles.fromMainLocation}
             />
             <BasicText
-              text={postDetail.arrival.subPlace}
+              text={postDetail.arrival.majorPlace}
               style={styles.fromSubLocation}
             />
           </View>

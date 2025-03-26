@@ -1,6 +1,7 @@
+/* eslint-disable react-native/no-inline-styles */
 // MyInfo.tsx 테스트
 import React,{useState,useEffect,useCallback} from 'react';
-import { View,ScrollView,Image ,ActivityIndicator,Alert,RefreshControl} from 'react-native';
+import { View,ScrollView,Image ,ActivityIndicator,Alert,RefreshControl, TouchableOpacity} from 'react-native';
 import SVG from '../components/SVG';
 import styles from '../styles/MyInfo.style';
 import { useNavigation,useFocusEffect } from '@react-navigation/native';
@@ -33,6 +34,7 @@ type RootStackParamList = {
   TermsOfUse:undefined;
   FAQ:undefined;
   Logout:undefined;
+  NowGaldaeDetail: { postId: string };
 };
 
 type nowGaldaeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -230,12 +232,12 @@ useFocusEffect(
           ) : myGaldaeHistory.length > 0 ? (
             <ScrollView horizontal showsHorizontalScrollIndicator={false} scrollEventThrottle={16}>
               {myGaldaeHistory.map((list, index) => (
-                <View key={index} style={styles.newGaldaeList}>
+                <TouchableOpacity key={index} style={styles.newGaldaeList} onPress={()=>navigation.navigate('NowGaldaeDetail', {postId: list.postId})}>
                   <BasicText text={moment(list.createAt).fromNow()} style={styles.newGaldaeTimeText} />
                   <BasicText text={`${list.departure.subPlace}`} style={styles.newGaldaeDepartText} />
                   <SVG name="arrow_down_fill_gray2" style={styles.newGaldaeArrowIcon} />
                   <BasicText text={`${list.arrival.subPlace}`} style={styles.newGaldaeDestText} />
-                </View>
+                </TouchableOpacity>
               ))}
             </ScrollView>
           ) : (
