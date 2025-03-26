@@ -99,26 +99,26 @@ useFocusEffect(
 
 
 
-  const formatTimeAgo = (departureTime: string) => {
-    // 오늘 날짜 (시간 제거)
-    const today = moment().startOf('day');
-    // 서버에서 받은 출발 시간을 UTC 기준으로 로컬 날짜로 변환 후, 시간 제거
-    const departureDate = moment.utc(departureTime).local().startOf('day');
+  // const formatTimeAgo = (departureTime: string) => {
+  //   // 오늘 날짜 (시간 제거)
+  //   const today = moment().startOf('day');
+  //   // 서버에서 받은 출발 시간을 UTC 기준으로 로컬 날짜로 변환 후, 시간 제거
+  //   const departureDate = moment.utc(departureTime).local().startOf('day');
 
-    // 콘솔에 오늘 날짜와 출발 날짜 출력
-    console.log(`오늘 날짜: ${today.format('YYYY-MM-DD')}`);
-    console.log(`출발 날짜: ${departureDate.format('YYYY-MM-DD')}`);
+  //   // 콘솔에 오늘 날짜와 출발 날짜 출력
+  //   console.log(`오늘 날짜: ${today.format('YYYY-MM-DD')}`);
+  //   console.log(`출발 날짜: ${departureDate.format('YYYY-MM-DD')}`);
 
-    // 오늘 날짜와 출발 날짜 간 차이를 일(day) 단위로 계산
-    const diffDays = today.diff(departureDate, 'days');
-    if(diffDays < 0){
-      return `${departureDate.diff(today, 'days')}일 후`;
-    }else{
-        // 차이가 0이면 "오늘", 아니면 "X일 전"으로 반환
-        return diffDays === 0 ? '오늘' : `${diffDays}일 전`;
-    }
+  //   // 오늘 날짜와 출발 날짜 간 차이를 일(day) 단위로 계산
+  //   const diffDays = today.diff(departureDate, 'days');
+  //   if(diffDays < 0){
+  //     return `${departureDate.diff(today, 'days')}일 후`;
+  //   }else{
+  //       // 차이가 0이면 "오늘", 아니면 "X일 전"으로 반환
+  //       return diffDays === 0 ? '오늘' : `${diffDays}일 전`;
+  //   }
 
-  };
+  // };
 
 
    // imageUri가 변경되면 imageBase64를 사용해서 updateMemberImage API 호출
@@ -231,7 +231,7 @@ useFocusEffect(
             <ScrollView horizontal showsHorizontalScrollIndicator={false} scrollEventThrottle={16}>
               {myGaldaeHistory.map((list, index) => (
                 <View key={index} style={styles.newGaldaeList}>
-                  <BasicText text={formatTimeAgo(list.createAt)} style={styles.newGaldaeTimeText} />
+                  <BasicText text={moment(list.createAt).fromNow()} style={styles.newGaldaeTimeText} />
                   <BasicText text={`${list.departure.subPlace}`} style={styles.newGaldaeDepartText} />
                   <SVG name="arrow_down_fill_gray2" style={styles.newGaldaeArrowIcon} />
                   <BasicText text={`${list.arrival.subPlace}`} style={styles.newGaldaeDestText} />

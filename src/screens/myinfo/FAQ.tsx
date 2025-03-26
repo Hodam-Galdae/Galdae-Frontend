@@ -72,7 +72,7 @@ const FAQ: React.FC<HomeProps> = () => {
             {renderTabContent()}
             </View>
 
-            <FloatingButton iconName={'service_line'} onPress={()=>navigation.navigate('Inquiry')}/>
+            <FloatingButton iconName={'service_line'} onPress={()=>navigation.replace('Inquiry')}/>
       </View>
     );
 };

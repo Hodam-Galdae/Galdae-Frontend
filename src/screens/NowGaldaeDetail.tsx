@@ -1,7 +1,8 @@
 /* eslint-disable react-native/no-inline-styles */
 // NowGaldaeDetail.tsx
-import React, {useEffect} from 'react';
+import React, {useEffect, useState,useRef} from 'react';
 import {View, Image, ActivityIndicator} from 'react-native';
+import { Modalize } from 'react-native-modalize';
 import {WebView} from 'react-native-webview';
 import BasicText from '../components/BasicText';
 import SVGButton from '../components/button/SVGButton';
@@ -20,6 +21,8 @@ import type {RootState} from '../modules/redux/RootReducer';
 import {useAppDispatch} from '../modules/redux/store';
 import moment from 'moment';
 import {joinChatroom, ChatroomResponse} from '../api/chatApi';
+import { TouchableOpacity } from 'react-native';
+import BigMapModal from '../components/popup/BigMapModal';
 
 type RootStackParamList = {
   CreateGaldae: undefined;
@@ -39,9 +42,10 @@ type NowGaldaeDetailRouteProp = RouteProp<
 
 const NowGaldaeDetail: React.FC = () => {
   const navigation = useNavigation<NowGaldaeDetailScreenNavigationProp>();
+  const mapModalRef = useRef<Modalize>(null);
   const route = useRoute<NowGaldaeDetailRouteProp>();
   const {postId} = route.params; // 전달받은 postId
-
+  const [mapBig,setMapBig] = useState<boolean>(false);
   const {postDetail, loading, error} = useSelector(
     (state: RootState) => state.postDetailSlice,
   );
@@ -61,6 +65,10 @@ const NowGaldaeDetail: React.FC = () => {
   };
   const formatDepartureTime = (departureTime: string): string => {
     return moment.utc(departureTime).format('YYYY년 MM월 DD일 (ddd) HH : mm');
+  };
+  const toBigMap = () =>{
+    setMapBig(true);
+    mapModalRef.current?.open();
   };
   if (loading) {
     return (
@@ -88,7 +96,7 @@ const NowGaldaeDetail: React.FC = () => {
 
   // 지도 URL은 departure와 arrival의 좌표를 사용
   const mapUrl = `https://galdae-kakao-map.vercel.app/?startLat=${postDetail.departure.latitude}&startLng=${postDetail.departure.longtitude}&endLat=${postDetail.arrival.latitude}&endLng=${postDetail.arrival.longtitude}`;
-  //const mapUrl = 'https://galdae-kakao-map.vercel.app/?startLat=37.5665&startLng=126.9780&endLat=37.4979&endLng=127.0276';
+  //const mapUrl = 'https://galdae-kakao-map.vercel.app/?startLat=37.5665&startLng=126.9780&endLat=37.4979&endLng=127.0276'; //테스트용
   console.log(`mapUrl: ${mapUrl}`);
   return (
     <View style={styles.main}>
@@ -201,9 +209,14 @@ const NowGaldaeDetail: React.FC = () => {
           </View>
         </View>
 
-        <View style={styles.map}>
-          <WebView source={{uri: mapUrl}} style={styles.map} />
-        </View>
+        <TouchableOpacity style={styles.map} onPress={toBigMap}>
+          <WebView source={{uri: mapUrl}} style={styles.map} pointerEvents="box-none"/>
+          <SVGButton
+                      iconName="ToBigPic"
+                      onPress={toBigMap}
+                      buttonStyle={styles.toBigPicIcon}
+                    />
+        </TouchableOpacity>
 
         <BasicText text="유저정보" style={styles.userInfo} />
 
@@ -261,6 +274,13 @@ const NowGaldaeDetail: React.FC = () => {
           }
         </View>
       </ScrollView>
+
+      { mapBig && (
+          <BigMapModal
+            ref={mapModalRef}
+            mapUrl={mapUrl}
+          />
+        )}
     </View>
   );
 };

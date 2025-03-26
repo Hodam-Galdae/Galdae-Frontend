@@ -43,7 +43,7 @@ export const getFaqList = async (tag: string) => {
  * POST /question
  */
 export const createQuestion = async (
-  tag: string,
+  // tag: string,
   title: string,
   content: string,
   imageUri?: string
@@ -51,7 +51,7 @@ export const createQuestion = async (
   const formData = new FormData();
 
   // 1. JSON 파일 생성
-  const jsonData = { tag, title, content };
+  const jsonData = { title, content };
   const fileName = `question_${Date.now()}.json`;
   const filePath = `${RNFS.TemporaryDirectoryPath}/${fileName}`;
   await RNFS.writeFile(filePath, JSON.stringify(jsonData), 'utf8');

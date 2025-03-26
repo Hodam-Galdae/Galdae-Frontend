@@ -98,6 +98,11 @@ const FastGaldaeStartPopup = forwardRef<FastGaldaeStartPopupRef, FastGaldaePopup
         }}
         onClosed={() => {
           setIsTabBarVisible(true);
+          setLargeCategoryName('');
+          setLargeCategoryId(0);
+          setSmallCategoryName('');
+          setSmallCategoryId(0);
+          setSelectedImage(null);
           onClose && onClose();
         }}
         overlayStyle={styles.background}
@@ -146,8 +151,8 @@ const FastGaldaeStartPopup = forwardRef<FastGaldaeStartPopupRef, FastGaldaePopup
                         borderColor:theme.colors.transparent,
                       }}
                     />
-                    <BasicText text={smallCategoryName || '정문'} fontSize={theme.fontSize.size24} style={styles.title}/>
-                    <BasicText text={largeCategoryName || '학교'} fontSize={theme.fontSize.size16} color={theme.colors.gray1} style={styles.subTitle}/>
+                    <BasicText text={smallCategoryName || '출발지 선택'} fontSize={theme.fontSize.size24} style={styles.title}/>
+                    <BasicText text={largeCategoryName || '출발지 선택'} fontSize={theme.fontSize.size16} color={theme.colors.gray1} style={styles.subTitle}/>
                   </View>
 
                 </View>

@@ -7,7 +7,7 @@ export default StyleSheet.create({
         backgroundColor: theme.colors.transparent,
     },
     container: {
-      
+
       shadowColor: 'rgba(156, 156, 156, 20)',
       shadowOffset: { width: 20, height: 20 },
       shadowOpacity:20,
@@ -123,6 +123,29 @@ export default StyleSheet.create({
       paddingHorizontal:15,
 
     },
+    backdrop: {
+      flex: 1,
+      backgroundColor: theme.colors.popupBackGround,
+      paddingVertical: 40,
+      paddingHorizontal:10,
+    },
+
+    wvOverlay: {
+      flex: 1,
+    },
+    outsideTouchable: {
+      ...StyleSheet.absoluteFillObject, // ← 배경 전체를 덮음
+    },
+    wvContainer:{
+      flex: 1,
+
+
+    },
+    // FastGaldaePopup.style.ts
+    webView: {
+      flex: 1,
+      borderRadius:theme.borderRadius.size10,
+    },
     modalContent: {
       width: '100%',
       height:'60%',
@@ -134,6 +157,11 @@ export default StyleSheet.create({
       position: 'absolute',
       bottom: 96,   // 원하는 위치로 조정 (예: 모달 컨텐츠 상단 바깥쪽)
       right:18, // 원하는 위치로 조정 (예: 모달 컨텐츠 우측 바깥쪽)
+    },
+    closeMapContainer:{
+      position: 'absolute',
+      bottom: 10,   // 원하는 위치로 조정 (예: 모달 컨텐츠 상단 바깥쪽)
+      right:10, // 원하는 위치로 조정 (예: 모달 컨텐츠 우측 바깥쪽)
     },
     closeButton: {
 
@@ -261,5 +289,5 @@ export default StyleSheet.create({
       fontWeight:'500',
       marginBottom:8,
     },
-    
+
   });

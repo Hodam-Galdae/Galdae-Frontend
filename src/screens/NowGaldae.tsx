@@ -256,28 +256,37 @@ const NowGaldae: React.FC<HomeProps> = () => {
     // 필요한 경우 추가 데이터 호출 로직을 넣어줍니다.
     setRefreshing(false);
   };
- // 삭제 API 호출 후 화면 갱신을 위한 함수 (예: redux나 로컬 상태 업데이트)
- const handleDeletePost = async () => {
-  if (!selectedPostId) return;
-  try {
-    await deletePost(selectedPostId);
-    // 삭제 성공 시 알림 또는 상태 업데이트
-    // 예시: searchResults나 reduxPosts에서 해당 postId 제거
-    // 만약 searchResults를 사용중이라면:
-    if (searchResults) {
-      setSearchResults(prev => ({
-        ...prev!,
-        content: prev!.content.filter(item => item.postId !== selectedPostId),
-      }));
-    } else {
-      // redux 사용 시 dispatch로 상태 업데이트 처리
+  const handleDeletePost = async () => {
+    if (!selectedPostId) {return;}
+    try {
+      await deletePost(selectedPostId);
+
+      // ✅ 검색모드일 경우 로컬 상태에서 삭제
+      if (searchResults) {
+        setSearchResults(prev => ({
+          ...prev!,
+          content: prev!.content.filter(item => item.postId !== selectedPostId),
+        }));
+      } else {
+        // ✅ 검색이 아닐 경우: redux 리스트 리패치
+        const params: GetPostsRequest = {
+          pageNumber: 0,
+          pageSize: 20,
+          direction: 'DESC',
+          properties: sortOrder === 'latest' ? ['createAt'] : ['departureTime'],
+        };
+        dispatch(fetchGaldaePosts(params));
+        setPageNumber(0); // 페이지도 초기화
+      }
+
+      Alert.alert('삭제 완료', '선택한 갈대가 삭제되었습니다.');
+      setDeletePopupVisible(false);
+      setSelectedPostId(null);
+    } catch (error) {
+      Alert.alert('삭제 실패', '글 삭제에 실패했습니다. 다시 시도해주세요.');
+      console.error(error);
     }
-    setDeletePopupVisible(false);
-    setSelectedPostId(null);
-  } catch (error) {
-    Alert.alert('삭제 실패', '글 삭제에 실패했습니다. 다시 시도해주세요.');
-  }
-};
+  };
 
 // 포스트 삭제를 위한 핸들러 (본인 글인 경우에만 활성화)
 const handleLongPress = (post: GaldaeItemType) => {
