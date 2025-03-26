@@ -8,6 +8,6 @@ export default StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: 'rgba(108, 108, 108, 0.1)',
     position: 'absolute',
-    zIndex: 9999,
+    zIndex: 9998,
   },
 });

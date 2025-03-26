@@ -29,7 +29,7 @@ import ChatRoomExitModal from '../components/popup/ChatRoomExitModal';
 import ReportCheckModal from '../components/popup/ReportCheckModal';
 import useDidMountEffect from '../hooks/useDidMountEffect';
 import Header from '../components/Header';
-import {Client, IMessage} from '@stomp/stompjs';
+import {Client, IMessage, Stomp} from '@stomp/stompjs';
 import {useSelector} from 'react-redux';
 import {RootState} from '../modules/redux/RootReducer';
 import {
@@ -42,7 +42,12 @@ import {
   exitChatroom,
 } from '../api/chatApi';
 import SockJS from 'sockjs-client';
-import {API_BASE_URL, SUB_ENDPOINT, PUB_ENDPOINT} from '../api/axiosInstance';
+import {
+  API_BASE_URL,
+  SUB_ENDPOINT,
+  PUB_ENDPOINT,
+  WEB_SOCKET_URL,
+} from '../api/axiosInstance';
 import {createReport} from '../api/reportApi';
 import RNFS from 'react-native-fs';
 import Loading from '../components/Loading';
@@ -124,7 +129,7 @@ const ChatRoom: React.FC = () => {
     setMembers(memberData);
   }, [chatRoomData]);
 
-  const exitChat = async() => {
+  const exitChat = async () => {
     await exitChatroom(chatRoomData.chatroomId);
     navigation.pop();
   };
@@ -136,8 +141,7 @@ const ChatRoom: React.FC = () => {
     };
 
     fetchChats();
-
-    const socket = new SockJS(API_BASE_URL + '/ws');
+    const socket = new WebSocket(WEB_SOCKET_URL);
     client.current = new Client({
       debug: (frame: any) => console.log(frame),
       connectHeaders: {
@@ -147,7 +151,9 @@ const ChatRoom: React.FC = () => {
       webSocketFactory: () => socket,
       reconnectDelay: 5000,
       heartbeatIncoming: 4000,
- 			heartbeatOutgoing: 4000,
+      heartbeatOutgoing: 4000,
+      forceBinaryWSFrames: true,
+      appendMissingNULLonIncoming: true,
     });
     client.current.onConnect = () => {
       console.log('connected websocket');
@@ -388,7 +394,7 @@ const ChatRoom: React.FC = () => {
   useDidMountEffect(() => {
     const send = async () => {
       if (imageUri !== '') {
-        try{
+        try {
           setIsLoading(true);
           const formData = new FormData();
           let imageFile = {uri: imageUri, type: imageType, name: imageName};
@@ -407,7 +413,6 @@ const ChatRoom: React.FC = () => {
             });
           }
         } catch (err) {
-
         } finally {
           setIsLoading(false);
         }
@@ -500,7 +505,7 @@ const ChatRoom: React.FC = () => {
         />
       </Animated.View>
       <View style={styles.container}>
-        {isLoading && <Loading/>}
+        {isLoading && <Loading />}
         <FlatList
           ref={chatListRef}
           style={styles.list}
@@ -564,17 +569,17 @@ const ChatRoom: React.FC = () => {
                 </View>
                 {chatRoomData.isRoomManager ? (
                   <View style={styles.extraViewContainer}>
-                  <SVGButton
-                    onPress={openSettlement}
-                    iconName="Money"
-                    SVGStyle={styles.extraViewItemIcon}
-                    buttonStyle={styles.extraViewItem}
-                  />
-                  <BasicText
-                    text="정산 요청"
-                    style={styles.extraViewItemText}
-                  />
-                </View>
+                    <SVGButton
+                      onPress={openSettlement}
+                      iconName="Money"
+                      SVGStyle={styles.extraViewItemIcon}
+                      buttonStyle={styles.extraViewItem}
+                    />
+                    <BasicText
+                      text="정산 요청"
+                      style={styles.extraViewItemText}
+                    />
+                  </View>
                 ) : null}
               </View>
             ) : null}
