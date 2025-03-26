@@ -100,7 +100,10 @@ const SignUp: React.FC = () => {
       setIsLoading={setIsLoading}
       setNextStep={() => navigation.replace('ReviewInProgress')}
     />,
-    <EmailVerify setIsLoading={setIsLoading} setNextStep={() => navigation.replace('MainTab')} />,
+    <EmailVerify
+      setIsLoading={setIsLoading}
+      setNextStep={() => navigation.replace('MainTab')}
+    />,
   ];
 
   const displayPage = (pageName: string) => {
@@ -131,7 +134,7 @@ const SignUp: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      {isLoading && <Loading/>}
+      {isLoading && <Loading />}
       <Header
         title={<SVG name="GaldaeLogo" />}
         leftButton={

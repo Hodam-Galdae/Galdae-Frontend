@@ -209,7 +209,7 @@ const Login: React.FC = () => {
         <TouchableOpacity onPress={signInWithKakao}>
           <View style={[styles.button, {backgroundColor: '#FEE500'}]}>
             <SVG style={styles.icon} name="Kakao" />
-            <BasicText text="Sign in with Kakao" />
+            <BasicText style={styles.btnText} text="Sign in with Kakao" />
           </View>
         </TouchableOpacity>
       </View>

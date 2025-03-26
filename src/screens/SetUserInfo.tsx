@@ -2,9 +2,11 @@ import React, {useState} from 'react';
 import {
   View,
   TextInput,
+  Platform,
   TouchableWithoutFeedback,
   Keyboard,
   Image,
+  KeyboardAvoidingView,
 } from 'react-native';
 import styles from '../styles/SetUserInfo.style';
 import BasicText from '../components/BasicText';
@@ -19,7 +21,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {checkNickname, join} from '../api/authApi';
 import useImagePicker from '../hooks/useImagePicker';
 import RNFS from 'react-native-fs';
-import { banks } from '../constants/bankOptions';
+import {banks} from '../constants/bankOptions';
 
 interface AgreeProps {
   setNextStep: (name: string) => void;
@@ -35,27 +37,16 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep, setIsLoading}) => {
   const [alertNameText, setAlertNameText] = useState<string>('');
   const [alertGenderText, setAlertGenderText] = useState<string>('');
   const [alertAccountText, setAlertAccountText] = useState<string>('');
-  const {imageUri, imageName, imageType, getImageByGallery} =
-    useImagePicker();
+  const {imageUri, imageName, imageType, getImageByGallery} = useImagePicker();
   const englishBanks = banks
-  .filter(bank => /^[A-Za-z]/.test(bank.name))
-  .map(bank => bank.name)
-  .sort((a, b) => a.localeCompare(b));
+    .filter(bank => /^[A-Za-z]/.test(bank.name))
+    .map(bank => bank.name)
+    .sort((a, b) => a.localeCompare(b));
   const koreanBanks = banks
-  .filter(bank => !/^[A-Za-z]/.test(bank.name))
-  .map(bank => bank.name)
-  .sort((a, b) => a.localeCompare(b, 'ko'));
+    .filter(bank => !/^[A-Za-z]/.test(bank.name))
+    .map(bank => bank.name)
+    .sort((a, b) => a.localeCompare(b, 'ko'));
   const sortedBanks = [...englishBanks, ...koreanBanks];
-
-  const bankText = [
-    '국민 은행',
-    '우리 은행',
-    '신한 은행',
-    '농협',
-    '카카오 뱅크',
-    '제주 은행',
-    '광주 은행',
-  ];
 
   const clickEvent = async () => {
     const regex = /^[가-힣0-9]{2,8}$/;
@@ -69,16 +60,16 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep, setIsLoading}) => {
       setAlertNameText('*닉네임은 한글, 숫자 2~8자로 제한됩니다.');
       flag = false;
     } else {
-      try{
-        const isAvailalbeNickname = !await checkNickname(name);
+      try {
+        const isAvailalbeNickname = !(await checkNickname(name));
         console.log(isAvailalbeNickname);
-        if(isAvailalbeNickname){
+        if (isAvailalbeNickname) {
           setAlertNameText('*중복되는 닉네임입니다.');
           flag = false;
         } else {
           setAlertNameText('');
         }
-      } catch(err) {
+      } catch (err) {
         setAlertNameText('*중복되는 닉네임입니다.');
         flag = false;
       }
@@ -92,7 +83,11 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep, setIsLoading}) => {
       setAlertGenderText('');
     }
 
-    if (bankSelect === -1 || accountName.length === 0 || accountNumber.length === 0){
+    if (
+      bankSelect === -1 ||
+      accountName.length === 0 ||
+      accountNumber.length === 0
+    ) {
       setAlertAccountText('*결제·정산정보를 모두 입력해주세요요');
       flag = false;
     } else {
@@ -107,7 +102,7 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep, setIsLoading}) => {
         const data = {
           nickname: name,
           gender: genderSelected === 0 ? 'FEMALE' : 'MALE',
-          bankType: bankText[bankSelect],
+          bankType: sortedBanks[bankSelect],
           accountNumber: accountNumber,
           depositor: accountName,
         };
@@ -120,7 +115,7 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep, setIsLoading}) => {
           name: fileName,
         });
         if (imageUri) {
-          console.log("hi");
+          console.log('hi');
           let imageFile = {uri: imageUri, type: imageType, name: imageName};
           formData.append('profileImage', imageFile);
         }
@@ -136,7 +131,9 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep, setIsLoading}) => {
   };
 
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{flex: 1, paddingTop: 30}}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <ScrollView>
           <View style={styles.container}>
@@ -144,15 +141,16 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep, setIsLoading}) => {
               <BasicText text="유저 정보 입력" style={styles.title} />
               <View style={styles.profileContainer}>
                 <View style={styles.profileWrapper}>
-                  {imageUri ?
-                    <Image style={styles.profile} source={{uri: imageUri}}/> :
+                  {imageUri ? (
+                    <Image style={styles.profile} source={{uri: imageUri}} />
+                  ) : (
                     <SVG
                       style={styles.profile}
                       name="DefaultProfile"
                       width={68}
                       height={68}
                     />
-                  }
+                  )}
 
                   <SVGButton
                     onPress={getImageByGallery}
@@ -227,11 +225,16 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep, setIsLoading}) => {
               />
             </View>
             {alertAccountText.length !== 0 ? (
-                  <BasicText style={{fontSize: theme.fontSize.size12,
-                    fontWeight: '500',
-                    color: theme.colors.red,
-                    marginTop: 6,}} text={alertAccountText} />
-                ) : null}
+              <BasicText
+                style={{
+                  fontSize: theme.fontSize.size12,
+                  fontWeight: '500',
+                  color: theme.colors.red,
+                  marginTop: 6,
+                }}
+                text={alertAccountText}
+              />
+            ) : null}
             <BasicButton
               text="다음"
               onPress={clickEvent}
@@ -246,7 +249,7 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep, setIsLoading}) => {
           </View>
         </ScrollView>
       </TouchableWithoutFeedback>
-    </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 };
 
