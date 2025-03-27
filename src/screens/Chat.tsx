@@ -57,7 +57,7 @@ const Chat: React.FC = () => {
       <FlatList
         data={chatRoomData}
         keyExtractor={(item) => item.chatroomId}
-        renderItem={({item}) => <ChatRoomItem onPress={navigate} id={item.chatroomId} time={new Date(item.departDate)} from={item.departPlace} to={item.arrivePlace} currentPerson={item.currentMemberCount} maxPerson={item.maxMemberCount} message={33}/>}
+        renderItem={({item}) => <ChatRoomItem onPress={navigate} id={item.chatroomId} time={new Date(item.departDate)} from={item.departPlace} to={item.arrivePlace} currentPerson={item.currentMemberCount} maxPerson={item.maxMemberCount} message={item.notReadCount}/>}
       />
     </View>
   );

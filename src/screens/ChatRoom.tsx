@@ -29,7 +29,7 @@ import ChatRoomExitModal from '../components/popup/ChatRoomExitModal';
 import ReportCheckModal from '../components/popup/ReportCheckModal';
 import useDidMountEffect from '../hooks/useDidMountEffect';
 import Header from '../components/Header';
-import {Client, IMessage, Stomp} from '@stomp/stompjs';
+import {Client, IMessage} from '@stomp/stompjs';
 import {useSelector} from 'react-redux';
 import {RootState} from '../modules/redux/RootReducer';
 import {
@@ -41,9 +41,7 @@ import {
   sendImage,
   exitChatroom,
 } from '../api/chatApi';
-import SockJS from 'sockjs-client';
 import {
-  API_BASE_URL,
   SUB_ENDPOINT,
   PUB_ENDPOINT,
   WEB_SOCKET_URL,
@@ -102,6 +100,7 @@ const ChatRoom: React.FC = () => {
   });
   const chatRoomData = params.data;
   const userInfo = useSelector((state: RootState) => state.user);
+  console.info(userInfo);
   const client = useRef<Client>();
 
   const panResponder = useRef(
@@ -339,7 +338,6 @@ const ChatRoom: React.FC = () => {
   };
 
   const openSettlement = async () => {
-    //TODO: 방장만 열 수 있게
     await fetchMembers();
     Keyboard.dismiss();
     settlementRequestPopupRef.current?.open();
