@@ -234,9 +234,9 @@ useFocusEffect(
               {myGaldaeHistory.map((list, index) => (
                 <TouchableOpacity key={index} style={styles.newGaldaeList} onPress={()=>navigation.navigate('NowGaldaeDetail', {postId: list.postId})}>
                   <BasicText text={moment(list.createAt).fromNow()} style={styles.newGaldaeTimeText} />
-                  <BasicText text={`${list.departure.subPlace}`} style={styles.newGaldaeDepartText} />
+                  <BasicText text={`${list.departure.subPlace}`} style={styles.newGaldaeDepartText} numberOfLines={1} ellipsizeMode="tail"/>
                   <SVG name="arrow_down_fill_gray2" style={styles.newGaldaeArrowIcon} />
-                  <BasicText text={`${list.arrival.subPlace}`} style={styles.newGaldaeDestText} />
+                  <BasicText text={`${list.arrival.subPlace}`} style={styles.newGaldaeDestText} numberOfLines={1} ellipsizeMode="tail"/>
                 </TouchableOpacity>
               ))}
             </ScrollView>

@@ -109,11 +109,13 @@ export default StyleSheet.create({
     fontSize:theme.fontSize.size14,
     fontWeight:'500',
     marginBottom:5,
+    maxWidth: 80,
     color:theme.colors.gray2,
   },
   newGaldaeDestText:{
     fontSize:theme.fontSize.size14,
     fontWeight:'500',
+    maxWidth: 80,
     color:theme.colors.gray2,
   },
   newGaldaeArrowIcon:{
