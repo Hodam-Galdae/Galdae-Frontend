@@ -51,13 +51,15 @@ const galdaeSlice = createSlice({
         >
       ) => {
         state.loading = false;
-        // 요청한 페이지 번호에 따라 첫 페이지이면 기존 데이터를 덮어쓰고,
-        // 그 외에는 기존 데이터에 추가합니다.
         const requestedPage = action.meta.arg.pageNumber;
+
         if (requestedPage === 0) {
           state.posts = action.payload.content;
         } else {
-          state.posts = [...state.posts, ...action.payload.content];
+          // 🧠 posts 배열에 직접 push! (immer가 불변성 자동 처리해줌)
+          action.payload.content.forEach(post => {
+            state.posts.push(post);
+          });
         }
       }
     );

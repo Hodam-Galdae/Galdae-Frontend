@@ -46,6 +46,7 @@ export interface GaldaeItemType {
   passengerCount: number;
   createdAt: string; // 생성 시간 (ISO 8601 형식)
   userNickName: string | null;
+  isCompleted: boolean;
 }
 /**
  * 실시간 갈대 API 조회 타입

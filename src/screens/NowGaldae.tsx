@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useMemo,useRef, useState, useEffect } from 'react';
 import { View, FlatList,ActivityIndicator,RefreshControl,Alert } from 'react-native';
 import moment from 'moment';
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
@@ -67,7 +67,7 @@ const NowGaldae: React.FC<HomeProps> = () => {
     // selectedHour: number;
     // selectedMinute: number;
     formattedDepartureTime: string,
-    selectedGender: 'SAME' | 'DONT_CARE'; // null: 필터 미적용, 0: 성별 무관 필터 적용 (즉, 'DONT_CARE'만 필터링)
+    selectedGender: 'SAME' | 'DONT_CARE'|null; // null: 필터 미적용, 0: 성별 무관 필터 적용 (즉, 'DONT_CARE'만 필터링)
     selectedTimeDiscuss: number | null; // null: 필터 미적용, 0: 시간협의가능, 1: 시간협의불가 (여기서는 0 사용)
     passengerNumber: number;
   }>({
@@ -76,11 +76,13 @@ const NowGaldae: React.FC<HomeProps> = () => {
     // selectedHour: 0,
     // selectedMinute: 0,
     formattedDepartureTime: '', // 빈 문자열로 초기화하여 필터 조건 미적용
-    selectedGender: 'DONT_CARE',
+    selectedGender: null,
     selectedTimeDiscuss: null,
     passengerNumber: 0,
   });
-
+  // FlatList의 스크롤 위치를 관리하기 위한 ref와 state 추가
+  const flatListRef = useRef<FlatList>(null);
+  const [scrollOffset, setScrollOffset] = useState(0);
   // 팝업 ref
   const arrayPopupRef = useRef<FastGaldaeTimePopupRef>(null);
   const filterRef = useRef<FastGaldaeTimePopupRef>(null);
@@ -298,60 +300,90 @@ const handleLongPress = (post: GaldaeItemType) => {
 };
   // 표시할 데이터: searchResults가 있으면 searchResults.content, 없으면 reduxPosts 사용
   const displayedPosts: GaldaeItemType[] = searchResults ? searchResults.content : reduxPosts;
+  const finalFilteredData = useMemo(() => {
+    let filtered = displayedPosts;
 
-  // 추가 필터 적용 (날짜, 시간협의, 성별, 탑승인원 등)
-  let finalFilteredData = displayedPosts;
-  console.log(`
-    ====================================
-    0️⃣현재 finalFilteredData 데이터: (필터적용전)
-
-    `,finalFilteredData);
     if (filterOptions.formattedDepartureTime) {
-      finalFilteredData = finalFilteredData.filter((item) => {
+      filtered = filtered.filter(item => {
         const apiTime = moment.utc(item.departureTime).format('YYYY-MM-DDTHH:mm:ss[Z]');
         const filterTime = moment.utc(filterOptions.formattedDepartureTime).format('YYYY-MM-DDTHH:mm:ss[Z]');
-        console.log(apiTime, filterTime);
         return apiTime === filterTime;
       });
     }
 
-  console.log(`
-    1️⃣현재 finalFilteredData 데이터:
+    if (filterOptions.selectedTimeDiscuss !== null) {
+      filtered = filtered.filter(item =>
+        item.arrangeTime === (filterOptions.selectedTimeDiscuss === 0 ? 'POSSIBLE' : 'IMPOSSIBLE')
+      );
+    }
 
-    `,finalFilteredData);
-  if (filterOptions.selectedTimeDiscuss !== null) {
-    finalFilteredData = finalFilteredData.filter(
-      (item) => item.arrangeTime === (filterOptions.selectedTimeDiscuss === 0 ? 'POSSIBLE' : 'IMPOSSIBLE')
-    );
-  }
+    if (filterOptions.selectedGender !== null) {
+      filtered = filtered.filter(item =>
+        item.passengerGenderType === (filterOptions.selectedGender === 'SAME' ? 'SAME' : 'DONT_CARE')
+      );
+    }
 
-  console.log(`
-    2️⃣현재 finalFilteredData 데이터:
+    if (filterOptions.passengerNumber > 0) {
+      filtered = filtered.filter(item =>
+        item.totalPassengerCount === filterOptions.passengerNumber
+      );
+    }
 
-    `,finalFilteredData);
+    return filtered;
+  }, [displayedPosts, filterOptions]);
+  // 추가 필터 적용 (날짜, 시간협의, 성별, 탑승인원 등)
+  // let finalFilteredData = displayedPosts;
+  // console.log(`
+  //   ====================================
+  //   0️⃣현재 finalFilteredData 데이터: (필터적용전)
 
-  if (filterOptions.selectedGender !== null) {
-    finalFilteredData = finalFilteredData.filter(
-      (item) =>
-        item.passengerGenderType ===
-        (filterOptions.selectedGender === 'SAME' ? 'SAME' : 'DONT_CARE')
-    );
-  }
+  //   `,finalFilteredData);
+  //   if (filterOptions.formattedDepartureTime) {
+  //     finalFilteredData = finalFilteredData.filter((item) => {
+  //       const apiTime = moment.utc(item.departureTime).format('YYYY-MM-DDTHH:mm:ss[Z]');
+  //       const filterTime = moment.utc(filterOptions.formattedDepartureTime).format('YYYY-MM-DDTHH:mm:ss[Z]');
+  //       console.log(apiTime, filterTime);
+  //       return apiTime === filterTime;
+  //     });
+  //   }
 
-  console.log(`
-    3️⃣현재 finalFilteredData 데이터:
+  // console.log(`
+  //   1️⃣현재 finalFilteredData 데이터:
 
-    `,finalFilteredData);
+  //   `,finalFilteredData);
+  // if (filterOptions.selectedTimeDiscuss !== null) {
+  //   finalFilteredData = finalFilteredData.filter(
+  //     (item) => item.arrangeTime === (filterOptions.selectedTimeDiscuss === 0 ? 'POSSIBLE' : 'IMPOSSIBLE')
+  //   );
+  // }
 
-  if (filterOptions.passengerNumber > 0) {
-    finalFilteredData = finalFilteredData.filter(
-      (item) => item.totalPassengerCount === filterOptions.passengerNumber
-    );
-  }
-  console.log(`
-    4️⃣현재 finalFilteredData 데이터:
-    ====================================
-    `,finalFilteredData);
+  // console.log(`
+  //   2️⃣현재 finalFilteredData 데이터:
+
+  //   `,finalFilteredData);
+
+  // if (filterOptions.selectedGender !== null) {
+  //   finalFilteredData = finalFilteredData.filter(
+  //     (item) =>
+  //       item.passengerGenderType ===
+  //       (filterOptions.selectedGender === 'SAME' ? 'SAME' : 'DONT_CARE')
+  //   );
+  // }
+
+  // console.log(`
+  //   3️⃣현재 finalFilteredData 데이터:
+
+  //   `,finalFilteredData);
+
+  // if (filterOptions.passengerNumber > 0) {
+  //   finalFilteredData = finalFilteredData.filter(
+  //     (item) => item.totalPassengerCount === filterOptions.passengerNumber
+  //   );
+  // }
+  // console.log(`
+  //   4️⃣현재 finalFilteredData 데이터:
+  //   ====================================
+  //   `,finalFilteredData);
 
   const loadMoreData = async () => {
     if (isLoadingMore) {return;}
@@ -377,13 +409,12 @@ const handleLongPress = (post: GaldaeItemType) => {
         const data: GaldaeApiResponse = await searchPosts(params);
 
         setSearchResults(prev => {
-          if (prev) {
-            return {
-              ...data,
-              content: [...prev.content, ...data.content],
-            };
-          }
-          return data;
+          if (!prev) {return data;}
+          return {
+            ...prev,
+            content: [...prev.content, ...data.content], // ✅ 기존 content + 새 content
+            last: data.last,
+          };
         });
         setPageNumber(nextPage);
         setIsLast(data.last);
@@ -487,18 +518,30 @@ const handleLongPress = (post: GaldaeItemType) => {
           </View>
         ) : (
           <FlatList
-            style={styles.scroll}
+            ref={flatListRef}
+            onScroll={(event) => {
+              setScrollOffset(event.nativeEvent.contentOffset.y);
+            }}
+            onContentSizeChange={() => {
+              if (pageNumber > 0 && flatListRef.current) {
+                flatListRef.current.scrollToOffset({ offset: scrollOffset, animated: false });
+              }
+            }}
+            scrollEventThrottle={16}
+            //style={styles.scroll}
             contentContainerStyle={styles.nowGaldaeList}
             refreshControl={
               <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
             }
+            extraData={finalFilteredData.length}
             data={finalFilteredData}
             keyExtractor={(item) => item.postId}
             onEndReached={loadMoreData}
+            //initialNumToRender={10}
+            //removeClippedSubviews={true} // 렌더링 최적화
             onEndReachedThreshold={0.5} // 화면의 50% 정도 남았을 때 다음 페이지를 불러옴
             renderItem={({ item }) => (
               <GaldaeItem
-                key={item.postId}
                 item={item}
                 onPress={() => navigation.navigate('NowGaldaeDetail', {postId: item.postId})}
                 onLongPress={() => handleLongPress(item)}

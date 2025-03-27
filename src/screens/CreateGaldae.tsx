@@ -61,7 +61,7 @@ const CreateGaldae: React.FC = () => {
   const passengerNumberHandler = (type: string) => {
     if (type === 'PLUS' && passengerNumber < 4) {
       setPassengerNumber(passengerNumber + 1);
-    } else if (type === 'MINUS' && passengerNumber > 1) {
+    } else if (type === 'MINUS' && passengerNumber > 2) {
       setPassengerNumber(passengerNumber - 1);
     }
   };
@@ -76,11 +76,13 @@ const CreateGaldae: React.FC = () => {
     Alert.alert('출발지 또는 도착지를 다시 선택해주세요!');
     return;
    }
+   if(formatDepartureDateTime() === '출발 시간을 선택해 주세요.'){
+    Alert.alert('출발 시간을 선택해 주세요.');
+    return;
+ }
     setLoading(true);
     // 출발 일시를 Asia/Seoul 타임존의 ISO 8601 형식으로 변환
-    const formattedDepartureTime = moment()
-      .tz('Asia/Seoul')
-      .format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
+    const formattedDepartureTime = getFormattedDepartureTime();
 
     const postData: CreatePostRequest = {
       majorDepartureId: departureLargeId,
@@ -138,24 +140,51 @@ const CreateGaldae: React.FC = () => {
   // 출발일시 문자열 포맷 함수
   const formatDepartureDateTime = () => {
     if (!departureDate) {
-      const now = moment();
-      const formattedDate = now.format('YYYY년 M월 D일 (ddd)');
-      const hour = now.hour();
-      const minute = now.minute();
-      const amPm = hour < 12 ? '오전' : '오후';
-      let hour12 = hour % 12;
-      if (hour12 === 0) {
-        hour12 = 12;
-      }
-      const formattedTime = `${amPm} ${hour12} : ${minute < 10 ? '0' + minute : minute}`;
-      return `출발일시: ${formattedDate} ${formattedTime}`;
+      // const now = moment();
+      // const formattedDate = now.format('YYYY년 M월 D일 (ddd)');
+      // const hour = now.hour();
+      // const minute = now.minute();
+      // const amPm = hour < 12 ? '오전' : '오후';
+      // let hour12 = hour % 12;
+      // if (hour12 === 0) {
+      //   hour12 = 12;
+      // }
+      // const formattedTime = `${amPm} ${hour12} : ${minute < 10 ? '0' + minute : minute}`;
+      return '클릭하여 출발 시간을 선택해 주세요.';
     }
     const dateObj = moment(departureDate, 'YYYY-MM-DD');
     const formattedDate = dateObj.format('YYYY년 M월 D일 (ddd)');
     const formattedTime = `${departureAmPm} ${departureHour} : ${departureMinute < 10 ? '0' + departureMinute : departureMinute}`;
     return `출발일시: ${formattedDate} ${formattedTime}`;
   };
+  const getFormattedDepartureTime = (): string => {
+    if (!departureDate) {
+      return '출발 시간을 선택해 주세요.';
+    }
 
+    // 12시간 -> 24시간 변환
+    let hour24 = departureHour;
+    if (departureAmPm === '오후' && departureHour < 12) {
+      hour24 += 12;
+    } else if (departureAmPm === '오전' && departureHour === 12) {
+      hour24 = 0;
+    }
+
+     // 선택한 날짜와 시간 정보를 Asia/Seoul 타임존의 moment 객체로 생성
+      const selectedMoment = moment.utc(departureDate).set({
+        hour: hour24,
+        minute: departureMinute,
+        second: 0,
+        millisecond: 0,
+      });
+      return selectedMoment.toISOString(); // UTC 기준 ISO 문자열 반환
+  };
+  const isFormValid =
+  departureLargeId !== null &&
+  departureSmallId !== null &&
+  destinationLargeId !== null &&
+  destinationSmallId !== null &&
+  departureDate !== null;
   return (
     <View>
       <Header
@@ -260,6 +289,7 @@ const CreateGaldae: React.FC = () => {
             buttonStyle={styles.generateButton}
             textStyle={styles.generateText}
             loading={loading}
+            disabled={!isFormValid} // 🔒 조건 미충족 시 비활성화
             onPress={handleCreateGaldaeConfirm}
           />
         </View>

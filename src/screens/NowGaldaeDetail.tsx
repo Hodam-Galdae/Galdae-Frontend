@@ -94,7 +94,7 @@ const NowGaldaeDetail: React.FC = () => {
       </View>
     );
   }
-
+  const isFull = postDetail.passengerCount >= postDetail.totalPassengerCount;
   // 지도 URL은 departure와 arrival의 좌표를 사용
   const mapUrl = `https://galdae-kakao-map.vercel.app/?startLat=${postDetail.departure.latitude}&startLng=${postDetail.departure.longtitude}&endLat=${postDetail.arrival.latitude}&endLng=${postDetail.arrival.longtitude}`;
   //const mapUrl = 'https://galdae-kakao-map.vercel.app/?startLat=37.5665&startLng=126.9780&endLat=37.4979&endLng=127.0276'; //테스트용
@@ -260,32 +260,39 @@ const NowGaldaeDetail: React.FC = () => {
         </View>
 
         <View style={styles.participateContainer}>
-          {
-            postDetail.isParticipated ? (
-              <BasicButton
-              text="이미 참여한 갈대입니다."
-              buttonStyle={styles.participateBtn}
-              textStyle={styles.participateText}
-              loading={false}
-              disabled={true}
-              //onPress={handleParticipateGaldae}
-              disabledColors={
-                {
-                  backgroundColor:theme.colors.lightGray,
-                  textColor:theme.colors.black,
-                }
-              }
-            />
-            ) : (
-              <BasicButton
-            text="참여하기"
-            buttonStyle={styles.participateBtn}
-            textStyle={styles.participateText}
-            loading={false}
-            onPress={handleParticipateGaldae}
-          />
-            )
-          }
+        {postDetail.isParticipated ? (
+    <BasicButton
+      text="이미 참여한 갈대입니다."
+      buttonStyle={styles.participateBtn}
+      textStyle={styles.participateText}
+      loading={false}
+      disabled={true}
+      disabledColors={{
+        backgroundColor: theme.colors.lightGray,
+        textColor: theme.colors.black,
+      }}
+    />
+  ) : isFull ? (
+    <BasicButton
+      text="참여불가"
+      buttonStyle={styles.participateBtn}
+      textStyle={styles.participateText}
+      loading={false}
+      disabled={true}
+      disabledColors={{
+        backgroundColor: theme.colors.lightGray,
+        textColor: theme.colors.black,
+      }}
+    />
+  ) : (
+    <BasicButton
+      text="참여하기"
+      buttonStyle={styles.participateBtn}
+      textStyle={styles.participateText}
+      loading={false}
+      onPress={handleParticipateGaldae}
+    />
+  )}
         </View>
       </ScrollView>
 

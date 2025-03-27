@@ -217,19 +217,19 @@ useEffect(() => {
   // 출발일시 문자열 포맷 함수
   const formatDepartureDateTime = () => {
     if (!departureDate) {
-      const now = moment();
-      const formattedDate = now.format('YYYY년 M월 D일 (ddd)'); // 예: 2025년 11월 12일 (수)
-      const hour = now.hour();
-      const minute = now.minute();
-      const amPm = hour < 12 ? '오전' : '오후';
-      let hour12 = hour % 12;
-      if (hour12 === 0) {
-        hour12 = 12;
-      }
-      const formattedTime = `${amPm} ${hour12} : ${
-        minute < 10 ? '0' + minute : minute
-      }`;
-      return `${formattedDate} ${formattedTime}`;
+      // const now = moment();
+      // const formattedDate = now.format('YYYY년 M월 D일 (ddd)'); // 예: 2025년 11월 12일 (수)
+      // const hour = now.hour();
+      // const minute = now.minute();
+      // const amPm = hour < 12 ? '오전' : '오후';
+      // let hour12 = hour % 12;
+      // if (hour12 === 0) {
+      //   hour12 = 12;
+      // }
+      // const formattedTime = `${amPm} ${hour12} : ${
+      //   minute < 10 ? '0' + minute : minute
+      // }`;
+      return '출발 시간을 선택해 주세요.';
     }
     const dateObj = moment(departureDate, 'YYYY-MM-DD');
     // 예: "2025년 11월 12일 (수)"
@@ -244,7 +244,7 @@ useEffect(() => {
 const getFormattedDepartureTime = (): string => {
   // 12시간 형식을 24시간 형식으로 변환
   if (!departureDate) {
-    return moment().toISOString();
+    return '출발 시간을 선택해 주세요.';
   }
     let hour24 = departureHour;
   if (departureAmPm === '오후' && departureHour < 12) {
@@ -274,10 +274,15 @@ const getFormattedDepartureTime = (): string => {
   };
 
   const openCreateGaldaePopup = () => {
+    const formattedDepartureTime = getFormattedDepartureTime();
+
     if(departureLargeName === '출발지 선택' || departureSmallName === '출발지 선택' || destinationLargeName === '도착지 선택' || destinationSmallName === '도착지 선택'){
       Alert.alert('출발지 또는 도착지를 제대로 선택해주세요!');
       return;
-   }
+   }else if(formattedDepartureTime === '출발 시간을 선택해 주세요.'){
+    Alert.alert('출발 시간을 선택해 주세요.');
+    return;
+ }
     setgenerateLoading(true);
     setgenerateLoading(false);
     setCreateGaldaePopupVisible(true);
@@ -287,10 +292,16 @@ const getFormattedDepartureTime = (): string => {
   };
 
   const handleCreateCaledaeConfirm = () => {
+    const formattedDepartureTime = getFormattedDepartureTime();
+
     if(departureLargeName === '출발지 선택' || departureSmallName === '출발지 선택' || destinationLargeName === '도착지 선택' || destinationSmallName === '도착지 선택'){
       Alert.alert('출발지 또는 도착지를 제대로 선택해주세요!');
       return;
-   }else{
+   }else if(formattedDepartureTime === '출발 시간을 선택해 주세요.'){
+    Alert.alert('출발 시간을 선택해 주세요.');
+    return;
+ }
+    else{
     handleCreateGaldaeConfirm();
     closeCreateGaldaePopup();
     setToastVisible(true);
@@ -343,9 +354,9 @@ const getFormattedDepartureTime = (): string => {
           )}
 
 
-          <BasicText text="갈대 시작하기" style={styles.startGaldae} />
+          <BasicText text="빠른 갈대 시작하기" style={styles.startGaldae} />
           <BasicText
-            text="목적지 설정 후 동승자를 구하세요!"
+            text="목적지, 시간만 고르고 빠르게 동승자를 구해보세요!"
             style={styles.startGaldaeEx}
           />
 

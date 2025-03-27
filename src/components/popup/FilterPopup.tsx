@@ -39,7 +39,7 @@ const FilterPopup = forwardRef<FastGaldaeTimePopupRef, FastGaldaePopupProps>(
         if(type === 'PLUS' && passengerNumber < 4){
           setPassengerNumber(passengerNumber + 1);
         }
-        else if(type === 'MINUS' && passengerNumber > 0){
+        else if(type === 'MINUS' && passengerNumber > 2){
           setPassengerNumber(passengerNumber - 1);
         }
       };

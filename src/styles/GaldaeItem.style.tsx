@@ -15,6 +15,17 @@ export default StyleSheet.create({
       paddingBottom: 18,
       marginBottom:12,
     },
+    borderedListBoxComplete:{
+      width:'100%',
+      borderColor:theme.colors.gray0,
+      borderRadius:theme.borderRadius.size10,
+      backgroundColor:theme.colors.gray0,
+      borderWidth:1,
+      paddingStart:24,
+      paddingTop:14,
+      paddingBottom: 18,
+      marginBottom:12,
+    },
     galdaeOwner:{
       fontSize:theme.fontSize.size12,
       fontWeight:'700',

@@ -22,7 +22,7 @@ const GaldaeItem: React.FC<GaldaeItemProps> = ({ item, onPress, onLongPress }) =
 
   return (
     <TouchableOpacity onPress={onPress} onLongPress={onLongPress} delayLongPress={100}>
-      <View style={styles.borderedListBox}>
+      <View style={ item.isCompleted ? styles.borderedListBoxComplete  : styles.borderedListBox}>
         {/* 사용자 닉네임 (null인 경우 익명 처리) */}
         <BasicText text={item.userNickName || '익명'} style={styles.galdaeOwner} />
 
