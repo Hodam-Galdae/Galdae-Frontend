@@ -16,9 +16,9 @@ export default StyleSheet.create({
     headerText:{
         fontSize: theme.fontSize.size22,
         fontWeight: 'bold',
-        lineHeight:Platform.select({
-            android:50,
-        }),
+        // lineHeight:Platform.select({
+        //     android:50,
+        // }),
     },
     content: {
       flex: 1,

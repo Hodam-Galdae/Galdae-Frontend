@@ -1,7 +1,7 @@
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
 import {Platform, StatusBar} from 'react-native';
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -51,12 +51,12 @@ function App() {
     }
     StatusBar.setBarStyle('dark-content');
     StatusBar.setHidden(false);
-
     const setInterceptor = setupAxiosInterceptors();
     return () => {
       setInterceptor();
     };
   }, []);
+
   useEffect(() => {
     const setup = async () => {
       await notifee.createChannel({
@@ -84,6 +84,7 @@ function App() {
 
     return unsubscribe;
   }, []);
+
   const Stack = createNativeStackNavigator();
 
   const theme = {
@@ -126,7 +127,7 @@ function App() {
                 <PortalProvider>
                 <NavigationContainer theme={theme}>
                     <Stack.Navigator
-                        initialRouteName="Login" //MainTab ,Onboarding,Login
+                        initialRouteName={'Onboarding'} //MainTab ,Onboarding,Login
                         screenOptions={{
                             headerShown: false,
                         }}
