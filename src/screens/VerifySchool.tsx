@@ -51,6 +51,7 @@ const VerifySchool: React.FC<VerifySchoolProps> = ({setNextStep}) => {
 
     if (flag) {
       if (methodSelected === 0) {
+        dispatch(setUniversity(schools[schoolSelected]));
         setNextStep('schoolCardVerify');
       } else {
         dispatch(setUniversity(schools[schoolSelected]));
