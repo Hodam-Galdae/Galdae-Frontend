@@ -43,10 +43,6 @@ import {requestUserPermission} from './src/utils/notification';
 import notifee from '@notifee/react-native';
 import {PortalProvider} from '@gorhom/portal';
 
-messaging().setBackgroundMessageHandler(async remoteMessage => {
-  console.log('Message handled in the background!', remoteMessage);
-});
-
 function App() {
   useEffect(() => {
     if (Platform.OS === 'android') {
@@ -71,7 +67,6 @@ function App() {
     setup();
     // 알림 권한 요청 및 토큰 획득
     requestUserPermission();
-
     // 포그라운드에서 수신된 알림 처리
     const unsubscribe = messaging().onMessage(async remoteMessage => {
       console.log('🔥 포그라운드 알림 수신:', remoteMessage);
