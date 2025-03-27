@@ -1,5 +1,5 @@
 // MyInfo.tsx 테스트
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, TouchableOpacity} from 'react-native';
 import BasicButton from '../components/button/BasicButton';
 import {theme} from '../styles/theme';
@@ -8,6 +8,7 @@ import BasicText from '../components/BasicText';
 import ItemSelector from '../components/ItemSelector';
 import { useDispatch } from 'react-redux';
 import { setUniversity } from '../modules/redux/slice/UserSlice';
+import { getSchool } from '../api/authApi';
 
 interface VerifySchoolProps {
   setNextStep: (name: string) => void;
@@ -21,17 +22,13 @@ const VerifySchool: React.FC<VerifySchoolProps> = ({setNextStep}) => {
     useState<boolean>(false);
   const [isVisibleMethodSelect, setIsVisibleMethodSelect] =
     useState<boolean>(false);
-  const schools = [
-    '건국대학교 글로컬캠퍼스',
-    '한국 교통대학교 충주캠퍼스',
-    '공주대학교 천안캠퍼스',
-    '단국대학교 천안캠퍼스',
-    '단국대학교 천안캠퍼스',
-    '백석문화대학교',
-    '상명대학교 천안캠퍼스',
-    '한양대학교',
-    '건국대학교(글로컬)',
-  ];
+  const [schools, setSchools] = useState(['']);
+
+  useEffect(() => {
+    getSchool().then(data => {
+      setSchools(data.map(item => item.name));
+    });
+  }, []);
 
   const clickEvent = () => {
     let flag = true;

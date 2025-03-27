@@ -14,6 +14,10 @@ interface CheckNicknameResponse {
   available: boolean;
 }
 
+export interface SchoolResponse {
+  name: string;
+}
+
 // ✅ 카카오 로그인
 export const loginWithKakao = async (
   kakaoToken: string,
@@ -51,6 +55,11 @@ export const join = async (form: any): Promise<AuthResponse | undefined> => {
       return form;
     },
   });
+  return response.data;
+};
+
+export const getSchool = async() : Promise<SchoolResponse[]> => {
+  const response = await axiosInstance.get<SchoolResponse[]>('http://15.164.118.59/auth/university/list');
   return response.data;
 };
 
