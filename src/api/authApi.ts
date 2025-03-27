@@ -59,7 +59,7 @@ export const join = async (form: any): Promise<AuthResponse | undefined> => {
 };
 
 export const getSchool = async() : Promise<SchoolResponse[]> => {
-  const response = await axiosInstance.get<SchoolResponse[]>('http://15.164.118.59/auth/university/list');
+  const response = await axiosInstance.get<SchoolResponse[]>('/auth/university/list');
   return response.data;
 };
 

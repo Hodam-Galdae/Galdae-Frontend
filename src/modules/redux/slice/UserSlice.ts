@@ -22,6 +22,7 @@ const UserSlice = createSlice({
     reducers: {
         // 모든 사용자 정보를 상태에 저장합니다.
         setUser(state, action) {
+            state.id = action.payload.id;
             state.nickname = action.payload.nickname;
             state.bankType = action.payload.bankType;
             state.accountNumber = action.payload.accountNumber;

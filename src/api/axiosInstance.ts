@@ -55,30 +55,28 @@ axiosInstance.interceptors.response.use(
     console.error('API Error:', error.response?.data || error.message);
     const originalRequest = error.config;
 
-    // 특정 API는 갱신 로직 제외
-    // if (EXCLUDED_URLS.includes(originalRequest)) return Promise.reject(error);
+    if (error.response.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
 
-    // if (error.response.status === 401 && !originalRequest._retry) {
-    //   originalRequest._retry = true;
+      const refreshToken = await EncryptedStorage.getItem('refreshToken');
+      const memberId = await EncryptedStorage.getItem('memberId');
+      if (!refreshToken) {
+        await EncryptedStorage.removeItem('accessToken');
+        return Promise.reject(error);
+      }
 
-    //   const refreshToken = EncryptedStorage.getItem('refreshToken');
-    //   if (!refreshToken) {
-    //     await EncryptedStorage.removeItem('accessToken');
-    //     return Promise.reject(error);
-    //   }
-
-    //   //refresh token 발급
-    //   try {
-    //     const res = await axios.post('', { refreshToken });
-    //     await EncryptedStorage.setItem('accessToken', "");
-    //     await EncryptedStorage.setItem('refreshToken', "");
-    //     axiosInstance.defaults.headers.Authorization = `Bearer ${res.data.accessToken}`;
-    //     return axiosInstance(originalRequest);
-    //   } catch (refreshError) {
-    //     await EncryptedStorage.removeItem('accessToken');
-    //     return Promise.reject(refreshError);
-    //   }
-    // }
+      //refresh token 발급
+      try {
+        const res = await axios.post(API_BASE_URL + '/auth/reissue', { refreshToken, memberId });
+        await EncryptedStorage.setItem('accessToken', res.data.accessToken);
+        await EncryptedStorage.setItem('refreshToken', res.data.refreshToken);
+        axiosInstance.defaults.headers.Authorization = `Bearer ${res.data.accessToken}`;
+        return axiosInstance(originalRequest);
+      } catch (refreshError) {
+        await EncryptedStorage.removeItem('accessToken');
+        return Promise.reject(refreshError);
+      }
+    }
     return Promise.reject(error);
   },
 );

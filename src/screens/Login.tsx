@@ -114,6 +114,7 @@ const Login: React.FC = () => {
 
   const handleGoNextPage = async (response: AuthResponse) => {
     const user = await getUserInfo();
+    await EncryptedStorage.setItem('memberId', user.id);
     dispatch(setUser({...user, token: 'Bearer ' + response.accessToken}));
 
     // 학생 인증 완료
