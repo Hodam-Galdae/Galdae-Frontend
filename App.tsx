@@ -41,6 +41,8 @@ import store from './src/modules/redux/store/index';
 import messaging from '@react-native-firebase/messaging';
 import { requestUserPermission } from './src/utils/notification';
 import notifee from '@notifee/react-native';
+import {PortalProvider} from '@gorhom/portal';
+
 function App() {
   useEffect(() => {
     if (Platform.OS === 'android') {
@@ -121,6 +123,7 @@ function App() {
           <GestureHandlerRootView>
             <SafeAreaProvider>
               <TabBarVisibilityProvider>
+                <PortalProvider>
                 <NavigationContainer theme={theme}>
                     <Stack.Navigator
                         initialRouteName="Login" //MainTab ,Onboarding,Login
@@ -162,6 +165,7 @@ function App() {
                         <Stack.Screen name="Notification" component={Notification}/>
                     </Stack.Navigator>
                 </NavigationContainer>
+                </PortalProvider>
               </TabBarVisibilityProvider>
             </SafeAreaProvider>
         </GestureHandlerRootView>

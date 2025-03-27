@@ -14,6 +14,7 @@
     "@babel/plugin-transform-modules-commonjs": "^7.26.3",
     "@babel/plugin-transform-runtime": "^7.26.8",
     "@bam.tech/react-native-image-resizer": "^3.0.11",
+    "@gorhom/portal": "^1.0.14",
     "@invertase/react-native-apple-authentication": "^2.4.0",
     "@notifee/react-native": "^9.1.8",
     "@react-native-async-storage/async-storage": "^1.24.0",

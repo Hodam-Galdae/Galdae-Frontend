@@ -22,6 +22,7 @@ import { createPost } from '../api/postApi'; // ✅ 갈대 생성 API 추가
 
 // ✅ 갈대 생성 요청 타입
 import { CreatePostRequest } from '../types/postTypes';
+import { Portal } from '@gorhom/portal';
 
 // 내비게이션 스택 타입 정의
 type RootStackParamList = {
@@ -264,35 +265,41 @@ const CreateGaldae: React.FC = () => {
         </View>
       </ScrollView>
 
-      <FastGaldaeStartPopup
-        ref={fastGaldaeStartPopupRef}
-        onConfirm={(largeName, largeId, smallName, smallId) => {
-          setDepartureLargeName(largeName);
-          setDepartureLargeId(largeId);
-          setDepartureSmallName(smallName);
-          setDepartureSmallId(smallId);
-        }}
-        selectedStartPlaceId={destinationSmallId} // ✅ 출발지에서 선택한 소분류 ID 전달
-        onClose={() => console.log('팝업 닫힘')}
-      />
+      <Portal>
+        <FastGaldaeStartPopup
+          ref={fastGaldaeStartPopupRef}
+          onConfirm={(largeName, largeId, smallName, smallId) => {
+            setDepartureLargeName(largeName);
+            setDepartureLargeId(largeId);
+            setDepartureSmallName(smallName);
+            setDepartureSmallId(smallId);
+          }}
+          selectedStartPlaceId={destinationSmallId} // ✅ 출발지에서 선택한 소분류 ID 전달
+          onClose={() => console.log('팝업 닫힘')}
+        />
+      </Portal>
 
-      <FastGaldaeEndPopup
-        ref={fastGaldaeEndPopupRef}
-        onConfirm={(largeName, largeId, smallName, smallId) => {
-          setDestinationLargeName(largeName);
-          setDestinationLargeId(largeId);
-          setDestinationSmallName(smallName);
-          setDestinationSmallId(smallId);
-        }}
-        selectedStartPlaceId={departureSmallId} // ✅ 출발지에서 선택한 소분류 ID 전달
-        onClose={() => console.log('팝업 닫힘')}
-      />
+      <Portal>
+        <FastGaldaeEndPopup
+          ref={fastGaldaeEndPopupRef}
+          onConfirm={(largeName, largeId, smallName, smallId) => {
+            setDestinationLargeName(largeName);
+            setDestinationLargeId(largeId);
+            setDestinationSmallName(smallName);
+            setDestinationSmallId(smallId);
+          }}
+          selectedStartPlaceId={departureSmallId} // ✅ 출발지에서 선택한 소분류 ID 전달
+          onClose={() => console.log('팝업 닫힘')}
+        />
+      </Portal>
 
-      <FastGaldaeTimePopup
-        ref={fastGaldaeTimePopupRef}
-        onConfirm={handleTimePopupConfirm}
-        onClose={() => console.log('팝업 닫힘')}
-      />
+      <Portal>
+        <FastGaldaeTimePopup
+          ref={fastGaldaeTimePopupRef}
+          onConfirm={handleTimePopupConfirm}
+          onClose={() => console.log('팝업 닫힘')}
+        />
+      </Portal>
     </View>
   );
 };

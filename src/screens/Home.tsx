@@ -53,6 +53,7 @@ import FastGaldaeEndPopup, {
 import FastGaldaeTimePopup, {
   FastGaldaeTimePopupRef,
 } from '../components/popup/FastGaldaeTimePopup';
+import { Portal } from '@gorhom/portal';
 
 type HomeProps = {
   navigation: any; // 실제 프로젝트에서는 proper type 사용 권장 (예: StackNavigationProp)
@@ -428,38 +429,43 @@ const getFormattedDepartureTime = (): string => {
         </ScrollView>
       </ScrollView>
 
-      <FastGaldaeStartPopup
-        ref={fastGaldaeStartPopupRef}
-        onConfirm={(largeName,largeId, smallName, smallId) => {
-          setDepartureLargeName(largeName);
-          setDepartureLargeId(largeId);
+      <Portal>
+        <FastGaldaeStartPopup
+          ref={fastGaldaeStartPopupRef}
+          onConfirm={(largeName,largeId, smallName, smallId) => {
+            setDepartureLargeName(largeName);
+            setDepartureLargeId(largeId);
 
-          setDepartureSmallName(smallName);
-          setDepartureSmallId(smallId);
-        }}
-        selectedStartPlaceId={destinationSmallId}
-        onClose={() => console.log('팝업 닫힘')}
-      />
+            setDepartureSmallName(smallName);
+            setDepartureSmallId(smallId);
+          }}
+          selectedStartPlaceId={destinationSmallId}
+          onClose={() => console.log('팝업 닫힘')}
+        />
+      </Portal>
 
-      <FastGaldaeEndPopup
-        ref={fastGaldaeEndPopupRef}
-        onConfirm={(largeName,largeId, smallName, smallId) => {
-          setDestinationLargeName(largeName);
-          setDestinationLargeId(largeId);
+      <Portal>
+        <FastGaldaeEndPopup
+          ref={fastGaldaeEndPopupRef}
+          onConfirm={(largeName,largeId, smallName, smallId) => {
+            setDestinationLargeName(largeName);
+            setDestinationLargeId(largeId);
 
-          setDestinationSmallName(smallName);
-          setDestinationSmallId(smallId);
-        }}
-        selectedStartPlaceId={departureSmallId}
-        onClose={() => console.log('팝업 닫힘')}
-      />
+            setDestinationSmallName(smallName);
+            setDestinationSmallId(smallId);
+          }}
+          selectedStartPlaceId={departureSmallId}
+          onClose={() => console.log('팝업 닫힘')}
+        />
+      </Portal>
 
-      <FastGaldaeTimePopup
-        ref={fastGaldaeTimePopupRef}
-        onConfirm={handleTimePopupConfirm}
-        onClose={() => console.log('팝업 닫힘')}
-      />
-
+      <Portal>
+        <FastGaldaeTimePopup
+          ref={fastGaldaeTimePopupRef}
+          onConfirm={handleTimePopupConfirm}
+          onClose={() => console.log('팝업 닫힘')}
+        />
+      </Portal>
 
       <CreateGaldaePopup
         loading={createGaldaeLoading}

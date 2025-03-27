@@ -14,6 +14,7 @@ import FastGaldaeEndPopup, { FastGaldaeEndPopupRef } from '../components/popup/F
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import TextTag from '../components/tag/TextTag';
 import { theme } from '../styles/theme';
+import { Portal } from '@gorhom/portal';
 // 내비게이션 스택 타입 정의
 type RootStackParamList = {
   NowGaldae: {
@@ -211,32 +212,33 @@ const SetDestination: React.FC = () => {
           />
         </View>
 
+        <Portal>
+          <FastGaldaeStartPopup
+            ref={fastGaldaeStartPopupRef}
+            onConfirm={(largeName, largeId, smallName, smallId) => {
+              setDepartureLargeName(largeName);
+              setDepartureLargeId(largeId);
+              setDepartureSmallName(smallName);
+              setDepartureSmallId(smallId);
+            }}
+            selectedStartPlaceId={destinationSmallId}
+            onClose={() => console.log('팝업 닫힘')}
+          />
+        </Portal>
 
-        <FastGaldaeStartPopup
-          ref={fastGaldaeStartPopupRef}
+        <Portal>
+          <FastGaldaeEndPopup
+          ref={fastGaldaeEndPopupRef}
           onConfirm={(largeName, largeId, smallName, smallId) => {
-            setDepartureLargeName(largeName);
-            setDepartureLargeId(largeId);
-            setDepartureSmallName(smallName);
-            setDepartureSmallId(smallId);
+            setDestinationLargeName(largeName);
+            setDestinationLargeId(largeId);
+            setDestinationSmallId(smallId);
+            setDestinationSmallName(smallName);
           }}
-          selectedStartPlaceId={destinationSmallId}
+          selectedStartPlaceId={departureSmallId}
           onClose={() => console.log('팝업 닫힘')}
-        />
-
-        <FastGaldaeEndPopup
-        ref={fastGaldaeEndPopupRef}
-        onConfirm={(largeName, largeId, smallName, smallId) => {
-          setDestinationLargeName(largeName);
-          setDestinationLargeId(largeId);
-          setDestinationSmallId(smallId);
-          setDestinationSmallName(smallName);
-        }}
-        selectedStartPlaceId={departureSmallId}
-        onClose={() => console.log('팝업 닫힘')}
-        />
-
-
+          />
+        </Portal>
     </View>
   );
 };
