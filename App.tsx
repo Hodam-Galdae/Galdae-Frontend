@@ -39,9 +39,13 @@ import {TabBarVisibilityProvider} from './src/utils/TabBarVisibilityContext';
 import {Provider} from 'react-redux';
 import store from './src/modules/redux/store/index';
 import messaging from '@react-native-firebase/messaging';
-import { requestUserPermission } from './src/utils/notification';
+import {requestUserPermission} from './src/utils/notification';
 import notifee from '@notifee/react-native';
 import {PortalProvider} from '@gorhom/portal';
+
+messaging().setBackgroundMessageHandler(async remoteMessage => {
+  console.log('Message handled in the background!', remoteMessage);
+});
 
 function App() {
   useEffect(() => {
@@ -98,7 +102,6 @@ function App() {
   const setupAxiosInterceptors = () => {
     axios.defaults.timeout = 10000;
 
-
     const requestInterceptors = axios.interceptors.request.use(
       (request: InternalAxiosRequestConfig) => {
         return requestLogger(request);
@@ -107,72 +110,86 @@ function App() {
         return Promise.reject(error);
       },
     );
-        const responseInterceptors = axios.interceptors.response.use(
-            (response: AxiosResponse) => responseLogger(response),
-            (error) => errorLogger(error)
-        );
+    const responseInterceptors = axios.interceptors.response.use(
+      (response: AxiosResponse) => responseLogger(response),
+      error => errorLogger(error),
+    );
 
-
-        return () => {
-            axios.interceptors.request.eject(requestInterceptors);
-            axios.interceptors.response.eject(responseInterceptors);
-        };
+    return () => {
+      axios.interceptors.request.eject(requestInterceptors);
+      axios.interceptors.response.eject(responseInterceptors);
     };
+  };
 
-    return (
-      <Provider store={store}>
-          <GestureHandlerRootView>
-            <SafeAreaProvider>
-              <TabBarVisibilityProvider>
-                <PortalProvider>
-                <NavigationContainer theme={theme}>
-                    <Stack.Navigator
-                        initialRouteName={'Onboarding'} //MainTab ,Onboarding,Login
-                        screenOptions={{
-                            headerShown: false,
-                        }}
-                    >
-
-                        <Stack.Screen name="Onboarding" component={Onboarding} />
-                        <Stack.Screen name="Login" component={Login} />
-                        <Stack.Screen name="CreateGaldae" component={CreateGaldae} />
-                        <Stack.Screen name="NowGaldae" component={NowGaldae} />
-                        <Stack.Screen name="NowGaldaeDetail" component={NowGaldaeDetail} />
-                        <Stack.Screen name="SetDestination" component={SetDestination} />
-                        <Stack.Screen name="SignUp" component={SignUp} />
-                        <Stack.Screen
-                          name="ReviewInProgress"
-                          component={ReviewInProgress}
-                        />
-                        <Stack.Screen name="TermsDetail" component={TermsDetail} />
-                        <Stack.Screen name="MainTab" component={MainTab} />
-                        <Stack.Screen name="ChatRoom" component={ChatRoom}/>
-                        <Stack.Screen name="Settlement" component={Settlement}/>
-                        <Stack.Screen name="MyInfo" component={MyInfo}/>
-                        <Stack.Screen name="Payment" component={Payment}/>
-                        <Stack.Screen name="AccountRegister" component={AccountRegister}/>
-                        <Stack.Screen name="MyGaldae" component={MyGaldae}/>
-                        <Stack.Screen name="MyGaldaeHistory" component={MyGaldaeHistory}/>
-                        <Stack.Screen name="NicknameChange" component={NicknameChange}/>
-                        <Stack.Screen name="Announcement" component={Announcement}/>
-                        <Stack.Screen name="UserGuide" component={UserGuide}/>
-                        <Stack.Screen name="TermsOfUse" component={TermsOfUse}/>
-                        <Stack.Screen name="TermsOfUseDetail" component={TermsOfUseDetail}/>
-                        <Stack.Screen name="FAQ" component={FAQ}/>
-                        <Stack.Screen name="Answer" component={Answer}/>
-                        <Stack.Screen name="Inquiry" component={Inquiry}/>
-                        <Stack.Screen name="Logout" component={Logout}/>
-                        <Stack.Screen name="WithDraw" component={WithDraw}/>
-                        <Stack.Screen name="Notification" component={Notification}/>
-                    </Stack.Navigator>
-                </NavigationContainer>
-                </PortalProvider>
-              </TabBarVisibilityProvider>
-            </SafeAreaProvider>
-        </GestureHandlerRootView>
-      </Provider>
-);
-
+  return (
+    <Provider store={store}>
+      <GestureHandlerRootView>
+        <SafeAreaProvider>
+          <TabBarVisibilityProvider>
+            <PortalProvider>
+              <NavigationContainer theme={theme}>
+                <Stack.Navigator
+                  initialRouteName={'Onboarding'} //MainTab ,Onboarding,Login
+                  screenOptions={{
+                    headerShown: false,
+                  }}>
+                  <Stack.Screen name="Onboarding" component={Onboarding} />
+                  <Stack.Screen name="Login" component={Login} />
+                  <Stack.Screen name="CreateGaldae" component={CreateGaldae} />
+                  <Stack.Screen name="NowGaldae" component={NowGaldae} />
+                  <Stack.Screen
+                    name="NowGaldaeDetail"
+                    component={NowGaldaeDetail}
+                  />
+                  <Stack.Screen
+                    name="SetDestination"
+                    component={SetDestination}
+                  />
+                  <Stack.Screen name="SignUp" component={SignUp} />
+                  <Stack.Screen
+                    name="ReviewInProgress"
+                    component={ReviewInProgress}
+                  />
+                  <Stack.Screen name="TermsDetail" component={TermsDetail} />
+                  <Stack.Screen name="MainTab" component={MainTab} />
+                  <Stack.Screen name="ChatRoom" component={ChatRoom} />
+                  <Stack.Screen name="Settlement" component={Settlement} />
+                  <Stack.Screen name="MyInfo" component={MyInfo} />
+                  <Stack.Screen name="Payment" component={Payment} />
+                  <Stack.Screen
+                    name="AccountRegister"
+                    component={AccountRegister}
+                  />
+                  <Stack.Screen name="MyGaldae" component={MyGaldae} />
+                  <Stack.Screen
+                    name="MyGaldaeHistory"
+                    component={MyGaldaeHistory}
+                  />
+                  <Stack.Screen
+                    name="NicknameChange"
+                    component={NicknameChange}
+                  />
+                  <Stack.Screen name="Announcement" component={Announcement} />
+                  <Stack.Screen name="UserGuide" component={UserGuide} />
+                  <Stack.Screen name="TermsOfUse" component={TermsOfUse} />
+                  <Stack.Screen
+                    name="TermsOfUseDetail"
+                    component={TermsOfUseDetail}
+                  />
+                  <Stack.Screen name="FAQ" component={FAQ} />
+                  <Stack.Screen name="Answer" component={Answer} />
+                  <Stack.Screen name="Inquiry" component={Inquiry} />
+                  <Stack.Screen name="Logout" component={Logout} />
+                  <Stack.Screen name="WithDraw" component={WithDraw} />
+                  <Stack.Screen name="Notification" component={Notification} />
+                </Stack.Navigator>
+              </NavigationContainer>
+            </PortalProvider>
+          </TabBarVisibilityProvider>
+        </SafeAreaProvider>
+      </GestureHandlerRootView>
+    </Provider>
+  );
 }
 
 export default App;
