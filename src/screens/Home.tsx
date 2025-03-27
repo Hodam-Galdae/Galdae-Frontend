@@ -331,9 +331,9 @@ const getFormattedDepartureTime = (): string => {
                 {myCreatedGaldaeList.map((item, index) => (
                   <TouchableOpacity key={index} style={styles.newGaldaeList} onPress={()=>navigation.navigate('NowGaldaeDetail', {postId: item.postId})}>
                     <BasicText text={moment(item.createdAt).fromNow()} style={styles.newGaldaeTimeText} />
-                    <BasicText text={`${item.departure}`} style={styles.newGaldaeDepartText} />
+                    <BasicText text={`${item.departure}`} style={styles.newGaldaeDepartText} numberOfLines={1} ellipsizeMode="tail"/>
                     <SVG name="arrow_down_fill" style={styles.newGaldaeArrowIcon} />
-                    <BasicText text={`${item.arrival}`} style={styles.newGaldaeDestText} />
+                    <BasicText text={`${item.arrival}`} style={styles.newGaldaeDestText} numberOfLines={1} ellipsizeMode="tail"/>
                   </TouchableOpacity>
                 ))}
               </ScrollView>

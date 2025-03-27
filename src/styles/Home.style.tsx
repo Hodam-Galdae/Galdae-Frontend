@@ -47,10 +47,13 @@ export default StyleSheet.create({
       fontSize:theme.fontSize.size14,
       fontWeight:'500',
       marginBottom:5,
+      maxWidth: 80,
+      //backgroundColor:theme.colors.brandColor,
     },
     newGaldaeDestText:{
       fontSize:theme.fontSize.size14,
       fontWeight:'500',
+      maxWidth: 80,
     },
     newGaldaeArrowIcon:{
       marginBottom:5,
