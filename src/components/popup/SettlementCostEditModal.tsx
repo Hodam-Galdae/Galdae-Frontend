@@ -3,8 +3,6 @@ import {
   Modal,
   View,
   TouchableOpacity,
-  StyleProp,
-  ViewStyle,
   TextInput,
 } from 'react-native';
 import SVG from '../../components/SVG';
