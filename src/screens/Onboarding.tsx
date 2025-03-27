@@ -7,7 +7,10 @@ import BasicText from '../components/BasicText';
 import {theme} from '../styles/theme';
 import SVG from '../components/SVG';
 import {Svg, Defs, RadialGradient, Stop, Circle} from 'react-native-svg';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useDispatch} from 'react-redux';
+import {setUser} from '../modules/redux/slice/UserSlice';
+import {getUserInfo} from '../api/membersApi';
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 type OnboardingProps = {
   navigation: any; // 실제 프로젝트에서는 proper type 사용 권장 (예: StackNavigationProp)
@@ -15,23 +18,21 @@ type OnboardingProps = {
 
 const OnboardingScreen: React.FC<OnboardingProps> = ({navigation}) => {
   const [current, setCurrent] = useState(0);
-  const [init, setInit] = useState<string | null>();
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    const initValue = async () => {
-      const temp = await AsyncStorage.getItem('init');
-      setInit(temp);
-      if(init === null) {
-        await AsyncStorage.setItem('init', 'init');
+    const autoLogin = async() => {
+      const user = await getUserInfo();
+      const accessToken = await EncryptedStorage.getItem('accessToken');
+
+      if(user) {
+        dispatch(setUser({...user, token: 'Bearer ' + accessToken}));
+        navigation.replace('MainTab');
       }
     };
 
-    initValue();
-  }, [init]);
-
-  useEffect(() => {
-    navigation.replace('Login');
-  }, [init, navigation]);
+    autoLogin();
+  }, []);
 
   const pages = [
     <OnBoarding1 />,

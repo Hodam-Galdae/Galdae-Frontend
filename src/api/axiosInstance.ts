@@ -67,6 +67,7 @@ axiosInstance.interceptors.response.use(
 
       //refresh token 발급
       try {
+        console.log('refresh!');
         const res = await axios.post(API_BASE_URL + '/auth/reissue', { refreshToken, memberId });
         await EncryptedStorage.setItem('accessToken', res.data.accessToken);
         await EncryptedStorage.setItem('refreshToken', res.data.refreshToken);
