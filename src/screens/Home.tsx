@@ -76,16 +76,16 @@ const Home: React.FC<HomeProps> = () => {
   const [departureAmPm, setDepartureAmPm] = useState<'오전' | '오후'>('오전');
   // 출발지 관련 상태
   const [departureLargeName, setDepartureLargeName] = useState<string>('출발지 선택');
-  const [departureLargeId, setDepartureLargeId] = useState<number>(0);
+  const [departureLargeId, setDepartureLargeId] = useState<number|null>(null);
 
   const [departureSmallName, setDepartureSmallName] = useState<string>('출발지 선택');
-  const [departureSmallId, setDepartureSmallId] = useState<number>(0);
+  const [departureSmallId, setDepartureSmallId] = useState<number|null>(null);
 
   const [destinationLargeName, setDestinationLargeName] = useState<string>('도착지 선택');
-  const [destinationLargeId, setDestinationLargeId] = useState<number>(0);
+  const [destinationLargeId, setDestinationLargeId] = useState<number|null>(null);
 
   const [destinationSmallName, setDestinationSmallName] = useState<string>('도착지 선택');
-  const [destinationSmallId, setDestinationSmallId] = useState<number>(0);
+  const [destinationSmallId, setDestinationSmallId] = useState<number|null>(null);
 
   const [departureHour, setDepartureHour] = useState<number>(0);
   const [departureMinute, setDepartureMinute] = useState<number>(0);
@@ -164,7 +164,10 @@ useEffect(() => {
     setCreateGaldaeLoading(true);
     // 사용자가 선택한 값들을 조합하여 ISO 8601 형식의 출발일시 생성
     const formattedDepartureTime = getFormattedDepartureTime();
-
+  if(departureLargeId === null || departureSmallId === null || destinationLargeId === null || destinationSmallId === null){
+    Alert.alert('출발지 또는 도착지를 다시 선택해주세요!');
+    return;
+   }
     const generateGaldaeData: CreatePostRequest = {
       subDepartureId:departureSmallId, // 예시 값 (실제 값에 맞게 수정)
       majorDepartureId: departureLargeId,
@@ -392,9 +395,9 @@ const getFormattedDepartureTime = (): string => {
             textStyle={styles.generateText}
           />
 
-          <View style={styles.advertiseBox}>
+          {/* <View style={styles.advertiseBox}>
             <BasicText text="advertiseBox" />
-          </View>
+          </View> */}
 
           <View style={styles.nowGaldaeTitle}>
             <BasicText text="실시간 갈대" style={styles.nowGaldae} />
@@ -434,6 +437,7 @@ const getFormattedDepartureTime = (): string => {
           setDepartureSmallName(smallName);
           setDepartureSmallId(smallId);
         }}
+        selectedStartPlaceId={destinationSmallId}
         onClose={() => console.log('팝업 닫힘')}
       />
 
@@ -446,6 +450,7 @@ const getFormattedDepartureTime = (): string => {
           setDestinationSmallName(smallName);
           setDestinationSmallId(smallId);
         }}
+        selectedStartPlaceId={departureSmallId}
         onClose={() => console.log('팝업 닫힘')}
       />
 

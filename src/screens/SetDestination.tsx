@@ -1,5 +1,5 @@
 import React, {useEffect,useState,useRef} from 'react';
-import {  View, ScrollView } from 'react-native';
+import { Alert, View, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import styles from '../styles/SetDestination.style';
@@ -54,16 +54,16 @@ const SetDestination: React.FC = () => {
   const goBack = () => navigation.goBack();
   const [loading, setLoading] = useState<boolean>(false);
   const [departureLargeName, setDepartureLargeName] = useState<string>('출발지 선택');
-  const [departureLargeId, setDepartureLargeId] = useState<number>(0);
+  const [departureLargeId, setDepartureLargeId] = useState<number|null>(null);
 
   const [departureSmallName, setDepartureSmallName] = useState<string>('출발지 선택');
-  const [departureSmallId, setDepartureSmallId] = useState<number>(0);
+  const [departureSmallId, setDepartureSmallId] = useState<number|null>(null);
 
   const [destinationLargeName, setDestinationLargeName] = useState<string>('도착지 선택');
-  const [destinationLargeId, setDestinationLargeId] = useState<number>(0);
+  const [destinationLargeId, setDestinationLargeId] = useState<number|null>(null);
 
   const [destinationSmallName, setDestinationSmallName] = useState<string>('도착지 선택');
-  const [destinationSmallId, setDestinationSmallId] = useState<number>(0);
+  const [destinationSmallId, setDestinationSmallId] = useState<number|null>(null);
 
   const [searchHistory, setSearchHistory] = useState<any[]>([]);
 
@@ -94,6 +94,10 @@ const SetDestination: React.FC = () => {
 
   const handleSearchGaldae = async () => {
     setLoading(true);
+    if(departureLargeId === null || departureSmallId === null || destinationLargeId === null || destinationSmallId === null){
+        Alert.alert('출발지 또는 도착지를 다시 선택해주세요!');
+        return;
+       }
     navigation.navigate('NowGaldae', {
       departureLargeName,
       departureLargeId,
@@ -216,6 +220,7 @@ const SetDestination: React.FC = () => {
             setDepartureSmallName(smallName);
             setDepartureSmallId(smallId);
           }}
+          selectedStartPlaceId={destinationSmallId}
           onClose={() => console.log('팝업 닫힘')}
         />
 
@@ -227,6 +232,7 @@ const SetDestination: React.FC = () => {
           setDestinationSmallId(smallId);
           setDestinationSmallName(smallName);
         }}
+        selectedStartPlaceId={departureSmallId}
         onClose={() => console.log('팝업 닫힘')}
         />
 

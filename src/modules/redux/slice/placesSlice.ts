@@ -4,13 +4,15 @@ import { getPlaces } from '../../../api/placesApi';
 import type { MajorPlace } from '../../../types/placesApiTypes';
 
 interface PlacesState {
-  places: MajorPlace[];
+  insidePlaces: MajorPlace[];
+  outsidePlaces: MajorPlace[];
   loading: boolean;
   error: string | null;
 }
 
 const initialState: PlacesState = {
-  places: [],
+  insidePlaces: [],
+  outsidePlaces: [],
   loading: false,
   error: null,
 };
@@ -32,7 +34,8 @@ const placesSlice = createSlice({
   initialState,
   reducers: {
     clearPlaces: (state) => {
-      state.places = [];
+      state.insidePlaces = [];
+      state.outsidePlaces = [];
       state.error = null;
     },
   },
@@ -44,7 +47,8 @@ const placesSlice = createSlice({
       })
       .addCase(fetchPlaces.fulfilled, (state, action) => {
         state.loading = false;
-        state.places = action.payload;
+        state.insidePlaces = action.payload.insidePlaces;
+        state.outsidePlaces = action.payload.outsidePlaces;
       })
       .addCase(fetchPlaces.rejected, (state, action) => {
         state.loading = false;

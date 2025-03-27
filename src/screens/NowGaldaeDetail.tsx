@@ -46,6 +46,7 @@ const NowGaldaeDetail: React.FC = () => {
   const route = useRoute<NowGaldaeDetailRouteProp>();
   const {postId} = route.params; // 전달받은 postId
   const [mapBig,setMapBig] = useState<boolean>(false);
+  const [isMapLoading, setIsMapLoading] = useState(true);
   const {postDetail, loading, error} = useSelector(
     (state: RootState) => state.postDetailSlice,
   );
@@ -118,9 +119,9 @@ const NowGaldaeDetail: React.FC = () => {
         }
       />
       <ScrollView style={styles.content}>
-        <View style={styles.advertiseBox}>
+        {/* <View style={styles.advertiseBox}>
           <BasicText text="advertiseBox" />
-        </View>
+        </View> */}
 
         <View key={postDetail.departureTime} style={styles.borderedListBox}>
           {/**postDetail.userInfo?.name || */}
@@ -210,12 +211,25 @@ const NowGaldaeDetail: React.FC = () => {
         </View>
 
         <TouchableOpacity style={styles.map} onPress={toBigMap}>
-          <WebView source={{uri: mapUrl}} style={styles.map} pointerEvents="box-none"/>
+          <View style={styles.map}>
+            <WebView
+              source={{uri: mapUrl}}
+              style={styles.map}
+              onLoadStart={() => setIsMapLoading(true)}
+              onLoadEnd={() => setIsMapLoading(false)}
+              pointerEvents="box-none"
+            />
+            {isMapLoading && (
+              <View style={[styles.map, { position: 'absolute', justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.6)' }]}>
+                <ActivityIndicator size="large" color={theme.colors.brandColor} />
+              </View>
+            )}
+          </View>
           <SVGButton
-                      iconName="ToBigPic"
-                      onPress={toBigMap}
-                      buttonStyle={styles.toBigPicIcon}
-                    />
+            iconName="ToBigPic"
+            onPress={toBigMap}
+            buttonStyle={styles.toBigPicIcon}
+          />
         </TouchableOpacity>
 
         <BasicText text="유저정보" style={styles.userInfo} />
@@ -223,8 +237,8 @@ const NowGaldaeDetail: React.FC = () => {
         <View style={styles.userInfoBox}>
           <View style={styles.userInfos}>
             <View style={styles.profile}>
-              <Image
-                source={require('../assets/test.jpg')}
+            <Image
+                source={{ uri: postDetail.userInfo.profileImage }}
                 style={styles.profileImg}
                 resizeMode="cover"
               />

@@ -81,7 +81,7 @@ export default StyleSheet.create({
       map:{
         width:'100%',
         height:180,
-        backgroundColor:theme.colors.brandColor,
+        //backgroundColor:theme.colors.brandColor,
         borderRadius:theme.borderRadius.size10,
         position:'relative',
       },
@@ -102,7 +102,7 @@ export default StyleSheet.create({
         width:62,
         height:62,
         borderRadius:999,
-        backgroundColor:theme.colors.brandColor,
+        //backgroundColor:theme.colors.brandColor,
       },
       profileImg:{
         width: '100%',

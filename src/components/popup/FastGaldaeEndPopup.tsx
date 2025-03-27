@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useEffect, forwardRef, useImperativeHandle, useRef,useState,useContext } from 'react';
+import React, {useMemo,useEffect, forwardRef, useImperativeHandle, useRef,useState,useContext } from 'react';
 import { View,KeyboardAvoidingView, TouchableOpacity } from 'react-native';
 import { Modalize } from 'react-native-modalize';
 import BasicText from '../BasicText';
@@ -25,10 +25,11 @@ export interface FastGaldaeEndPopupRef {
 export interface FastGaldaePopupProps {
   onClose?: () => void;
   onConfirm?: (largeCategoryName: string,largeCategoryId:number,  smallCategoryName: string, smallCategoryId:number) => void;
+  selectedStartPlaceId: number|null; // ✅ 출발지의 소분류 ID
 }
 
 const FastGaldaePopup = forwardRef<FastGaldaeEndPopupRef, FastGaldaePopupProps>(
-  ({ onClose,onConfirm }, ref) => {
+  ({ onClose,onConfirm,selectedStartPlaceId }, ref) => {
     const modalizeRef = useRef<Modalize>(null);
     const pictureModalRef = useRef<Modalize>(null);
    // 대분류와 소분류 선택 상태 (더미 데이터)
@@ -38,19 +39,33 @@ const FastGaldaePopup = forwardRef<FastGaldaeEndPopupRef, FastGaldaePopupProps>(
     const [smallCategoryId, setSmallCategoryId] = useState<number>(0);
     const dispatch = useAppDispatch();
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
-    const places = useSelector((state: RootState) => state.placesSlice.places);
+    const { insidePlaces = [], outsidePlaces = [] } = useSelector((state: RootState) => state.placesSlice || {});
     const placesLoading = useSelector((state: RootState) => state.placesSlice.loading);
     const placesError = useSelector((state: RootState) => state.placesSlice.error);
 
 
     const { setIsTabBarVisible } = useContext(TabBarVisibilityContext);
 
-     // 컴포넌트 마운트 시 Redux를 통해 places 데이터 불러오기
-     useEffect(() => {
-      if (!places || places.length === 0) {
+    useEffect(() => {
+      if (!insidePlaces || insidePlaces.length === 0 || !outsidePlaces || outsidePlaces.length === 0) {
         dispatch(fetchPlaces());
       }
-    }, [dispatch, places]);
+    }, [dispatch, insidePlaces,outsidePlaces]);
+    // 출발지가 inside에 있는지 확인
+    const isStartInside = useMemo(() => {
+      if (!selectedStartPlaceId) {return false;}
+      return insidePlaces.some((major) =>
+        major.subPlaceList.some((sub) => sub.subPlaceId === selectedStartPlaceId)
+      );
+    }, [selectedStartPlaceId, insidePlaces]);
+
+    // 보여줄 places를 조건에 맞게 필터링
+    const filteredPlaces = useMemo(() => {
+      if (isStartInside) {
+        return outsidePlaces;
+      }
+      return [...insidePlaces, ...outsidePlaces];
+    }, [isStartInside, insidePlaces, outsidePlaces]);
     const handleSelectConfirm = () =>{
       onConfirm && onConfirm(largeCategoryName,largeCategoryId, smallCategoryName, smallCategoryId);
       modalizeRef.current?.close();
@@ -156,7 +171,7 @@ const FastGaldaePopup = forwardRef<FastGaldaeEndPopupRef, FastGaldaePopupProps>(
                     ) : placesError ? (
                       <BasicText text={`Error: ${placesError}`} />
                     ) : (
-                      places.map((majorPlace) => (
+                      filteredPlaces.map((majorPlace) => (
                         <SelectTextButton
                           key={majorPlace.majorPlaceId}
                           text={majorPlace.majorPlace}
@@ -183,7 +198,7 @@ const FastGaldaePopup = forwardRef<FastGaldaeEndPopupRef, FastGaldaePopupProps>(
                 <ScrollView style={styles.selectContainer}>
                   <View style={styles.select}>
                     {(() => {
-                      const selectedMajor = places.find((p) => p.majorPlace === largeCategoryName);
+                      const selectedMajor = filteredPlaces.find((p) => p.majorPlace === largeCategoryName);
                       if (selectedMajor && selectedMajor.subPlaceList) {
                         return selectedMajor.subPlaceList.map((subPlace) => (
                           <SelectTextButton
