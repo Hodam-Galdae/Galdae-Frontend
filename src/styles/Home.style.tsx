@@ -1,6 +1,8 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 import {} from '../utils/ScreenScaler';
 import { theme } from './theme';
+
+const screenWidth = Dimensions.get('window').width;
 
 export default StyleSheet.create({
     container: {
@@ -83,7 +85,8 @@ export default StyleSheet.create({
     },
     startContain:{ //고정 width 설정해야할듯
       alignItems:'center',
-      width:(85),
+      // width:(200),
+      maxWidth: (screenWidth - 52) / 2 - 40,
     },
     start:{
       marginBottom:(12),

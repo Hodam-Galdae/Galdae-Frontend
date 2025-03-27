@@ -20,7 +20,7 @@ const ChatRoomItem = (props : Props) => {
     <TouchableOpacity onPress={() => props.onPress(props.id)}>
       <View style={styles.container}>
         <View style={styles.wrapper}>
-          <BasicText text={props.time.getFullYear() + '년 ' + props.time.getMonth() + '월 ' + props.time.getDate() + '일 ' + props.time.getHours() + ':' + props.time.getMinutes()} style={styles.timeText}/>
+          <BasicText text={props.time.getFullYear() + '년 ' + (props.time.getMonth() + 1) + '월 ' + props.time.getDate() + '일 ' + props.time.getHours() + ':' + props.time.getMinutes()} style={styles.timeText}/>
           {props.message === 0 ? null :
             <View style={styles.message}>
               <BasicText style={styles.messageText} text={props.message.toString()}/>

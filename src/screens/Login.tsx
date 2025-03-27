@@ -135,9 +135,10 @@ const Login: React.FC = () => {
   };
 
   const images = [
-    require('../assets/test.jpg'),
-    require('../assets/test.jpg'),
-    require('../assets/test.jpg'),
+    require('../assets/school/school1.png'),
+    require('../assets/school/school2.png'),
+    require('../assets/school/school3.png'),
+    require('../assets/school/school4.png'),
   ];
 
   useEffect(() => {
