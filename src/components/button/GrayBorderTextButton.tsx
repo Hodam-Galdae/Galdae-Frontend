@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React, { useState } from 'react';
 import { StyleProp, ViewStyle, TextStyle } from 'react-native';
 import BasicButton, { BasicButtonProps } from './BasicButton';
 import { theme } from '../../styles/theme';
@@ -7,6 +7,7 @@ import stylesheet from '../../styles/stylesheet';
 export interface SmallBorderTextButtonProps
   extends Omit<BasicButtonProps, 'text' | 'buttonStyle' | 'textStyle' | 'enabledColors' | 'disabledColors'> {
   text: string;
+  isSelected?: boolean; // 외부에서 선택 여부를 전달할 수 있도록 추가
   buttonStyle?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
 }
@@ -19,39 +20,42 @@ const GrayBorderTextButton: React.FC<SmallBorderTextButtonProps> = ({
   buttonStyle,
   textStyle,
   accessibilityLabel,
+  isSelected,
   ...restProps
 }) => {
-  // 버튼 선택 상태 (true: 선택됨, false: 선택되지 않음)
-  const [selected, setSelected] = useState<boolean>(false);
+  // 외부 isSelected prop이 제공되지 않으면 내부 상태를 사용
+  const [internalSelected, setInternalSelected] = useState<boolean>(false);
+  const selectedState = isSelected !== undefined ? isSelected : internalSelected;
 
-  // 버튼 클릭 시 토글 처리 및 부모의 onPress 호출
+  // 버튼 클릭 시 토글 처리 (외부 prop이 없을 경우에만) 및 부모 onPress 호출
   const handlePress = () => {
-    setSelected(!selected);
+    if (isSelected === undefined) {
+      setInternalSelected(!internalSelected);
+    }
     if (onPress) {
       onPress();
     }
   };
+
   // 선택 상태에 따라 색상 변경
-  const enabledColors = selected
-  ? {
-      backgroundColor: theme.colors.white, // 선택된 상태: 배경색 채움
-      textColor: theme.colors.brandColor,         // 텍스트 색상 흰색
-      borderColor: theme.colors.brandColor,
-    }
-  : {
-      backgroundColor: theme.colors.white,        // 미선택 상태: 배경 투명
-      textColor: theme.colors.gray0,
-      borderColor: theme.colors.gray0,
-    };
+  const enabledColors = selectedState
+    ? {
+        backgroundColor: theme.colors.white,
+        textColor: theme.colors.brandColor,
+        borderColor: theme.colors.brandColor,
+      }
+    : {
+        backgroundColor: theme.colors.white,
+        textColor: theme.colors.gray0,
+        borderColor: theme.colors.gray0,
+      };
   return (
     <BasicButton
       text={text}
       onPress={handlePress}
       disabled={disabled}
       loading={loading}
-      // 기본적으로 배경은 투명, 텍스트와 테두리 색상은 테마의 gray0를 사용 (활성 상태)
       enabledColors={enabledColors}
-      // 비활성 상태의 기본 색상 (원하는 대로 수정 가능)
       disabledColors={{
         backgroundColor: 'transparent',
         textColor: theme.colors.gray1,

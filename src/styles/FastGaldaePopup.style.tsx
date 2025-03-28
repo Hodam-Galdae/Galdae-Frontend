@@ -35,6 +35,7 @@ export default StyleSheet.create({
     },
     start:{
       fontWeight:700,
+      marginBottom:10,
     },
     landMarkContainer:{
       flexDirection:'row',
@@ -184,6 +185,12 @@ export default StyleSheet.create({
       alignSelf:'flex-end',
       justifyContent:'flex-end',
     },
+    resetBtnContainer:{
+      paddingTop:20,
+      //alignSelf:'flex-end',
+      flexDirection:'row',
+      justifyContent:'space-between',
+    },
     toastPopup:{
       paddingVertical:9,
       paddingHorizontal:26,
@@ -199,7 +206,9 @@ export default StyleSheet.create({
       fontWeight:'500',
   },
   arrayContent:{
-
+    height:200,
+    paddingTop:30,
+    gap:15,
   },
   font:{
     fontSize:theme.fontSize.size18,
@@ -220,7 +229,7 @@ export default StyleSheet.create({
   },
   time:{
     marginTop:15,
-    fontWeight:'500',
+    fontWeight:'600',
     marginBottom:8,
   },
   timePicker:{

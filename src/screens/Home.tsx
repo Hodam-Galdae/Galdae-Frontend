@@ -17,7 +17,7 @@ import CreateGaldaePopup from '../components/popup/CreateGaldaePopup';
 import {useNavigation} from '@react-navigation/native';
 import moment from 'moment-timezone/builds/moment-timezone-with-data';
 import ToastPopup from '../components/popup/ToastPopup';
-
+import NowGaldaeSameGender from '../components/popup/NowGaldaeSameGender';
 //type
 import {MyCreatedPost} from '../types/getTypes';
 
@@ -81,7 +81,7 @@ const Home: React.FC<HomeProps> = () => {
 
   const [departureSmallName, setDepartureSmallName] = useState<string>('출발지 선택');
   const [departureSmallId, setDepartureSmallId] = useState<number|null>(null);
-
+  const [sameGenderPopupVisible, setSameGenderPopupVisible] = useState(false);
   const [destinationLargeName, setDestinationLargeName] = useState<string>('도착지 선택');
   const [destinationLargeId, setDestinationLargeId] = useState<number|null>(null);
 
@@ -433,7 +433,7 @@ const getFormattedDepartureTime = (): string => {
               <GaldaeItem
                 key={item.postId}
                 item={item}
-                onPress={() => navigation.navigate('NowGaldaeDetail', {postId: item.postId})}
+                onPress={ !item.isSameGender && item.passengerGenderType === 'SAME' ? () =>setSameGenderPopupVisible(true) : ()=> navigation.navigate('NowGaldaeDetail', {postId: item.postId}) }
               />
             ))}
           </View>
@@ -493,6 +493,10 @@ const getFormattedDepartureTime = (): string => {
         text="갈대가 생성되었습니다!"
         onDismiss={() => setToastVisible(false)}
       />
+      <NowGaldaeSameGender
+          visible={sameGenderPopupVisible}
+          onConfirm={()=>{setSameGenderPopupVisible(false);}}
+        />
     </View>
   );
 };

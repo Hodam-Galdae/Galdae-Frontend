@@ -1,5 +1,5 @@
 import React, { forwardRef, useImperativeHandle, useRef,useState } from 'react';
-import { View } from 'react-native';
+import { ScrollView,View,KeyboardAvoidingView } from 'react-native';
 import { Modalize } from 'react-native-modalize';
 import BasicText from '../BasicText';
 import { theme } from '../../styles/theme';
@@ -23,10 +23,11 @@ export interface FastGaldaePopupProps {
     selectedTimeDiscuss: number,  // 0: 가능, 1: 불가능
     passengerNumber: number
   ) => void;
+  handleFilterReset:() => void;
 }
 
 const FilterPopup = forwardRef<FastGaldaeTimePopupRef, FastGaldaePopupProps>(
-  ({ onClose ,onConfirm}, ref) => {
+  ({ onClose ,onConfirm,handleFilterReset}, ref) => {
     const [selectedDate, setSelectedDate] = useState<string | null>(null);
     const [selectedAmPm, setSelectedAmPm] = useState<'오전' | '오후'>('오전');
     const [selectedHour, setSelectedHour] = useState<number>(0);
@@ -94,19 +95,23 @@ const FilterPopup = forwardRef<FastGaldaeTimePopupRef, FastGaldaePopupProps>(
     return (
       <Modalize
         ref={modalizeRef}
-        modalHeight={586} // 고정 높이 설정
+        adjustToContentHeight={true}  // 고정 높이 설정
         onClosed={onClose}
         onOpened={handleOnOpened} // 팝업 열릴 때 기본값 자동 매핑
         overlayStyle={styles.background}
         modalStyle={styles.container}
+        scrollViewProps={{
+          keyboardShouldPersistTaps: 'always',
+        }}
         withHandle={false}  // 기본 핸들을 비활성화
         {...({ swipeToClose: true, swipeThreshold: 10 } as any)}
       >
+        <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
         {/* 팝업 안쪽에 커스텀 핸들 추가 */}
         <View style={styles.handleContainer}>
           <View style={styles.handle} />
         </View>
-
+      <ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
         <View style={styles.content}>
             <BasicText
               text="검색 조건 설정"
@@ -203,7 +208,24 @@ const FilterPopup = forwardRef<FastGaldaeTimePopupRef, FastGaldaePopupProps>(
                 />
               </View>
             </View>
-            <View style={styles.confirmBtnContainer}>
+            <View style={styles.resetBtnContainer}>
+            <BasicButton
+                text="필터제거"
+                //disabled={false}
+                onPress={handleFilterReset}
+                buttonStyle={styles.confirmButton}
+                textStyle={styles.confirmText}
+                enabledColors={{
+                  backgroundColor: theme.colors.lightGray,
+                  textColor: theme.colors.black,
+                  borderColor:theme.colors.transparent,
+                }}
+                // disabledColors={{
+                //   backgroundColor: theme.colors.lightGray,
+                //   textColor: theme.colors.black,
+                //   borderColor:theme.colors.transparent,
+                // }}
+              />
               <BasicButton
                 text="완료"
                 disabled={false}
@@ -223,7 +245,8 @@ const FilterPopup = forwardRef<FastGaldaeTimePopupRef, FastGaldaePopupProps>(
               />
             </View>
         </View>
-
+        </ScrollView>
+        </KeyboardAvoidingView>
       </Modalize>
     );
   }

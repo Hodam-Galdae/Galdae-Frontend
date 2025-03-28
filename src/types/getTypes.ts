@@ -47,6 +47,8 @@ export interface GaldaeItemType {
   createdAt: string; // 생성 시간 (ISO 8601 형식)
   userNickName: string | null;
   isCompleted: boolean;
+  isSameGender:boolean;
+  isWriter:boolean;
 }
 /**
  * 실시간 갈대 API 조회 타입

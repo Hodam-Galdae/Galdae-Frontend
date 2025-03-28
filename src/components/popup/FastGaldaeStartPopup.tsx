@@ -133,7 +133,7 @@ const FastGaldaeStartPopup = forwardRef<FastGaldaeStartPopupRef, FastGaldaePopup
            <View style={styles.handleContainer}>
                 <View style={styles.handle} />
               </View>
-          <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
+          <ScrollView contentContainerStyle={{ paddingBottom:50 }}>
 
               <View style={styles.content}>
                 <BasicText

@@ -39,12 +39,17 @@ const ArrayPopup = forwardRef<FastGaldaeTimePopupRef, FastGaldaePopupProps>(
     return (
       <Modalize
         ref={modalizeRef}
-        modalHeight={152} // 고정 높이 설정
+        adjustToContentHeight={true} // 내용에 맞게 높이 조절
         onClosed={onClose}
+        swipeToClose={true}
+        swipeThreshold={20}
         overlayStyle={styles.background}
         modalStyle={styles.container}
-        withHandle={false}  // 기본 핸들을 비활성화
-        {...({ swipeToClose: true, swipeThreshold: 10 } as any)}
+        scrollViewProps={{
+          keyboardShouldPersistTaps: 'always',
+        }}
+        withHandle={true}  // 기본 핸들을 비활성화
+        {...({ swipeToClose: true, swipeThreshold: 20 } as any)}
       >
         {/* 팝업 안쪽에 커스텀 핸들 추가 */}
         <View style={styles.handleContainer}>

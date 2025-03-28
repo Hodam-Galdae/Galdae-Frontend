@@ -12,6 +12,7 @@ import SVGTextButton from '../components/button/SVGTextButton';
 import SVG from '../components/SVG';
 import GaldaeItem from '../components/GaldaeItem';
 import DeletePopup from '../components/popup/DeletePopup'; // DeletePopup import
+import NowGaldaeSameGender from '../components/popup/NowGaldaeSameGender';
 import { theme } from '../styles/theme';
 import FloatingButton from '../components/button/FloatingButton';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -94,6 +95,7 @@ const NowGaldae: React.FC<HomeProps> = () => {
   const route = useRoute<RouteProp<RootStackParamList, 'NowGaldae'>>();
   //삭제팝업
   const [deletePopupVisible, setDeletePopupVisible] = useState(false);
+  const [sameGenderPopupVisible, setSameGenderPopupVisible] = useState(false);
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
   // 전달받은 검색 조건
   const {
@@ -130,7 +132,7 @@ const NowGaldae: React.FC<HomeProps> = () => {
       const params = {
         pageNumber: 0,
         pageSize: 20,
-        direction: 'DESC',
+        direction: sortOrder === 'latest' ? 'DESC' : 'ASC',
         properties: sortOrder === 'latest' ? ['createAt'] : ['departureTime'],
         majorDepartment: departureLargeId,      // 출발지 대분류 ID
         subDepartment: departureSmallId,        // 출발지 소분류 ID
@@ -166,7 +168,7 @@ const NowGaldae: React.FC<HomeProps> = () => {
       const params: GetPostsRequest = {
         pageNumber: 0,
         pageSize: 20,
-        direction: 'DESC',
+        direction: sortOrder === 'latest' ? 'DESC' : 'ASC',
         properties: sortOrder === 'latest' ? ['createAt'] : ['departureTime'],
       };
       dispatch(fetchGaldaePosts(params));
@@ -225,6 +227,13 @@ const NowGaldae: React.FC<HomeProps> = () => {
     console.log('선택된 필터 옵션:', filterOptionsObj);
     setFilterOptions(filterOptionsObj);
   };
+  const handleFilterReset = () =>{
+    handleCancelSearch();
+    filterRef.current?.close();
+  };
+  /**
+   * 전부 초기화하는 로직
+   */
   const handleCancelSearch = () => {
     // 네비게이션 파라미터 초기화
     navigation.setParams({
@@ -246,10 +255,12 @@ const NowGaldae: React.FC<HomeProps> = () => {
       // selectedHour: 0,
       // selectedMinute: 0,
       formattedDepartureTime: '', // 빈 문자열로 초기화하여 필터 조건 미적용
-      selectedGender: 'DONT_CARE',
+      selectedGender: null,
       selectedTimeDiscuss: null,
       passengerNumber: 0,
     });
+    //정렬도 최신순으로 초기화
+    setSortOrder('latest');
   };
   const onRefresh = async () => {
     setRefreshing(true);
@@ -274,7 +285,7 @@ const NowGaldae: React.FC<HomeProps> = () => {
         const params: GetPostsRequest = {
           pageNumber: 0,
           pageSize: 20,
-          direction: 'DESC',
+          direction: sortOrder === 'latest' ? 'DESC' : 'ASC',
           properties: sortOrder === 'latest' ? ['createAt'] : ['departureTime'],
         };
         dispatch(fetchGaldaePosts(params));
@@ -395,7 +406,7 @@ const handleLongPress = (post: GaldaeItemType) => {
       const params = {
         pageNumber: nextPage,
         pageSize: 20,
-        direction: 'DESC',
+        direction: sortOrder === 'latest' ? 'DESC' : 'ASC',
         properties: sortOrder === 'latest' ? ['createAt'] : ['departureTime'],
         department: departureLargeName,
         arrival: destinationLargeName,
@@ -428,7 +439,7 @@ const handleLongPress = (post: GaldaeItemType) => {
       const params: GetPostsRequest = {
         pageNumber: nextPage,
         pageSize: 20,
-        direction: 'DESC',
+        direction: sortOrder === 'latest' ? 'DESC' : 'ASC',
         properties: sortOrder === 'latest' ? ['createAt'] : ['departureTime'],
       };
 
@@ -489,8 +500,8 @@ const handleLongPress = (post: GaldaeItemType) => {
         <View style={styles.btns}>
           <View style={styles.filters}>
             <FilterButton onPress={handleFilterPress} />
-            <GrayBorderTextButton text="시간협의가능" onPress={handlePressTimeFilterBtn} />
-            <GrayBorderTextButton text="성별무관" onPress={handlePressGenderFilterBtn} />
+            <GrayBorderTextButton text="시간협의가능" onPress={handlePressTimeFilterBtn} isSelected={filterOptions.selectedTimeDiscuss !== null} />
+            <GrayBorderTextButton text="성별무관" onPress={handlePressGenderFilterBtn} isSelected={filterOptions.selectedGender !== null}/>
             {/* <GrayBorderTextButton text="동성만" onPress={handlePressSameGenderFilterBtn} /> */}
           </View>
           <View style={styles.arrayBtn}>
@@ -543,7 +554,7 @@ const handleLongPress = (post: GaldaeItemType) => {
             renderItem={({ item }) => (
               <GaldaeItem
                 item={item}
-                onPress={() => navigation.navigate('NowGaldaeDetail', {postId: item.postId})}
+                onPress={ !item.isSameGender && item.passengerGenderType === 'SAME' ? () =>setSameGenderPopupVisible(true) : ()=> navigation.navigate('NowGaldaeDetail', {postId: item.postId}) }
                 onLongPress={() => handleLongPress(item)}
               />
             )}
@@ -562,6 +573,7 @@ const handleLongPress = (post: GaldaeItemType) => {
         ref={filterRef}
         onConfirm={handleFilterPopupConfirm}
         onClose={() => console.log('팝업 닫힘')}
+        handleFilterReset={handleFilterReset}
       />
       <DeletePopup
         visible={deletePopupVisible}
@@ -574,6 +586,10 @@ const handleLongPress = (post: GaldaeItemType) => {
         message="삭제하시겠습니까?"
         buttonText="삭제하기"
       />
+      <NowGaldaeSameGender
+          visible={sameGenderPopupVisible}
+          onConfirm={()=>{setSameGenderPopupVisible(false);}}
+        />
     </View>
   );
 };

@@ -205,6 +205,7 @@ const SetDestination: React.FC = () => {
 
           <BasicButton
             text="검색하기"
+            disabled={departureLargeId === null || departureSmallId === null || destinationLargeId === null || destinationSmallId === null}
             buttonStyle={styles.generateButton}
             textStyle={styles.generateText}
             loading={loading}

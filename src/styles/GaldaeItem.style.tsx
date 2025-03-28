@@ -19,7 +19,7 @@ export default StyleSheet.create({
       width:'100%',
       borderColor:theme.colors.gray0,
       borderRadius:theme.borderRadius.size10,
-      backgroundColor:theme.colors.gray0,
+      backgroundColor:theme.colors.lightGray,
       borderWidth:1,
       paddingStart:24,
       paddingTop:14,
