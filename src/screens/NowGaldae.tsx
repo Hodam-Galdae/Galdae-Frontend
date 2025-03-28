@@ -190,7 +190,7 @@ const NowGaldae: React.FC<HomeProps> = () => {
   const handlePressGenderFilterBtn = () => {
     setFilterOptions(prev => ({
       ...prev,
-      selectedGender: prev.selectedGender === 'SAME' ? 'DONT_CARE' :  'DONT_CARE',
+      selectedGender: prev.selectedGender ===  null ? 'DONT_CARE' :  null,
     }));
   };
   // const handlePressSameGenderFilterBtn = () => {
