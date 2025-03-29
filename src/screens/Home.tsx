@@ -132,7 +132,7 @@ const fetchPosts = async () => {
   const params: GetPostsRequest = {
     pageNumber: 0,
     pageSize: 3,
-    direction: 'DESC',
+    direction: 'ASC',
     properties: ['departureTime'],
   };
   try {

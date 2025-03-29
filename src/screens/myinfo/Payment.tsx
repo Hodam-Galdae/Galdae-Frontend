@@ -121,7 +121,7 @@ useEffect(() => {
           title={<BasicText text="결제 · 정산관리" style={styles.headerText}/>}
           />
           <View style={styles.content}>
-              <BasicText text="현재 정산 계좌2" style={styles.title}/>
+              <BasicText text="현재 정산 계좌" style={styles.title}/>
               {
                 isAccountRegister ? (
                   <LinearGradient

@@ -17,7 +17,7 @@ interface MyGaldaeItemProps {
 const MyGaldaeItem: React.FC<MyGaldaeItemProps> = ({ item, onPress, onLongPress }) => {
   // ISO 8601 형식의 출발일시를 포맷팅 (예: "2025년 03월 20일 (목) 01 : 00")
   const formatDepartureTime = (departureTime: string): string => {
-    return moment.utc(departureTime).local().format('YYYY년 MM월 DD일 (ddd) HH : mm');
+    return moment.utc(departureTime).format('YYYY년 MM월 DD일 (ddd) HH : mm');
   };
 
   return (
