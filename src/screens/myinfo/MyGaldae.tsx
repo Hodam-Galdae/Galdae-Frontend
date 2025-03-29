@@ -13,12 +13,17 @@ import FrequentRouteItem from '../../components/FrequentRouteItem';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import {  useSelector } from 'react-redux';
 import { useAppDispatch } from '../../modules/redux/store';
-import { fetchFrequentRoutes } from '../../modules/redux/slice/frequentRouteSlice';
 import {fetchMyGaldaeHistory} from '../../modules/redux/slice/myGaldaeSlice';
+import {fetchHomeGaldaePosts} from  '../../modules/redux/slice/homeGaldaeSlice';
+import { fetchMyCreatedGaldae } from '../../modules/redux/slice/myCreatedGaldaeSlice';
+import { fetchGaldaePosts } from '../../modules/redux/slice/galdaeSlice';
+import { fetchFrequentRoutes } from '../../modules/redux/slice/frequentRouteSlice';
 import { RootState } from '../../modules/redux/RootReducer';
 import { MyPostHistory } from '../../types/getTypes';
 import DeletePopup from '../../components/popup/DeletePopup';
 import { deletePost } from '../../api/postApi';
+//type
+import { GetPostsRequest } from '../../types/postTypes';
 type HomeProps = {
   navigation: any;
 };
@@ -71,6 +76,16 @@ const MyGaldae: React.FC<HomeProps> = () => {
       try {
         await deletePost(selectedPostId);
         dispatch(fetchMyGaldaeHistory());
+         dispatch(fetchMyCreatedGaldae());
+              dispatch(fetchHomeGaldaePosts());
+              dispatch(fetchFrequentRoutes());
+              const params: GetPostsRequest = {
+                      pageNumber: 0,
+                      pageSize: 20,
+                      direction: 'DESC' ,
+                      properties:  ['createAt'] ,
+                    };
+             dispatch(fetchGaldaePosts(params));
         Alert.alert('삭제 완료', '선택한 갈대가 삭제되었습니다.');
         setDeletePopupVisible(false);
         setSelectedPostId(null);

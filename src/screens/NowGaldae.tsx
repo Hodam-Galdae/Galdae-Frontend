@@ -27,6 +27,9 @@ import { GaldaeItemType,GaldaeApiResponse } from '../types/getTypes';
 import {  useSelector } from 'react-redux';
 import { useAppDispatch } from '../modules/redux/store';
 import { fetchGaldaePosts } from '../modules/redux/slice/galdaeSlice';
+import { fetchMyCreatedGaldae } from '../modules/redux/slice/myCreatedGaldaeSlice';
+import { fetchMyGaldaeHistory } from '../modules/redux/slice/myGaldaeSlice';
+import {fetchHomeGaldaePosts} from  '../modules/redux/slice/homeGaldaeSlice';
 import { RootState } from '../modules/redux/RootReducer';
 
 type HomeProps = {
@@ -296,6 +299,9 @@ const NowGaldae: React.FC<HomeProps> = () => {
           properties: sortOrder === 'latest' ? ['createAt'] : ['departureTime'],
         };
         dispatch(fetchGaldaePosts(params));
+        dispatch(fetchMyGaldaeHistory());
+        dispatch(fetchMyCreatedGaldae());
+        dispatch(fetchHomeGaldaePosts());
         setPageNumber(0); // 페이지도 초기화
       }
 

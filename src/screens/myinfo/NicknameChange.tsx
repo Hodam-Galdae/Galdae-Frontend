@@ -1,5 +1,5 @@
 import React,{ useState } from 'react';
-import {  View } from 'react-native';
+import {  View,Alert } from 'react-native';
 import { useNavigation ,useRoute, RouteProp} from '@react-navigation/native';
 import styles from '../../styles/NicknameChange.style';
 import Header from '../../components/Header';
@@ -9,7 +9,11 @@ import BasicButton from '../../components/button/BasicButton';
 import DeletePopup from '../../components/popup/DeletePopup';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import BasicInput from '../../components/BasicInput';
-
+import { useAppDispatch } from '../../modules/redux/store';
+import { fetchUserInfo } from '../../modules/redux/slice/myInfoSlice';
+import { fetchMyGaldaeHistory } from '../../modules/redux/slice/myGaldaeSlice';
+import { fetchMyCreatedGaldae } from '../../modules/redux/slice/myCreatedGaldaeSlice';
+import {fetchHomeGaldaePosts} from  '../../modules/redux/slice/homeGaldaeSlice';
 //api
 import { updateNickname } from '../../api/membersApi'; // updateNickname API 임포트
 
@@ -39,8 +43,9 @@ type NicknameChangeRouteProp = RouteProp<RootStackParamList, 'NicknameChange'>;
 
 const NicknameChange: React.FC<HomeProps> = () => {
   const route = useRoute<NicknameChangeRouteProp>();
-    // 전달받은 닉네임을 초기값으로 설정 (없으면 기본값 '하재연')
-    const initialNickname = route.params?.nickname || '하재연';
+  const dispatch = useAppDispatch();
+    // 전달받은 닉네임을 초기값으로 설정 (없으면 기본값 '닉네임')
+    const initialNickname = route.params?.nickname || '닉네임';
     const [nickname, setNickname] = useState<string>(initialNickname);
     const [invalidPopupVisible, setInvalidPopupVisible] = useState<boolean>(false);
     const navigation = useNavigation<nowGaldaeScreenNavigationProp>();
@@ -50,11 +55,18 @@ const NicknameChange: React.FC<HomeProps> = () => {
         // 닉네임 변경 API 호출
         await updateNickname(nickname);
         console.log('닉네임 변경 성공');
+        dispatch(fetchUserInfo());
+        dispatch(fetchMyGaldaeHistory());
+        dispatch(fetchMyCreatedGaldae());
+        dispatch(fetchHomeGaldaePosts());
         setInvalidPopupVisible(false);
         goBack();
-      } catch (error) {
+      } catch (error : any) {
+        // 에러 응답 객체에서 메시지를 추출합니다.
+        const errorMessage =
+        error.response?.data?.message || error.message || '닉네임 변경에 실패했습니다.';
+        Alert.alert('오류', errorMessage);
         console.error('닉네임 변경 실패:', error);
-        // 필요 시 에러 메시지 출력 등의 추가 처리
       }
     };
 

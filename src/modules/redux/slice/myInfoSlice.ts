@@ -1,4 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
+import { getUserInfo } from '../../../api/membersApi'; // API 경로에 맞게 수정
 
 export interface UserInfo {
   accountNumber?: string;
@@ -12,11 +13,27 @@ export interface UserInfo {
 
 interface UserState {
   userInfo: UserInfo | null;
+  loading: boolean;
+  error: string | null;
 }
 
 const initialState: UserState = {
   userInfo: null,
+  loading: false,
+  error: null,
 };
+
+export const fetchUserInfo = createAsyncThunk<UserInfo, void>(
+  'user/fetchUserInfo',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await getUserInfo();
+      return response;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
 
 const userSlice = createSlice({
   name: 'user',
@@ -28,6 +45,20 @@ const userSlice = createSlice({
     clearUserInfo(state) {
       state.userInfo = null;
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(fetchUserInfo.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(fetchUserInfo.fulfilled, (state, action: PayloadAction<UserInfo>) => {
+      state.loading = false;
+      state.userInfo = action.payload;
+    });
+    builder.addCase(fetchUserInfo.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload as string;
+    });
   },
 });
 

@@ -17,10 +17,13 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import {  useSelector } from 'react-redux';
 import { useAppDispatch } from '../modules/redux/store';
 import { RootState } from '../modules/redux/RootReducer'; // RootState 타입 (store 설정에 따라 경로 수정)
-import { setUserInfo } from '../modules/redux/slice/myInfoSlice';
+import { fetchUserInfo } from '../modules/redux/slice/myInfoSlice';
 import { fetchMyGaldaeHistory } from '../modules/redux/slice/myGaldaeSlice';
+import { fetchMyCreatedGaldae } from '../modules/redux/slice/myCreatedGaldaeSlice';
+import {fetchHomeGaldaePosts} from  '../modules/redux/slice/homeGaldaeSlice';
+
 //API
-import {  getUserInfo,updateMemberImage } from '../api/membersApi';
+import { updateMemberImage } from '../api/membersApi';
 import { deletePost } from '../api/postApi';
 //type
 import { MyPostHistory } from '../types/getTypes';
@@ -66,36 +69,22 @@ const MyInfo: React.FC = () => {
     (state: RootState) => state.myGaldaeSlice
   );
 
-  // 사용자 정보 불러오기 (Redux 업데이트)
-  const fetchUserInfo = useCallback(async () => {
-    try {
-      const response = await getUserInfo();
-      console.log('🚀 사용자 정보:', response);
-      dispatch(setUserInfo(response));
-    } catch (error) {
-      console.error('❌ 사용자 정보 조회 실패:', error);
-      Alert.alert('오류', '사용자 정보를 불러오는데 실패했습니다.');
-    }
-  }, [dispatch]);
 // 내 갈대 기록 조회: Redux를 통해 관리하므로 useEffect로 thunk dispatch
 useEffect(() => {
   dispatch(fetchMyGaldaeHistory());
 }, [dispatch]);
-  useEffect(() => {
-    fetchUserInfo();
-  }, [fetchUserInfo]);
 
 
  // 초기 마운트 시 유저 정보 fetch
  useEffect(() => {
-  fetchUserInfo();
-}, [fetchUserInfo]);
+  dispatch(fetchUserInfo());
+}, [dispatch]);
 
 // 화면 포커스될 때마다 최신 유저 정보 재호출
 useFocusEffect(
   useCallback(() => {
-    fetchUserInfo();
-  }, [fetchUserInfo])
+    dispatch(fetchUserInfo());
+  }, [dispatch])
 );
 
   const handleMorePress = () =>{
@@ -124,7 +113,11 @@ useFocusEffect(
           const result = await updateMemberImage(imageUri);
           console.log('✅ 이미지 업데이트 성공:', result);
           // 이미지 업데이트 후 사용자 정보를 재갱신
-          fetchUserInfo();
+          dispatch(fetchUserInfo());
+          dispatch(fetchMyGaldaeHistory());
+          dispatch(fetchMyCreatedGaldae());
+          dispatch(fetchHomeGaldaePosts());
+
         }
       } catch (error) {
         console.error('❌ 이미지 업데이트 실패:', error);
@@ -135,12 +128,13 @@ useFocusEffect(
     };
 
     updateImage();
-  }, [imageUri, fetchUserInfo]);
+  }, [imageUri, dispatch]);
 
   const onRefresh = async () => {
     setRefreshing(true);
-    fetchUserInfo();
+    dispatch(fetchUserInfo());
     dispatch(fetchMyGaldaeHistory());
+    dispatch(fetchMyCreatedGaldae());
     setRefreshing(false);
   };
   const handleDeletePost = async () => {
@@ -148,6 +142,9 @@ useFocusEffect(
       try {
         await deletePost(selectedPostId);
         dispatch(fetchMyGaldaeHistory());
+        dispatch(fetchMyCreatedGaldae());
+        dispatch(fetchHomeGaldaePosts());
+
         Alert.alert('삭제 완료', '선택한 갈대가 삭제되었습니다.');
         setDeletePopupVisible(false);
         setSelectedPostId(null);

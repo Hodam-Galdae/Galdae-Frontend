@@ -16,10 +16,16 @@ import FastGaldaeStartPopup, { FastGaldaeStartPopupRef } from '../components/pop
 import FastGaldaeEndPopup, { FastGaldaeEndPopupRef } from '../components/popup/FastGaldaeEndPopup';
 import FastGaldaeTimePopup, { FastGaldaeTimePopupRef } from '../components/popup/FastGaldaeTimePopup';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-
+import { useAppDispatch } from '../modules/redux/store';
+import { fetchMyGaldaeHistory } from '../modules/redux/slice/myGaldaeSlice';
+import {fetchHomeGaldaePosts} from  '../modules/redux/slice/homeGaldaeSlice';
+import { fetchMyCreatedGaldae } from '../modules/redux/slice/myCreatedGaldaeSlice';
+import { fetchGaldaePosts } from '../modules/redux/slice/galdaeSlice';
+import { fetchFrequentRoutes } from '../modules/redux/slice/frequentRouteSlice';
 // API
 import { createPost } from '../api/postApi'; // ✅ 갈대 생성 API 추가
-
+//type
+import { GetPostsRequest } from '../types/postTypes';
 // ✅ 갈대 생성 요청 타입
 import { CreatePostRequest } from '../types/postTypes';
 import { Portal } from '@gorhom/portal';
@@ -53,7 +59,7 @@ const CreateGaldae: React.FC = () => {
   const [destinationSmallId, setDestinationSmallId] = useState<number|null>(null);
   const [departureHour, setDepartureHour] = useState<number>(0);
   const [departureMinute, setDepartureMinute] = useState<number>(0);
-
+  const dispatch = useAppDispatch();
   const fastGaldaeStartPopupRef = useRef<FastGaldaeStartPopupRef>(null);
   const fastGaldaeEndPopupRef = useRef<FastGaldaeEndPopupRef>(null);
   const fastGaldaeTimePopupRef = useRef<FastGaldaeTimePopupRef>(null);
@@ -80,10 +86,19 @@ const CreateGaldae: React.FC = () => {
     Alert.alert('출발 시간을 선택해 주세요.');
     return;
  }
-    setLoading(true);
+
+
     // 출발 일시를 Asia/Seoul 타임존의 ISO 8601 형식으로 변환
     const formattedDepartureTime = getFormattedDepartureTime();
-
+// 출발 시간을 moment 객체로 변환하여 현재 시간과 비교
+ const departureMoment = moment(formattedDepartureTime.replace(/Z$/, ''));
+ console.log(` departureMoment:
+   ${departureMoment}`);
+ if (departureMoment.isBefore(moment())) {
+   Alert.alert('알림', '현재 시간보다 이후의 시간을 선택해주세요!');
+   return;
+ }
+ setLoading(true);
     const postData: CreatePostRequest = {
       majorDepartureId: departureLargeId,
       subDepartureId: departureSmallId,
@@ -101,6 +116,17 @@ const CreateGaldae: React.FC = () => {
     try {
       const response = await createPost(postData); // 서버에서 postId 반환
       console.log('✅ 생성된 갈대 postId:', response.postId);
+      dispatch(fetchMyGaldaeHistory());
+      dispatch(fetchMyCreatedGaldae());
+      dispatch(fetchHomeGaldaePosts());
+      dispatch(fetchFrequentRoutes());
+      const params: GetPostsRequest = {
+              pageNumber: 0,
+              pageSize: 20,
+              direction: 'DESC' ,
+              properties:  ['createAt'] ,
+            };
+     dispatch(fetchGaldaePosts(params));
 
       if (response.postId) {
         // 상세 페이지로 이동하면서 postId 전달

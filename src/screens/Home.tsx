@@ -18,21 +18,22 @@ import CreateGaldaePopup from '../components/popup/CreateGaldaePopup';
 import {useNavigation} from '@react-navigation/native';
 import moment from 'moment-timezone/builds/moment-timezone-with-data';
 import ToastPopup from '../components/popup/ToastPopup';
-
+import { useAppDispatch } from '../modules/redux/store';
 import NowGaldaeSameGender from '../components/popup/NowGaldaeSameGender';
+import { fetchMyGaldaeHistory } from '../modules/redux/slice/myGaldaeSlice';
+import {fetchHomeGaldaePosts} from  '../modules/redux/slice/homeGaldaeSlice';
 //type
 import {MyCreatedPost} from '../types/getTypes';
 
 //API
-import { createPost,getPosts } from '../api/postApi'; // 갈대 생성 API 불러오기
+import { createPost } from '../api/postApi'; // 갈대 생성 API 불러오기
 import { deletePost } from '../api/postApi';
-import {getMyCreatedPosts} from '../api/membersApi';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
-//import { useSelector } from 'react-redux';
-//import { RootState } from '../modules/redux/RootReducer'; // store.ts에서 RootState 가져오기
+import { useSelector } from 'react-redux';
+import { RootState } from '../modules/redux/RootReducer'; // store.ts에서 RootState 가져오기
+import { fetchMyCreatedGaldae } from '../modules/redux/slice/myCreatedGaldaeSlice';
 
 // type
-import { GetPostsRequest } from '../types/postTypes';
 import {GaldaeItemType } from '../types/getTypes';
 
 // redux
@@ -65,9 +66,8 @@ type HomeProps = {
 
 const Home: React.FC<HomeProps> = () => {
   const [refreshing, setRefreshing] = useState(false);
-  //const [loading, setLoading] = useState<boolean>(false);
-  //const { posts } = useSelector((state: RootState) => state.galdaeSlice);
-  const [posts, setPosts] = useState<GaldaeItemType[]>([]); // API 응답 데이터 타입에 맞게 수정 가능
+  const posts = useSelector((state: RootState) => state.homeGaldaeSlice.posts);
+  const postsLoading = useSelector((state: RootState) => state.homeGaldaeSlice.loading);
   const [createGaldaeLoading, setCreateGaldaeLoading] = useState<boolean>(false);
   const [deletePopupVisible, setDeletePopupVisible] = useState<boolean>(false);
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
@@ -91,38 +91,30 @@ const Home: React.FC<HomeProps> = () => {
 
   const [destinationSmallName, setDestinationSmallName] = useState<string>('도착지 선택');
   const [destinationSmallId, setDestinationSmallId] = useState<number|null>(null);
-
+  const dispatch = useAppDispatch();
   const [departureHour, setDepartureHour] = useState<number>(0);
   const [departureMinute, setDepartureMinute] = useState<number>(0);
   const fastGaldaeStartPopupRef = useRef<FastGaldaeStartPopupRef>(null);
   const fastGaldaeEndPopupRef = useRef<FastGaldaeEndPopupRef>(null);
   const fastGaldaeTimePopupRef = useRef<FastGaldaeTimePopupRef>(null);
-  const [myCreatedGaldaeList, setMyCreatedGaldaeList] = useState<MyCreatedPost[]>([]); // ✅ 내가 생성한 갈대 목록 상태 추가
-  const [myCreatedGaldaeLoading, setMyCreatedGaldaeLoading] = useState<boolean>(true); // ✅ API 로딩 상태
-  const [createGaldaeBoolean, setCreateGaldaeBoolean] = useState<boolean>(false);
-  //const dispatch = useAppDispatch();
+  const myCreatedGaldaeList = useSelector((state: RootState) => state.myCreatedGaldaeSlice.list);
+  const myCreatedGaldaeLoading = useSelector((state: RootState) => state.myCreatedGaldaeSlice.loading);
 
-  const fetchMyCreatedGaldae = async () => {
-    try {
-      const response = await getMyCreatedPosts();
-      setMyCreatedGaldaeList(response); // 응답 데이터 상태 저장
-    } catch (error) {
-      console.error('❌ 내가 생성한 갈대 목록 불러오기 실패:', error);
-    } finally {
-      setMyCreatedGaldaeLoading(false); // 로딩 완료
-    }
-  };
+  // dispatch 생성
+  const [createGaldaeBoolean, setCreateGaldaeBoolean] = useState<boolean>(false);
+
+
   // ✅ 내가 생성한 갈대 불러오기
   useEffect(() => {
-    fetchMyCreatedGaldae();
-  }, [createGaldaeBoolean]);
+    dispatch(fetchMyCreatedGaldae());
+  }, [dispatch]);
 
 // 새로고침 시 실행할 함수 (예: 데이터 다시 불러오기)
 const onRefresh = async () => {
   setRefreshing(true);
   try {
-    fetchPosts();
-    fetchMyCreatedGaldae();
+    dispatch(fetchMyCreatedGaldae());
+    dispatch(fetchHomeGaldaePosts());
     formatDepartureDateTime();
   } catch (error) {
     console.error('새로고침 에러:', error);
@@ -130,32 +122,11 @@ const onRefresh = async () => {
     setRefreshing(false);
   }
 };
-// 0번째 페이지의 3개 데이터만 가져오기 위한 API 호출 함수
-const fetchPosts = async () => {
-
-  const params: GetPostsRequest = {
-    pageNumber: 0,
-    pageSize: 3,
-    direction: 'ASC',
-    properties: ['departureTime'],
-  };
-  try {
-    const data = await getPosts(params);
-    console.log( `
-      🪄홈화면 실시간 갈대 목록 응답: 
-      `,data);
-    setPosts(data.content);
-  } catch (error) {
-    console.error('갈대 조회 실패:', error);
-  } finally {
-
-  }
-};
 
 // 컴포넌트가 마운트될 때 데이터 호출
 useEffect(() => {
-  fetchPosts();
-}, []);
+  dispatch(fetchHomeGaldaePosts());
+}, [dispatch]);
 // const handlePress = () => {
 //   setLoading(true);
 //   // 버튼 클릭 시 원하는 로직을 수행하고, 완료 후 로딩 상태를 false로 전환합니다.
@@ -192,6 +163,9 @@ useEffect(() => {
       setCreateGaldaePopupVisible(false);
       setToastVisible(true);
       setCreateGaldaeBoolean(!createGaldaeBoolean);
+      dispatch(fetchMyGaldaeHistory());
+      dispatch(fetchMyCreatedGaldae());
+      dispatch(fetchHomeGaldaePosts());
       setTimeout(() => {
         setToastVisible(false);
       }, 2000);
@@ -221,18 +195,6 @@ useEffect(() => {
   // 출발일시 문자열 포맷 함수
   const formatDepartureDateTime = () => {
     if (!departureDate) {
-      // const now = moment();
-      // const formattedDate = now.format('YYYY년 M월 D일 (ddd)'); // 예: 2025년 11월 12일 (수)
-      // const hour = now.hour();
-      // const minute = now.minute();
-      // const amPm = hour < 12 ? '오전' : '오후';
-      // let hour12 = hour % 12;
-      // if (hour12 === 0) {
-      //   hour12 = 12;
-      // }
-      // const formattedTime = `${amPm} ${hour12} : ${
-      //   minute < 10 ? '0' + minute : minute
-      // }`;
       return '출발 시간을 선택해 주세요.';
     }
     const dateObj = moment(departureDate, 'YYYY-MM-DD');
@@ -287,6 +249,14 @@ const getFormattedDepartureTime = (): string => {
     Alert.alert('출발 시간을 선택해 주세요.');
     return;
  }
+ // 출발 시간을 moment 객체로 변환하여 현재 시간과 비교
+ const departureMoment = moment(formattedDepartureTime.replace(/Z$/, ''));
+ console.log(` departureMoment:
+   ${departureMoment}`);
+ if (departureMoment.isBefore(moment())) {
+   Alert.alert('알림', '현재 시간보다 이후의 시간을 선택해주세요!');
+   return;
+ }
     setgenerateLoading(true);
     setgenerateLoading(false);
     setCreateGaldaePopupVisible(true);
@@ -308,24 +278,25 @@ const getFormattedDepartureTime = (): string => {
     if(departureLargeName === '출발지 선택' || departureSmallName === '출발지 선택' || destinationLargeName === '도착지 선택' || destinationSmallName === '도착지 선택'){
       Alert.alert('출발지 또는 도착지를 제대로 선택해주세요!');
       return;
-   }else if(formattedDepartureTime === '출발 시간을 선택해 주세요.'){
-    Alert.alert('출발 시간을 선택해 주세요.');
-    return;
- }
-    else{
+    }else if(formattedDepartureTime === '출발 시간을 선택해 주세요.'){
+      Alert.alert('출발 시간을 선택해 주세요.');
+      return;
+    }
+
     handleCreateGaldaeConfirm();
     closeCreateGaldaePopup();
     setToastVisible(true);
-   }
   };
   const handleDeletePost = async () => {
       if (!selectedPostId) {return;}
       try {
         await deletePost(selectedPostId);
-        fetchMyCreatedGaldae();
+        dispatch(fetchMyCreatedGaldae());
         Alert.alert('삭제 완료', '선택한 갈대가 삭제되었습니다.');
         setDeletePopupVisible(false);
         setSelectedPostId(null);
+        dispatch(fetchMyGaldaeHistory());
+        dispatch(fetchHomeGaldaePosts());
       } catch (error) {
         Alert.alert('삭제 실패', '글 삭제에 실패했습니다. 다시 시도해주세요.');
         console.error(error);
@@ -452,14 +423,20 @@ const getFormattedDepartureTime = (): string => {
           </View>
 
           <View style={styles.nowGaldaeList}>
-          {posts.map(item => (
-              <GaldaeItem
-                key={item.postId}
-                item={item}
-                onPress={ !item.isSameGender && item.passengerGenderType === 'SAME' ? () =>setSameGenderPopupVisible(true) : ()=> navigation.navigate('NowGaldaeDetail', {postId: item.postId}) }
-                onLongPress={() => handleLongPress(item)}
-              />
-            ))}
+          {
+            postsLoading ? (
+              <ActivityIndicator size="small" color={theme.colors.brandColor} />
+            ) : (
+              posts.map(item => (
+                <GaldaeItem
+                  key={item.postId}
+                  item={item}
+                  onPress={ !item.isSameGender && item.passengerGenderType === 'SAME' ? () =>setSameGenderPopupVisible(true) : ()=> navigation.navigate('NowGaldaeDetail', {postId: item.postId}) }
+                  onLongPress={() => handleLongPress(item)}
+                />
+              ))
+            )
+          }
           </View>
         </ScrollView>
       </ScrollView>
