@@ -137,6 +137,17 @@ const SetDestination: React.FC = () => {
     // 0일이면 '오늘', 1일이면 '1일전', 그 이상이면 'n일전'
     return diffDays === 0 ? '오늘' : `${diffDays}일전`;
   };
+  const handleSwitch = () => {
+    setDepartureLargeName(destinationLargeName);
+    setDepartureSmallName(destinationSmallName);
+    setDepartureSmallId(destinationSmallId);
+    setDepartureLargeId(destinationLargeId);
+
+    setDestinationLargeId(departureLargeId);
+    setDestinationSmallId(departureSmallId);
+    setDestinationLargeName(departureLargeName);
+    setDestinationSmallName(departureSmallName);
+  };
   return (
 
     <View style={styles.mainContainer}>
@@ -153,6 +164,7 @@ const SetDestination: React.FC = () => {
               iconName="Switch"
               buttonStyle={styles.switchBtn}
               SVGStyle={styles.switchIcon}
+              onPress={handleSwitch}
             />
             <PositionBox title={destinationLargeName} subTitle={destinationSmallName} isOrigin={false} onPress={toggleFastGaldaeEndPopup}/>
           </View>

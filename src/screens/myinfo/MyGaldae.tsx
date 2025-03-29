@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { View, FlatList } from 'react-native';
+import React, { useState,useEffect } from 'react';
+import { Alert,View, FlatList } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from '../../styles/MyGaldae.style';
 import Header from '../../components/Header';
@@ -14,8 +14,11 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import {  useSelector } from 'react-redux';
 import { useAppDispatch } from '../../modules/redux/store';
 import { fetchFrequentRoutes } from '../../modules/redux/slice/frequentRouteSlice';
+import {fetchMyGaldaeHistory} from '../../modules/redux/slice/myGaldaeSlice';
 import { RootState } from '../../modules/redux/RootReducer';
-
+import { MyPostHistory } from '../../types/getTypes';
+import DeletePopup from '../../components/popup/DeletePopup';
+import { deletePost } from '../../api/postApi';
 type HomeProps = {
   navigation: any;
 };
@@ -38,9 +41,14 @@ type nowGaldaeScreenNavigationProp = NativeStackNavigationProp<RootStackParamLis
 const MyGaldae: React.FC<HomeProps> = () => {
   const dispatch = useAppDispatch();
   const navigation = useNavigation<nowGaldaeScreenNavigationProp>();
-
+  const [deletePopupVisible, setDeletePopupVisible] = useState(false);
+  const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
   // Redux에서 자주 가는 경로 데이터 가져오기 (인터페이스는 departure, arrival, createdAt 등)
   const { routes, loading, error } = useSelector((state: RootState) => state.frequentSlice);
+  // 내 갈대 기록은 Redux slice에서 관리 (state.myGaldae)
+  const { history: myGaldaeHistory, totalCount} = useSelector(
+    (state: RootState) => state.myGaldaeSlice
+  );
 
 
   useEffect(() => {
@@ -51,24 +59,29 @@ const MyGaldae: React.FC<HomeProps> = () => {
   const handleMorePress = () => {
     navigation.navigate('MyGaldaeHistory');
   };
+  const handleLongPress = (post: MyPostHistory) => {
+    // 예시로 본인 글 여부는 post.isMine 속성으로 확인
+    if (post) { //.isMine
+      setSelectedPostId(post.postId);
+      setDeletePopupVisible(true);
+    }
+  };
+  const handleDeletePost = async () => {
+      if (!selectedPostId) {return;}
+      try {
+        await deletePost(selectedPostId);
+        dispatch(fetchMyGaldaeHistory());
+        Alert.alert('삭제 완료', '선택한 갈대가 삭제되었습니다.');
+        setDeletePopupVisible(false);
+        setSelectedPostId(null);
+      // eslint-disable-next-line no-catch-shadow, @typescript-eslint/no-shadow
+      } catch (error) {
+        Alert.alert('삭제 실패', '글 삭제에 실패했습니다. 다시 시도해주세요.');
+        console.error(error);
+      }
+    };
 
-  // // 기존 갈대 아이템 예시 데이터 (여기서는 예시 아이템으로 GaldaeItem 사용)
-  // const item = {
-  //   id: 1,
-  //   owner: '하재연님의 갈대',
-  //   from: { main: '학교', sub: '정문' },
-  //   users: 2,
-  //   capacity: 4,
-  //   destination: { main: '학교', sub: '정문' },
-  //   time: '2025년 00월 00일 (0) 00 : 00',
-  //   timeAgreement: true,
-  //   tags: ['성별무관'],
-  //   timestamp: 1735689600000,
-  // };
-  // 내 갈대 기록은 Redux slice에서 관리 (state.myGaldae)
-  const { history: myGaldaeHistory, totalCount} = useSelector(
-    (state: RootState) => state.myGaldaeSlice
-  );
+
 // 내 갈대 기록의 첫 번째 항목을 topItem으로 사용 (있다면)
 const topItem = myGaldaeHistory.length > 0 ? myGaldaeHistory[0] : null;
   return (
@@ -99,6 +112,7 @@ const topItem = myGaldaeHistory.length > 0 ? myGaldaeHistory[0] : null;
           <MyGaldaeItem
             item={topItem}
             onPress={() => navigation.navigate('NowGaldaeDetail', {postId: topItem.postId})}
+            onLongPress={() => handleLongPress(topItem)}
           />
         ) : (
           <View style={styles.borderBox}>
@@ -134,6 +148,17 @@ const topItem = myGaldaeHistory.length > 0 ? myGaldaeHistory[0] : null;
           onPress={() => navigation.navigate('CreateGaldae')}
         />
       </View>
+      <DeletePopup
+        visible={deletePopupVisible}
+        onCancel={() => {
+          setDeletePopupVisible(false);
+          setSelectedPostId(null);
+        }}
+        onConfirm={handleDeletePost}
+        title="선택하신 갈대를"
+        message="삭제하시겠습니까?"
+        buttonText="삭제하기"
+      />
     </View>
   );
 };

@@ -1,5 +1,5 @@
 import React,{useState} from 'react';
-import {  View ,FlatList} from 'react-native';
+import { Alert, View ,FlatList} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from '../../styles/MyGaldaeHistory.style';
 import Header from '../../components/Header';
@@ -11,7 +11,11 @@ import { theme } from '../../styles/theme';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import DeletePopup from '../../components/popup/DeletePopup';
 import {  useSelector } from 'react-redux';
+import { useAppDispatch } from '../../modules/redux/store';
+import {fetchMyGaldaeHistory} from '../../modules/redux/slice/myGaldaeSlice';
 import { RootState } from '../../modules/redux/RootReducer';
+import { MyPostHistory } from '../../types/getTypes';
+import { deletePost } from '../../api/postApi';
 type HomeProps = {
   navigation: any; // 실제 프로젝트에서는 proper type 사용 권장 (예: StackNavigationProp)
 };
@@ -31,28 +35,23 @@ type RootStackParamList = {
 type nowGaldaeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 const MyGaldaeHistory: React.FC<HomeProps> = () => {
+    const dispatch = useAppDispatch();
     const [deletePopupVisible, setDeletePopupVisible] = useState<boolean>(false);
-    const [selectedItem, setSelectedItem] = useState<any>(null);
+    const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
+
     // 내 갈대 기록은 Redux slice에서 관리 (state.myGaldae)
   const { history: myGaldaeHistory} = useSelector(
     (state: RootState) => state.myGaldaeSlice
   );
-    // ➋ 삭제 팝업 ‘확인’ 버튼 누를 시 실행될 로직
-    const handleConfirmDelete = () => {
-       // TODO: 실제 삭제 로직 (예: API 요청, state에서 아이템 제거 등)
-       console.log('선택된 아이템 삭제:', selectedItem);
 
-       // 팝업 닫기
-       setDeletePopupVisible(false);
-       setSelectedItem(null);
-     };
-
-     // ➌ 삭제 팝업 ‘취소’ 버튼 누를 시
-     const handleCancelDelete = () => {
-       setDeletePopupVisible(false);
-       setSelectedItem(null);
-     };
-
+    // 포스트 삭제를 위한 핸들러 (본인 글인 경우에만 활성화)
+    const handleLongPress = (post: MyPostHistory) => {
+      // 예시로 본인 글 여부는 post.isMine 속성으로 확인
+      if (post) { //.isMine
+        setSelectedPostId(post.postId);
+        setDeletePopupVisible(true);
+      }
+    };
     const navigation = useNavigation<nowGaldaeScreenNavigationProp>();
     const goBack = () => navigation.goBack();
     // [FlatList] 데이터가 없을 때 표시할 내용 (ListEmptyComponent)
@@ -62,15 +61,24 @@ const MyGaldaeHistory: React.FC<HomeProps> = () => {
         <BasicText text="갈대가 없습니다." color={theme.colors.gray1} />
       </View>
     );
-
+  const handleDeletePost = async () => {
+      if (!selectedPostId) {return;}
+      try {
+        await deletePost(selectedPostId);
+        dispatch(fetchMyGaldaeHistory());
+        Alert.alert('삭제 완료', '선택한 갈대가 삭제되었습니다.');
+        setDeletePopupVisible(false);
+        setSelectedPostId(null);
+      } catch (error) {
+        Alert.alert('삭제 실패', '글 삭제에 실패했습니다. 다시 시도해주세요.');
+        console.error(error);
+      }
+  };
     // [FlatList] 각 항목 렌더링
     const renderGaldaeItem = ({ item }: { item: typeof myGaldaeHistory[0] }) => (
       <MyGaldaeItem
         item={item}
-        onLongPress={() => {
-          setSelectedItem(item);
-          setDeletePopupVisible(true);
-        }}
+        onLongPress={() => handleLongPress(item)}
         onPress={() => navigation.navigate('NowGaldaeDetail', {postId: item.postId})}
       />
     );
@@ -92,10 +100,16 @@ const MyGaldaeHistory: React.FC<HomeProps> = () => {
               />
              </View>
              {/* ➏ DeletePopup 연결 */}
-            <DeletePopup
+             <DeletePopup
               visible={deletePopupVisible}
-              onCancel={handleCancelDelete}
-              onConfirm={handleConfirmDelete}
+              onCancel={() => {
+                setDeletePopupVisible(false);
+                setSelectedPostId(null);
+              }}
+              onConfirm={handleDeletePost}
+              title="선택하신 갈대를"
+              message="삭제하시겠습니까?"
+              buttonText="삭제하기"
             />
 
     </View>

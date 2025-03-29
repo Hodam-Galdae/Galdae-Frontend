@@ -21,7 +21,7 @@ const MyGaldaeItem: React.FC<MyGaldaeItemProps> = ({ item, onPress, onLongPress 
   };
 
   return (
-    <TouchableOpacity onPress={onPress} onLongPress={onLongPress}>
+    <TouchableOpacity onPress={onPress} onLongPress={onLongPress} delayLongPress={100}>
       <View style={styles.borderedListBox}>
         {/* 출발지 정보 */}
         <View style={styles.fromContainer}>

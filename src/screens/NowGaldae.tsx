@@ -261,6 +261,13 @@ const NowGaldae: React.FC<HomeProps> = () => {
     });
     //정렬도 최신순으로 초기화
     setSortOrder('latest');
+    const params: GetPostsRequest = {
+      pageNumber: 0,
+      pageSize: 20,
+      direction: sortOrder === 'latest' ? 'DESC' : 'ASC',
+      properties: sortOrder === 'latest' ? ['createAt'] : ['departureTime'],
+    };
+    dispatch(fetchGaldaePosts(params));
   };
   const onRefresh = async () => {
     setRefreshing(true);

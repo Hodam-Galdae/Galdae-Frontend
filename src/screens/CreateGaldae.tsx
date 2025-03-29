@@ -179,6 +179,17 @@ const CreateGaldae: React.FC = () => {
       });
       return selectedMoment.toISOString(); // UTC 기준 ISO 문자열 반환
   };
+  const handleSwitch = () => {
+    setDepartureLargeName(destinationLargeName);
+    setDepartureSmallName(destinationSmallName);
+    setDepartureSmallId(destinationSmallId);
+    setDepartureLargeId(destinationLargeId);
+
+    setDestinationLargeId(departureLargeId);
+    setDestinationSmallId(departureSmallId);
+    setDestinationLargeName(departureLargeName);
+    setDestinationSmallName(departureSmallName);
+  };
   const isFormValid =
   departureLargeId !== null &&
   departureSmallId !== null &&
@@ -205,6 +216,7 @@ const CreateGaldae: React.FC = () => {
               iconName="Switch"
               buttonStyle={styles.switchBtn}
               SVGStyle={styles.switchIcon}
+              onPress={handleSwitch}
             />
             <PositionBox
               title={destinationLargeName}

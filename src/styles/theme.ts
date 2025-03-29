@@ -7,6 +7,7 @@ export const theme = {
       brandSubColor:'#DAFFCD',
       white:'#FFFFFF',
       lightGray:'#F8F8F8',
+      lightGray2:'#F6F6F6',
       gray0:'#D7D7D7',
       gray1:'#9C9C9C',
       gray2:'#6C6C6C',

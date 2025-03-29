@@ -92,7 +92,7 @@ export default StyleSheet.create({
     fontSize:theme.fontSize.size20,
     fontWeight: '700',
   },
-  newGaldaeList:{
+  newGaldaeListPassed:{
     marginRight: 8,
     padding:8,
     alignItems:'center',
@@ -100,19 +100,47 @@ export default StyleSheet.create({
     borderRadius: theme.borderRadius.size10,
     width:86,
   },
-  newGaldaeTimeText:{
+  newGaldaeList:{
+    marginRight: 8,
+    padding:8,
+    alignItems:'center',
+    backgroundColor: theme.colors.white,
+    borderRadius: theme.borderRadius.size10,
+    borderColor:theme.colors.brandColor,
+    borderWidth:1,
+    width: 86,
+  },
+  newGaldaeTimeTextPassed:{
     fontSize: theme.fontSize.size10,
     marginBottom: 6,
     color:theme.colors.gray2,
+  },
+  newGaldaeTimeText:{
+    fontSize: theme.fontSize.size10,
+    marginBottom: 6,
+    color:theme.colors.black,
   },
   newGaldaeDepartText:{
     fontSize:theme.fontSize.size14,
     fontWeight:'500',
     marginBottom:5,
     maxWidth: 80,
-    color:theme.colors.gray2,
+    color:theme.colors.black,
   },
   newGaldaeDestText:{
+    fontSize:theme.fontSize.size14,
+    fontWeight:'500',
+    maxWidth: 80,
+    color:theme.colors.black,
+  },
+  newGaldaeDepartTextPassed:{
+    fontSize:theme.fontSize.size14,
+    fontWeight:'500',
+    marginBottom:5,
+    maxWidth: 80,
+    color:theme.colors.gray2,
+  },
+  newGaldaeDestTextPassed:{
     fontSize:theme.fontSize.size14,
     fontWeight:'500',
     maxWidth: 80,

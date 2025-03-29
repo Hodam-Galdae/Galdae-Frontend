@@ -17,9 +17,9 @@ export default StyleSheet.create({
     },
     borderedListBoxComplete:{
       width:'100%',
-      borderColor:theme.colors.gray0,
+      borderColor:theme.colors.lightGray2,
       borderRadius:theme.borderRadius.size10,
-      backgroundColor:theme.colors.lightGray,
+      backgroundColor:theme.colors.lightGray2,
       borderWidth:1,
       paddingStart:24,
       paddingTop:14,
@@ -30,6 +30,11 @@ export default StyleSheet.create({
       fontSize:theme.fontSize.size12,
       fontWeight:'700',
     },
+    galdaeOwnerCom:{
+      fontSize:theme.fontSize.size12,
+      fontWeight:'700',
+      color:theme.colors.gray2,
+    },
     fromContainer:{
       flexDirection:'row',
       marginTop:(8),
@@ -39,9 +44,29 @@ export default StyleSheet.create({
       fontSize:theme.fontSize.size16,
       fontWeight:'700',
     },
+    fromMainLocationCom:{
+      fontSize:theme.fontSize.size16,
+      fontWeight:'700',
+      color: theme.colors.gray2,
+    },
     fromSubLocation:{
       fontSize:theme.fontSize.size16,
       fontWeight:'500',
+    },
+    departureTime:{
+      color:theme.colors.black,
+      fontWeight:'500',
+      fontSize:theme.fontSize.size14,
+    },
+    departureTimeCom:{
+      color:theme.colors.gray1,
+      fontWeight:'500',
+      fontSize:theme.fontSize.size14,
+    },
+    fromSubLocationCom:{
+      fontSize:theme.fontSize.size16,
+      fontWeight:'500',
+      color:theme.colors.gray1,
     },
     toContainer:{
       flexDirection:'row',

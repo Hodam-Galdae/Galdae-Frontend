@@ -11,18 +11,21 @@ import {theme} from '../styles/theme';
 import SVGButton from '../components/button/SVGButton';
 import SVG from '../components/SVG';
 import TextTag from '../components/tag/TextTag';
+import DeletePopup from '../components/popup/DeletePopup';
 import FloatingButton from '../components/button/FloatingButton';
 import GaldaeItem from '../components/GaldaeItem';
 import CreateGaldaePopup from '../components/popup/CreateGaldaePopup';
 import {useNavigation} from '@react-navigation/native';
 import moment from 'moment-timezone/builds/moment-timezone-with-data';
 import ToastPopup from '../components/popup/ToastPopup';
+
 import NowGaldaeSameGender from '../components/popup/NowGaldaeSameGender';
 //type
 import {MyCreatedPost} from '../types/getTypes';
 
 //API
 import { createPost,getPosts } from '../api/postApi'; // 갈대 생성 API 불러오기
+import { deletePost } from '../api/postApi';
 import {getMyCreatedPosts} from '../api/membersApi';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 //import { useSelector } from 'react-redux';
@@ -66,7 +69,8 @@ const Home: React.FC<HomeProps> = () => {
   //const { posts } = useSelector((state: RootState) => state.galdaeSlice);
   const [posts, setPosts] = useState<GaldaeItemType[]>([]); // API 응답 데이터 타입에 맞게 수정 가능
   const [createGaldaeLoading, setCreateGaldaeLoading] = useState<boolean>(false);
-
+  const [deletePopupVisible, setDeletePopupVisible] = useState<boolean>(false);
+  const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
   const [generateLoading, setgenerateLoading] = useState<boolean>(false);
   const [toastVisible, setToastVisible] = useState<boolean>(false);
 
@@ -290,7 +294,14 @@ const getFormattedDepartureTime = (): string => {
   const closeCreateGaldaePopup = () => {
     setCreateGaldaePopupVisible(false);
   };
-
+  // 포스트 삭제를 위한 핸들러 (본인 글인 경우에만 활성화)
+  const handleLongPress = (post: MyCreatedPost | GaldaeItemType) => {
+    // 예시로 본인 글 여부는 post.isMine 속성으로 확인
+    if (post) { //.isMine
+      setSelectedPostId(post.postId);
+      setDeletePopupVisible(true);
+    }
+  };
   const handleCreateCaledaeConfirm = () => {
     const formattedDepartureTime = getFormattedDepartureTime();
 
@@ -307,7 +318,19 @@ const getFormattedDepartureTime = (): string => {
     setToastVisible(true);
    }
   };
-
+  const handleDeletePost = async () => {
+      if (!selectedPostId) {return;}
+      try {
+        await deletePost(selectedPostId);
+        fetchMyCreatedGaldae();
+        Alert.alert('삭제 완료', '선택한 갈대가 삭제되었습니다.');
+        setDeletePopupVisible(false);
+        setSelectedPostId(null);
+      } catch (error) {
+        Alert.alert('삭제 실패', '글 삭제에 실패했습니다. 다시 시도해주세요.');
+        console.error(error);
+      }
+  };
   const handleSwitch = () => {
     setDepartureLargeName(destinationLargeName);
     setDepartureSmallName(destinationSmallName);
@@ -341,7 +364,7 @@ const getFormattedDepartureTime = (): string => {
             ) : (
               <ScrollView horizontal showsHorizontalScrollIndicator={false} scrollEventThrottle={16}>
                 {myCreatedGaldaeList.map((item, index) => (
-                  <TouchableOpacity key={index} style={styles.newGaldaeList} onPress={()=>navigation.navigate('NowGaldaeDetail', {postId: item.postId})}>
+                  <TouchableOpacity key={index} style={styles.newGaldaeList} onPress={()=>navigation.navigate('NowGaldaeDetail', {postId: item.postId})} onLongPress={() => handleLongPress(item)} delayLongPress={100}>
                     <BasicText text={moment(item.createdAt).fromNow()} style={styles.newGaldaeTimeText} />
                     <BasicText text={`${item.departure}`} style={styles.newGaldaeDepartText} numberOfLines={1} ellipsizeMode="tail"/>
                     <SVG name="arrow_down_fill" style={styles.newGaldaeArrowIcon} />
@@ -434,6 +457,7 @@ const getFormattedDepartureTime = (): string => {
                 key={item.postId}
                 item={item}
                 onPress={ !item.isSameGender && item.passengerGenderType === 'SAME' ? () =>setSameGenderPopupVisible(true) : ()=> navigation.navigate('NowGaldaeDetail', {postId: item.postId}) }
+                onLongPress={() => handleLongPress(item)}
               />
             ))}
           </View>
@@ -494,9 +518,20 @@ const getFormattedDepartureTime = (): string => {
         onDismiss={() => setToastVisible(false)}
       />
       <NowGaldaeSameGender
-          visible={sameGenderPopupVisible}
-          onConfirm={()=>{setSameGenderPopupVisible(false);}}
-        />
+        visible={sameGenderPopupVisible}
+        onConfirm={()=>{setSameGenderPopupVisible(false);}}
+      />
+      <DeletePopup
+      visible={deletePopupVisible}
+      onCancel={() => {
+        setDeletePopupVisible(false);
+        setSelectedPostId(null);
+      }}
+      onConfirm={handleDeletePost}
+      title="선택하신 갈대를"
+      message="삭제하시겠습니까?"
+      buttonText="삭제하기"
+    />
     </View>
   );
 };

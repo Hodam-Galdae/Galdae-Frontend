@@ -61,7 +61,7 @@ const NowGaldaeDetail: React.FC = () => {
 
   const handleParticipateGaldae = async() => {
     const tagetRoom = await joinChatroom(postId);
-    navigation.navigate('ChatRoom', { data: Object.freeze(tagetRoom)});
+    navigation.replace('ChatRoom', { data: Object.freeze(tagetRoom)});
     // 참여 로직 처리
   };
   const formatDepartureTime = (departureTime: string): string => {

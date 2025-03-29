@@ -24,66 +24,75 @@ const GaldaeItem: React.FC<GaldaeItemProps> = ({ item, onPress, onLongPress }) =
     <TouchableOpacity onPress={onPress} onLongPress={item.isWriter ? onLongPress : undefined} delayLongPress={100}>
       <View style={ !item.isSameGender && item.passengerGenderType === 'SAME' ?   styles.borderedListBoxComplete : styles.borderedListBox}>
         {/* 사용자 닉네임 (null인 경우 익명 처리) */}
-        <BasicText text={item.userNickName || '익명'} style={styles.galdaeOwner} />
+        <BasicText text={item.userNickName || '익명'} style={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.galdaeOwnerCom : styles.galdaeOwner} />
 
         {/* 출발지 정보 */}
         <View style={styles.fromContainer}>
-          <SVG name="Car" />
-          <BasicText text={item.departure.majorPlace} style={styles.fromMainLocation} />
-          <BasicText text={item.departure.subPlace} style={styles.fromSubLocation} />
+          <SVG name={!item.isSameGender && item.passengerGenderType === 'SAME' ? 'Car1' : 'Car'} />
+          <BasicText text={item.departure.majorPlace} style={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.fromMainLocationCom : styles.fromMainLocation} />
+          <BasicText text={item.departure.subPlace} style={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.fromSubLocationCom : styles.fromSubLocation} />
         </View>
 
         {/* 승객 수 아이콘 */}
         <View style={styles.toContainer}>
           <View style={styles.fromToLine}>
-            <SVG name="FromToLine" />
+            <SVG name={!item.isSameGender && item.passengerGenderType === 'SAME' ? 'FromToLine1' : 'FromToLine'} />
           </View>
           {Array(item.passengerCount)
             .fill(null)
             .map((_, idx) => (
-              <SVG key={`user-${item.postId}-${idx}`} name="User" />
+              <SVG key={`user-${item.postId}-${idx}`} name={!item.isSameGender && item.passengerGenderType === 'SAME' ? 'User1' : 'User'} />
             ))}
           {Array(item.totalPassengerCount - item.passengerCount)
             .fill(null)
             .map((_, idx) => (
-              <SVG key={`disabled-${item.postId}-${idx}`} name="DisabledUser" />
+              <SVG key={`disabled-${item.postId}-${idx}`} name={!item.isSameGender && item.passengerGenderType === 'SAME' ? 'DisabledUser1' : 'DisabledUser' }/>
             ))}
           <BasicText
             text={`(${item.passengerCount}/${item.totalPassengerCount})`}
             fontWeight={500}
             fontSize={theme.fontSize.size16}
-            color={theme.colors.gray1}
+            color={!item.isSameGender && item.passengerGenderType === 'SAME' ? theme.colors.gray0 : theme.colors.gray1}
           />
         </View>
 
         {/* 도착지 정보 */}
         <View style={styles.toContainer}>
-          <SVG name="Location" />
-          <BasicText text={item.arrival.majorPlace} style={styles.fromMainLocation} />
-          <BasicText text={item.arrival.subPlace} style={styles.fromSubLocation} />
+          <SVG name={!item.isSameGender && item.passengerGenderType === 'SAME' ? 'Location1' : 'Location'} />
+          <BasicText text={item.arrival.majorPlace} style={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.fromMainLocationCom : styles.fromMainLocation}  />
+          <BasicText text={item.arrival.subPlace} style={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.fromSubLocationCom : styles.fromSubLocation} />
         </View>
 
         {/* 시간 정보 */}
         <View style={styles.timeContainer}>
-          <SVG name="Clock" />
+          <SVG name={!item.isSameGender && item.passengerGenderType === 'SAME' ? 'Clock1' : 'Clock' }/>
           <View>
             <BasicText
               text={item.arrangeTime === 'POSSIBLE' ? '시간 협의가능' : '시간 협의불가'}
-              style={styles.fromMainLocation}
+              style={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.fromSubLocationCom : styles.fromMainLocation}
               color={theme.colors.gray2}
               fontSize={theme.fontSize.size10}
             />
             <BasicText
               text={formatDepartureTime(item.departureTime)}
-              style={styles.fromSubLocation}
-              color={theme.colors.black}
-              fontSize={theme.fontSize.size14}
+              style={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.departureTimeCom : styles.departureTime}
+
             />
           </View>
         </View>
             {item.passengerGenderType && (
               <View style={styles.tags}>
-                {item.passengerGenderType === 'SAME' ? (
+                {!item.isSameGender && item.passengerGenderType === 'SAME' ? (
+                  <TextTag text="동성만"
+                  enabledColors={
+                    {
+                      backgroundColor:theme.colors.lightGray2,
+                      textColor:theme.colors.gray1,
+                      borderColor:theme.colors.gray1,
+                    }
+                  }
+                  />
+                ) : item.passengerGenderType === 'SAME' ? (
                   <TextTag text="동성만" />
                 ) : item.passengerGenderType === 'DONT_CARE' ? (
                   <TextTag text="성별무관" />

@@ -12,6 +12,7 @@ import SVGButton from '../components/button/SVGButton';
 import SVGTextButton from '../components/button/SVGTextButton';
 import moment from 'moment-timezone';
 import { theme } from '../styles/theme';
+import DeletePopup from '../components/popup/DeletePopup';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import {  useSelector } from 'react-redux';
 import { useAppDispatch } from '../modules/redux/store';
@@ -20,9 +21,9 @@ import { setUserInfo } from '../modules/redux/slice/myInfoSlice';
 import { fetchMyGaldaeHistory } from '../modules/redux/slice/myGaldaeSlice';
 //API
 import {  getUserInfo,updateMemberImage } from '../api/membersApi';
-
+import { deletePost } from '../api/postApi';
 //type
-import {} from '../types/getTypes';
+import { MyPostHistory } from '../types/getTypes';
 
 // 내비게이션 스택 타입 정의
 type RootStackParamList = {
@@ -51,6 +52,8 @@ const MyInfo: React.FC = () => {
   const [refreshing, setRefreshing] = useState(false);
   const dispatch = useAppDispatch();
   const [isImageLoading, setIsImageLoading] = useState(false); // 이미지 업데이트 로딩 상태
+  const [deletePopupVisible, setDeletePopupVisible] = useState<boolean>(false);
+  const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
   const navigation = useNavigation<nowGaldaeScreenNavigationProp>();
   //const [profileImg, setProfileImg] = useState<string>('');
   const {imageUri, getImageByGallery} = useImagePicker();
@@ -101,26 +104,14 @@ useFocusEffect(
 
 
 
-  // const formatTimeAgo = (departureTime: string) => {
-  //   // 오늘 날짜 (시간 제거)
-  //   const today = moment().startOf('day');
-  //   // 서버에서 받은 출발 시간을 UTC 기준으로 로컬 날짜로 변환 후, 시간 제거
-  //   const departureDate = moment.utc(departureTime).local().startOf('day');
-
-  //   // 콘솔에 오늘 날짜와 출발 날짜 출력
-  //   console.log(`오늘 날짜: ${today.format('YYYY-MM-DD')}`);
-  //   console.log(`출발 날짜: ${departureDate.format('YYYY-MM-DD')}`);
-
-  //   // 오늘 날짜와 출발 날짜 간 차이를 일(day) 단위로 계산
-  //   const diffDays = today.diff(departureDate, 'days');
-  //   if(diffDays < 0){
-  //     return `${departureDate.diff(today, 'days')}일 후`;
-  //   }else{
-  //       // 차이가 0이면 "오늘", 아니면 "X일 전"으로 반환
-  //       return diffDays === 0 ? '오늘' : `${diffDays}일 전`;
-  //   }
-
-  // };
+  // 포스트 삭제를 위한 핸들러 (본인 글인 경우에만 활성화)
+  const handleLongPress = (post: MyPostHistory) => {
+    // 예시로 본인 글 여부는 post.isMine 속성으로 확인
+    if (post) { //.isMine
+      setSelectedPostId(post.postId);
+      setDeletePopupVisible(true);
+    }
+  };
 
 
    // imageUri가 변경되면 imageBase64를 사용해서 updateMemberImage API 호출
@@ -151,6 +142,19 @@ useFocusEffect(
     fetchUserInfo();
     dispatch(fetchMyGaldaeHistory());
     setRefreshing(false);
+  };
+  const handleDeletePost = async () => {
+      if (!selectedPostId) {return;}
+      try {
+        await deletePost(selectedPostId);
+        dispatch(fetchMyGaldaeHistory());
+        Alert.alert('삭제 완료', '선택한 갈대가 삭제되었습니다.');
+        setDeletePopupVisible(false);
+        setSelectedPostId(null);
+      } catch (error) {
+        Alert.alert('삭제 실패', '글 삭제에 실패했습니다. 다시 시도해주세요.');
+        console.error(error);
+      }
   };
   return (
     <View>
@@ -231,14 +235,24 @@ useFocusEffect(
             <ActivityIndicator size="large" color={theme.colors.brandColor} />
           ) : myGaldaeHistory.length > 0 ? (
             <ScrollView horizontal showsHorizontalScrollIndicator={false} scrollEventThrottle={16}>
-              {myGaldaeHistory.map((list, index) => (
-                <TouchableOpacity key={index} style={styles.newGaldaeList} onPress={()=>navigation.navigate('NowGaldaeDetail', {postId: list.postId})}>
-                  <BasicText text={moment(list.createAt).fromNow()} style={styles.newGaldaeTimeText} />
-                  <BasicText text={`${list.departure.subPlace}`} style={styles.newGaldaeDepartText} numberOfLines={1} ellipsizeMode="tail"/>
-                  <SVG name="arrow_down_fill_gray2" style={styles.newGaldaeArrowIcon} />
-                  <BasicText text={`${list.arrival.subPlace}`} style={styles.newGaldaeDestText} numberOfLines={1} ellipsizeMode="tail"/>
-                </TouchableOpacity>
-              ))}
+              {myGaldaeHistory.map((list, index) =>{
+                const isPassed = moment(list.departureTime.replace(/Z$/, '')).isBefore(moment());
+
+                return (
+                  <TouchableOpacity key={index} style={isPassed ? styles.newGaldaeListPassed : styles.newGaldaeList} onPress={()=>navigation.navigate('NowGaldaeDetail', {postId: list.postId})} onLongPress={() => handleLongPress(list)} delayLongPress={100}>
+                    <BasicText text={moment(list.createAt).fromNow()} style={isPassed ? styles.newGaldaeTimeTextPassed : styles.newGaldaeTimeText} />
+                    <BasicText text={`${list.departure.subPlace}`} style={isPassed ? styles.newGaldaeDepartTextPassed : styles.newGaldaeDepartText} numberOfLines={1} ellipsizeMode="tail"/>
+                    {
+                      isPassed ? (
+                        <SVG name="arrow_down_fill_gray2" style={styles.newGaldaeArrowIcon} />
+                      ) : (
+                        <SVG name="arrow_down_fill" style={styles.newGaldaeArrowIcon} />
+                      )
+                    }
+                    <BasicText text={`${list.arrival.subPlace}`} style={isPassed ? styles.newGaldaeDestTextPassed : styles.newGaldaeDestText} numberOfLines={1} ellipsizeMode="tail"/>
+                  </TouchableOpacity>
+                );
+              })}
             </ScrollView>
           ) : (
             <BasicText text="갈대 기록이 없습니다."  />
@@ -269,6 +283,17 @@ useFocusEffect(
         </View>
         </ScrollView>
       </ScrollView>
+      <DeletePopup
+        visible={deletePopupVisible}
+        onCancel={() => {
+          setDeletePopupVisible(false);
+          setSelectedPostId(null);
+        }}
+        onConfirm={handleDeletePost}
+        title="선택하신 갈대를"
+        message="삭제하시겠습니까?"
+        buttonText="삭제하기"
+      />
     </View>
   );
 };
