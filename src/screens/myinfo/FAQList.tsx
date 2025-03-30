@@ -71,7 +71,7 @@ const FAQList = () => {
       ) : (
       <FAQItem
       id={-1}
-      question="해당 메뉴의 FAQ가 없습니다."
+      question="해당 메뉴의 FAQ가 없습니다"
       answer=""
       expandedId={null}
       setExpandedId={() => null}

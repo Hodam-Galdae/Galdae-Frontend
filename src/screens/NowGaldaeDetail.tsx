@@ -90,7 +90,7 @@ const NowGaldaeDetail: React.FC = () => {
   if (!postDetail) {
     return (
       <View style={{padding: 16}}>
-        <BasicText text="상세 정보가 없습니다." />
+        <BasicText text="상세 정보가 없습니다" />
       </View>
     );
   }

@@ -87,7 +87,7 @@ const NicknameChange: React.FC<HomeProps> = () => {
                       onChangeText={setNickname}
                     />
                      <BasicText text="* 닉네임은 최초 설정 후 최대 2회까지 변경 가능하오니," style={styles.redText}/>
-                     <BasicText text="이점 유의하시어 신중하게 설정해 주시길 바랍니다." style={styles.redText}/>
+                     <BasicText text="이점 유의하시어 신중하게 설정해 주시길 바랍니다" style={styles.redText}/>
                 </View>
                 <BasicButton
                     text="완료"

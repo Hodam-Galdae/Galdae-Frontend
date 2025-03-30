@@ -5,14 +5,14 @@ import RNFS from 'react-native-fs';
  * GET /question/my-list
  */
 export const getMyQuestions = async () => {
-  console.log('🚀 [내 문의 목록 조회 요청] GET /question/my-list');
+ // console.log('🚀 [내 문의 목록 조회 요청] GET /question/my-list');
 
   try {
     const response = await axiosInstance.get('/question/my-list');
-    console.log('✅ [내 문의 목록 조회 성공] 응답 데이터:', response.data);
+   // console.log('✅ [내 문의 목록 조회 성공] 응답 데이터:', response.data);
     return response.data;
   } catch (error: any) {
-    console.error('❌ [내 문의 목록 조회 실패] 오류 발생:', error.response ? error.response.data : error);
+   // console.error('❌ [내 문의 목록 조회 실패] 오류 발생:', error.response ? error.response.data : error);
     throw error;
   }
 };
@@ -23,17 +23,17 @@ export const getMyQuestions = async () => {
  * @param tag FAQ 태그
  */
 export const getFaqList = async (tag: string) => {
-  console.log('🚀 [FAQ 조회 요청] GET /question/list');
-  console.log('📌 요청 파라미터:', tag);
+  //console.log('🚀 [FAQ 조회 요청] GET /question/list');
+ // console.log('📌 요청 파라미터:', tag);
 
   try {
     const response = await axiosInstance.get('/question/list', {
       params: { tag },
     });
-    console.log('✅ [FAQ 조회 성공] 응답 데이터:', response.data);
+   // console.log('✅ [FAQ 조회 성공] 응답 데이터:', response.data);
     return response.data;
   } catch (error: any) {
-    console.error('❌ [FAQ 조회 실패] 오류 발생:', error.response ? error.response.data : error);
+   // console.error('❌ [FAQ 조회 실패] 오류 발생:', error.response ? error.response.data : error);
     throw error;
   }
 };
@@ -72,19 +72,19 @@ export const createQuestion = async (
     } as any);
   }
 
-  // 4. 디버깅용 로그
-  const unsafeFormData = formData as any;
-  for (const part of unsafeFormData._parts) {
-    console.log('📦 formData:', part[0], part[1]);
-  }
+  // // 4. 디버깅용 로그
+  // const unsafeFormData = formData as any;
+  // for (const part of unsafeFormData._parts) {
+  //  // console.log('📦 formData:', part[0], part[1]);
+  // }
 
   // 5. 요청
   try {
     const response = await axiosInstance.post('/question', formData);
-    console.log('✅ [문의하기 성공]', response.data);
+   // console.log('✅ [문의하기 성공]', response.data);
     return response.data;
   } catch (error: any) {
-    console.error('❌ [문의하기 실패]', error.response?.data || error);
+    //console.error('❌ [문의하기 실패]', error.response?.data || error);
     throw error;
   }
 };

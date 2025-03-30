@@ -82,8 +82,8 @@ const CreateGaldae: React.FC = () => {
     Alert.alert('출발지 또는 도착지를 다시 선택해주세요!');
     return;
    }
-   if(formatDepartureDateTime() === '출발 시간을 선택해 주세요.'){
-    Alert.alert('출발 시간을 선택해 주세요.');
+   if(formatDepartureDateTime() === '출발 시간 선택'){
+    Alert.alert('출발 시간을 선택해주세요!');
     return;
  }
 
@@ -176,7 +176,7 @@ const CreateGaldae: React.FC = () => {
       //   hour12 = 12;
       // }
       // const formattedTime = `${amPm} ${hour12} : ${minute < 10 ? '0' + minute : minute}`;
-      return '클릭하여 출발 시간을 선택해 주세요.';
+      return '출발 시간 선택';
     }
     const dateObj = moment(departureDate, 'YYYY-MM-DD');
     const formattedDate = dateObj.format('YYYY년 M월 D일 (ddd)');
@@ -185,7 +185,7 @@ const CreateGaldae: React.FC = () => {
   };
   const getFormattedDepartureTime = (): string => {
     if (!departureDate) {
-      return '출발 시간을 선택해 주세요.';
+      return '출발 시간 선택';
     }
 
     // 12시간 -> 24시간 변환

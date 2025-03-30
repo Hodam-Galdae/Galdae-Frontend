@@ -70,7 +70,7 @@ const FilterPopup = forwardRef<FastGaldaeTimePopupRef, FastGaldaePopupProps>(
 
 
 
-      console.log(hour ,nextMinute );
+     // console.log(hour ,nextMinute );
     };
 
     // 🔧 handleSelectConfirm: ISO 형식의 날짜시간 문자열로 변환 후 onConfirm 호출

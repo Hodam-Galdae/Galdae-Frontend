@@ -38,7 +38,7 @@ const Logout: React.FC<HomeProps> = () => {
       try {
         await logoutMember(token);
         // 로그아웃 성공 시, 상태 초기화 후 로그인 화면으로 이동하거나 적절히 처리합니다.
-        Alert.alert('로그아웃', '정상적으로 로그아웃 되었습니다.');
+        Alert.alert('로그아웃', '정상적으로 로그아웃 되었습니다');
         navigation.navigate('Login');
       } catch (error) {
         Alert.alert('로그아웃 실패', '로그아웃에 실패하였습니다. 다시 시도해주세요.');

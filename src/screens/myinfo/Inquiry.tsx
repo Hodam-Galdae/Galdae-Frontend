@@ -46,7 +46,7 @@ const Inquiry: React.FC<HomeProps> = () => {
     const copyEmailToClipboard = () => {
       const email = 'hodamdae@gmail.com';
       Clipboard.setString(email);
-      Alert.alert('클립보드에 복사됨', `'${email}'이(가) 복사되었습니다.`);
+      Alert.alert('클립보드에 복사됨', `'${email}'이(가) 복사되었습니다`);
     };
     useEffect(() => {
       if (imageUri !== undefined) {

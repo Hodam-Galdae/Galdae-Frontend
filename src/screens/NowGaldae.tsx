@@ -305,7 +305,7 @@ const NowGaldae: React.FC<HomeProps> = () => {
         setPageNumber(0); // 페이지도 초기화
       }
 
-      Alert.alert('삭제 완료', '선택한 갈대가 삭제되었습니다.');
+      //Alert.alert('삭제 완료', '선택한 갈대가 삭제되었습니다.');
       setDeletePopupVisible(false);
       setSelectedPostId(null);
     } catch (error) {
@@ -538,7 +538,7 @@ const handleLongPress = (post: GaldaeItemType) => {
         ) : finalFilteredData.length === 0 ? (
           <View style={styles.noData}>
             <SVG name="information_line" />
-            <BasicText text="해당 경로의 갈대가 없습니다." color={theme.colors.gray1} />
+            <BasicText text="해당 경로의 갈대가 없습니다" color={theme.colors.gray1} />
           </View>
         ) : (
           <FlatList
@@ -580,12 +580,10 @@ const handleLongPress = (post: GaldaeItemType) => {
         onConfirm={(selectedSortOrder: 'latest' | 'departureTime') => {
           setSortOrder(selectedSortOrder);
         }}
-        onClose={() => console.log('팝업 닫힘')}
       />
       <FilterPopup
         ref={filterRef}
         onConfirm={handleFilterPopupConfirm}
-        onClose={() => console.log('팝업 닫힘')}
         handleFilterReset={handleFilterReset}
       />
       <DeletePopup

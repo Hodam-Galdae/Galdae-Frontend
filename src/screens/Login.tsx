@@ -180,7 +180,7 @@ const Login: React.FC = () => {
         />
         <View style={styles.textWrapper}>
           <SVG name="GaldaeLogo" />
-          <BasicText text="입니다." style={{...styles.title, marginLeft: 10}} />
+          <BasicText text="입니다" style={{...styles.title, marginLeft: 10}} />
         </View>
       </View>
 

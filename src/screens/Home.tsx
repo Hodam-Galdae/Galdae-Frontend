@@ -195,7 +195,7 @@ useEffect(() => {
   // 출발일시 문자열 포맷 함수
   const formatDepartureDateTime = () => {
     if (!departureDate) {
-      return '출발 시간을 선택해 주세요.';
+      return '출발 시간 선택';
     }
     const dateObj = moment(departureDate, 'YYYY-MM-DD');
     // 예: "2025년 11월 12일 (수)"
@@ -210,7 +210,7 @@ useEffect(() => {
 const getFormattedDepartureTime = (): string => {
   // 12시간 형식을 24시간 형식으로 변환
   if (!departureDate) {
-    return '출발 시간을 선택해 주세요.';
+    return '출발 시간 선택';
   }
     let hour24 = departureHour;
   if (departureAmPm === '오후' && departureHour < 12) {
@@ -245,8 +245,8 @@ const getFormattedDepartureTime = (): string => {
     if(departureLargeName === '출발지 선택' || departureSmallName === '출발지 선택' || destinationLargeName === '도착지 선택' || destinationSmallName === '도착지 선택'){
       Alert.alert('출발지 또는 도착지를 제대로 선택해주세요!');
       return;
-   }else if(formattedDepartureTime === '출발 시간을 선택해 주세요.'){
-    Alert.alert('출발 시간을 선택해 주세요.');
+   }else if(formattedDepartureTime === '출발 시간 선택'){
+    Alert.alert('출발 시간을 선택해주세요!');
     return;
  }
  // 출발 시간을 moment 객체로 변환하여 현재 시간과 비교
@@ -278,8 +278,8 @@ const getFormattedDepartureTime = (): string => {
     if(departureLargeName === '출발지 선택' || departureSmallName === '출발지 선택' || destinationLargeName === '도착지 선택' || destinationSmallName === '도착지 선택'){
       Alert.alert('출발지 또는 도착지를 제대로 선택해주세요!');
       return;
-    }else if(formattedDepartureTime === '출발 시간을 선택해 주세요.'){
-      Alert.alert('출발 시간을 선택해 주세요.');
+    }else if(formattedDepartureTime === '출발 시간 선택'){
+      Alert.alert('출발 시간 선택');
       return;
     }
 
@@ -426,6 +426,11 @@ const getFormattedDepartureTime = (): string => {
           {
             postsLoading ? (
               <ActivityIndicator size="small" color={theme.colors.brandColor} />
+            ) : posts.length === 0  ? (
+              <View style={styles.noData}>
+                <SVG name="information_line" />
+                <BasicText text="갈대가 없습니다" color={theme.colors.gray1} />
+              </View>
             ) : (
               posts.map(item => (
                 <GaldaeItem

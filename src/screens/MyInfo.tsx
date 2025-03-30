@@ -145,7 +145,7 @@ useFocusEffect(
         dispatch(fetchMyCreatedGaldae());
         dispatch(fetchHomeGaldaePosts());
 
-        Alert.alert('삭제 완료', '선택한 갈대가 삭제되었습니다.');
+        //Alert.alert('삭제 완료', '선택한 갈대가 삭제되었습니다');
         setDeletePopupVisible(false);
         setSelectedPostId(null);
       } catch (error) {

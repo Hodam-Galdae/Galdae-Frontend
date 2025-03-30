@@ -32,15 +32,15 @@ axiosInstance.interceptors.request.use(
     } else {
       config.headers['Content-Type'] = 'application/json';
     }
-    console.log(config);
+   // console.log(config);
     try {
       const token = await EncryptedStorage.getItem('accessToken');
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
-        console.log(`Bearer ${token}`);
+       // console.log(`Bearer ${token}`);
       }
     } catch (error) {
-      console.error('Token 가져오는 중 오류 발생:', error);
+     // console.error('Token 가져오는 중 오류 발생:', error);
     }
 
     return config;
@@ -52,7 +52,7 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   response => response,
   async error => {
-    console.error('API Error:', error.response?.data || error.message);
+    //console.error('API Error:', error.response?.data || error.message);
     const originalRequest = error.config;
 
     if (error.response.status === 401 && !originalRequest._retry) {
@@ -67,7 +67,7 @@ axiosInstance.interceptors.response.use(
 
       //refresh token 발급
       try {
-        console.log('refresh!');
+       // console.log('refresh!');
         const res = await axios.post(API_BASE_URL + '/auth/reissue', { refreshToken, memberId });
         await EncryptedStorage.setItem('accessToken', res.data.accessToken);
         await EncryptedStorage.setItem('refreshToken', res.data.refreshToken);

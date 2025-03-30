@@ -64,7 +64,7 @@ const MyGaldaeHistory: React.FC<HomeProps> = () => {
     const renderEmptyComponent = () => (
       <View style={styles.noData}>
         <SVG name="information_line" />
-        <BasicText text="갈대가 없습니다." color={theme.colors.gray1} />
+        <BasicText text="갈대가 없습니다" color={theme.colors.gray1} />
       </View>
     );
   const handleDeletePost = async () => {
@@ -82,7 +82,7 @@ const MyGaldaeHistory: React.FC<HomeProps> = () => {
                       properties:  ['createAt'] ,
                     };
              dispatch(fetchGaldaePosts(params));
-        
+
         Alert.alert('삭제 완료', '선택한 갈대가 삭제되었습니다.');
         setDeletePopupVisible(false);
         setSelectedPostId(null);

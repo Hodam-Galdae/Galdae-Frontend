@@ -42,7 +42,7 @@ const WithDraw: React.FC<HomeProps> = () => {
         // 예시: navigation.reset({ index: 0, routes: [{ name: 'Login' }] });
 
         setInvalidPopupVisible(false);
-        Alert.alert('회원탈퇴', '정상적으로 회원탈퇴 되었습니다.');
+        Alert.alert('회원탈퇴', '정상적으로 회원탈퇴 되었습니다');
         navigation.navigate('Login');
       } catch (error) {
         console.error('탈퇴 실패:', error);

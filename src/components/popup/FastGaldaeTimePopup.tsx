@@ -45,15 +45,15 @@ const FastGaldaeTimePopup = forwardRef<FastGaldaeTimePopupRef, FastGaldaePopupPr
 
 
 
-      console.log(hour ,nextMinute );
+     // console.log(hour ,nextMinute );
     };
 
     const handleSelectConfirm = () =>{
       // 선택한 날짜, 오전/오후, 시간 정보를 활용
       onConfirm && selectedDate && onConfirm(selectedDate, selectedAmPm, selectedHour, selectedMinute);
-      console.log('날짜:', selectedDate);
-      console.log('오전/오후:', selectedAmPm);
-      console.log('시간:', selectedHour, '시', selectedMinute, '분');
+     // console.log('날짜:', selectedDate);
+     // console.log('오전/오후:', selectedAmPm);
+     // console.log('시간:', selectedHour, '시', selectedMinute, '분');
       modalizeRef.current?.close();
     };
 

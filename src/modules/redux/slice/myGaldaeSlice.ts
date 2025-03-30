@@ -22,7 +22,7 @@ export const fetchMyGaldaeHistory = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       const response = await getMyPostHistory();
-      console.log('내 갈대기록:', response);
+     // console.log('내 갈대기록:', response);
       return {
         data: response,
         totalCount: response.length,

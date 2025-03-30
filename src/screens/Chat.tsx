@@ -42,7 +42,7 @@ const Chat: React.FC = () => {
       navigation.navigate('ChatRoom', { data: Object.freeze(tagetRoom)});
     }
     else{
-      console.log('error');
+     // console.log('error');
       return;
     }
   };

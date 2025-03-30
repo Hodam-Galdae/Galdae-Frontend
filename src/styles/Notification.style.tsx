@@ -21,6 +21,14 @@ export default StyleSheet.create({
 
         backgroundColor: theme.colors.white,
     },
+    noData:{
+        //height:'100%',
+        height: 170,
+         alignItems:'center',
+         justifyContent:'center',
+         gap:12,
+         //backgroundColor:theme.colors.brandColor,
+       },
     title:{
         marginLeft:15,
         fontSize:theme.fontSize.size18,

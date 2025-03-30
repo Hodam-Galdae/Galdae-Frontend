@@ -51,10 +51,10 @@ const TimePicker: React.FC<TimePickerProps> = ({ onTimeChange, isToday = false,s
 
   const handleSelectAmPm = (amPm: '오전' | '오후') => {
     const convertedHour = amPm === '오전' ? (selectedHour % 12) : ((selectedHour % 12) + 12);
-    console.log(`
-      ⭐️amPm: ${amPm}
-      ⭐️convertedHour : ${convertedHour}
-      `);
+    // console.log(`
+    //   ⭐️amPm: ${amPm}
+    //   ⭐️convertedHour : ${convertedHour}
+    //   `);
     if (isToday) {
       const now = moment();
       const chosenTime = moment().startOf('day').set({ hour: convertedHour, minute: selectedMinute, second: 0, millisecond: 0 });
@@ -70,10 +70,10 @@ const TimePicker: React.FC<TimePickerProps> = ({ onTimeChange, isToday = false,s
   const handleSelectHour = (hour: number) => {
     // 12시간 값을 24시간 값으로 변환
     const convertedHour = selectedAmPm === '오전' ? (hour % 12) : ((hour % 12) + 12);
-    console.log(`
-      🌸amPm: ${hour}
-      🌸convertedHour : ${convertedHour}
-      `);
+    // console.log(`
+    //   🌸amPm: ${hour}
+    //   🌸convertedHour : ${convertedHour}
+    //   `);
     if (isToday) {
       const now = moment();
       // 오늘 날짜의 시작을 기준으로 선택한 시간 설정 (날짜는 오늘)
@@ -91,10 +91,10 @@ const TimePicker: React.FC<TimePickerProps> = ({ onTimeChange, isToday = false,s
 
 const handleSelectMinute = (minute: number) => {
   const convertedHour = selectedAmPm === '오전' ? (selectedHour % 12) : ((selectedHour % 12) + 12);
-  console.log(`
-    🐤amPm: ${minute}
-    🐤convertedHour : ${convertedHour}
-    `);
+  // console.log(`
+  //   🐤amPm: ${minute}
+  //   🐤convertedHour : ${convertedHour}
+  //   `);
   if (isToday) {
     const now = moment();
     const chosenTime = moment().startOf('day').set({ hour: convertedHour, minute, second: 0, millisecond: 0 });
@@ -205,7 +205,7 @@ const handleSelectMinute = (minute: number) => {
     onCancel={() => setInvalidPopupVisible(false)}
     onConfirm={() => setInvalidPopupVisible(false)}
     title="현재 시간 이전 시간은"
-    message="선택이 불가능 합니다."
+    message="선택이 불가능 합니다"
     buttonText="확인"
     />
 

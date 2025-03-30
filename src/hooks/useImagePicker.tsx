@@ -22,13 +22,13 @@ const useImagePicker = () => {
   // 권한 확인 및 요청 함수
   const checkAndRequestPermission = async (permission: Permission) => {
     const result = await check(permission);
-    console.log(`Check permission: ${permission} => ${result}`);
+   // console.log(`Check permission: ${permission} => ${result}`);
 
     if (result === RESULTS.GRANTED) {
       return true;
     } else {
       const requestResult = await request(permission);
-      console.log(`Request permission: ${permission} => ${requestResult}`);
+     // console.log(`Request permission: ${permission} => ${requestResult}`);
       return requestResult === RESULTS.GRANTED;
     }
   };
@@ -81,9 +81,9 @@ const useImagePicker = () => {
         },
         (response: ImagePickerResponse) => {
           if (response.didCancel) {
-            console.log('User cancelled camera');
+          //  console.log('User cancelled camera');
           } else if (response.errorCode) {
-            console.log('Camera error: ', response.errorMessage);
+           // console.log('Camera error: ', response.errorMessage);
           } else if (response.assets !== undefined) {
             setImageUri(response.assets[0].uri ?? '');
             setImageName(response.assets[0].fileName ?? '');
@@ -92,7 +92,7 @@ const useImagePicker = () => {
         },
       );
     } else {
-      console.log('Permissions are not granted');
+     // console.log('Permissions are not granted');
     }
   };
 
@@ -128,9 +128,9 @@ const useImagePicker = () => {
         },
         response => {
           if (response.didCancel) {
-            console.log('User cancelled gallery');
+           // console.log('User cancelled gallery');
           } else if (response.errorCode) {
-            console.log('Gallery error: ', response.errorMessage);
+           // console.log('Gallery error: ', response.errorMessage);
           } else if (
             response.assets !== undefined &&
             response.assets.length > 0
@@ -142,7 +142,7 @@ const useImagePicker = () => {
         },
       );
     } else {
-      console.log('Permissions are not granted');
+     // console.log('Permissions are not granted');
     }
   };
 

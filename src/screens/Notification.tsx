@@ -3,6 +3,7 @@ import {  ScrollView, View,ActivityIndicator} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { theme } from '../styles/theme';
 import styles from '../styles/Notification.style';
+import SVG from '../components/SVG';
 import Header from '../components/Header';
 import SVGButton from '../components/button/SVGButton';
 import BasicText from '../components/BasicText';
@@ -88,6 +89,11 @@ const Notification: React.FC<HomeProps> = () => {
                 {
                     loading ? (
                         <ActivityIndicator size="large" color={theme.colors.brandColor} />
+                    ) : notifications.length === 0 ? (
+                      <View style={styles.noData}>
+                <SVG name="information_line" />
+                <BasicText text="알림이 없습니다." color={theme.colors.gray1} />
+              </View>
                     ) : (
                         <>
                         <BasicText text="오늘" style={styles.title}/>

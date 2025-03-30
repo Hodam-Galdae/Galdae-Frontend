@@ -49,7 +49,7 @@ const Agree: React.FC<AgreeProps> = ({setNextStep, goTermsDetailPage}) => {
       setNextStep('setUserInfo');
     }
     catch(e) {
-      console.log(e);
+     // console.log(e);
     }
   };
 
@@ -84,7 +84,7 @@ const Agree: React.FC<AgreeProps> = ({setNextStep, goTermsDetailPage}) => {
               style={styles.agreeBtn}
             />
             <BasicText
-              text="모두 동의합니다."
+              text="모두 동의합니다"
               style={
                 selected.every(value => value)
                   ? {...styles.agreeText, color: theme.colors.black}
