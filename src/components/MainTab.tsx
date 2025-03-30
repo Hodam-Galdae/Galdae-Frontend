@@ -33,7 +33,7 @@ function App(): React.JSX.Element {
               tabBarStyle: {
                 height: Platform.select({
                   ios: 80,
-                  android: 54,
+                  android: 74,
                 }),
                 borderTopLeftRadius: 20,
                 borderTopRightRadius: 20,
