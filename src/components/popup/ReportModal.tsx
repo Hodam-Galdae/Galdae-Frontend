@@ -23,7 +23,7 @@ export interface ReportPopupProps {
   title?: string;
   message?: string;
   containerStyle?: StyleProp<ViewStyle>;
-  setImage: React.Dispatch<React.SetStateAction<{ uri: string; name: string; }>>;
+  setImage: React.Dispatch<React.SetStateAction<{uri: string; name: string}>>;
 }
 
 const ReportPopup: React.FC<ReportPopupProps> = ({
@@ -34,7 +34,12 @@ const ReportPopup: React.FC<ReportPopupProps> = ({
 }) => {
   const [selected, setSelected] = useState<number>(-1);
   const [reason, setReason] = useState<string>('');
-  const reportText = ['사유 선택1', '사유 선택2', '사유 선택3', '직접 입력'];
+  const reportText = [
+    '상대방이 불건전한 채팅을 보냈어요.',
+    '상대방이 정산금을 보내지 않아요.',
+    '상대방이 협의된 목적지가 아닌 목적지를 요구해요.',
+    '직접 입력',
+  ];
   const {imageUri, imageName, getImageByGallery} = useImagePicker();
 
   useDidMountEffect(() => {
@@ -72,12 +77,13 @@ const ReportPopup: React.FC<ReportPopupProps> = ({
             ) : null}
           </View>
           <View style={styles.wrapper}>
-            <View style={{flexDirection: 'row', marginBottom: 10,}}>
-              <SVGButton onPress={getImageByGallery} iconName="PictureGray" buttonStyle={styles.pictureBtn} />
-              {imageUri ?
-                <Image source={{uri: imageUri}}/> :
-                null
-              }
+            <View style={{flexDirection: 'row', marginBottom: 10}}>
+              <SVGButton
+                onPress={getImageByGallery}
+                iconName="PictureGray"
+                buttonStyle={styles.pictureBtn}
+              />
+              {imageUri ? <Image source={{uri: imageUri}} /> : null}
             </View>
             <TouchableOpacity
               onPress={() =>

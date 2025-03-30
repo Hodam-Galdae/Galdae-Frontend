@@ -21,6 +21,7 @@
       android:allowBackup="false"
       android:theme="@style/AppTheme"
       android:usesCleartextTraffic="true"
+      android:screenOrientation="portrait"
       android:supportsRtl="true">
       <!-- FCM 기본 서비스 등록 -->
     <service

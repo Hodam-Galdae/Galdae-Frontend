@@ -4,7 +4,7 @@ import styles from '../styles/ChatItem.style';
 import BasicText from './BasicText';
 import SVG from './SVG';
 import {theme} from '../styles/theme';
-import { useSelector } from 'react-redux';
+import {useSelector} from 'react-redux';
 import {RootState} from '../modules/redux/RootReducer';
 
 type Chat = {
@@ -28,7 +28,7 @@ const ChatItem: React.FC<{item: Chat}> = React.memo(({item}) => {
         <View>
           {item.sender !== userInfo.nickname && item.isShowProfile ? (
             <View style={styles.userWrapper}>
-              {item.senderImage === undefined ? (
+              {item.senderImage === null ? (
                 <SVG name="DefaultProfile" style={styles.userImage} />
               ) : (
                 <Image source={{uri: item.senderImage}} />
@@ -56,7 +56,9 @@ const ChatItem: React.FC<{item: Chat}> = React.memo(({item}) => {
                   styles.messageContainer,
                   {
                     alignSelf:
-                      item.sender === userInfo.nickname ? 'flex-end' : 'flex-start',
+                      item.sender === userInfo.nickname
+                        ? 'flex-end'
+                        : 'flex-start',
                     backgroundColor:
                       item.sender === userInfo.nickname
                         ? theme.colors.brandSubColor
@@ -66,7 +68,6 @@ const ChatItem: React.FC<{item: Chat}> = React.memo(({item}) => {
                 <BasicText style={styles.messageText} text={item.content} />
               </View>
             ) : item.type === 'IMAGE' ? (
-              //TODO: item.content로 변경
               <Image style={styles.image} source={{uri: item.content}} />
             ) : null}
             {item.isShowTime && item.sender !== userInfo.nickname ? (

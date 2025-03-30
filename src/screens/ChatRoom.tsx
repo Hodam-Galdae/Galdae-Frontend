@@ -41,11 +41,7 @@ import {
   sendImage,
   exitChatroom,
 } from '../api/chatApi';
-import {
-  SUB_ENDPOINT,
-  PUB_ENDPOINT,
-  WEB_SOCKET_URL,
-} from '../api/axiosInstance';
+import {SUB_ENDPOINT, PUB_ENDPOINT, WEB_SOCKET_URL} from '../api/axiosInstance';
 import {createReport} from '../api/reportApi';
 import RNFS from 'react-native-fs';
 import Loading from '../components/Loading';
@@ -169,6 +165,7 @@ const ChatRoom: React.FC = () => {
               sender: receiveData.sender,
               chatType: receiveData.type,
               time: new Date().toISOString(),
+              memberImage: receiveData.senderImage,
             },
           ]);
         },
@@ -224,6 +221,7 @@ const ChatRoom: React.FC = () => {
           type: 'MESSAGE',
           sender: userInfo.nickname,
           message: message,
+          senderImage: userInfo.image,
         }),
       });
 
