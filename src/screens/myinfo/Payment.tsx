@@ -103,7 +103,13 @@ useEffect(() => {
   const bankOption: BankOption | undefined = banks.find(
     (bank: BankOption) => bank.name === userInfo?.bankType
   );
-
+// [FlatList] 데이터가 없을 때 표시할 내용 (ListEmptyComponent)
+const renderEmptyComponent = () => (
+  <View style={styles.noData}>
+    <SVG name="information_line" />
+    <BasicText text="정산 내역이 없습니다" color={theme.colors.gray1} />
+  </View>
+);
   return (
     <View style={styles.container}>
           <Header
@@ -174,6 +180,7 @@ useEffect(() => {
                 data={settlements}
                 renderItem={renderSettlementItem}
                 keyExtractor={keyExtractor}
+                ListEmptyComponent={renderEmptyComponent}
                 // 필요하다면 스타일 지정
                 //contentContainerStyle={{ paddingBottom: 50 }}
               />
