@@ -26,8 +26,8 @@ const MyGaldaeItem: React.FC<MyGaldaeItemProps> = ({ item, onPress, onLongPress 
         {/* 출발지 정보 */}
         <View style={styles.fromContainer}>
           <SVG name="Car" />
-          <BasicText text={item.departure.majorPlace} style={styles.fromMainLocation} />
-          <BasicText text={item.departure.subPlace} style={styles.fromSubLocation} />
+          <BasicText text={item.departure.subPlace} style={styles.fromMainLocation} />
+          <BasicText text={item.departure.majorPlace} style={styles.fromSubLocation} />
         </View>
 
         {/* 탑승 인원 정보 */}
@@ -56,8 +56,8 @@ const MyGaldaeItem: React.FC<MyGaldaeItemProps> = ({ item, onPress, onLongPress 
         {/* 도착지 정보 */}
         <View style={styles.toContainer}>
           <SVG name="Location" />
-          <BasicText text={item.arrival.majorPlace} style={styles.fromMainLocation} />
-          <BasicText text={item.arrival.subPlace} style={styles.fromSubLocation} />
+          <BasicText text={item.arrival.subPlace} style={styles.fromMainLocation} />
+          <BasicText text={item.arrival.majorPlace} style={styles.fromSubLocation} />
         </View>
 
         {/* 시간 정보 */}
