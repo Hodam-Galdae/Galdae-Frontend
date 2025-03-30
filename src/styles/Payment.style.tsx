@@ -25,6 +25,14 @@ export default StyleSheet.create({
         fontSize:theme.fontSize.size20,
         fontWeight:'700',
     },
+    noData:{
+      //height:'100%',
+      height: 170,
+       alignItems:'center',
+       justifyContent:'center',
+       gap:12,
+       //backgroundColor:theme.colors.brandColor,
+     },
     gradient:{
       borderRadius: 10,
       //padding: 2, // 그라데이션 border 두께

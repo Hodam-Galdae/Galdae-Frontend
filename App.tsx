@@ -69,7 +69,7 @@ function App() {
     requestUserPermission();
     // 포그라운드에서 수신된 알림 처리
     const unsubscribe = messaging().onMessage(async remoteMessage => {
-      console.log('🔥 포그라운드 알림 수신:', remoteMessage);
+     // console.log('🔥 포그라운드 알림 수신:', remoteMessage);
 
       // 로컬 알림 띄우기 (notifee 이용)
       await notifee.displayNotification({

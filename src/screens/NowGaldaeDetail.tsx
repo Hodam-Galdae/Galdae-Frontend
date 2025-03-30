@@ -1,8 +1,8 @@
 /* eslint-disable react-native/no-inline-styles */
 // NowGaldaeDetail.tsx
-import React, {useEffect, useState,useRef} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Image, ActivityIndicator} from 'react-native';
-import { Modalize } from 'react-native-modalize';
+//import { Modalize } from 'react-native-modalize';
 import {WebView} from 'react-native-webview';
 import BasicText from '../components/BasicText';
 import SVGButton from '../components/button/SVGButton';
@@ -22,7 +22,7 @@ import {useAppDispatch} from '../modules/redux/store';
 import moment from 'moment';
 import {joinChatroom, ChatroomResponse} from '../api/chatApi';
 import { TouchableOpacity } from 'react-native';
-import BigMapModal from '../components/popup/BigMapModal';
+//import BigMapModal from '../components/popup/BigMapModal';
 
 type RootStackParamList = {
   CreateGaldae: undefined;
@@ -42,10 +42,10 @@ type NowGaldaeDetailRouteProp = RouteProp<
 
 const NowGaldaeDetail: React.FC = () => {
   const navigation = useNavigation<NowGaldaeDetailScreenNavigationProp>();
-  const mapModalRef = useRef<Modalize>(null);
+  //const mapModalRef = useRef<Modalize>(null);
   const route = useRoute<NowGaldaeDetailRouteProp>();
   const {postId} = route.params; // 전달받은 postId
-  const [mapBig,setMapBig] = useState<boolean>(false);
+  //const [mapBig,setMapBig] = useState<boolean>(false);
   const [isMapLoading, setIsMapLoading] = useState(true);
   const {postDetail, loading, error} = useSelector(
     (state: RootState) => state.postDetailSlice,
@@ -67,10 +67,10 @@ const NowGaldaeDetail: React.FC = () => {
   const formatDepartureTime = (departureTime: string): string => {
     return moment.utc(departureTime).format('YYYY년 MM월 DD일 (ddd) HH : mm');
   };
-  const toBigMap = () =>{
-    setMapBig(true);
-    mapModalRef.current?.open();
-  };
+  // const toBigMap = () =>{
+  //   setMapBig(true);
+  //   mapModalRef.current?.open();
+  // };
   if (loading) {
     return (
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
@@ -90,7 +90,7 @@ const NowGaldaeDetail: React.FC = () => {
   if (!postDetail) {
     return (
       <View style={{padding: 16}}>
-        <BasicText text="상세 정보가 없습니다." />
+        <BasicText text="상세 정보가 없습니다" />
       </View>
     );
   }
@@ -210,7 +210,7 @@ const NowGaldaeDetail: React.FC = () => {
           </View>
         </View>
 
-        <TouchableOpacity style={styles.map} onPress={toBigMap}>
+        <TouchableOpacity style={styles.map} >
           <View style={styles.map}>
             <WebView
               source={{uri: mapUrl}}
@@ -225,11 +225,11 @@ const NowGaldaeDetail: React.FC = () => {
               </View>
             )}
           </View>
-          <SVGButton
+          {/* <SVGButton
             iconName="ToBigPic"
             onPress={toBigMap}
             buttonStyle={styles.toBigPicIcon}
-          />
+          /> */}
         </TouchableOpacity>
 
         <BasicText text="유저정보" style={styles.userInfo} />
@@ -237,11 +237,18 @@ const NowGaldaeDetail: React.FC = () => {
         <View style={styles.userInfoBox}>
           <View style={styles.userInfos}>
             <View style={styles.profile}>
-            <Image
-                source={{ uri: postDetail.userInfo.profileImage }}
-                style={styles.profileImg}
-                resizeMode="cover"
-              />
+              {
+                postDetail.userInfo.profileImage ? (
+                <Image
+                  source={{ uri: postDetail.userInfo.profileImage }}
+                  style={styles.profileImg}
+                  resizeMode="cover"
+                />
+                ) : (
+                <SVG name="profileImg" style={styles.profileImg} />
+                )
+              }
+
             </View>
             <View style={styles.userInfoText}>
               <BasicText
@@ -296,12 +303,12 @@ const NowGaldaeDetail: React.FC = () => {
         </View>
       </ScrollView>
 
-      { mapBig && (
+      {/* { mapBig && (
           <BigMapModal
             ref={mapModalRef}
             mapUrl={mapUrl}
           />
-        )}
+        )} */}
     </View>
   );
 };

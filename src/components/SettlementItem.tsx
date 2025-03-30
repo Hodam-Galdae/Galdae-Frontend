@@ -23,7 +23,7 @@ interface SettlementItemProps {
 const SettlementItem: React.FC<SettlementItemProps> = ({ item }) => {
   const date = moment.utc(item.departureTime);
   const formattedDate = date.format('M월 D일');
-  console.log(`item: `, item);
+ // console.log(`item: `, item);
   return (
     <View key={item.id}>
       {/* 날짜 표시 */}

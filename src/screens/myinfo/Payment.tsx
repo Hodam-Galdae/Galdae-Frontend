@@ -58,16 +58,6 @@ useEffect(() => {
   const fetchSettlements = async () => {
     try {
       const data = await getPaymentList();
-      console.log(`
-        
-        
-        
-        정산 내역 불러오기
-        
-        
-        
-        
-        `,data)
       setSettlements(data); // 서버 응답을 상태에 저장
     } catch (error) {
       Alert.alert('정산 내역 조회 실패', '다시 시도해주세요.');
@@ -105,7 +95,7 @@ useEffect(() => {
       goBack();
     } catch (error) {
       Alert.alert('오류', '결제 정보 수정에 실패했습니다. 다시 시도해주세요.');
-      console.error(error);
+      //console.error(error);
     }
 
   };
@@ -113,7 +103,13 @@ useEffect(() => {
   const bankOption: BankOption | undefined = banks.find(
     (bank: BankOption) => bank.name === userInfo?.bankType
   );
-
+// [FlatList] 데이터가 없을 때 표시할 내용 (ListEmptyComponent)
+const renderEmptyComponent = () => (
+  <View style={styles.noData}>
+    <SVG name="information_line" />
+    <BasicText text="정산 내역이 없습니다" color={theme.colors.gray1} />
+  </View>
+);
   return (
     <View style={styles.container}>
           <Header
@@ -184,6 +180,7 @@ useEffect(() => {
                 data={settlements}
                 renderItem={renderSettlementItem}
                 keyExtractor={keyExtractor}
+                ListEmptyComponent={renderEmptyComponent}
                 // 필요하다면 스타일 지정
                 //contentContainerStyle={{ paddingBottom: 50 }}
               />

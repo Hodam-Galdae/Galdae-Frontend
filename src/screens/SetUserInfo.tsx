@@ -117,7 +117,7 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep, setIsLoading}) => {
           name: fileName,
         });
         if (imageUri) {
-          console.log('hi');
+          //console.log('hi');
           let imageFile = {uri: imageUri, type: imageType, name: imageName};
           formData.append('profileImage', imageFile);
         }
@@ -125,7 +125,7 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep, setIsLoading}) => {
         await join(formData);
         setNextStep('verifySchool');
       } catch (e) {
-        console.log(e);
+        //console.log(e);
       } finally {
         setIsLoading(false);
       }

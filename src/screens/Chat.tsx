@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useState, useCallback} from 'react';
 import {View} from 'react-native';
 import Tabs from '../components/Tabs';
 import styles from '../styles/Chat.style';
@@ -49,10 +49,11 @@ const Chat: React.FC = () => {
   const navigate = (id: string) => {
     const tagetRoom = chatRoomData.find(item => item.chatroomId === id);
 
-    if (tagetRoom) {
-      navigation.navigate('ChatRoom', {data: Object.freeze(tagetRoom)});
-    } else {
-      console.log('error');
+    if(tagetRoom){
+      navigation.navigate('ChatRoom', { data: Object.freeze(tagetRoom)});
+    }
+    else{
+     // console.log('error');
       return;
     }
   };

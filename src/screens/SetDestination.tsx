@@ -35,7 +35,7 @@ const saveSearchHistory = async (history: any[]) => {
   try {
     await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(history));
   } catch (error) {
-    console.error('검색 기록 저장 실패:', error);
+    //console.error('검색 기록 저장 실패:', error);
   }
 };
 
@@ -45,7 +45,7 @@ const loadSearchHistory = async (): Promise<any[]> => {
     const jsonValue = await AsyncStorage.getItem(STORAGE_KEY);
     return jsonValue ? JSON.parse(jsonValue) : [];
   } catch (error) {
-    console.error('검색 기록 불러오기 실패:', error);
+    //console.error('검색 기록 불러오기 실패:', error);
     return [];
   }
 };
@@ -235,7 +235,7 @@ const SetDestination: React.FC = () => {
               setDepartureSmallId(smallId);
             }}
             selectedStartPlaceId={destinationSmallId}
-            onClose={() => console.log('팝업 닫힘')}
+            //onClose={() => //console.log('팝업 닫힘')}
           />
         </Portal>
 
@@ -249,7 +249,7 @@ const SetDestination: React.FC = () => {
             setDestinationSmallName(smallName);
           }}
           selectedStartPlaceId={departureSmallId}
-          onClose={() => console.log('팝업 닫힘')}
+         // onClose={() => //console.log('팝업 닫힘')}
           />
         </Portal>
     </View>

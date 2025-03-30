@@ -92,7 +92,7 @@ const MyGaldae: React.FC<HomeProps> = () => {
       // eslint-disable-next-line no-catch-shadow, @typescript-eslint/no-shadow
       } catch (error) {
         Alert.alert('삭제 실패', '글 삭제에 실패했습니다. 다시 시도해주세요.');
-        console.error(error);
+        //console.error(error);
       }
     };
 
@@ -131,7 +131,7 @@ const topItem = myGaldaeHistory.length > 0 ? myGaldaeHistory[0] : null;
           />
         ) : (
           <View style={styles.borderBox}>
-            <BasicText text="새로운 갈대를 생성해보세요." style={styles.noGaldaeText} />
+            <BasicText text="갈대가 없습니다" style={styles.noGaldaeText} />
           </View>
         )}
 
@@ -150,7 +150,7 @@ const topItem = myGaldaeHistory.length > 0 ? myGaldaeHistory[0] : null;
             )}
             ListEmptyComponent={
               <View style={styles.borderBox}>
-                <BasicText text="기록이 없습니다." style={styles.noGaldaeText} />
+                <BasicText text="기록이 없습니다" style={styles.noGaldaeText} />
               </View>
             }
           />

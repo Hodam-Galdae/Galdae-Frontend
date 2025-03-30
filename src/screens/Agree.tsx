@@ -49,7 +49,7 @@ const Agree: React.FC<AgreeProps> = ({setNextStep, goTermsDetailPage}) => {
       setNextStep('setUserInfo');
     }
     catch(e) {
-      console.log(e);
+     // console.log(e);
     }
   };
 
@@ -60,9 +60,7 @@ const Agree: React.FC<AgreeProps> = ({setNextStep, goTermsDetailPage}) => {
           더 나은 서비스를 위해{'\n'}약관을 마련했습니다.
         </BasicText>
         <BasicText style={styles.subTitle}>
-          이용자 편의에 더욱 적합한 서비스 제공을 위해{'\n'}서비스 운영 정책을
-          마련했습니다. {'\n\n'}이 약관은 2025년 00월 00일로부터 발효며{'\n'}
-          동의 후에 갈대 서비스 이용이 가능합니다.
+        이용자 편의에 따라 더욱 적합한 서비스 제공을 위해{'\n'}서비스 운영 정책을 마련했습니다. {'\n\n'}필수 동의 후 서버 입장이 가능합니다.
         </BasicText>
       </View>
 
@@ -84,7 +82,7 @@ const Agree: React.FC<AgreeProps> = ({setNextStep, goTermsDetailPage}) => {
               style={styles.agreeBtn}
             />
             <BasicText
-              text="모두 동의합니다."
+              text="모두 동의합니다"
               style={
                 selected.every(value => value)
                   ? {...styles.agreeText, color: theme.colors.black}

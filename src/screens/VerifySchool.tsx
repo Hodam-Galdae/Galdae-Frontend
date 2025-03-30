@@ -119,14 +119,14 @@ const VerifySchool: React.FC<VerifySchoolProps> = ({setNextStep}) => {
               </BasicText>
               <BasicText
                 style={styles.verifyAlert}
-                text="*인증 시 바로 이용이 가능합니다."
+                text="*인증 시 바로 이용이 가능합니다"
               />
             </View>
           </TouchableOpacity>
           {isVisibleMethodSelect ? (
             <BasicText
               style={styles.alert}
-              text="*학생 인증 방법을 선택해주세요."
+              text="*학생 인증 방법을 선택해주세요"
             />
           ) : null}
         </View>

@@ -29,8 +29,8 @@ const GaldaeItem: React.FC<GaldaeItemProps> = ({ item, onPress, onLongPress }) =
         {/* 출발지 정보 */}
         <View style={styles.fromContainer}>
           <SVG name={!item.isSameGender && item.passengerGenderType === 'SAME' ? 'Car1' : 'Car'} />
-          <BasicText text={item.departure.majorPlace} style={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.fromMainLocationCom : styles.fromMainLocation} />
-          <BasicText text={item.departure.subPlace} style={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.fromSubLocationCom : styles.fromSubLocation} />
+          <BasicText text={item.departure.subPlace} style={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.fromMainLocationCom : styles.fromMainLocation} />
+          <BasicText text={item.departure.majorPlace} style={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.fromSubLocationCom : styles.fromSubLocation} />
         </View>
 
         {/* 승객 수 아이콘 */}
@@ -59,8 +59,8 @@ const GaldaeItem: React.FC<GaldaeItemProps> = ({ item, onPress, onLongPress }) =
         {/* 도착지 정보 */}
         <View style={styles.toContainer}>
           <SVG name={!item.isSameGender && item.passengerGenderType === 'SAME' ? 'Location1' : 'Location'} />
-          <BasicText text={item.arrival.majorPlace} style={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.fromMainLocationCom : styles.fromMainLocation}  />
-          <BasicText text={item.arrival.subPlace} style={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.fromSubLocationCom : styles.fromSubLocation} />
+          <BasicText text={item.arrival.subPlace} style={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.fromMainLocationCom : styles.fromMainLocation}  />
+          <BasicText text={item.arrival.majorPlace} style={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.fromSubLocationCom : styles.fromSubLocation} />
         </View>
 
         {/* 시간 정보 */}

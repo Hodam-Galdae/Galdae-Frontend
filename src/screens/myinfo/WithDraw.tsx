@@ -36,16 +36,16 @@ const WithDraw: React.FC<HomeProps> = () => {
     const handleWithDraw = async () => {
       try {
         const result = await withdrawMember(); // 탈퇴 API 호출
-        console.log('탈퇴 성공:', result);
+        //console.log('탈퇴 성공:', result);
 
         // ✅ 필요 시 로그아웃 처리나 초기 화면 이동 등 추가
         // 예시: navigation.reset({ index: 0, routes: [{ name: 'Login' }] });
 
         setInvalidPopupVisible(false);
-        Alert.alert('회원탈퇴', '정상적으로 회원탈퇴 되었습니다.');
+        Alert.alert('회원탈퇴', '정상적으로 회원탈퇴 되었습니다');
         navigation.navigate('Login');
       } catch (error) {
-        console.error('탈퇴 실패:', error);
+        //console.error('탈퇴 실패:', error);
         // TODO: 사용자에게 에러 알림 (예: 토스트)
         setInvalidPopupVisible(false);
       }

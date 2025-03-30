@@ -96,7 +96,7 @@ const ChatRoom: React.FC = () => {
   });
   const chatRoomData = params.data;
   const userInfo = useSelector((state: RootState) => state.user);
-  console.info(userInfo);
+  //console.info(userInfo);
   const client = useRef<Client>();
 
   const panResponder = useRef(
@@ -138,7 +138,6 @@ const ChatRoom: React.FC = () => {
     fetchChats();
     const socket = new WebSocket(WEB_SOCKET_URL);
     client.current = new Client({
-      debug: (frame: any) => console.log(frame),
       connectHeaders: {
         Authorization: userInfo.token,
         chatroomId: chatRoomData.chatroomId,
@@ -151,7 +150,6 @@ const ChatRoom: React.FC = () => {
       appendMissingNULLonIncoming: true,
     });
     client.current.onConnect = () => {
-      console.log('connected websocket');
       setIsLoading(false);
       client.current!.subscribe(
         SUB_ENDPOINT + '/' + chatRoomData.chatroomId,
@@ -173,8 +171,8 @@ const ChatRoom: React.FC = () => {
     };
     client.current.onStompError = function (frame) {
       setIsLoading(true);
-      console.log(`Broker reported error: ${frame.headers.message}`);
-      console.log(`Additional details: ${frame.body}`);
+     // console.log(`Broker reported error: ${frame.headers.message}`);
+     // console.log(`Additional details: ${frame.body}`);
       // 액세스 토큰 만료시
       if (
         frame.headers.message ===
@@ -187,8 +185,8 @@ const ChatRoom: React.FC = () => {
     };
     client.current.onDisconnect = error => {
       setIsLoading(true);
-      console.log('disconnected websocket');
-      console.log(error);
+      //.log('disconnected websocket');
+     // console.log(error);
     };
 
     client.current.activate();

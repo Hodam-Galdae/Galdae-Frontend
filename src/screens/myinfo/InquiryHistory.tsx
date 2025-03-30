@@ -39,7 +39,7 @@ const InquiryHistory = () => {
         const response = await getMyQuestions();
         setQuestionList(response);
       } catch (e) {
-        console.error('문의 내역 불러오기 실패:', e);
+        //console.error('문의 내역 불러오기 실패:', e);
       } finally {
         setIsLoading(false);
       }
@@ -52,7 +52,7 @@ const InquiryHistory = () => {
     return (
       <View style={styles.emptyContainer}>
         <SVG name="information_line" />
-        <BasicText text="문의 내역이 없습니다." color={theme.colors.gray1} />
+        <BasicText text="문의 내역이 없습니다" color={theme.colors.gray1} />
       </View>
     );
   }

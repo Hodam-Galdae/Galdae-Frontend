@@ -51,10 +51,11 @@ const NicknameChange: React.FC<HomeProps> = () => {
     const navigation = useNavigation<nowGaldaeScreenNavigationProp>();
     const goBack = () => navigation.goBack();
     const handleChangeNickname = async () => {
+  
       try {
         // 닉네임 변경 API 호출
         await updateNickname(nickname);
-        console.log('닉네임 변경 성공');
+        //console.log('닉네임 변경 성공');
         dispatch(fetchUserInfo());
         dispatch(fetchMyGaldaeHistory());
         dispatch(fetchMyCreatedGaldae());
@@ -66,7 +67,7 @@ const NicknameChange: React.FC<HomeProps> = () => {
         const errorMessage =
         error.response?.data?.message || error.message || '닉네임 변경에 실패했습니다.';
         Alert.alert('오류', errorMessage);
-        console.error('닉네임 변경 실패:', error);
+        //console.error('닉네임 변경 실패:', error);
       }
     };
 
@@ -87,13 +88,26 @@ const NicknameChange: React.FC<HomeProps> = () => {
                       onChangeText={setNickname}
                     />
                      <BasicText text="* 닉네임은 최초 설정 후 최대 2회까지 변경 가능하오니," style={styles.redText}/>
-                     <BasicText text="이점 유의하시어 신중하게 설정해 주시길 바랍니다." style={styles.redText}/>
+                     <BasicText text="이점 유의하시어 신중하게 설정해 주시길 바랍니다" style={styles.redText}/>
                 </View>
                 <BasicButton
                     text="완료"
                     buttonStyle={styles.generateButton}
                     textStyle={styles.generateText}
-                    onPress={()=>{setInvalidPopupVisible(true);}}
+                    onPress={()=>{
+                      // 닉네임 길이 검증: 2~6자 제한
+                      if (nickname.length < 2 || nickname.length > 6) {
+                        Alert.alert('닉네임 오류', '닉네임은 2~6자여야 합니다.');
+                        return;
+                      }
+                      // 한글과 숫자만 허용하는 정규식 검사
+                      const regex = /^[가-힣0-9]+$/;
+                      if (!regex.test(nickname)) {
+                        Alert.alert('닉네임 오류', '닉네임은 한글과 숫자만 사용할 수 있습니다.');
+                        return;
+                      }
+                      setInvalidPopupVisible(true);
+                    }}
                 />
             </View>
 

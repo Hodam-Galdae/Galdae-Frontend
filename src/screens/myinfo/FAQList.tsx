@@ -35,7 +35,7 @@ const FAQList = () => {
         const data = await getFaqList(tag);
         setFaqData(data);
       } catch (e) {
-        console.error('FAQ 가져오기 실패:', e);
+        //console.error('FAQ 가져오기 실패:', e);
         setFaqData([]);
       } finally {
         setLoading(false);
@@ -71,7 +71,7 @@ const FAQList = () => {
       ) : (
       <FAQItem
       id={-1}
-      question="해당 메뉴의 FAQ가 없습니다."
+      question="해당 메뉴의 FAQ가 없습니다"
       answer=""
       expandedId={null}
       setExpandedId={() => null}

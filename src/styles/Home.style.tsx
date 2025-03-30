@@ -52,6 +52,14 @@ export default StyleSheet.create({
       maxWidth: 80,
       //backgroundColor:theme.colors.brandColor,
     },
+    noData:{
+     //height:'100%',
+     height: 170,
+      alignItems:'center',
+      justifyContent:'center',
+      gap:12,
+      //backgroundColor:theme.colors.brandColor,
+    },
     newGaldaeDestText:{
       fontSize:theme.fontSize.size14,
       fontWeight:'500',
@@ -164,6 +172,8 @@ export default StyleSheet.create({
     nowGaldaeList:{
       marginTop:14,
       position:'relative',
+      //height:500,
+      // backgroundColor:theme.colors.gray0,
     },
     borderedListBox:{
       width:'100%',
