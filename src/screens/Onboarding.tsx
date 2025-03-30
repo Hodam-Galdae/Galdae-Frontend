@@ -21,11 +21,11 @@ const OnboardingScreen: React.FC<OnboardingProps> = ({navigation}) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const autoLogin = async() => {
+    const autoLogin = async () => {
       const user = await getUserInfo();
       const accessToken = await EncryptedStorage.getItem('accessToken');
 
-      if(user) {
+      if (user.isAuthenticated === 'CERTIFIED') {
         dispatch(setUser({...user, token: 'Bearer ' + accessToken}));
         navigation.replace('MainTab');
       }
