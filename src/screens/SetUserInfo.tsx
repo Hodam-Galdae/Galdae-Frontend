@@ -8,6 +8,7 @@ import {
   Image,
   KeyboardAvoidingView,
 } from 'react-native';
+import messaging from '@react-native-firebase/messaging';
 import styles from '../styles/SetUserInfo.style';
 import BasicText from '../components/BasicText';
 import SVG from '../components/SVG';
@@ -61,9 +62,8 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep, setIsLoading}) => {
       flag = false;
     } else {
       try {
-        const isAvailalbeNickname = !(await checkNickname(name));
-        console.log(isAvailalbeNickname);
-        if (isAvailalbeNickname) {
+        const isAvailableNickname = !(await checkNickname(name));
+        if (isAvailableNickname) {
           setAlertNameText('*중복되는 닉네임입니다.');
           flag = false;
         } else {
@@ -98,6 +98,7 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep, setIsLoading}) => {
     if (flag) {
       try {
         setIsLoading(true);
+        const deviceToken = await messaging().getToken();
         const formData = new FormData();
         const data = {
           nickname: name,
@@ -105,6 +106,7 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep, setIsLoading}) => {
           bankType: sortedBanks[bankSelect],
           accountNumber: accountNumber,
           depositor: accountName,
+          deviceToken: deviceToken,
         };
         const fileName = `${name}.json`;
         const filePath = `${RNFS.TemporaryDirectoryPath}/${fileName}`;
