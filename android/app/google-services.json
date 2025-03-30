@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "1034543222691-9376i0knhrl26clos1chkh3rllf0f5nt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.galdae",
+            "certificate_hash": "0b07267a343559a4ec3bf1c2873368490475b3bf"
+          }
+        },
+        {
           "client_id": "1034543222691-s2q1bpn9pqviq7fplcc5nm4461gp5n78.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
