@@ -109,9 +109,9 @@ useFocusEffect(
       try {
         if (imageUri) {
           setIsImageLoading(true);
-          console.log(`imageUri: ${imageUri}`);
-          const result = await updateMemberImage(imageUri);
-          console.log('✅ 이미지 업데이트 성공:', result);
+          //console.log(`imageUri: ${imageUri}`);
+          await updateMemberImage(imageUri);
+          //console.log('✅ 이미지 업데이트 성공:', result);
           // 이미지 업데이트 후 사용자 정보를 재갱신
           dispatch(fetchUserInfo());
           dispatch(fetchMyGaldaeHistory());
@@ -120,7 +120,7 @@ useFocusEffect(
 
         }
       } catch (error) {
-        console.error('❌ 이미지 업데이트 실패:', error);
+        //console.error('❌ 이미지 업데이트 실패:', error);
         Alert.alert('오류', '프로필 이미지를 업데이트하는데 실패했습니다.');
       }finally{
         setIsImageLoading(false);
@@ -150,7 +150,7 @@ useFocusEffect(
         setSelectedPostId(null);
       } catch (error) {
         Alert.alert('삭제 실패', '글 삭제에 실패했습니다. 다시 시도해주세요.');
-        console.error(error);
+        //console.error(error);
       }
   };
   return (

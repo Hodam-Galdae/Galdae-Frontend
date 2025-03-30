@@ -39,7 +39,7 @@ const InquiryHistory = () => {
         const response = await getMyQuestions();
         setQuestionList(response);
       } catch (e) {
-        console.error('문의 내역 불러오기 실패:', e);
+        //console.error('문의 내역 불러오기 실패:', e);
       } finally {
         setIsLoading(false);
       }

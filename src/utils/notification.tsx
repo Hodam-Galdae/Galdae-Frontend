@@ -8,9 +8,9 @@ export const requestUserPermission = async () => {
     authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
   if (enabled) {
-    console.log('🔓 알림 권한 허용됨:', authStatus);
+    //console.log('🔓 알림 권한 허용됨:', authStatus);
     const token = await messaging().getToken();
-    console.log('🎯 FCM 토큰:', token);
+    //console.log('🎯 FCM 토큰:', token);
 
     // TODO: 이 토큰을 백엔드 서버에 저장
   }

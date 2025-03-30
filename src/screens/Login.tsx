@@ -56,7 +56,7 @@ const Login: React.FC = () => {
       );
       handleGoNextPage(response);
     } catch (err) {
-      console.error('login err : ', err);
+     // console.error('login err : ', err);
     } finally {
       setIsLoading(false);
     }
@@ -76,7 +76,7 @@ const Login: React.FC = () => {
       );
       handleGoNextPage(response);
     } catch (err) {
-      console.error('login err : ', err);
+     // console.error('login err : ', err);
     } finally {
       setIsLoading(false);
     }
@@ -106,7 +106,7 @@ const Login: React.FC = () => {
         handleGoNextPage(response);
       }
     } catch (err) {
-      console.error('login err : ', err);
+     // console.error('login err : ', err);
     } finally {
       setIsLoading(false);
     }

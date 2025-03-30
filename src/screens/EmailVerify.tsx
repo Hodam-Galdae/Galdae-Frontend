@@ -71,7 +71,7 @@ const EmailVerify: React.FC<AgreeProps> = ({setNextStep, setIsLoading}) => {
     try{
       setIsLoading(true);
       const result = await emailVerify(number, userInfo.university, email);
-      console.log(result);
+     // console.log(result);
       if(result === "이메일 인증완료"){
         setNextStep();
       }

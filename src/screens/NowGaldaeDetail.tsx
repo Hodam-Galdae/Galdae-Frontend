@@ -98,7 +98,7 @@ const NowGaldaeDetail: React.FC = () => {
   // 지도 URL은 departure와 arrival의 좌표를 사용
   const mapUrl = `https://galdae-kakao-map.vercel.app/?startLat=${postDetail.departure.latitude}&startLng=${postDetail.departure.longtitude}&endLat=${postDetail.arrival.latitude}&endLng=${postDetail.arrival.longtitude}`;
   //const mapUrl = 'https://galdae-kakao-map.vercel.app/?startLat=37.5665&startLng=126.9780&endLat=37.4979&endLng=127.0276'; //테스트용
-  console.log(`mapUrl: ${mapUrl}`);
+  //console.log(`mapUrl: ${mapUrl}`);
   return (
     <View style={styles.main}>
       <Header

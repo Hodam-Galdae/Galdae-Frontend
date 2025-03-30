@@ -37,7 +37,7 @@ export const deletePost = async (postId: string) => {
    // console.log('✅ [갈대 삭제 성공] 응답 데이터:', response.data);
     return response.data;
   } catch (error: any) {
-    console.error('❌ [갈대 삭제 실패] 오류 발생:', error.response ? error.response.data : error);
+   // console.error('❌ [갈대 삭제 실패] 오류 발생:', error.response ? error.response.data : error);
     throw error;
   }
 };
@@ -101,7 +101,7 @@ export const searchPosts = async (params: SearchPostsRequest) => {
     //console.log('✅ [갈대 검색 성공] 응답 데이터:', response.data);
     return response.data;
   } catch (error: any) {
-    console.error('❌ [갈대 검색 실패] 오류 발생:', error.response ? error.response.data : error);
+   // console.error('❌ [갈대 검색 실패] 오류 발생:', error.response ? error.response.data : error);
     throw error;
   }
 };

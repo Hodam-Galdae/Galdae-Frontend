@@ -92,8 +92,8 @@ const CreateGaldae: React.FC = () => {
     const formattedDepartureTime = getFormattedDepartureTime();
 // 출발 시간을 moment 객체로 변환하여 현재 시간과 비교
  const departureMoment = moment(formattedDepartureTime.replace(/Z$/, ''));
- console.log(` departureMoment:
-   ${departureMoment}`);
+ //console.log(` departureMoment:
+  // ${departureMoment}`);
  if (departureMoment.isBefore(moment())) {
    Alert.alert('알림', '현재 시간보다 이후의 시간을 선택해주세요!');
    return;
@@ -111,11 +111,11 @@ const CreateGaldae: React.FC = () => {
       isFavoriteRoute: selectedChannel,
     };
 
-    console.log('🚀 서버로 보낼 갈대 생성 데이터:', postData);
+   // console.log('🚀 서버로 보낼 갈대 생성 데이터:', postData);
 
     try {
       const response = await createPost(postData); // 서버에서 postId 반환
-      console.log('✅ 생성된 갈대 postId:', response.postId);
+     // console.log('✅ 생성된 갈대 postId:', response.postId);
       dispatch(fetchMyGaldaeHistory());
       dispatch(fetchMyCreatedGaldae());
       dispatch(fetchHomeGaldaePosts());
@@ -133,7 +133,7 @@ const CreateGaldae: React.FC = () => {
         navigation.replace('NowGaldaeDetail', { postId: response.postId });
       }
     } catch (error) {
-      console.error('❌ 갈대 생성 실패:', error);
+     // console.error('❌ 갈대 생성 실패:', error);
     } finally {
       setLoading(false);
     }
@@ -343,7 +343,7 @@ const CreateGaldae: React.FC = () => {
             setDepartureSmallId(smallId);
           }}
           selectedStartPlaceId={destinationSmallId} // ✅ 출발지에서 선택한 소분류 ID 전달
-          onClose={() => console.log('팝업 닫힘')}
+          //onClose={() => console.log('팝업 닫힘')}
         />
       </Portal>
 
@@ -357,7 +357,7 @@ const CreateGaldae: React.FC = () => {
             setDestinationSmallId(smallId);
           }}
           selectedStartPlaceId={departureSmallId} // ✅ 출발지에서 선택한 소분류 ID 전달
-          onClose={() => console.log('팝업 닫힘')}
+         //onClose={() => console.log('팝업 닫힘')}
         />
       </Portal>
 
@@ -365,7 +365,7 @@ const CreateGaldae: React.FC = () => {
         <FastGaldaeTimePopup
           ref={fastGaldaeTimePopupRef}
           onConfirm={handleTimePopupConfirm}
-          onClose={() => console.log('팝업 닫힘')}
+          //onClose={() => console.log('팝업 닫힘')}
         />
       </Portal>
     </View>

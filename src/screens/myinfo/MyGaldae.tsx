@@ -92,7 +92,7 @@ const MyGaldae: React.FC<HomeProps> = () => {
       // eslint-disable-next-line no-catch-shadow, @typescript-eslint/no-shadow
       } catch (error) {
         Alert.alert('삭제 실패', '글 삭제에 실패했습니다. 다시 시도해주세요.');
-        console.error(error);
+        //console.error(error);
       }
     };
 

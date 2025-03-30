@@ -208,7 +208,7 @@ const Announcement: React.FC<HomeProps> = () => {
         const data = await getTermsList();
         setNotiList(data);
       } catch (error) {
-        console.error('❌ 공지사항 불러오기 실패:', error);
+        //console.error('❌ 공지사항 불러오기 실패:', error);
       } finally {
         setLoading(false);
       }

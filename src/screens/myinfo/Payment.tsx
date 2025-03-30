@@ -58,16 +58,6 @@ useEffect(() => {
   const fetchSettlements = async () => {
     try {
       const data = await getPaymentList();
-      console.log(`
-        
-        
-        
-        정산 내역 불러오기
-        
-        
-        
-        
-        `,data)
       setSettlements(data); // 서버 응답을 상태에 저장
     } catch (error) {
       Alert.alert('정산 내역 조회 실패', '다시 시도해주세요.');
@@ -105,7 +95,7 @@ useEffect(() => {
       goBack();
     } catch (error) {
       Alert.alert('오류', '결제 정보 수정에 실패했습니다. 다시 시도해주세요.');
-      console.error(error);
+      //console.error(error);
     }
 
   };

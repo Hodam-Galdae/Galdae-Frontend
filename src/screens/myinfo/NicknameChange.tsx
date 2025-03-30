@@ -54,7 +54,7 @@ const NicknameChange: React.FC<HomeProps> = () => {
       try {
         // 닉네임 변경 API 호출
         await updateNickname(nickname);
-        console.log('닉네임 변경 성공');
+        //console.log('닉네임 변경 성공');
         dispatch(fetchUserInfo());
         dispatch(fetchMyGaldaeHistory());
         dispatch(fetchMyCreatedGaldae());
@@ -66,7 +66,7 @@ const NicknameChange: React.FC<HomeProps> = () => {
         const errorMessage =
         error.response?.data?.message || error.message || '닉네임 변경에 실패했습니다.';
         Alert.alert('오류', errorMessage);
-        console.error('닉네임 변경 실패:', error);
+        //console.error('닉네임 변경 실패:', error);
       }
     };
 

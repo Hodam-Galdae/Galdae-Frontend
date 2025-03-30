@@ -35,7 +35,7 @@ const FAQList = () => {
         const data = await getFaqList(tag);
         setFaqData(data);
       } catch (e) {
-        console.error('FAQ 가져오기 실패:', e);
+        //console.error('FAQ 가져오기 실패:', e);
         setFaqData([]);
       } finally {
         setLoading(false);

@@ -66,7 +66,7 @@ const Inquiry: React.FC<HomeProps> = () => {
         Alert.alert('문의 완료', '문의가 성공적으로 접수되었습니다.');
         navigation.replace('FAQ', { tabIndex: 1 });
       } catch (error) {
-        console.error('문의 등록 실패:', error);
+        //console.error('문의 등록 실패:', error);
         Alert.alert('오류', '문의 등록 중 문제가 발생했습니다. 잠시 후 다시 시도해주세요.');
       } finally {
         setLoading(false);

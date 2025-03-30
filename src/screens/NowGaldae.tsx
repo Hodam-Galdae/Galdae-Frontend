@@ -147,7 +147,7 @@ const NowGaldae: React.FC<HomeProps> = () => {
         setSearchResults(data);
         setIsLast(data.last);
       } catch (error) {
-        console.error('검색 실패:', error);
+        //console.error('검색 실패:', error);
       }
       setIsLoadingMore(false);
     };
@@ -227,7 +227,7 @@ const NowGaldae: React.FC<HomeProps> = () => {
       selectedTimeDiscuss,
       passengerNumber,
     };
-    console.log('선택된 필터 옵션:', filterOptionsObj);
+    //console.log('선택된 필터 옵션:', filterOptionsObj);
     setFilterOptions(filterOptionsObj);
   };
   const handleFilterReset = () =>{
@@ -310,7 +310,7 @@ const NowGaldae: React.FC<HomeProps> = () => {
       setSelectedPostId(null);
     } catch (error) {
       Alert.alert('삭제 실패', '글 삭제에 실패했습니다. 다시 시도해주세요.');
-      console.error(error);
+      //console.error(error);
     }
   };
 
@@ -357,7 +357,7 @@ const handleLongPress = (post: GaldaeItemType) => {
   }, [displayedPosts, filterOptions]);
   // 추가 필터 적용 (날짜, 시간협의, 성별, 탑승인원 등)
   // let finalFilteredData = displayedPosts;
-  // console.log(`
+  // //console.log(`
   //   ====================================
   //   0️⃣현재 finalFilteredData 데이터: (필터적용전)
 
@@ -366,12 +366,12 @@ const handleLongPress = (post: GaldaeItemType) => {
   //     finalFilteredData = finalFilteredData.filter((item) => {
   //       const apiTime = moment.utc(item.departureTime).format('YYYY-MM-DDTHH:mm:ss[Z]');
   //       const filterTime = moment.utc(filterOptions.formattedDepartureTime).format('YYYY-MM-DDTHH:mm:ss[Z]');
-  //       console.log(apiTime, filterTime);
+  //       //console.log(apiTime, filterTime);
   //       return apiTime === filterTime;
   //     });
   //   }
 
-  // console.log(`
+  // //console.log(`
   //   1️⃣현재 finalFilteredData 데이터:
 
   //   `,finalFilteredData);
@@ -381,7 +381,7 @@ const handleLongPress = (post: GaldaeItemType) => {
   //   );
   // }
 
-  // console.log(`
+  // //console.log(`
   //   2️⃣현재 finalFilteredData 데이터:
 
   //   `,finalFilteredData);
@@ -394,7 +394,7 @@ const handleLongPress = (post: GaldaeItemType) => {
   //   );
   // }
 
-  // console.log(`
+  // //console.log(`
   //   3️⃣현재 finalFilteredData 데이터:
 
   //   `,finalFilteredData);
@@ -404,7 +404,7 @@ const handleLongPress = (post: GaldaeItemType) => {
   //     (item) => item.totalPassengerCount === filterOptions.passengerNumber
   //   );
   // }
-  // console.log(`
+  // //console.log(`
   //   4️⃣현재 finalFilteredData 데이터:
   //   ====================================
   //   `,finalFilteredData);
@@ -443,7 +443,7 @@ const handleLongPress = (post: GaldaeItemType) => {
         setPageNumber(nextPage);
         setIsLast(data.last);
       } catch (error) {
-        console.error('추가 검색 실패:', error);
+        //console.error('추가 검색 실패:', error);
       }
 
     } else {
