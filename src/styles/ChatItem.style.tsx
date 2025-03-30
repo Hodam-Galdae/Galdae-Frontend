@@ -31,6 +31,7 @@ export default StyleSheet.create({
         width: 28,
         height: 28,
         marginRight: 6,
+        borderRadius: 999,
     },
     userText: {
         fontSize: theme.fontSize.size14,

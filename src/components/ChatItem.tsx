@@ -20,6 +20,7 @@ type Chat = {
 
 const ChatItem: React.FC<{item: Chat}> = React.memo(({item}) => {
   const userInfo = useSelector((state: RootState) => state.user);
+  console.log(item.senderImage);
   return (
     <View style={styles.container}>
       {item.type === 'ENTER' || item.type === 'EXIT' ? (
@@ -31,7 +32,7 @@ const ChatItem: React.FC<{item: Chat}> = React.memo(({item}) => {
               {item.senderImage === null ? (
                 <SVG name="DefaultProfile" style={styles.userImage} />
               ) : (
-                <Image source={{uri: item.senderImage}} />
+                <Image style={styles.userImage} source={{uri: item.senderImage}} />
               )}
               <BasicText text={item.sender} />
             </View>

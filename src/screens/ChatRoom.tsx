@@ -96,7 +96,6 @@ const ChatRoom: React.FC = () => {
   });
   const chatRoomData = params.data;
   const userInfo = useSelector((state: RootState) => state.user);
-  //console.info(userInfo);
   const client = useRef<Client>();
 
   const panResponder = useRef(
@@ -205,6 +204,7 @@ const ChatRoom: React.FC = () => {
           type: 'MONEY',
           sender: userInfo.nickname,
           message: settlementCost,
+          senderImage: userInfo.image,
         }),
       });
     }
@@ -403,6 +403,7 @@ const ChatRoom: React.FC = () => {
                 type: 'IMAGE',
                 sender: userInfo.nickname,
                 message: url,
+                senderImage: userInfo.image,
               }),
             });
           }

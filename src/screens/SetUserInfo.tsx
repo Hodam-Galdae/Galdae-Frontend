@@ -50,7 +50,7 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep, setIsLoading}) => {
   const sortedBanks = [...englishBanks, ...koreanBanks];
 
   const clickEvent = async () => {
-    const regex = /^[가-힣0-9]{2,8}$/;
+    const regex = /^[가-힣0-9]{2,6}$/;
     let flag = true;
 
     // 닉네임 확인
@@ -58,7 +58,7 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep, setIsLoading}) => {
       setAlertNameText('*필수 입력 항목입니다.');
       flag = false;
     } else if (!regex.test(name)) {
-      setAlertNameText('*닉네임은 한글, 숫자 2~8자로 제한됩니다.');
+      setAlertNameText('*닉네임은 한글, 숫자 2~6자로 제한됩니다.');
       flag = false;
     } else {
       try {
