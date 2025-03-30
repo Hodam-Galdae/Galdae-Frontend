@@ -51,6 +51,7 @@ const NicknameChange: React.FC<HomeProps> = () => {
     const navigation = useNavigation<nowGaldaeScreenNavigationProp>();
     const goBack = () => navigation.goBack();
     const handleChangeNickname = async () => {
+  
       try {
         // 닉네임 변경 API 호출
         await updateNickname(nickname);
@@ -93,7 +94,20 @@ const NicknameChange: React.FC<HomeProps> = () => {
                     text="완료"
                     buttonStyle={styles.generateButton}
                     textStyle={styles.generateText}
-                    onPress={()=>{setInvalidPopupVisible(true);}}
+                    onPress={()=>{
+                      // 닉네임 길이 검증: 2~6자 제한
+                      if (nickname.length < 2 || nickname.length > 6) {
+                        Alert.alert('닉네임 오류', '닉네임은 2~6자여야 합니다.');
+                        return;
+                      }
+                      // 한글과 숫자만 허용하는 정규식 검사
+                      const regex = /^[가-힣0-9]+$/;
+                      if (!regex.test(nickname)) {
+                        Alert.alert('닉네임 오류', '닉네임은 한글과 숫자만 사용할 수 있습니다.');
+                        return;
+                      }
+                      setInvalidPopupVisible(true);
+                    }}
                 />
             </View>
 
