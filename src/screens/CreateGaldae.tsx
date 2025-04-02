@@ -124,7 +124,7 @@ const CreateGaldae: React.FC = () => {
               pageNumber: 0,
               pageSize: 20,
               direction: 'DESC' ,
-              properties:  ['createAt'] ,
+              properties:  ['create_at'] ,
             };
      dispatch(fetchGaldaePosts(params));
 

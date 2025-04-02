@@ -10,7 +10,7 @@ export const fetchHomeGaldaePosts = createAsyncThunk(
       pageNumber: 0,
       pageSize: 3,
       direction: 'ASC',
-      properties: ['departureTime'],
+      properties: ['departure_time'],
     };
     try {
       const data: GaldaeApiResponse = await getPosts(params);

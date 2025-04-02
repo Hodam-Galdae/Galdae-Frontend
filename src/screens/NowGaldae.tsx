@@ -136,7 +136,7 @@ const NowGaldae: React.FC<HomeProps> = () => {
         pageNumber: 0,
         pageSize: 20,
         direction: sortOrder === 'latest' ? 'DESC' : 'ASC',
-        properties: sortOrder === 'latest' ? ['createAt'] : ['departureTime'],
+        properties: sortOrder === 'latest' ? ['create_at'] : ['departure_time'],
         majorDepartment: departureLargeId,      // 출발지 대분류 ID
         subDepartment: departureSmallId,        // 출발지 소분류 ID
         majorArrival: destinationLargeId,       // 도착지 대분류 ID
@@ -172,7 +172,7 @@ const NowGaldae: React.FC<HomeProps> = () => {
         pageNumber: 0,
         pageSize: 20,
         direction: sortOrder === 'latest' ? 'DESC' : 'ASC',
-        properties: sortOrder === 'latest' ? ['createAt'] : ['departureTime'],
+        properties: sortOrder === 'latest' ? ['create_at'] : ['departure_time'],
       };
       dispatch(fetchGaldaePosts(params));
     }
@@ -268,7 +268,7 @@ const NowGaldae: React.FC<HomeProps> = () => {
       pageNumber: 0,
       pageSize: 20,
       direction: sortOrder === 'latest' ? 'DESC' : 'ASC',
-      properties: sortOrder === 'latest' ? ['createAt'] : ['departureTime'],
+      properties: sortOrder === 'latest' ? ['create_at'] : ['departure_time'],
     };
     dispatch(fetchGaldaePosts(params));
   };
@@ -296,7 +296,7 @@ const NowGaldae: React.FC<HomeProps> = () => {
           pageNumber: 0,
           pageSize: 20,
           direction: sortOrder === 'latest' ? 'DESC' : 'ASC',
-          properties: sortOrder === 'latest' ? ['createAt'] : ['departureTime'],
+          properties: sortOrder === 'latest' ? ['create_at'] : ['departure_time'],
         };
         dispatch(fetchGaldaePosts(params));
         dispatch(fetchMyGaldaeHistory());
@@ -420,7 +420,7 @@ const handleLongPress = (post: GaldaeItemType) => {
         pageNumber: nextPage,
         pageSize: 20,
         direction: sortOrder === 'latest' ? 'DESC' : 'ASC',
-        properties: sortOrder === 'latest' ? ['createAt'] : ['departureTime'],
+        properties: sortOrder === 'latest' ? ['create_at'] : ['departure_time'],
         department: departureLargeName,
         arrival: destinationLargeName,
         majorDepartment: departureLargeId,
@@ -453,7 +453,7 @@ const handleLongPress = (post: GaldaeItemType) => {
         pageNumber: nextPage,
         pageSize: 20,
         direction: sortOrder === 'latest' ? 'DESC' : 'ASC',
-        properties: sortOrder === 'latest' ? ['createAt'] : ['departureTime'],
+        properties: sortOrder === 'latest' ? ['create_at'] : ['departure_time'],
       };
 
       const resultAction = await dispatch(fetchGaldaePosts(params));
