@@ -83,7 +83,7 @@ const MyGaldae: React.FC<HomeProps> = () => {
                       pageNumber: 0,
                       pageSize: 20,
                       direction: 'DESC' ,
-                      properties:  ['createAt'] ,
+                      properties:  ['create_at'] ,
                     };
              dispatch(fetchGaldaePosts(params));
         Alert.alert('삭제 완료', '선택한 갈대가 삭제되었습니다.');
