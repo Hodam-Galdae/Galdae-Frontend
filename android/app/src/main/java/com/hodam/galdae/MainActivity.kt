@@ -1,4 +1,4 @@
-package com.galdae
+package com.hodam.galdae
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate

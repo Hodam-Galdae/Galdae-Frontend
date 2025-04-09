@@ -1,4 +1,4 @@
-package com.galdae
+package com.hodam.galdae
 
 import android.app.Application
 import com.facebook.react.PackageList
