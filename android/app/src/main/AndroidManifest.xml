@@ -24,17 +24,18 @@
       android:screenOrientation="portrait"
       android:supportsRtl="true">
       <!-- FCM 기본 서비스 등록 -->
-    <service
-    android:name="io.invertase.firebase.messaging.ReactNativeFirebaseMessagingService"
-    android:exported="true"
-    tools:replace="android:exported">
-    <intent-filter>
-        <action android:name="com.google.firebase.MESSAGING_EVENT" />
-    </intent-filter>
-</service>
+      <service
+        android:name="io.invertase.firebase.messaging.ReactNativeFirebaseMessagingService"
+        android:exported="true"
+        tools:replace="android:exported">
+        <intent-filter>
+            <action android:name="com.google.firebase.MESSAGING_EVENT" />
+        </intent-filter>
+      </service>
 
-    <!-- 포그라운드 메시지 수신 처리 -->
-    <service android:name="io.invertase.firebase.messaging.ReactNativeFirebaseMessagingHeadlessService" />
+      <!-- 포그라운드 메시지 수신 처리 -->
+      <service android:name="io.invertase.firebase.messaging.ReactNativeFirebaseMessagingHeadlessService" />
+
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"
@@ -45,23 +46,20 @@
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
-
-            <!-- Redirect URI: "kakao{NATIVE_APP_KEY}://oauth“ -->
-            <data android:host="oauth" android:scheme="kakao3525284d2d1ca180a3ee3bb37840f922" />
         </intent-filter>
       </activity>
 
       <activity
-            android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
+          android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
+          android:exported="true">
+          <intent-filter>
+              <action android:name="android.intent.action.VIEW" />
+              <category android:name="android.intent.category.DEFAULT" />
+              <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:host="oauth"
-                    android:scheme="kakao3525284d2d1ca180a3ee3bb37840f922" />
-            </intent-filter>
-        </activity>
+              <data android:host="oauth"
+                  android:scheme="kakao3525284d2d1ca180a3ee3bb37840f922" />
+          </intent-filter>
+      </activity>
     </application>
 </manifest>
