@@ -13,3 +13,14 @@
 -dontwarn okio.**
 # Note: the configuration keeps the entry point 'okhttp3.internal.ws.WebSocketWriter$FrameSink { void write(okio.Buffer,long); }', but not the descriptor class 'okio.Buffer'
 -dontwarn okhttp3.**
+
+# Google Sign-In
+-keep class com.google.android.gms.auth.api.signin.** { *; }
+-keep interface com.google.android.gms.auth.api.signin.** { *; }
+-keep class com.google.android.gms.common.api.** { *; }
+-keep class com.google.android.gms.common.internal.** { *; }
+
+# Kakao SDK
+-keep class com.kakao.** { *; }
+-dontwarn com.kakao.**
+
