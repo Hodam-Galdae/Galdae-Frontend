@@ -77,8 +77,9 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep, setIsLoading}) => {
 
     // 성별 확인
     if (genderSelected === -1) {
-      setAlertGenderText('*필수 선택 항목입니다.');
-      flag = false;
+      setGenderSelected(1); //임시
+      // setAlertGenderText('*필수 선택 항목입니다.');
+      // flag = false;
     } else {
       setAlertGenderText('');
     }

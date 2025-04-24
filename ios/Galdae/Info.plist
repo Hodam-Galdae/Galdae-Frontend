@@ -71,13 +71,13 @@
 		</dict>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>카메라 사용을 위한 권한이 필요합니다.</string>
+	<string>사용자가 기기에 저장된 사진을 채팅에 첨부하거나 프로필 사진으로 설정할 수 있도록 사진 라이브러리에 접근합니다.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>현재 위치 정보는 내 주변 출,도착지 찾기에 이용됩니다. 위치 정보는 해당 기능에만 사용되며, 언제든지 설정에서 위치 서비스 사용을 중지할 수 있습니다.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>사진 저장을 위한 권한이 필요합니다.</string>
+	<string>사용자가 기기에 저장된 사진을 채팅에 첨부하거나 프로필 사진으로 설정할 수 있도록 사진 라이브러리에 접근합니다.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>갤러리 접근을 위한 권한이 필요합니다.</string>
+	<string>사용자가 기기에 저장된 사진을 채팅에 첨부하거나 프로필 사진으로 설정할 수 있도록 사진 라이브러리에 접근합니다.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>
