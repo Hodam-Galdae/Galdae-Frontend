@@ -76,13 +76,12 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep, setIsLoading}) => {
     }
 
     // 성별 확인
-    if (genderSelected === -1) {
-      setGenderSelected(1); //임시
-      // setAlertGenderText('*필수 선택 항목입니다.');
-      // flag = false;
-    } else {
-      setAlertGenderText('');
-    }
+    // if (genderSelected === -1) {
+    //   setAlertGenderText('*필수 선택 항목입니다.');
+    //   flag = false;
+    // } else {
+    //   setAlertGenderText('');
+    // }
 
     if (
       bankSelect === -1 ||
@@ -101,6 +100,7 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep, setIsLoading}) => {
         setIsLoading(true);
         const deviceToken = await messaging().getToken();
         const formData = new FormData();
+        const gender = (genderSelected === 0 || genderSelected === -1) ? 'FEMALE' : 'MALE';
         const data = {
           nickname: name,
           gender: genderSelected === 0 ? 'FEMALE' : 'MALE',
