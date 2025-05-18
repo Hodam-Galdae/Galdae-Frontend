@@ -194,7 +194,7 @@ const Login: React.FC = () => {
             />
           </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={signInWithGoogle}>
+        {/* <TouchableOpacity onPress={signInWithGoogle}>
           <View
             style={[
               styles.button,
@@ -213,7 +213,7 @@ const Login: React.FC = () => {
             <SVG style={styles.icon} name="Kakao" />
             <BasicText style={styles.btnText} text="Sign in with Kakao" />
           </View>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </View>
   );
