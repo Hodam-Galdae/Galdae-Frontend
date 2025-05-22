@@ -117,23 +117,23 @@ const Login: React.FC = () => {
     await EncryptedStorage.setItem('memberId', user.id);
     dispatch(setUser({...user, token: 'Bearer ' + response.accessToken}));
 
-    // // 학생 인증 완료
-    // if (response.isAuthenticated === 'CERTIFIED') {
-    //   navigation.replace('MainTab');
-    //   return;
-    // }
+    // 학생 인증 완료
+    if (response.isAuthenticated === 'CERTIFIED') {
+      navigation.replace('MainTab');
+      return;
+    }
 
-    // if (response.isAuthenticated === 'NOT_CERTIFIED') {
-    //   navigation.replace('SignUp', {data: response.isJoined});
-    //   return;
-    // }
+    if (response.isAuthenticated === 'NOT_CERTIFIED') {
+      navigation.replace('SignUp', {data: response.isJoined});
+      return;
+    }
 
-    // if (response.isAuthenticated === 'PENDING') {
-    //   navigation.replace('ReviewInProgress');
-    //   return;
-    // }
+    if (response.isAuthenticated === 'PENDING') {
+      navigation.replace('ReviewInProgress');
+      return;
+    }
 
-    navigation.replace('MainTab');
+    // navigation.replace('MainTab');
   };
 
   const images = [
@@ -195,7 +195,7 @@ const Login: React.FC = () => {
             />
           </View>
         </TouchableOpacity>
-        {/* <TouchableOpacity onPress={signInWithGoogle}>
+        <TouchableOpacity onPress={signInWithGoogle}>
           <View
             style={[
               styles.button,
@@ -214,7 +214,7 @@ const Login: React.FC = () => {
             <SVG style={styles.icon} name="Kakao" />
             <BasicText style={styles.btnText} text="Sign in with Kakao" />
           </View>
-        </TouchableOpacity> */}
+        </TouchableOpacity>
       </View>
     </View>
   );
