@@ -17,6 +17,7 @@ import {
   AuthResponse,
   loginWithApple,
 } from '../api/authApi';
+import NaverLogin from '@react-native-seoul/naver-login';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {getUserInfo} from '../api/membersApi';
 import {useDispatch} from 'react-redux';
@@ -148,6 +149,14 @@ const Login: React.FC = () => {
     GoogleSignin.configure({
       webClientId:
         '1034543222691-3m9roadnkpqs562p6q2dj3qblv2ps69h.apps.googleusercontent.com',
+    });
+
+    NaverLogin.initialize({
+      appName: '갈대',
+      consumerKey: 'dOTesTTr7nptiY1g3mc_',
+      consumerSecret: 'RUk2LWOr4F',
+      serviceUrlSchemeIOS: 'com.hodam.galdaeApp',
+      disableNaverAppAuthIOS: true,
     });
   }, []);
 
