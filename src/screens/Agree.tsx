@@ -10,7 +10,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface AgreeProps {
   setNextStep: (name: string) => void;
-  goTermsDetailPage: (data: string) => void;
+  goTermsDetailPage: (data: number) => void;
 }
 
 const Agree: React.FC<AgreeProps> = ({setNextStep, goTermsDetailPage}) => {
@@ -102,7 +102,7 @@ const Agree: React.FC<AgreeProps> = ({setNextStep, goTermsDetailPage}) => {
                   style={styles.agreeIcon}
                 />
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => goTermsDetailPage(e)}>
+              <TouchableOpacity onPress={() => i === 0 ? {} : goTermsDetailPage(i)}>
                 <BasicText style={styles.agreeDetailText} text={e} />
               </TouchableOpacity>
             </View>

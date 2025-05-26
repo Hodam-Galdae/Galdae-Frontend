@@ -65,9 +65,10 @@ const Login: React.FC = () => {
 
   const signInWithNaver = async (): Promise<void> => {
     try {
-      setIsLoading(true);
-      const { failureResponse, successResponse } = await NaverLogin.login();
-      console.log(successResponse);
+      navigation.replace('SignUp', {data: false});
+      // setIsLoading(true);
+      // const { failureResponse, successResponse } = await NaverLogin.login();
+      // console.log(successResponse);
       // const response = await loginWithKakao(token);
       // await EncryptedStorage.setItem('accessToken', response.accessToken);
       // await EncryptedStorage.setItem(
