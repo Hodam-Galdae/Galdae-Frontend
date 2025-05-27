@@ -20,7 +20,7 @@ type RootStackParamList = {
   ReviewInProgress: undefined;
   MainTab: undefined;
   Login: undefined;
-  TermsDetail: {data: string};
+  TermsDetail: {data: number};
 };
 
 type SignUpScreenNavigationProp = NativeStackNavigationProp<
@@ -78,7 +78,7 @@ const SignUp: React.FC = () => {
     extrapolate: 'clamp', //extrapolate은 clamp 으로 설정한다.
   });
 
-  const goToTermsDetail = (data: string) => {
+  const goToTermsDetail = (data: number) => {
     navigation.navigate('TermsDetail', {data: data});
   };
 

@@ -36,8 +36,6 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep, setIsLoading}) => {
   const [accountNumber, setAccountNumber] = useState<string>('');
   const [accountName, setAccountName] = useState<string>('');
   const [alertNameText, setAlertNameText] = useState<string>('');
-  const [alertGenderText, setAlertGenderText] = useState<string>('');
-  const [alertAccountText, setAlertAccountText] = useState<string>('');
   const {imageUri, imageName, imageType, getImageByGallery} = useImagePicker();
   const englishBanks = banks
     .filter(bank => /^[A-Za-z]/.test(bank.name))
@@ -73,25 +71,6 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep, setIsLoading}) => {
         setAlertNameText('*중복되는 닉네임입니다.');
         flag = false;
       }
-    } 
-
-    // 성별 확인
-    // if (genderSelected === -1) {
-    //   setAlertGenderText('*필수 선택 항목입니다.');
-    //   flag = false;
-    // } else {
-    //   setAlertGenderText('');
-    // }
-
-    if (
-      bankSelect === -1 ||
-      accountName.length === 0 ||
-      accountNumber.length === 0
-    ) {
-      setAlertAccountText('*결제·정산정보를 모두 입력해주세요요');
-      flag = false;
-    } else {
-      setAlertAccountText('');
     }
 
     // 모든 조건 충족
@@ -100,10 +79,9 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep, setIsLoading}) => {
         setIsLoading(true);
         const deviceToken = await messaging().getToken();
         const formData = new FormData();
-        const gender = (genderSelected === 0 || genderSelected === -1) ? 'FEMALE' : 'MALE';
         const data = {
           nickname: name,
-          gender: genderSelected === 0 ? 'FEMALE' : 'MALE',
+          gender: genderSelected === 0 ? 'FEMALE' : (genderSelected === 1 ? 'MALE' : undefined),
           bankType: sortedBanks[bankSelect],
           accountNumber: accountNumber,
           depositor: accountName,
@@ -171,11 +149,6 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep, setIsLoading}) => {
                     value={name}
                     onChangeText={setName}
                   />
-                  {/* <TouchableOpacity>
-                <View style={styles.checkBtn}>
-                  <BasicText style={styles.checkBtnText} text="중복 확인" />
-                </View>
-              </TouchableOpacity> */}
                 </View>
                 {alertNameText.length !== 0 ? (
                   <BasicText style={styles.alertText} text={alertNameText} />
@@ -197,9 +170,6 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep, setIsLoading}) => {
                     buttonStyle={styles.genderBtn}
                   />
                 </View>
-                {alertGenderText.length !== 0 ? (
-                  <BasicText style={styles.alertText} text={alertGenderText} />
-                ) : null}
               </View>
               <BasicText text="결제·정산관리" style={styles.subTitle} />
               <View style={styles.bankSelector}>
@@ -227,17 +197,6 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep, setIsLoading}) => {
                 onChangeText={setAccountName}
               />
             </View>
-            {alertAccountText.length !== 0 ? (
-              <BasicText
-                style={{
-                  fontSize: theme.fontSize.size12,
-                  fontWeight: '500',
-                  color: theme.colors.red,
-                  marginTop: 6,
-                }}
-                text={alertAccountText}
-              />
-            ) : null}
             <BasicButton
               text="다음"
               onPress={clickEvent}
