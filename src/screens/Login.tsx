@@ -14,9 +14,11 @@ import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {
   loginWithGoogle,
   loginWithKakao,
+  loginWithNaver,
   AuthResponse,
   loginWithApple,
 } from '../api/authApi';
+import NaverLogin from '@react-native-seoul/naver-login';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {getUserInfo} from '../api/membersApi';
 import {useDispatch} from 'react-redux';
@@ -49,6 +51,24 @@ const Login: React.FC = () => {
       setIsLoading(true);
       const token = (await login()).accessToken;
       const response = await loginWithKakao(token);
+      await EncryptedStorage.setItem('accessToken', response.accessToken);
+      await EncryptedStorage.setItem(
+        'refreshToken',
+        response.refreshToken || '',
+      );
+      handleGoNextPage(response);
+    } catch (err) {
+     // console.error('login err : ', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const signInWithNaver = async (): Promise<void> => {
+    try {
+      setIsLoading(true);
+      const { failureResponse, successResponse } = await NaverLogin.login();
+      const response = await loginWithNaver(successResponse?.accessToken || '');
       await EncryptedStorage.setItem('accessToken', response.accessToken);
       await EncryptedStorage.setItem(
         'refreshToken',
@@ -149,6 +169,14 @@ const Login: React.FC = () => {
       webClientId:
         '1034543222691-3m9roadnkpqs562p6q2dj3qblv2ps69h.apps.googleusercontent.com',
     });
+
+    NaverLogin.initialize({
+      appName: '갈대',
+      consumerKey: 'dOTesTTr7nptiY1g3mc_',
+      consumerSecret: 'RUk2LWOr4F',
+      serviceUrlSchemeIOS: 'com.hodam.galdaeApp',
+      disableNaverAppAuthIOS: true,
+    });
   }, []);
 
   return (
@@ -195,18 +223,16 @@ const Login: React.FC = () => {
             />
           </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={signInWithGoogle}>
+        <TouchableOpacity onPress={signInWithNaver}>
           <View
             style={[
               styles.button,
               {
-                backgroundColor: theme.colors.white,
-                borderWidth: 1,
-                borderColor: '#747775',
+                backgroundColor: '#03C75A',
               },
             ]}>
-            <SVG style={styles.icon} name="Google" />
-            <BasicText style={styles.btnText} text="Sign in with Google" />
+            <SVG style={styles.icon} name="Naver" />
+            <BasicText style={[styles.btnText, {color: theme.colors.white}]} text="Sign in with Naver" />
           </View>
         </TouchableOpacity>
         <TouchableOpacity onPress={signInWithKakao}>

@@ -4,6 +4,7 @@ import React_RCTAppDelegate
 import ReactAppDependencyProvider
 import KakaoSDKAuth
 import FirebaseCore
+import NaverThirdPartyLogin
 
 @main
 class AppDelegate: RCTAppDelegate {
@@ -34,6 +35,10 @@ class AppDelegate: RCTAppDelegate {
     if (AuthApi.isKakaoTalkLoginUrl(url)) {
         return AuthController.handleOpenUrl(url: url)
     }
+    if url.scheme == "naverLogin" {
+        return NaverThirdPartyLoginConnection.getSharedInstance()?.application(app, open: url, options: options) ?? false
+    }
+
     return super.application(app, open: url, options: options)
   }
 
