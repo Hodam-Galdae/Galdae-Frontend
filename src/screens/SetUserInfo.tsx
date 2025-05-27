@@ -73,7 +73,7 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep, setIsLoading}) => {
         setAlertNameText('*중복되는 닉네임입니다.');
         flag = false;
       }
-    }
+    } 
 
     // 성별 확인
     // if (genderSelected === -1) {

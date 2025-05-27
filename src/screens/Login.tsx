@@ -14,6 +14,7 @@ import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {
   loginWithGoogle,
   loginWithKakao,
+  loginWithNaver,
   AuthResponse,
   loginWithApple,
 } from '../api/authApi';
@@ -65,17 +66,15 @@ const Login: React.FC = () => {
 
   const signInWithNaver = async (): Promise<void> => {
     try {
-      navigation.replace('SignUp', {data: false});
-      // setIsLoading(true);
-      // const { failureResponse, successResponse } = await NaverLogin.login();
-      // console.log(successResponse);
-      // const response = await loginWithKakao(token);
-      // await EncryptedStorage.setItem('accessToken', response.accessToken);
-      // await EncryptedStorage.setItem(
-      //   'refreshToken',
-      //   response.refreshToken || '',
-      // );
-      // handleGoNextPage(response);
+      setIsLoading(true);
+      const { failureResponse, successResponse } = await NaverLogin.login();
+      const response = await loginWithNaver(successResponse?.accessToken || '');
+      await EncryptedStorage.setItem('accessToken', response.accessToken);
+      await EncryptedStorage.setItem(
+        'refreshToken',
+        response.refreshToken || '',
+      );
+      handleGoNextPage(response);
     } catch (err) {
      // console.error('login err : ', err);
     } finally {

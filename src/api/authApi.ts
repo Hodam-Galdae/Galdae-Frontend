@@ -38,6 +38,16 @@ export const loginWithGoogle = async (
   return response.data;
 };
 
+// ✅ 네이버 로그인
+export const loginWithNaver = async (
+  naverToken: string,
+): Promise<AuthResponse> => {
+  const response = await axiosInstance.post<AuthResponse>('/auth/naver', {
+    token: naverToken,
+  });
+  return response.data;
+};
+
 // ✅ 애플 로그인
 export const loginWithApple = async (
   appleToken: string,
