@@ -17,7 +17,6 @@ import SelectTextButton from '../components/button/SelectTextButton';
 import BasicButton from '../components/button/BasicButton';
 import {theme} from '../styles/theme';
 import ItemSelector from '../components/ItemSelector';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import {ScrollView} from 'react-native-gesture-handler';
 import {checkNickname, join} from '../api/authApi';
 import useImagePicker from '../hooks/useImagePicker';
@@ -33,8 +32,8 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep, setIsLoading}) => {
   const [genderSelected, setGenderSelected] = useState<number>(-1);
   const [bankSelect, setBankSelect] = useState<number>(-1);
   const [name, setName] = useState<string>('');
-  const [accountNumber, setAccountNumber] = useState<string>('');
-  const [accountName, setAccountName] = useState<string>('');
+  const [accountNumber, setAccountNumber] = useState<string|undefined>(undefined);
+  const [accountName, setAccountName] = useState<string|undefined>(undefined);
   const [alertNameText, setAlertNameText] = useState<string>('');
   const {imageUri, imageName, imageType, getImageByGallery} = useImagePicker();
   const englishBanks = banks

@@ -93,19 +93,19 @@ export const certifyCard = async (form: FormData): Promise<void> => {
 };
 
 export const emailVerify = async (
-  code: string,
+  // code: string,
   univName: string,
-  email: string,
+  // email: string,
 ): Promise<string> => {
   const form = new FormData();
   const universityAuthCommand = {
     university: univName,
-    universityAuthType: 'EMAIL',
-    email: email,
-    code: code,
-    studentCard: '',
+    // universityAuthType: 'EMAIL',
+    // email: email,
+    // code: code,
+    // studentCard: '',
   };
-  const fileName = `${email}.json`;
+  const fileName = `${univName}.json`;
   const filePath = `${RNFS.TemporaryDirectoryPath}/${fileName}`;
   await RNFS.writeFile(filePath, JSON.stringify(universityAuthCommand), 'utf8');
 

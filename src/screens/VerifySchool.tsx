@@ -8,10 +8,10 @@ import BasicText from '../components/BasicText';
 import ItemSelector from '../components/ItemSelector';
 import { useDispatch } from 'react-redux';
 import { setUniversity } from '../modules/redux/slice/UserSlice';
-import { getSchool } from '../api/authApi';
+import { getSchool, emailVerify } from '../api/authApi';
 
 interface VerifySchoolProps {
-  setNextStep: (name: string) => void;
+  setNextStep: () => void;
 }
  
 const VerifySchool: React.FC<VerifySchoolProps> = ({setNextStep}) => {
@@ -30,7 +30,7 @@ const VerifySchool: React.FC<VerifySchoolProps> = ({setNextStep}) => {
     });
   }, []);
 
-  const clickEvent = () => {
+  const clickEvent = async() => {
     let flag = true;
     if (schoolSelected === -1) {
       setIsVisibleSchoolSelect(true);
@@ -39,21 +39,24 @@ const VerifySchool: React.FC<VerifySchoolProps> = ({setNextStep}) => {
       setIsVisibleSchoolSelect(false);
     }
 
-    if (methodSelected === -1) {
-      setIsVisibleMethodSelect(true);
-      flag = false;
-    } else {
-      setIsVisibleMethodSelect(false);
-    }
+    // if (methodSelected === -1) {
+    //   setIsVisibleMethodSelect(true);
+    //   flag = false;
+    // } else {
+    //   setIsVisibleMethodSelect(false);
+    // }
 
     if (flag) {
-      if (methodSelected === 0) {
-        dispatch(setUniversity(schools[schoolSelected]));
-        setNextStep('schoolCardVerify');
-      } else {
-        dispatch(setUniversity(schools[schoolSelected]));
-        setNextStep('emailVerify');
-      }
+      // if (methodSelected === 0) {
+      //   dispatch(setUniversity(schools[schoolSelected]));
+      //   setNextStep('schoolCardVerify');
+      // } else {
+      //   dispatch(setUniversity(schools[schoolSelected]));
+      //   setNextStep('emailVerify');
+      // }
+
+      await emailVerify(schools[schoolSelected]);
+      setNextStep();
     }
   };
 
@@ -77,7 +80,7 @@ const VerifySchool: React.FC<VerifySchoolProps> = ({setNextStep}) => {
           ) : null}
         </View>
 
-        <BasicText text="학생 인증 " style={styles.title} />
+        {/* <BasicText text="학생 인증 " style={styles.title} />
         <View>
           <TouchableOpacity onPress={() => setMethodSelected(0)}>
             <View
@@ -129,7 +132,7 @@ const VerifySchool: React.FC<VerifySchoolProps> = ({setNextStep}) => {
               text="*학생 인증 방법을 선택해주세요"
             />
           ) : null}
-        </View>
+        </View> */}
       </View>
 
       <BasicButton

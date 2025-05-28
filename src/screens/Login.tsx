@@ -148,12 +148,10 @@ const Login: React.FC = () => {
       return;
     }
 
-    if (response.isAuthenticated === 'PENDING') {
-      navigation.replace('ReviewInProgress');
-      return;
-    }
-
-    // navigation.replace('MainTab');
+    // if (response.isAuthenticated === 'PENDING') {
+    //   navigation.replace('ReviewInProgress');
+    //   return;
+    // }
   };
 
   const images = [
