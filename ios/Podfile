@@ -47,10 +47,9 @@ target 'Galdae' do
   config = use_native_modules!
   pod 'GoogleUtilities', :modular_headers => true
   pod 'FirebaseCore', :modular_headers => true
-  pod 'NaverThirdPartyLogin', :modular_headers => true
   pod 'KakaoSDKAuth'
   pod 'RNFS', :path => '../node_modules/react-native-fs'
-  
+ 
   use_react_native!(
     :path => config[:reactNativePath],
     # An absolute path to your application root.
