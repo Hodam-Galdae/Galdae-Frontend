@@ -95,7 +95,7 @@ const SignUp: React.FC = () => {
       goTermsDetailPage={goToTermsDetail}
     />,
     <SetUserInfo setIsLoading={setIsLoading} setNextStep={setNextStepByName} />,
-    <VerifySchool setNextStep={setNextStepByName} />,
+    <VerifySchool setNextStep={() => navigation.replace('MainTab')} />,
     <SchoolCardVerify
       setIsLoading={setIsLoading}
       setNextStep={() => navigation.replace('ReviewInProgress')}
