@@ -1,5 +1,5 @@
 import React ,{useState,useEffect } from 'react';
-import { Keyboard,KeyboardAvoidingView,Platform, TouchableWithoutFeedback, View,Alert,TouchableOpacity,Image } from 'react-native';
+import { Keyboard,KeyboardAvoidingView,Platform, TouchableWithoutFeedback, View,Alert,TouchableOpacity,Image,Linking } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from '../../styles/Inquiry.style';
 import { theme } from '../../styles/theme';
@@ -103,11 +103,11 @@ const Inquiry: React.FC<HomeProps> = () => {
                 <View style={styles.texts}>
                     <BasicText text="빠른 답변을 원하신다면 " style={styles.text}/>
                     <BasicText
-                     text="hodamdae@gmail.com"
+                     text="갈대 채널"
                      style={styles.importText}
-                     onPress={copyEmailToClipboard}
+                     onPress={()=>Linking.openURL('http://pf.kakao.com/_kxlPJn')}
                     />
-                    <BasicText text=" 으로 이메일을 남겨주세요." style={styles.text}/>
+                    <BasicText text="을 이용해주세요" style={styles.text}/>
                 </View>
 
                 <TouchableOpacity style={styles.imgContainer} onPress={getImageByGallery}>
