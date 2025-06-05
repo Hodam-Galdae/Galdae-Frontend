@@ -15,10 +15,11 @@ interface AgreeProps {
 
 const Agree: React.FC<AgreeProps> = ({setNextStep, goTermsDetailPage}) => {
   const agreeDetailTexts = [
-    '[필수] 만 17세 이상입니다.',
-    '[필수] 서비스 이용약관 동의',
     '[필수] 위치정보 수집 및 이용 동의',
-    '[필수] 개인정보 수집 및 이용 동의',
+    '[필수] 서비스 이용약관 동의',
+    '[필수] 만 17세 이상입니다다',
+    '[필수] 전체 이용약관',
+    '[필수] 개인인정보 수집 및 이용 동의',
   ];
 
   const [selected, setSelected] = useState<boolean[]>(
@@ -102,7 +103,7 @@ const Agree: React.FC<AgreeProps> = ({setNextStep, goTermsDetailPage}) => {
                   style={styles.agreeIcon}
                 />
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => i === 0 ? {} : goTermsDetailPage(i)}>
+              <TouchableOpacity onPress={() => goTermsDetailPage(i)}>
                 <BasicText style={styles.agreeDetailText} text={e} />
               </TouchableOpacity>
             </View>

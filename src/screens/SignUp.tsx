@@ -20,7 +20,7 @@ type RootStackParamList = {
   ReviewInProgress: undefined;
   MainTab: undefined;
   Login: undefined;
-  TermsDetail: {data: number};
+  TermsOfUseDetail: {index:number}
 };
 
 type SignUpScreenNavigationProp = NativeStackNavigationProp<
@@ -79,7 +79,7 @@ const SignUp: React.FC = () => {
   });
 
   const goToTermsDetail = (data: number) => {
-    navigation.navigate('TermsDetail', {data: data});
+    navigation.navigate('TermsOfUseDetail',{index: data});
   };
 
   useEffect(() => {
