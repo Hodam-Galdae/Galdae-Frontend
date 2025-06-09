@@ -10,6 +10,7 @@ import {theme} from '../styles/theme';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import { PaymentResponse } from '../api/chatApi';
 import { banks, BankOption } from '../constants/bankOptions';
+import moment from 'moment';
 
 type RootStackParamList = {
   Settlement: {data: PaymentResponse};
@@ -49,7 +50,7 @@ const Settlement: React.FC = () => {
         </View>
         <BasicText style={styles.costTitle}>{data.totalCost + '원'}</BasicText>
         <BasicText style={styles.costSubTitle}>
-          {'요청일 : ' + `${new Date(data.requestTime).getFullYear()}년 ${new Date(data.requestTime).getMonth()}월 ${new Date(data.requestTime).getDay()}일 ${new Date(data.requestTime).getHours()}:${new Date(data.requestTime).getMinutes()}`}
+          {'요청일 : ' + moment.utc(data.requestTime).format('YYYY년 MM월 DD일 (ddd) HH : mm')}
         </BasicText>
         {/* <TouchableOpacity>
           <View style={styles.galleryBtn}>

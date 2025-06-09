@@ -34,7 +34,7 @@ export interface PaymentResponse {
   depositor: string;
   accountNumber: string;
   bankType: string;
-  requestTime: Date;
+  requestTime: string;
   members: PaymentUserReponse[];
 }
 

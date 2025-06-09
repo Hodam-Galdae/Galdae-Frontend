@@ -3,10 +3,11 @@ import { TouchableOpacity, View } from 'react-native';
 import styles from '../styles/ChatRoomItem.style';
 import BasicText from './BasicText';
 import SVG from './SVG';
+import moment from 'moment';
 
 interface Props {
     id: string,
-    time: Date,
+    time: string,
     from: string,
     to: string,
     currentPerson: number,
@@ -16,11 +17,14 @@ interface Props {
 }
 
 const ChatRoomItem = (props : Props) => {
+  const formatDepartureTime = (departureTime: string): string => {
+    return moment.utc(departureTime).format('YYYY년 MM월 DD일 (ddd) HH : mm');
+  };
   return (
     <TouchableOpacity onPress={() => props.onPress(props.id)}>
       <View style={styles.container}>
         <View style={styles.wrapper}>
-          <BasicText text={props.time.getFullYear() + '년 ' + (props.time.getMonth() + 1) + '월 ' + props.time.getDate() + '일 ' + props.time.getHours() + ':' + props.time.getMinutes()} style={styles.timeText}/>
+          <BasicText text={formatDepartureTime(props.time)} style={styles.timeText}/>
           {props.message === 0 ? null :
             <View style={styles.message}>
               <BasicText style={styles.messageText} text={props.message.toString()}/>

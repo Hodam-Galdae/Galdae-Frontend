@@ -6,13 +6,14 @@ import SVG from './SVG';
 import {theme} from '../styles/theme';
 import {useSelector} from 'react-redux';
 import {RootState} from '../modules/redux/RootReducer';
+import moment from 'moment';
 
 type Chat = {
   id: number;
   content: string;
   sender: string;
   senderImage?: string;
-  time: Date;
+  time: string;
   type: string;
   isShowProfile?: boolean;
   isShowTime?: boolean;
@@ -20,7 +21,7 @@ type Chat = {
 
 const ChatItem: React.FC<{item: Chat}> = React.memo(({item}) => {
   const userInfo = useSelector((state: RootState) => state.user);
-
+  console.log(item.time);
   return (
     <View style={styles.container}>
       {item.type === 'ENTER' || item.type === 'EXIT' ? (
@@ -48,7 +49,7 @@ const ChatItem: React.FC<{item: Chat}> = React.memo(({item}) => {
             {item.isShowTime && item.sender === userInfo.nickname ? (
               <BasicText
                 style={styles.timeText}
-                text={item.time.getHours() + ':' + item.time.getMinutes()}
+                text={moment.utc(item.time).hour() + ':' + moment.utc(item.time).minute()}
               />
             ) : null}
             {item.type === 'MESSAGE' ? (
@@ -74,7 +75,7 @@ const ChatItem: React.FC<{item: Chat}> = React.memo(({item}) => {
             {item.isShowTime && item.sender !== userInfo.nickname ? (
               <BasicText
                 style={styles.timeText}
-                text={item.time.getHours() + ':' + item.time.getMinutes()}
+                text={moment.utc(item.time).hour() + ':' + moment.utc(item.time).minute()}
               />
             ) : null}
           </View>

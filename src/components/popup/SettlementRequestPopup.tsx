@@ -15,6 +15,7 @@ import {
 } from '../../api/chatApi';
 import { getUserInfo } from '../../api/membersApi';
 import { banks, BankOption } from '../../constants/bankOptions';
+import moment from 'moment';
 
 export interface SettlementRequestPopupRef {
   open: () => void;
@@ -145,7 +146,7 @@ const SettlementRequestPopup = forwardRef<
           <View>
             <BasicText style={styles.settlementTitle} text="최종 확인" />
             <BasicText style={styles.settlementTime}>
-              {`${new Date().getFullYear()}년 ${new Date().getMonth()}월 ${new Date().getDay()}일 ${new Date().getHours()}:${new Date().getMinutes()}`}
+              {moment.utc().format('YYYY년 MM월 DD일 (ddd) HH : mm')}
             </BasicText>
             <View style={styles.settlementLoactionContainer}>
               <SVG

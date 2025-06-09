@@ -9,6 +9,7 @@ import {useNavigation} from '@react-navigation/native';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {RootState} from '../modules/redux/RootReducer';
 import { getPayment, PaymentResponse } from '../api/chatApi';
+import moment from 'moment';
 
 type RootStackParamList = {
   Settlement: {data: PaymentResponse};
@@ -17,7 +18,7 @@ type RootStackParamList = {
 type Settlement = {
     sender: string,
     senderImage: string | undefined,
-    time: Date,
+    time: string,
     isShowProfile: boolean,
     isShowTime: boolean
     chatroomId: string
@@ -33,7 +34,7 @@ const SettlementBox: React.FC<{settlement: Settlement}> = React.memo(({settlemen
         depositor: '',
         accountNumber: '',
         bankType: '',
-        requestTime: new Date(),
+        requestTime: new Date().toISOString(),
         members: [
             {id: '',name: '', image: ''},
         ],
@@ -58,7 +59,7 @@ const SettlementBox: React.FC<{settlement: Settlement}> = React.memo(({settlemen
             ) : null}
             <View style={[styles.boxWrapper, {justifyContent: settlement.sender === userInfo.nickname ? 'flex-end' : 'flex-start'}]}>
                 {settlement.isShowTime && settlement.sender === userInfo.nickname ? (
-                    <BasicText style={styles.timeText} text={settlement.time.getHours() + ':' + settlement.time.getMinutes()}/>
+                    <BasicText style={styles.timeText} text={moment.utc(settlement.time).hour() + ':' + moment.utc(settlement.time).minute()}/>
                 ) : null}
                 <View style={[styles.box, {alignSelf: settlement.sender === userInfo.nickname ? 'flex-end' : 'flex-start'}]}>
                     <View style={styles.backImage}>
@@ -68,7 +69,7 @@ const SettlementBox: React.FC<{settlement: Settlement}> = React.memo(({settlemen
                     <BasicButton text="정산 상세" buttonStyle={styles.button} textStyle={styles.buttonText} onPress={()=>navigation.navigate('Settlement', { data: paymentData})}/>
                 </View>
                 {settlement.isShowTime && settlement.sender !== userInfo.nickname ? (
-                    <BasicText style={styles.timeText} text={settlement.time.getHours() + ':' + settlement.time.getMinutes()}/>
+                    <BasicText style={styles.timeText} text={moment.utc(settlement.time).hour() + ':' + moment.utc(settlement.time).minute()}/>
                 ) : null}
             </View>
         </View>

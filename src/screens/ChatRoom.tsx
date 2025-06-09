@@ -41,6 +41,7 @@ import {
   sendImage,
   exitChatroom,
 } from '../api/chatApi';
+import moment from 'moment';
 import {SUB_ENDPOINT, PUB_ENDPOINT, WEB_SOCKET_URL} from '../api/axiosInstance';
 import {createReport} from '../api/reportApi';
 import RNFS from 'react-native-fs';
@@ -343,18 +344,18 @@ const ChatRoom: React.FC = () => {
     ({item, index}: RenderItem) => {
       const isShowTime =
         !(
-          new Date(data[index + 1]?.time).getMinutes() ===
-            new Date(item.time).getMinutes() &&
-          new Date(data[index + 1]?.time).getHours() ===
-            new Date(item.time).getHours()
+          moment.utc(data[index + 1]?.time).minute() ===
+            moment.utc(item.time).minute() &&
+          moment.utc(data[index + 1]?.time).hour() ===
+            moment.utc(item.time).hour()
         ) || data[index + 1]?.sender !== item.sender;
       const isShowProfile =
         data[index - 1]?.sender !== item.sender ||
         !(
-          new Date(data[index - 1]?.time).getMinutes() ===
-            new Date(item.time).getMinutes() &&
-          new Date(data[index - 1]?.time).getHours() ===
-            new Date(item.time).getHours()
+          moment.utc(data[index - 1]?.time).minute() ===
+            moment.utc(item.time).minute() &&
+          moment.utc(data[index - 1]?.time).hour() ===
+            moment.utc(item.time).hour()
         );
       return item.chatType !== 'MONEY' ? (
         <ChatItem
@@ -363,7 +364,7 @@ const ChatRoom: React.FC = () => {
             content: item.chatContent,
             sender: item.sender,
             senderImage: item.memberImage,
-            time: new Date(item.time),
+            time: item.time,
             type: item.chatType.toString(),
             isShowProfile,
             isShowTime,
@@ -375,7 +376,7 @@ const ChatRoom: React.FC = () => {
             sender: item.sender,
             senderImage: item.memberImage,
             chatroomId: chatRoomData.chatroomId,
-            time: new Date(item.time),
+            time: item.time,
             isShowProfile,
             isShowTime,
           }}
