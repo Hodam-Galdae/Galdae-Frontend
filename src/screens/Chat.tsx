@@ -15,15 +15,27 @@ import {useFocusEffect} from '@react-navigation/native';
 import SVG from '../components/SVG';
 import BasicText from '../components/BasicText';
 import {theme} from '../styles/theme';
+import EncryptedStorage from 'react-native-encrypted-storage';
+import { getUserInfo } from '../api/membersApi';
 
 type RootStackParamList = {
-  ChatRoom: {data: Readonly<ChatroomResponse>};
+  ChatRoom: {data: Readonly<ChatroomResponse>, userInfo: Readonly<User>};
 };
 
 type ChatScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
   'ChatRoom'
 >;
+
+type User = {
+  nickname: string,
+  image: string,
+  university: string,
+  bankType: string,
+  accountNumber: string,
+  depositor: string,
+  token: string,
+}
 
 const Chat: React.FC = () => {
   const navigation = useNavigation<ChatScreenNavigationProp>();
@@ -46,11 +58,12 @@ const Chat: React.FC = () => {
     }, [tab]),
   );
 
-  const navigate = (id: string) => {
+  const navigate = async(id: string) => {
     const tagetRoom = chatRoomData.find(item => item.chatroomId === id);
-
+    const userInfo = await getUserInfo();
+    const token = await EncryptedStorage.getItem('accessToken');
     if(tagetRoom){
-      navigation.navigate('ChatRoom', { data: Object.freeze(tagetRoom)});
+      navigation.navigate('ChatRoom', { data: Object.freeze(tagetRoom), userInfo: {...userInfo, token}});
     }
     else{
      // console.log('error');

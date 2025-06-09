@@ -51,7 +51,6 @@ const NicknameChange: React.FC<HomeProps> = () => {
     const navigation = useNavigation<nowGaldaeScreenNavigationProp>();
     const goBack = () => navigation.goBack();
     const handleChangeNickname = async () => {
-  
       try {
         // 닉네임 변경 API 호출
         await updateNickname(nickname);

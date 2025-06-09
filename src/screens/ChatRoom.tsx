@@ -61,9 +61,19 @@ type RenderItem = {
 };
 
 type RootStackParamList = {
-  ChatRoom: {data: Readonly<ChatroomResponse>};
+  ChatRoom: {data: Readonly<ChatroomResponse>, userInfo: Readonly<User>};
   Settlement: {data: Readonly<SettlementType>};
 };
+
+type User = {
+  nickname: string,
+  image: string,
+  university: string,
+  bankType: string,
+  accountNumber: string,
+  depositor: string,
+  token: string,
+}
 
 const ChatRoom: React.FC = () => {
   const [data, setData] = useState<ChatResponse[]>([]);
@@ -96,7 +106,7 @@ const ChatRoom: React.FC = () => {
     reason: '',
   });
   const chatRoomData = params.data;
-  const userInfo = useSelector((state: RootState) => state.user);
+  const userInfo = params.userInfo;
   const client = useRef<Client>();
 
   const panResponder = useRef(
@@ -368,6 +378,7 @@ const ChatRoom: React.FC = () => {
             type: item.chatType.toString(),
             isShowProfile,
             isShowTime,
+            nickname: userInfo.nickname,
           }}
         />
       ) : (
@@ -379,11 +390,12 @@ const ChatRoom: React.FC = () => {
             time: item.time,
             isShowProfile,
             isShowTime,
+            nickname: userInfo.nickname,
           }}
         />
       );
     },
-    [data, chatRoomData],
+    [data, chatRoomData, userInfo],
   );
 
   useDidMountEffect(() => {

@@ -4,8 +4,6 @@ import styles from '../styles/ChatItem.style';
 import BasicText from './BasicText';
 import SVG from './SVG';
 import {theme} from '../styles/theme';
-import {useSelector} from 'react-redux';
-import {RootState} from '../modules/redux/RootReducer';
 import moment from 'moment';
 
 type Chat = {
@@ -17,18 +15,17 @@ type Chat = {
   type: string;
   isShowProfile?: boolean;
   isShowTime?: boolean;
+  nickname: string;
 };
 
 const ChatItem: React.FC<{item: Chat}> = React.memo(({item}) => {
-  const userInfo = useSelector((state: RootState) => state.user);
-  console.log(item.time);
   return (
     <View style={styles.container}>
       {item.type === 'ENTER' || item.type === 'EXIT' ? (
         <BasicText text={item.content} style={styles.enterBox} />
       ) : (
         <View>
-          {item.sender !== userInfo.nickname && item.isShowProfile ? (
+          {item.sender !== item.nickname && item.isShowProfile ? (
             <View style={styles.userWrapper}>
               {item.senderImage === null ? (
                 <SVG name="DefaultProfile" style={styles.userImage} />
@@ -43,10 +40,10 @@ const ChatItem: React.FC<{item: Chat}> = React.memo(({item}) => {
               styles.messageWrapper,
               {
                 justifyContent:
-                  item.sender === userInfo.nickname ? 'flex-end' : 'flex-start',
+                  item.sender === item.nickname ? 'flex-end' : 'flex-start',
               },
             ]}>
-            {item.isShowTime && item.sender === userInfo.nickname ? (
+            {item.isShowTime && item.sender === item.nickname ? (
               <BasicText
                 style={styles.timeText}
                 text={moment.utc(item.time).hour() + ':' + moment.utc(item.time).minute()}
@@ -58,11 +55,11 @@ const ChatItem: React.FC<{item: Chat}> = React.memo(({item}) => {
                   styles.messageContainer,
                   {
                     alignSelf:
-                      item.sender === userInfo.nickname
+                      item.sender === item.nickname
                         ? 'flex-end'
                         : 'flex-start',
                     backgroundColor:
-                      item.sender === userInfo.nickname
+                      item.sender === item.nickname
                         ? theme.colors.brandSubColor
                         : theme.colors.white,
                   },
@@ -72,7 +69,7 @@ const ChatItem: React.FC<{item: Chat}> = React.memo(({item}) => {
             ) : item.type === 'IMAGE' ? (
               <Image style={styles.image} source={{uri: item.content}} />
             ) : null}
-            {item.isShowTime && item.sender !== userInfo.nickname ? (
+            {item.isShowTime && item.sender !== item.nickname ? (
               <BasicText
                 style={styles.timeText}
                 text={moment.utc(item.time).hour() + ':' + moment.utc(item.time).minute()}
