@@ -23,4 +23,3 @@
 # Kakao SDK
 -keep class com.kakao.** { *; }
 -dontwarn com.kakao.**
-
