@@ -7,6 +7,7 @@ import {
   Keyboard,
   Image,
   KeyboardAvoidingView,
+  ActivityIndicator,
 } from 'react-native';
 import messaging from '@react-native-firebase/messaging';
 import styles from '../styles/SetUserInfo.style';
@@ -32,6 +33,7 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep, setIsLoading}) => {
   const [genderSelected, setGenderSelected] = useState<number>(-1);
   const [bankSelect, setBankSelect] = useState<number>(-1);
   const [name, setName] = useState<string>('');
+  const [isImageLoading, setIsImageLoading] = useState(false); // 이미지 업데이트 로딩 상태
   const [accountNumber, setAccountNumber] = useState<string|undefined>(undefined);
   const [accountName, setAccountName] = useState<string|undefined>(undefined);
   const [alertNameText, setAlertNameText] = useState<string>('');
@@ -121,23 +123,17 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep, setIsLoading}) => {
               <BasicText text="유저 정보 입력" style={styles.title} />
               <View style={styles.profileContainer}>
                 <View style={styles.profileWrapper}>
-                  {imageUri ? (
-                    <Image style={styles.profile} source={{uri: imageUri}} />
-                  ) : (
-                    <SVG
-                      style={styles.profile}
-                      name="DefaultProfile"
-                      width={68}
-                      height={68}
-                    />
-                  )}
+                {isImageLoading ? (
+                  <View style={[styles.profileImg, { justifyContent: 'center', alignItems: 'center' }]}>
+                    <ActivityIndicator size="small" color={theme.colors.brandColor} />
+                  </View>
+                ) : imageUri ? (
+                  <Image source={{ uri: imageUri }} style={styles.profileImg} resizeMode="cover" />
+                ) : (
+                  <SVG name="profileImg" style={styles.profileImg} />
+                )}
 
-                  <SVGButton
-                    onPress={getImageByGallery}
-                    iconName="GalleryBlack"
-                    SVGStyle={{width: 30, height: 30}}
-                    buttonStyle={styles.camera}
-                  />
+                  <SVGButton iconName="camera_2_line" buttonStyle={styles.profileCamera} onPress={getImageByGallery} />
                 </View>
               </View>
               <View>

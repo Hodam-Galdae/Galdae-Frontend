@@ -62,6 +62,7 @@ const useImagePicker = () => {
           PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
         );
       }
+      console.log('hasStoragePermission', hasStoragePermission);
     } else {
       // iOS
       hasCameraPermission = await checkAndRequestPermission(
