@@ -6,6 +6,7 @@ export const API_BASE_URL = 'http://15.164.118.59'; // 백엔드 API 주소
 export const WEB_SOCKET_URL = 'ws://15.164.118.59/ws'; // 백엔드 API 주소
 export const PUB_ENDPOINT = '/send';
 export const SUB_ENDPOINT = '/topic/chatroom';
+export const CHAT_COUNT_ENDPOINT = '/topic/chatCount';
 const EXCLUDED_URLS = ['/auth/kakao', '/auth/google', '/auth/apple', '/ws'];
 const MULTIPART_URLS = [
   '/auth/join',

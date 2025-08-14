@@ -16,9 +16,11 @@ type Chat = {
   isShowProfile?: boolean;
   isShowTime?: boolean;
   nickname: string;
+  unreadCount?: number;
 };
 
 const ChatItem: React.FC<{item: Chat}> = React.memo(({item}) => {
+
   return (
     <View style={styles.container}>
       {item.type === 'ENTER' || item.type === 'EXIT' ? (
@@ -65,6 +67,12 @@ const ChatItem: React.FC<{item: Chat}> = React.memo(({item}) => {
                   },
                 ]}>
                 <BasicText style={styles.messageText} text={item.content} />
+                {item.unreadCount !== undefined && item.unreadCount > 0 && (
+                  <BasicText 
+                    style={[styles.timeText, {marginTop: 4}]} 
+                    text={`안읽음 ${item.unreadCount}명`} 
+                  />
+                )}
               </View>
             ) : item.type === 'IMAGE' ? (
               <Image style={styles.image} source={{uri: item.content}} />

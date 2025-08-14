@@ -1,4 +1,9 @@
+/* eslint-disable @typescript-eslint/no-shadow */
+/* eslint-disable react-native/no-inline-styles */
 // Chat.tsx 테스트
+// 채팅 메시지 수신 시 채팅 목록 업데이트
+// 안 읽은 사람 수 구독
+
 import React, {useState, useEffect, useRef, useCallback} from 'react';
 import {
   View,
@@ -29,9 +34,7 @@ import ChatRoomExitModal from '../components/popup/ChatRoomExitModal';
 import ReportCheckModal from '../components/popup/ReportCheckModal';
 import useDidMountEffect from '../hooks/useDidMountEffect';
 import Header from '../components/Header';
-import {Client, IMessage} from '@stomp/stompjs';
-import {useSelector} from 'react-redux';
-import {RootState} from '../modules/redux/RootReducer';
+import {useWebSocket} from '../hooks/useWebSocket';
 import {
   ChatResponse,
   ChatroomResponse,
@@ -42,10 +45,11 @@ import {
   exitChatroom,
 } from '../api/chatApi';
 import moment from 'moment';
-import {SUB_ENDPOINT, PUB_ENDPOINT, WEB_SOCKET_URL} from '../api/axiosInstance';
 import {createReport} from '../api/reportApi';
 import RNFS from 'react-native-fs';
 import Loading from '../components/Loading';
+import { useSelector } from 'react-redux';
+import { RootState } from '../modules/redux/RootReducer';
 
 type SettlementType = {
   accountNumber: String;
@@ -77,7 +81,6 @@ type User = {
 
 const ChatRoom: React.FC = () => {
   const [data, setData] = useState<ChatResponse[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [message, setMessage] = useState<string>('');
   const [showExtraView, setShowExtraView] = useState<boolean>(false);
   const [keyboardHeight, setKeyboardHeight] = useState<number>(0);
@@ -86,6 +89,7 @@ const ChatRoom: React.FC = () => {
   const [isVisibleReportCheckPopup, setIsVisibleReportCheckPopup] =
     useState<boolean>(false);
   const [isVisibleExitPopup, setIsVisibleExitPopup] = useState<boolean>(false);
+  const [unreadCounts, setUnreadCounts] = useState<{[key: number]: number}>({});
   const chatListRef = useRef<FlatList>(null);
   const {imageUri, imageType, imageName, getImageByCamera, getImageByGallery} =
     useImagePicker();
@@ -107,8 +111,9 @@ const ChatRoom: React.FC = () => {
   });
   const chatRoomData = params.data;
   const userInfo = params.userInfo;
-  const client = useRef<Client>();
-
+  const userInfo2 = useSelector((state: RootState) => state.user);
+  console.log('userInfo2', userInfo2.token.startsWith('Bearer '));
+  console.log('userInfo', userInfo.token.startsWith('Bearer '));
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
@@ -142,98 +147,54 @@ const ChatRoom: React.FC = () => {
   useEffect(() => {
     const fetchChats = async () => {
       const chatData = await getChats(chatRoomData.chatroomId);
+      console.log(`
+        
+        
+        처음 받아온 채팅 데이터들 
+        
+        
+        
+        `,chatData);
       setData(chatData);
     };
 
     fetchChats();
-    const socket = new WebSocket(WEB_SOCKET_URL);
-    client.current = new Client({
-      connectHeaders: {
-        Authorization: userInfo.token,
-        chatroomId: chatRoomData.chatroomId,
-      },
-      webSocketFactory: () => socket,
-      reconnectDelay: 5000,
-      heartbeatIncoming: 4000,
-      heartbeatOutgoing: 4000,
-      forceBinaryWSFrames: true,
-      appendMissingNULLonIncoming: true,
-    });
-    client.current.onConnect = () => {
-      setIsLoading(false);
-      client.current!.subscribe(
-        SUB_ENDPOINT + '/' + chatRoomData.chatroomId,
-        (message: IMessage) => {
-          const receiveData = JSON.parse(message.body);
-          setData(prev => [
-            ...prev,
-            {
-              chatId: prev.length === 0 ? 0 : prev[prev.length - 1].chatId + 1,
-              chatContent: receiveData.message,
-              sender: receiveData.sender,
-              chatType: receiveData.type,
-              time: new Date().toISOString(),
-              memberImage: receiveData.senderImage,
-            },
-          ]);
+  }, [chatRoomData]);
+
+  // ChatRoom 컴포넌트 안
+useEffect(() => {
+  console.log('★ 최신 unreadCounts:', unreadCounts);
+}, [unreadCounts]);
+
+  const {isLoading, sendMessage: wsSendMessage} = useWebSocket({
+    chatroomId: chatRoomData.chatroomId,
+    token: userInfo.token.startsWith('Bearer ') ? userInfo.token : 'Bearer ' + userInfo.token,
+    onMessageReceived: useCallback((receiveData) => {
+      setData(prev => [
+        ...prev,
+        {
+          chatId: prev.length === 0 ? 0 : prev[prev.length - 1].chatId + 1,
+          chatContent: receiveData.message,
+          sender: receiveData.sender,
+          chatType: receiveData.type,
+          time: moment.utc(receiveData.time).add(9, 'hours').toISOString(), // UTC+9 (한국 시간)
+          memberImage: receiveData.senderImage,
         },
-      );
-    };
-    client.current.onStompError = function (frame) {
-      setIsLoading(true);
-     // console.log(`Broker reported error: ${frame.headers.message}`);
-     // console.log(`Additional details: ${frame.body}`);
-      // 액세스 토큰 만료시
-      if (
-        frame.headers.message ===
-        'Failed to send message to ExecutorSubscribableChannel[clientInboundChannel]'
-      ) {
-        // 가지고 있던 리프레시 토큰으로 새 엑세스 토큰을 발급받아
-        // 세션 스토리지에 저장하고,
-        // setToken으로 token 상태 업데이트.
-      }
-    };
-    client.current.onDisconnect = error => {
-      setIsLoading(true);
-      //.log('disconnected websocket');
-     // console.log(error);
-    };
-
-    client.current.activate();
-
-    return () => {
-      client.current?.deactivate();
-    };
-  }, [chatRoomData, userInfo]);
+      ]);
+    }, []),
+    onUnreadCountReceived: useCallback((unreadData) => {
+      console.log(unreadData);
+      setUnreadCounts(unreadData);
+    }, []),
+  });
 
   const sendPayment = async (settlementCost: string) => {
-    if (client.current?.connected) {
-      client.current.publish({
-        destination: PUB_ENDPOINT + '/' + chatRoomData.chatroomId,
-        headers: {Authorization: userInfo.token},
-        body: JSON.stringify({
-          type: 'MONEY',
-          sender: userInfo.nickname,
-          message: settlementCost,
-          senderImage: userInfo.image,
-        }),
-      });
-    }
+    wsSendMessage(settlementCost, 'MONEY', userInfo.nickname, userInfo.image);
   };
 
   const sendMessage = async () => {
-    if (client.current && message.length !== 0) {
-      client.current.publish({
-        destination: PUB_ENDPOINT + '/' + chatRoomData.chatroomId,
-        headers: {Authorization: userInfo.token},
-        body: JSON.stringify({
-          type: 'MESSAGE',
-          sender: userInfo.nickname,
-          message: message,
-          senderImage: userInfo.image,
-        }),
-      });
-
+    if (message.length !== 0) {
+      wsSendMessage(message, 'MESSAGE', userInfo.nickname, userInfo.image);
       setMessage('');
     }
   };
@@ -325,15 +286,11 @@ const ChatRoom: React.FC = () => {
     const fileName = `${reportData.current.member.memberId}.json`;
     const filePath = `${RNFS.TemporaryDirectoryPath}/${fileName}`;
     await RNFS.writeFile(filePath, JSON.stringify(data), 'utf8');
-    formData.append('reportRequestDto', {
-      uri: `file:///${filePath}`,
-      type: 'application/json',
-      name: fileName,
-    });
+    formData.append('reportRequestDto', `file:///${filePath}`);
 
     if (reportImage.uri !== '') {
       let imageFile = {uri: imageUri, type: imageType, name: imageName};
-      formData.append('profileImage', imageFile);
+      formData.append('profileImage', imageFile as any);
     }
 
     await createReport(formData);
@@ -359,7 +316,9 @@ const ChatRoom: React.FC = () => {
           moment.utc(data[index + 1]?.time).hour() ===
             moment.utc(item.time).hour()
         ) || data[index + 1]?.sender !== item.sender;
+
       const isShowProfile =
+        index === 1 || // 첫 번째 메시지는 항상 프로필 표시
         data[index - 1]?.sender !== item.sender ||
         !(
           moment.utc(data[index - 1]?.time).minute() ===
@@ -379,6 +338,7 @@ const ChatRoom: React.FC = () => {
             isShowProfile,
             isShowTime,
             nickname: userInfo.nickname,
+            unreadCount: unreadCounts[item.chatId],
           }}
         />
       ) : (
@@ -395,34 +355,20 @@ const ChatRoom: React.FC = () => {
         />
       );
     },
-    [data, chatRoomData, userInfo],
+    [data, chatRoomData, userInfo, unreadCounts],
   );
 
   useDidMountEffect(() => {
     const send = async () => {
       if (imageUri !== '') {
         try {
-          setIsLoading(true);
           const formData = new FormData();
           let imageFile = {uri: imageUri, type: imageType, name: imageName};
-          formData.append('image', imageFile);
+          formData.append('image', imageFile as any);
           const url = await sendImage(formData);
 
-          if (client.current) {
-            client.current.publish({
-              destination: PUB_ENDPOINT + '/' + chatRoomData.chatroomId,
-              headers: {Authorization: userInfo.token},
-              body: JSON.stringify({
-                type: 'IMAGE',
-                sender: userInfo.nickname,
-                message: url,
-                senderImage: userInfo.image,
-              }),
-            });
-          }
+          wsSendMessage(url, 'IMAGE', userInfo.nickname, userInfo.image);
         } catch (err) {
-        } finally {
-          setIsLoading(false);
         }
       }
     };
