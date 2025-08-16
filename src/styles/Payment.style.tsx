@@ -31,7 +31,7 @@ export default StyleSheet.create({
        alignItems:'center',
        justifyContent:'center',
        gap:12,
-       //backgroundColor:theme.colors.brandColor,
+       //backgroundColor:theme.colors.Galdae,
      },
     gradient:{
       borderRadius: 10,
@@ -47,7 +47,7 @@ export default StyleSheet.create({
     hasAccountContainer:{
       width:282,
       height:152,
-      backgroundColor:theme.colors.sub2,
+      backgroundColor:theme.colors.sunPk,
       borderRadius:theme.borderRadius.size10,
       borderWidth:0,
       gap:14,
@@ -71,7 +71,7 @@ export default StyleSheet.create({
     accountContainer:{
       width:275,
       height:145,
-      backgroundColor:theme.colors.gray0,
+      backgroundColor:theme.colors.grayV0,
       borderRadius:theme.borderRadius.size10,
       justifyContent:'center',
       alignItems:'center',

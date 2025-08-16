@@ -482,15 +482,15 @@ const handleLongPress = (post: GaldaeItemType) => {
             SVGStyle={styles.searchSVG}
             enabledColors={{
               backgroundColor: theme.colors.white,
-              textColor: theme.colors.gray2,
+              textColor: theme.colors.grayV2,
             }}
             onPress={handleCancelSearch}
           >
             <View style={styles.searchContent}>
               <SVG name="location_line_gray2" />
-              <BasicText text={departureSmallName} color={theme.colors.gray2} style={styles.searchPos} />
+              <BasicText text={departureSmallName} color={theme.colors.grayV2} style={styles.searchPos} />
               <SVG name="arrow_right_line_gray2" />
-              <BasicText text={destinationSmallName} color={theme.colors.gray2} style={styles.searchPos} />
+              <BasicText text={destinationSmallName} color={theme.colors.grayV2} style={styles.searchPos} />
             </View>
           </SVGTextButton>
         ) : (
@@ -504,7 +504,7 @@ const handleLongPress = (post: GaldaeItemType) => {
             SVGStyle={styles.searchSVG}
             enabledColors={{
               backgroundColor: theme.colors.white,
-              textColor: theme.colors.gray2,
+              textColor: theme.colors.grayV2,
             }}
             onPress={() => navigation.navigate('SetDestination')}
           />
@@ -525,7 +525,7 @@ const handleLongPress = (post: GaldaeItemType) => {
               iconPosition="right"
               enabledColors={{
                 backgroundColor: theme.colors.white,
-                textColor: theme.colors.gray1,
+                textColor: theme.colors.grayV1,
               }}
             />
           </View>
@@ -533,12 +533,12 @@ const handleLongPress = (post: GaldaeItemType) => {
 
         {reduxLoading || isLoadingMore ? (
           <View style={styles.noData}>
-             <ActivityIndicator size="large" color={theme.colors.brandColor} />
+             <ActivityIndicator size="large" color={theme.colors.Galdae} />
           </View>
         ) : finalFilteredData.length === 0 ? (
           <View style={styles.noData}>
             <SVG name="information_line" />
-            <BasicText text="해당 경로의 갈대가 없습니다" color={theme.colors.gray1} />
+            <BasicText text="해당 경로의 갈대가 없습니다" color={theme.colors.grayV1} />
           </View>
         ) : (
           <FlatList

@@ -18,7 +18,7 @@ export default StyleSheet.create({
         justifyContent:'space-between',
         height:60,
         borderWidth:2,
-        borderColor:theme.colors.lightGray,
+        borderColor:theme.colors.grayV3,
         borderRadius:theme.borderRadius.size10,
         marginBottom:10,
     },
@@ -34,12 +34,12 @@ export default StyleSheet.create({
         fontWeight:'500',
     },
     complete:{
-        color:theme.colors.brandColor,
+        color:theme.colors.Galdae,
         fontSize:theme.fontSize.size14,
         fontWeight:'500',
     },
     wait:{
-        color:theme.colors.gray1,
+        color:theme.colors.grayV1,
         fontSize:theme.fontSize.size14,
         fontWeight:'500',
     },

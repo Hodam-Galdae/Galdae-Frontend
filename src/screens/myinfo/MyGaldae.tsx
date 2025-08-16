@@ -117,7 +117,7 @@ const topItem = myGaldaeHistory.length > 0 ? myGaldaeHistory[0] : null;
             onPress={handleMorePress}
             enabledColors={{
               backgroundColor: 'transparent',
-              textColor: theme.colors.gray1,
+              textColor: theme.colors.grayV1,
               borderColor: 'transparent',
             }}
           />

@@ -41,7 +41,7 @@ export default StyleSheet.create({
       width:'100%',
       borderRadius:10,
       borderWidth:2,
-      borderColor:theme.colors.lightGray,
+      borderColor:theme.colors.grayV3,
       alignItems:'flex-start',
       justifyContent:'flex-start',
       marginBottom:(12),
@@ -65,7 +65,7 @@ export default StyleSheet.create({
     title: {
         fontSize: theme.fontSize.size18,
         fontWeight: 'bold',
-        color: theme.colors.black,
+        color: theme.colors.blackV0,
         marginBottom: 20,
     },
     switchBtn: {
@@ -118,7 +118,7 @@ export default StyleSheet.create({
       subPosName: {
         fontSize: theme.fontSize.size16,
         fontWeight: '500',
-        color: theme.colors.gray1,
+        color: theme.colors.grayV1,
         lineHeight: (22), // mainPosName과 동일하게 지정
       },
       startContainer:{

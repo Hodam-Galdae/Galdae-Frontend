@@ -40,13 +40,13 @@ const FilterButton: React.FC<FilterButtonProps> = ({
         loading={loading}
         enabledColors={{
           backgroundColor: 'transparent',
-          textColor: theme.colors.black,
-          borderColor: theme.colors.black,
+          textColor: theme.colors.blackV0,
+          borderColor: theme.colors.blackV0,
         }}
         disabledColors={{
           backgroundColor: 'transparent',
-          textColor: theme.colors.gray1,
-          borderColor: theme.colors.gray1,
+          textColor: theme.colors.grayV1,
+          borderColor: theme.colors.grayV1,
         }}
         buttonStyle={[stylesheet.smallBorderTextBtn, buttonStyle]}
         textStyle={[stylesheet.smallBorderBtnText, textStyle]}

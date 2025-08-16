@@ -24,8 +24,8 @@ const TextTag: React.FC<BasicDisplayProps> = ({
   text,
   enabledColors = {
     backgroundColor: theme.colors.white,
-    textColor: theme.colors.brandColor,
-    borderColor: theme.colors.brandColor,
+    textColor: theme.colors.Galdae,
+    borderColor: theme.colors.Galdae,
   },
 }) => {
   // enabledColors 값을 메모이제이션 (여기서는 인터랙션이 없으므로 그대로 사용)

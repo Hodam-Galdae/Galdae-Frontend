@@ -29,8 +29,8 @@ const GradientSpinner = () => {
         <Svg width="130" height="130" viewBox="0 0 100 100">
           <Defs>
             <LinearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <Stop offset="0%" stopColor={theme.colors.brandColor} />
-              <Stop offset="100%" stopColor={theme.colors.sub2}/>
+              <Stop offset="0%" stopColor={theme.colors.Galdae} />
+              <Stop offset="100%" stopColor={theme.colors.sunPk}/>
             </LinearGradient>
           </Defs>
           <Circle

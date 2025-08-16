@@ -16,12 +16,12 @@ export default StyleSheet.create({
         height: 84,
         borderTopLeftRadius: 10,
         borderTopRightRadius: 10,
-        backgroundColor: theme.colors.brandColor,
+        backgroundColor: theme.colors.Galdae,
         justifyContent: 'center',
         marginBottom: 14,
     },
     text: {
-        color: theme.colors.black,
+        color: theme.colors.blackV0,
         fontSize: theme.fontSize.size16,
         fontWeight: 400,
         marginBottom: 20,
@@ -29,12 +29,12 @@ export default StyleSheet.create({
     },
     button: {
         borderRadius: 10,
-        backgroundColor: theme.colors.gray0,
+        backgroundColor: theme.colors.grayV0,
         paddingVertical: 10,
         marginHorizontal: 16,
     },
     buttonText: {
-        color: theme.colors.gray2,
+        color: theme.colors.grayV2,
         fontSize: theme.fontSize.size16,
     },
     userWrapper: {
@@ -50,12 +50,12 @@ export default StyleSheet.create({
     },
     userText: {
         fontSize: theme.fontSize.size14,
-        color: theme.colors.black,
+        color: theme.colors.blackV0,
         fontWeight: '500',
     },
     timeText: {
         fontSize: theme.fontSize.size12,
-        color: theme.colors.gray1,
+        color: theme.colors.grayV1,
         fontWeight: '500',
         marginHorizontal: 6,
     },

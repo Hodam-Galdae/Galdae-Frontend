@@ -35,13 +35,13 @@ export interface ReportCheckModalProps {
                 text={member.memberName + '님 을'}
                 fontWeight={'500'}
                 fontSize={theme.fontSize.size16}
-                color={theme.colors.black}
+                color={theme.colors.blackV0}
               />
               <BasicText
                 text={'정말 신고하겠습니까?'}
                 fontSize={theme.fontSize.size16}
                 fontWeight={'500'}
-                color={theme.colors.black}
+                color={theme.colors.blackV0}
                 style={styles.textPopUpText}
               />
               <BasicButton
@@ -49,7 +49,7 @@ export interface ReportCheckModalProps {
                 textStyle={styles.cancelBtnText}
                 buttonStyle={styles.cancelBtn}
                 enabledColors={{
-                  backgroundColor: theme.colors.brandColor,
+                  backgroundColor: theme.colors.Galdae,
                   textColor: theme.colors.white,
                   borderColor: theme.colors.transparent,
                 }}

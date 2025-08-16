@@ -140,8 +140,8 @@ const SchoolCardVerify: React.FC<SchoolCardVerifyProps> = ({setNextStep, setIsLo
           onPress={clickEvent}
           disabled={imageUri.length === 0}
           disabledColors={{
-            backgroundColor: theme.colors.lightGray,
-            textColor: theme.colors.black,
+            backgroundColor: theme.colors.grayV3,
+            textColor: theme.colors.blackV0,
           }}
           buttonStyle={styles.nextButton}
           textStyle={styles.nextText}

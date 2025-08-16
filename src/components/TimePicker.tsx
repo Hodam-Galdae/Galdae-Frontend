@@ -114,7 +114,7 @@ const handleSelectMinute = (minute: number) => {
       <SelectTextButton
         text="오전"
         selected={selectedAmPm === '오전'}
-        unselectedColors={{ textColor: theme.colors.black }}
+        unselectedColors={{ textColor: theme.colors.blackV0 }}
         buttonStyle={styles.amPmBtn}
         textStyle={styles.amPmText}
         onPress={() => handleSelectAmPm('오전')}
@@ -122,7 +122,7 @@ const handleSelectMinute = (minute: number) => {
       <SelectTextButton
         text="오후"
         selected={selectedAmPm === '오후'}
-        unselectedColors={{ textColor: theme.colors.black }}
+        unselectedColors={{ textColor: theme.colors.blackV0 }}
         buttonStyle={styles.amPmBtn}
         textStyle={styles.amPmText}
         onPress={() => handleSelectAmPm('오후')}
@@ -142,8 +142,8 @@ const handleSelectMinute = (minute: number) => {
           onPress={() => setDropdownOpen(dropdownOpen === 'hour' ? null : 'hour')}
           enabledColors={{
             backgroundColor: theme.colors.white,
-            textColor: theme.colors.black,
-            borderColor: theme.colors.lightGray,
+            textColor: theme.colors.blackV0,
+            borderColor: theme.colors.grayV3,
           }}
           buttonStyle={styles.pickerButton}
           textStyle={styles.pickerButtonText}
@@ -176,8 +176,8 @@ const handleSelectMinute = (minute: number) => {
           onPress={() => setDropdownOpen(dropdownOpen === 'minute' ? null : 'minute')}
           enabledColors={{
             backgroundColor: theme.colors.white,
-            textColor: theme.colors.black,
-            borderColor: theme.colors.lightGray,
+            textColor: theme.colors.blackV0,
+            borderColor: theme.colors.grayV3,
           }}
           buttonStyle={styles.pickerButton}
           textStyle={styles.pickerButtonText}

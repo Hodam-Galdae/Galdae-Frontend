@@ -107,7 +107,7 @@ useEffect(() => {
 const renderEmptyComponent = () => (
   <View style={styles.noData}>
     <SVG name="information_line" />
-    <BasicText text="정산 내역이 없습니다" color={theme.colors.gray1} />
+    <BasicText text="정산 내역이 없습니다" color={theme.colors.grayV1} />
   </View>
 );
   return (
@@ -121,7 +121,7 @@ const renderEmptyComponent = () => (
               {
                 isAccountRegister ? (
                   <LinearGradient
-                    colors={[theme.colors.brandColor, theme.colors.sub]}
+                    colors={[theme.colors.Galdae, theme.colors.subOrg]}
                     start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 1 }}
                     style={styles.gradient}
@@ -153,8 +153,8 @@ const renderEmptyComponent = () => (
                 buttonStyle={styles.btn}
                 enabledColors={
                   {
-                    backgroundColor:theme.colors.lightGray,
-                    textColor:theme.colors.black,
+                    backgroundColor:theme.colors.grayV3,
+                    textColor:theme.colors.blackV0,
 
                   }
                 }
@@ -165,8 +165,8 @@ const renderEmptyComponent = () => (
                 buttonStyle={styles.btn}
                 enabledColors={
                   {
-                    backgroundColor:theme.colors.lightGray,
-                    textColor:theme.colors.black,
+                    backgroundColor:theme.colors.grayV3,
+                    textColor:theme.colors.blackV0,
 
                   }
                 }

@@ -32,7 +32,7 @@ export default StyleSheet.create({
   },
   title: {
     fontSize: theme.fontSize.size16,
-    color: theme.colors.black,
+    color: theme.colors.blackV0,
     fontWeight: '500',
     marginBottom: 21,
     width: '100%',
@@ -41,16 +41,16 @@ export default StyleSheet.create({
   },
   input: {
     width: '100%',
-    borderColor: theme.colors.gray0,
+    borderColor: theme.colors.grayV0,
     borderBottomWidth: 2,
-    color: theme.colors.black,
+    color: theme.colors.blackV0,
     fontSize: theme.fontSize.size22,
     textAlign: 'center',
     marginBottom: 20,
     paddingBottom: 4,
   },
   btn: {
-    backgroundColor: theme.colors.brandColor,
+    backgroundColor: theme.colors.Galdae,
     width: '100%',
     borderRadius: 10,
     textAlign: 'center',

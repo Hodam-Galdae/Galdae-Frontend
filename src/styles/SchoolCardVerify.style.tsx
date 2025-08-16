@@ -32,7 +32,7 @@ export default StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: '700',
-    color: theme.colors.black,
+    color: theme.colors.blackV0,
     marginTop: 30,
     marginBottom: 14,
   },
@@ -41,13 +41,13 @@ export default StyleSheet.create({
     textAlign: 'center',
     fontSize: 14,
     fontWeight: '500',
-    color: theme.colors.gray1,
+    color: theme.colors.grayV1,
     marginBottom: 20,
   },
   subTitle: {
     fontSize: 16,
     fontWeight: '500',
-    color: theme.colors.black,
+    color: theme.colors.blackV0,
     marginBottom: 20,
   },
   alert: {
@@ -71,13 +71,13 @@ export default StyleSheet.create({
   exTitle: {
     fontSize: 14,
     fontWeight: '500',
-    color: theme.colors.black,
+    color: theme.colors.blackV0,
     marginBottom: 2,
   },
   exSubTitle: {
     fontSize: 12,
     fontWeight: '500',
-    color: theme.colors.gray2,
+    color: theme.colors.grayV2,
   },
   btnWrapper: {
     flexDirection: 'row',
@@ -90,6 +90,6 @@ export default StyleSheet.create({
     height: 70,
     borderRadius: 999,
     marginRight: 12,
-    backgroundColor: theme.colors.lightGray,
+    backgroundColor: theme.colors.grayV3,
   },
 });

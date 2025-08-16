@@ -88,11 +88,11 @@ const Notification: React.FC<HomeProps> = () => {
             <ScrollView style={styles.content}>
                 {
                     loading ? (
-                        <ActivityIndicator size="large" color={theme.colors.brandColor} />
+                        <ActivityIndicator size="large" color={theme.colors.Galdae} />
                     ) : notifications.length === 0 ? (
                       <View style={styles.noData}>
                 <SVG name="information_line" />
-                <BasicText text="알림이 없습니다." color={theme.colors.gray1} />
+                <BasicText text="알림이 없습니다." color={theme.colors.grayV1} />
               </View>
                     ) : (
                         <>

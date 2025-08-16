@@ -52,7 +52,7 @@ const InquiryHistory = () => {
     return (
       <View style={styles.emptyContainer}>
         <SVG name="information_line" />
-        <BasicText text="문의 내역이 없습니다" color={theme.colors.gray1} />
+        <BasicText text="문의 내역이 없습니다" color={theme.colors.grayV1} />
       </View>
     );
   }

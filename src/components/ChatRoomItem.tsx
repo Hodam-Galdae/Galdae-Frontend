@@ -14,6 +14,7 @@ interface Props {
     maxPerson: number,
     message: number,
     onPress: (id: string) => void,
+    isActive?: boolean,
 }
 
 const ChatRoomItem = (props : Props) => {
@@ -22,9 +23,18 @@ const ChatRoomItem = (props : Props) => {
   };
   return (
     <TouchableOpacity onPress={() => props.onPress(props.id)}>
-      <View style={styles.container}>
+      <View style={[
+        styles.container,
+        !props.isActive && styles.inactiveContainer,
+      ]}>
         <View style={styles.wrapper}>
-          <BasicText text={formatDepartureTime(props.time)} style={styles.timeText}/>
+          <BasicText
+            text={formatDepartureTime(props.time)}
+            style={[
+              styles.timeText,
+              !props.isActive && styles.inactiveText,
+            ]}
+          />
           {props.message === 0 ? null :
             <View style={styles.message}>
               <BasicText style={styles.messageText} text={props.message.toString()}/>
@@ -33,9 +43,21 @@ const ChatRoomItem = (props : Props) => {
         </View>
         <View style={styles.locationWrapper}>
           <SVG name="LocationBlack" style={styles.locationIcon}/>
-          <BasicText text={props.from} style={styles.locationText}/>
+          <BasicText
+            text={props.from}
+            style={[
+              styles.locationText,
+              !props.isActive && styles.inactiveText,
+            ]}
+          />
           <SVG name="RightArrow" style={styles.arrowIcon}/>
-          <BasicText text={props.to} style={styles.locationText}/>
+          <BasicText
+            text={props.to}
+            style={[
+              styles.locationText,
+              !props.isActive && styles.inactiveText,
+            ]}
+          />
         </View>
         <View style={styles.personWrapper}>
           {[...Array(props.currentPerson)].map((e, i: number) => {
@@ -44,7 +66,13 @@ const ChatRoomItem = (props : Props) => {
           {[...Array(props.maxPerson - props.currentPerson)].map((e, i: number) => {
               return <SVG key={i} style={styles.personIcon} name="UserFillLight"/>;
           })}
-          <BasicText style={styles.personText} text={'( ' + props.currentPerson + ' / ' + props.maxPerson + ' )'}/>
+          <BasicText
+            style={[
+              styles.personText,
+              !props.isActive && styles.inactiveText,
+            ]}
+            text={'( ' + props.currentPerson + ' / ' + props.maxPerson + ' )'}
+          />
         </View>
       </View>
     </TouchableOpacity>

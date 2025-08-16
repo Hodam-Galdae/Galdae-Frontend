@@ -28,7 +28,7 @@ container:{
     notiTitleContainer:{
         marginTop:30,
         marginBottom:30,
-        backgroundColor:theme.colors.lightGray,
+        backgroundColor:theme.colors.grayV3,
         alignItems:'center',
         justifyContent:'center',
         flexDirection:'row',
@@ -40,10 +40,10 @@ container:{
       notiTitleText:{
         fontSize:theme.fontSize.size14,
         fontWeight:'500',
-        color:theme.colors.gray2,
+        color:theme.colors.grayV2,
       },
       line:{
         borderTopWidth:1,
-        borderColor:theme.colors.gray0,
+        borderColor:theme.colors.grayV0,
       },
 })

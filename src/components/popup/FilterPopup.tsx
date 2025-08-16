@@ -116,7 +116,7 @@ const FilterPopup = forwardRef<FastGaldaeTimePopupRef, FastGaldaePopupProps>(
             <BasicText
               text="검색 조건 설정"
               fontSize={theme.fontSize.size20}
-              color={theme.colors.black}
+              color={theme.colors.blackV0}
               style={styles.start}
             />
             <View style={styles.line} />
@@ -124,13 +124,13 @@ const FilterPopup = forwardRef<FastGaldaeTimePopupRef, FastGaldaePopupProps>(
             {/* <BasicText
               text="시간대"
               fontSize={theme.fontSize.size16}
-              color={theme.colors.black}
+              color={theme.colors.blackV0}
               style={styles.time}
             /> */}
           <BasicText
             text="출발 일시"
             fontSize={theme.fontSize.size16}
-            color={theme.colors.black}
+            color={theme.colors.blackV0}
             style={styles.time}
           />
 
@@ -141,7 +141,7 @@ const FilterPopup = forwardRef<FastGaldaeTimePopupRef, FastGaldaePopupProps>(
           <BasicText
             text="시간 선택"
             fontSize={theme.fontSize.size16}
-            color={theme.colors.black}
+            color={theme.colors.blackV0}
             style={styles.start}
           />
 
@@ -216,13 +216,13 @@ const FilterPopup = forwardRef<FastGaldaeTimePopupRef, FastGaldaePopupProps>(
                 buttonStyle={styles.confirmButton}
                 textStyle={styles.confirmText}
                 enabledColors={{
-                  backgroundColor: theme.colors.lightGray,
-                  textColor: theme.colors.black,
+                  backgroundColor: theme.colors.grayV3,
+                  textColor: theme.colors.blackV0,
                   borderColor:theme.colors.transparent,
                 }}
                 // disabledColors={{
-                //   backgroundColor: theme.colors.lightGray,
-                //   textColor: theme.colors.black,
+                //   backgroundColor: theme.colors.grayV3,
+                //   textColor: theme.colors.blackV0,
                 //   borderColor:theme.colors.transparent,
                 // }}
               />
@@ -233,13 +233,13 @@ const FilterPopup = forwardRef<FastGaldaeTimePopupRef, FastGaldaePopupProps>(
                 buttonStyle={styles.confirmButton}
                 textStyle={styles.confirmText}
                 enabledColors={{
-                  backgroundColor: theme.colors.brandColor,
+                  backgroundColor: theme.colors.Galdae,
                   textColor: theme.colors.white,
                   borderColor:theme.colors.transparent,
                 }}
                 disabledColors={{
-                  backgroundColor: theme.colors.lightGray,
-                  textColor: theme.colors.black,
+                  backgroundColor: theme.colors.grayV3,
+                  textColor: theme.colors.blackV0,
                   borderColor:theme.colors.transparent,
                 }}
               />

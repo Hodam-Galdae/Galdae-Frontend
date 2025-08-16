@@ -62,7 +62,7 @@ const stylesheet = StyleSheet.create({
     floatingBtn:{
         width:(62),
         height:(62),
-        backgroundColor:theme.colors.brandColor,
+        backgroundColor:theme.colors.Galdae,
         borderRadius: '50%',
         justifyContent:'center',
         alignItems:'center',

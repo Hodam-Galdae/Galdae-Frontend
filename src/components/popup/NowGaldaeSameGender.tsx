@@ -28,7 +28,7 @@ export interface ReportCheckModalProps {
                 text={'동성만 입장이 가능합니다'}
                 fontSize={theme.fontSize.size16}
                 fontWeight={'500'}
-                color={theme.colors.black}
+                color={theme.colors.blackV0}
                 style={styles.textPopUpText}
               />
               <BasicButton
@@ -36,7 +36,7 @@ export interface ReportCheckModalProps {
                 textStyle={styles.cancelBtnText}
                 buttonStyle={styles.cancelBtn}
                 enabledColors={{
-                  backgroundColor: theme.colors.brandColor,
+                  backgroundColor: theme.colors.Galdae,
                   textColor: theme.colors.white,
                   borderColor: theme.colors.transparent,
                 }}

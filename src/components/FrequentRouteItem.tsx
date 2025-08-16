@@ -34,8 +34,8 @@ const FrequentRouteItem: React.FC<FrequentRouteItemProps> = ({ routeData }) => {
           viewStyle={styles.start}
           enabledColors={{
             backgroundColor: theme.colors.white,
-            textColor: theme.colors.brandColor,
-            borderColor: theme.colors.brandColor,
+            textColor: theme.colors.Galdae,
+            borderColor: theme.colors.Galdae,
           }}
         />
         <BasicText text={routeData.departure.majorPlace} style={styles.mainPosName} />
@@ -50,8 +50,8 @@ const FrequentRouteItem: React.FC<FrequentRouteItemProps> = ({ routeData }) => {
           viewStyle={styles.start}
           enabledColors={{
             backgroundColor: theme.colors.white,
-            textColor: theme.colors.brandColor,
-            borderColor: theme.colors.brandColor,
+            textColor: theme.colors.Galdae,
+            borderColor: theme.colors.Galdae,
           }}
         />
         <BasicText text={routeData.arrival.majorPlace} style={styles.mainPosName} />

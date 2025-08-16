@@ -29,7 +29,7 @@ export default StyleSheet.create({
         width: '100%',
         height: 40,
         borderWidth: 2,
-        borderColor: theme.colors.lightGray,
+        borderColor: theme.colors.grayV3,
         borderRadius: theme.borderRadius.size10,
         marginBottom: 20,
       },
@@ -37,7 +37,7 @@ export default StyleSheet.create({
         height:42,
         paddingHorizontal:20,
         fontSize:theme.fontSize.size14,
-        color:theme.colors.gray2,
+        color:theme.colors.grayV2,
         fontWeight:'500',
         marginBottom:40,
     },
@@ -45,7 +45,7 @@ export default StyleSheet.create({
   bankPickerContainer: {
     marginBottom: 40,
     borderWidth: 2,
-    borderColor: theme.colors.lightGray,
+    borderColor: theme.colors.grayV3,
     borderRadius: theme.borderRadius.size10,
     backgroundColor: theme.colors.white,
   },
@@ -62,7 +62,7 @@ export default StyleSheet.create({
   },
   bankPickerText: {
     fontSize: theme.fontSize.size14,
-    color: theme.colors.gray2,
+    color: theme.colors.grayV2,
     fontWeight:'500',
   },
   bankPickerIcon: {
@@ -84,7 +84,7 @@ export default StyleSheet.create({
   },
   bankDropdownText: {
     fontSize: theme.fontSize.size14,
-    color:theme.colors.gray2,
+    color:theme.colors.grayV2,
   },
     completeBtnContainer:{
       alignSelf:'center',

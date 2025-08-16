@@ -64,7 +64,7 @@ const MyGaldaeHistory: React.FC<HomeProps> = () => {
     const renderEmptyComponent = () => (
       <View style={styles.noData}>
         <SVG name="information_line" />
-        <BasicText text="갈대가 없습니다" color={theme.colors.gray1} />
+        <BasicText text="갈대가 없습니다" color={theme.colors.grayV1} />
       </View>
     );
   const handleDeletePost = async () => {

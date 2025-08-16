@@ -11,7 +11,7 @@ export default StyleSheet.create({
   title: {
     fontSize: theme.fontSize.size20,
     fontWeight: '700',
-    color: theme.colors.black,
+    color: theme.colors.blackV0,
     marginBottom: 20,
   },
   alertText: {
@@ -72,7 +72,7 @@ export default StyleSheet.create({
   },
   subTitle: {
     fontSize: theme.fontSize.size16,
-    color: theme.colors.black,
+    color: theme.colors.blackV0,
     fontWeight: '500',
     marginBottom: 10,
   },
@@ -90,7 +90,7 @@ export default StyleSheet.create({
     borderRadius: 10,
     borderWidth: 2,
     paddingRight: 70,
-    borderColor: theme.colors.lightGray,
+    borderColor: theme.colors.grayV3,
     position: 'absolute',
     fontSize: theme.fontSize.size14,
     fontWeight: '500',
@@ -100,7 +100,7 @@ export default StyleSheet.create({
     right: 10,
     top: '50%', // 세로 중앙 정렬
     transform: [{translateY: -14}],
-    backgroundColor: theme.colors.lightGray,
+    backgroundColor: theme.colors.grayV3,
     borderRadius: 10,
     zIndex: 999,
     width: 80,
@@ -111,7 +111,7 @@ export default StyleSheet.create({
   checkBtnText: {
     fontSize: theme.fontSize.size14,
     fontWeight: '500',
-    color: theme.colors.gray1,
+    color: theme.colors.grayV1,
   },
   genderBtnContainer: {
     flexDirection: 'row',
@@ -128,7 +128,7 @@ export default StyleSheet.create({
   bankContainer: {
     borderRadius: 10,
     borderWidth: 2,
-    borderColor: theme.colors.lightGray,
+    borderColor: theme.colors.grayV3,
     width: '100%',
     paddingLeft: 20,
     paddingVertical: 12,
@@ -139,7 +139,7 @@ export default StyleSheet.create({
     marginBottom: 8,
   },
   bankText: {
-    color: theme.colors.gray2,
+    color: theme.colors.grayV2,
     fontSize: theme.fontSize.size14,
     fontWeight: '500',
   },

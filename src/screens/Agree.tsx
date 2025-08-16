@@ -72,7 +72,7 @@ const Agree: React.FC<AgreeProps> = ({setNextStep, goTermsDetailPage}) => {
               selected.every(value => value)
                 ? {
                     ...styles.agreeBtnWrapper,
-                    borderColor: theme.colors.brandColor,
+                    borderColor: theme.colors.Galdae,
                   }
                 : styles.agreeBtnWrapper
             }>
@@ -86,7 +86,7 @@ const Agree: React.FC<AgreeProps> = ({setNextStep, goTermsDetailPage}) => {
               text="모두 동의합니다"
               style={
                 selected.every(value => value)
-                  ? {...styles.agreeText, color: theme.colors.black}
+                  ? {...styles.agreeText, color: theme.colors.blackV0}
                   : styles.agreeText
               }
             />
@@ -114,8 +114,8 @@ const Agree: React.FC<AgreeProps> = ({setNextStep, goTermsDetailPage}) => {
           onPress={clickEvent}
           disabled={!selected.every(value => value)}
           disabledColors={{
-            backgroundColor: theme.colors.lightGray,
-            textColor: theme.colors.black,
+            backgroundColor: theme.colors.grayV3,
+            textColor: theme.colors.blackV0,
           }}
           buttonStyle={styles.nextButton}
           textStyle={styles.nextText}

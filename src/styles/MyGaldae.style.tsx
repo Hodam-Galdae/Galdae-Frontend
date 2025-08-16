@@ -43,7 +43,7 @@ export default StyleSheet.create({
       borderBox:{
         width:'100%',
         height:195,
-        borderColor:theme.colors.gray0,
+        borderColor:theme.colors.grayV0,
         borderRadius:theme.borderRadius.size10,
         borderWidth:1,
         marginBottom:12,
@@ -52,7 +52,7 @@ export default StyleSheet.create({
     },
     noGaldaeText:{
         fontSize:theme.fontSize.size14,
-        color:theme.colors.gray1,
+        color:theme.colors.grayV1,
 
     },
 

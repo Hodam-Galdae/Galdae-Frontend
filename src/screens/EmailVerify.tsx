@@ -139,8 +139,8 @@ const EmailVerify: React.FC<AgreeProps> = ({setNextStep, setIsLoading}) => {
             isVisibleNumberInput ? number.length === 0 : email.length === 0
           }
           disabledColors={{
-            backgroundColor: theme.colors.lightGray,
-            textColor: theme.colors.black,
+            backgroundColor: theme.colors.grayV3,
+            textColor: theme.colors.blackV0,
           }}
           buttonStyle={styles.nextButton}
           textStyle={styles.nextText}

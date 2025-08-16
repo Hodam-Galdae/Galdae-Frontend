@@ -32,7 +32,7 @@ const SelectTextButton: React.FC<SelectableButtonProps> = ({
 }) => {
   // 기본 선택된 상태 색상 (선택된 경우)
   const defaultSelectedColors = {
-    backgroundColor: theme.colors.brandColor,
+    backgroundColor: theme.colors.Galdae,
     textColor: theme.colors.white,
     borderColor: 'transparent',
     ...selectedColors, // 전달된 값으로 덮어쓰기
@@ -40,8 +40,8 @@ const SelectTextButton: React.FC<SelectableButtonProps> = ({
 
   // 기본 선택되지 않은 상태 색상
   const defaultUnselectedColors = {
-    backgroundColor: theme.colors.lightGray,
-    textColor: theme.colors.gray1,
+    backgroundColor: theme.colors.grayV3,
+    textColor: theme.colors.grayV1,
     borderColor: 'transparent',
     ...unselectedColors, // 전달된 값으로 덮어쓰기
   };

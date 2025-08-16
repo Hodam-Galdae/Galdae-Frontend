@@ -14,7 +14,7 @@ export default StyleSheet.create({
     flex: 1,
   },
   title: {
-    color: theme.colors.black,
+    color: theme.colors.blackV0,
     fontSize: theme.fontSize.size22,
     fontWeight: '900',
     textAlign: 'center',

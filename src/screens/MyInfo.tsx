@@ -175,7 +175,7 @@ const MyInfo: React.FC = () => {
               <View style={styles.profile}>
                 {isImageLoading ? (
                   <View style={[styles.profileImg, { justifyContent: 'center', alignItems: 'center' }]}>
-                    <ActivityIndicator size="small" color={theme.colors.brandColor} />
+                    <ActivityIndicator size="small" color={theme.colors.Galdae} />
                   </View>
                 ) : profileImg ? (
                   <Image source={{ uri: profileImg }} style={styles.profileImg} resizeMode="cover" />
@@ -223,13 +223,13 @@ const MyInfo: React.FC = () => {
               onPress={handleMorePress}
               enabledColors={{
                 backgroundColor: 'transparent',
-                textColor: theme.colors.gray1,
+                textColor: theme.colors.grayV1,
                 borderColor: 'transparent',
               }}
             />
           </View>
           {historyLoading ? (
-            <ActivityIndicator size="large" color={theme.colors.brandColor} />
+            <ActivityIndicator size="large" color={theme.colors.Galdae} />
           ) : myGaldaeHistory.length > 0 ? (
             <ScrollView horizontal showsHorizontalScrollIndicator={false} scrollEventThrottle={16}>
               {myGaldaeHistory.map((list, index) => {
@@ -271,7 +271,7 @@ const MyInfo: React.FC = () => {
                 enabledColors={
                   {
                     backgroundColor: theme.colors.white,
-                    textColor: theme.colors.gray2,
+                    textColor: theme.colors.grayV2,
                   }
                 }
                 onPress={menu.onPress}

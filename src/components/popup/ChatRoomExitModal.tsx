@@ -36,13 +36,13 @@ export interface ChatRoomExitModalProps {
                 text={title}
                 fontWeight={'500'}
                 fontSize={theme.fontSize.size16}
-                color={theme.colors.black}
+                color={theme.colors.blackV0}
               />
               <BasicText
                 text={message}
                 fontSize={theme.fontSize.size16}
                 fontWeight={'500'}
-                color={theme.colors.black}
+                color={theme.colors.blackV0}
                 style={styles.textPopUpText}
               />
               <BasicButton
@@ -50,7 +50,7 @@ export interface ChatRoomExitModalProps {
                 textStyle={styles.cancelBtnText}
                 buttonStyle={styles.cancelBtn}
                 enabledColors={{
-                  backgroundColor: theme.colors.brandColor,
+                  backgroundColor: theme.colors.Galdae,
                   textColor: theme.colors.white,
                   borderColor: theme.colors.transparent,
                 }}

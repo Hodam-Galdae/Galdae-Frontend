@@ -22,7 +22,7 @@ export default StyleSheet.create({
   title: {
     fontSize: theme.fontSize.size20,
     fontWeight: '700',
-    color: theme.colors.black,
+    color: theme.colors.blackV0,
     marginTop: 30,
     marginBottom: 12,
   },
@@ -33,7 +33,7 @@ export default StyleSheet.create({
     height: 55,
   },
   verifyContainer: {
-    backgroundColor: theme.colors.lightGray,
+    backgroundColor: theme.colors.grayV3,
     borderRadius: 10,
     paddingHorizontal: 20,
     paddingVertical: 14,
@@ -45,19 +45,19 @@ export default StyleSheet.create({
   verifyTitle: {
     fontSize: theme.fontSize.size16,
     fontWeight: '500',
-    color: theme.colors.black,
+    color: theme.colors.blackV0,
     marginBottom: 6,
   },
   verifyContent: {
     fontSize: theme.fontSize.size16,
     fontWeight: '500',
-    color: theme.colors.gray2,
+    color: theme.colors.grayV2,
     marginBottom: 8,
   },
   verifyAlert: {
     fontSize: theme.fontSize.size12,
     fontWeight: '500',
-    color: theme.colors.black,
+    color: theme.colors.blackV0,
   },
   alert: {
     color: theme.colors.red,

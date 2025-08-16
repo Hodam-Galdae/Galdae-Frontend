@@ -7,9 +7,9 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     height: 80,
-    backgroundColor: theme.colors.white,
+    backgroundColor: theme.colors.Galdae,
     // iOS 전용 그림자
-    shadowColor: theme.colors.gray1,
+    shadowColor: theme.colors.grayV1,
     shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.1,
     shadowRadius: 10,

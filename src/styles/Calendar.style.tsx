@@ -20,7 +20,7 @@ export default StyleSheet.create({
         marginBottom:7,
       },
       clickedCircle:{
-        backgroundColor: theme.colors.brandColor,
+        backgroundColor: theme.colors.Galdae,
         borderRadius:'50%',
         position:'absolute',
         bottom:0,

@@ -12,7 +12,7 @@ export default StyleSheet.create({
   },
   headerText: {
     marginRight: 4,
-    color: theme.colors.black,
+    color: theme.colors.blackV0,
     fontSize: theme.fontSize.size22,
     fontWeight: '700',
   },
@@ -23,7 +23,7 @@ export default StyleSheet.create({
   container: {
     paddingTop: 50,
     flex: 1,
-    backgroundColor: theme.colors.lightGray,
+    backgroundColor: theme.colors.grayV3,
     justifyContent: 'space-between',
   },
   list: {
@@ -33,14 +33,14 @@ export default StyleSheet.create({
   addBtn: {
     width: 30,
     height: 30,
-    backgroundColor: theme.colors.brandSubColor,
+    backgroundColor: theme.colors.Galdae2,
     marginRight: 10,
     borderRadius: 999,
   },
   sendBtn: {
     width: 34,
     height: 34,
-    backgroundColor: theme.colors.brandColor,
+    backgroundColor: theme.colors.Galdae,
     marginLeft: 12,
     borderRadius: 999,
   },
@@ -52,7 +52,7 @@ export default StyleSheet.create({
     backgroundColor: '#E9E9E9',
     fontSize: theme.fontSize.size14,
     fontWeight: '500',
-    color: theme.colors.black,
+    color: theme.colors.blackV0,
     paddingHorizontal: 12,
     paddingVertical: 10,
   },
@@ -84,7 +84,7 @@ export default StyleSheet.create({
     borderRadius: 999,
     width: 70,
     height: 70,
-    backgroundColor: theme.colors.lightGray,
+    backgroundColor: theme.colors.grayV3,
   },
   extraViewItemIcon: {
     width: 28,
@@ -93,7 +93,7 @@ export default StyleSheet.create({
   extraViewItemText: {
     marginTop: 6,
     fontSize: 14,
-    color: theme.colors.gray2,
+    color: theme.colors.grayV2,
     fontWeight: '500',
   },
   inputWrapper: {
@@ -114,7 +114,7 @@ export default StyleSheet.create({
     flex: 1,
   },
   menuText: {
-    color: theme.colors.black,
+    color: theme.colors.blackV0,
     fontSize: theme.fontSize.size20,
     fontWeight: '700',
     marginTop: 57,
@@ -127,11 +127,11 @@ export default StyleSheet.create({
   menuUserText: {
     fontSize: theme.fontSize.size18,
     fontWeight: '500',
-    color: theme.colors.black,
+    color: theme.colors.blackV0,
     marginRight: 10,
   },
   menuUserMe: {
-    backgroundColor: theme.colors.brandSubColor,
+    backgroundColor: theme.colors.Galdae2,
     width: 18,
     height: 18,
     borderRadius: 999,
@@ -139,7 +139,7 @@ export default StyleSheet.create({
     alignItems: 'center',
   },
   menuUserMeText: {
-    color: theme.colors.brandColor,
+    color: theme.colors.Galdae,
     fontSize: theme.fontSize.size12,
     fontWeight: '700',
   },
@@ -156,7 +156,7 @@ export default StyleSheet.create({
     marginBottom: 16,
   },
   menuUserBtn: {
-    backgroundColor: theme.colors.brandColor,
+    backgroundColor: theme.colors.Galdae,
     paddingHorizontal: 7,
     paddingVertical: 5,
     borderRadius: 10,

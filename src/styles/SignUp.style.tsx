@@ -12,10 +12,10 @@ export default StyleSheet.create({
   bar: {
     width: '100%',
     height: 7,
-    backgroundColor: theme.colors.gray0,
+    backgroundColor: theme.colors.grayV0,
   },
   progress: {
-    backgroundColor: theme.colors.brandColor,
+    backgroundColor: theme.colors.Galdae,
     height: 7,
     borderTopRightRadius: 10,
     borderBottomRightRadius: 10,

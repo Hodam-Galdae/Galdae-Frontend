@@ -13,7 +13,7 @@ export default StyleSheet.create({
       width:'100%',
       paddingHorizontal:16,
       height:68,
-      backgroundColor:theme.colors.lightGray,
+      backgroundColor:theme.colors.grayV3,
       borderRadius:theme.borderRadius.size10,
       alignItems:'center',
       justifyContent:'space-between',
@@ -35,7 +35,7 @@ export default StyleSheet.create({
       }),
     },
     dateText:{
-      color:theme.colors.caption1,
+      color:theme.colors.blackV0,
     },
     bankContainer:{
       alignItems:'flex-end',

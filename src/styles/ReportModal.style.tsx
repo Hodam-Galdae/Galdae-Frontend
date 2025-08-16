@@ -28,7 +28,7 @@ export default StyleSheet.create({
   pictureBtn: {
     width: 40,
     height: 40,
-    backgroundColor: theme.colors.lightGray,
+    backgroundColor: theme.colors.grayV3,
     borderRadius: 10,
     marginRight: 10,
   },
@@ -39,7 +39,7 @@ export default StyleSheet.create({
   },
   title: {
     fontSize: theme.fontSize.size18,
-    color: theme.colors.black,
+    color: theme.colors.blackV0,
     fontWeight: '700',
     marginBottom: 10,
     width: '100%',
@@ -49,9 +49,9 @@ export default StyleSheet.create({
     width: '100%',
     borderRadius: 10,
     height: 120,
-    borderColor: theme.colors.lightGray,
+    borderColor: theme.colors.grayV3,
     borderWidth: 2,
-    color: theme.colors.black,
+    color: theme.colors.blackV0,
     fontSize: theme.fontSize.size14,
     padding: 12,
   },
@@ -59,7 +59,7 @@ export default StyleSheet.create({
     width: '100%',
   },
   btn: {
-    backgroundColor: theme.colors.brandColor,
+    backgroundColor: theme.colors.Galdae,
     width: '100%',
     borderRadius: 10,
     textAlign: 'center',

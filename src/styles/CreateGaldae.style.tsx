@@ -43,7 +43,7 @@ export default StyleSheet.create({
     title: {
         fontSize: theme.fontSize.size18,
         fontWeight: 'bold',
-        color: theme.colors.black,
+        color: theme.colors.blackV0,
         marginBottom: 12,
     },
     switchBtn: {
@@ -85,30 +85,30 @@ export default StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         borderWidth: 2,
-        borderColor: theme.colors.lightGray,
+        borderColor: theme.colors.grayV3,
         backgroundColor: theme.colors.white,
         borderRadius: 10,
         marginBottom: 30,
     },
     timeText: {
         fontSize: theme.fontSize.size18,
-        color: theme.colors.black,
+        color: theme.colors.blackV0,
         fontWeight:'500',
     },
     subTitle: {
-        color: theme.colors.gray1,
+        color: theme.colors.grayV1,
         fontSize: theme.fontSize.size14,
         marginBottom: 8,
     },
     additionalButton: {
         paddingHorizontal: 22,
         paddingVertical: 6,
-        backgroundColor: theme.colors.lightGray,
+        backgroundColor: theme.colors.grayV3,
         marginRight: 8,
     },
     additionalButtonText: {
         fontSize: theme.fontSize.size14,
-        color: theme.colors.gray1,
+        color: theme.colors.grayV1,
     },
     buttonWrapper: {
         display: 'flex',
@@ -146,19 +146,19 @@ export default StyleSheet.create({
     },
     personText: {
         fontSize: theme.fontSize.size18,
-        color: theme.colors.black,
+        color: theme.colors.blackV0,
         marginRight: 4,
         fontWeight:'700',
     },
     personSubText: {
         fontSize: theme.fontSize.size14,
-        color: theme.colors.gray1,
+        color: theme.colors.grayV1,
         fontWeight:'500',
     },
     plusBtn: {
         width: 26,
         height: 26,
-        backgroundColor: theme.colors.gray0,
+        backgroundColor: theme.colors.grayV0,
         borderRadius: 999,
     },
     plusIcon: {
@@ -167,7 +167,7 @@ export default StyleSheet.create({
     },
     numberText: {
         fontSize: theme.fontSize.size24,
-        color: theme.colors.black,
+        color: theme.colors.blackV0,
         marginHorizontal: 10,
     },
     oftenBox: {
@@ -177,7 +177,7 @@ export default StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'flex-start',
         alignItems: 'center',
-        backgroundColor: theme.colors.lightGray,
+        backgroundColor: theme.colors.grayV3,
         borderRadius: 10,
         marginBottom: 30,
         borderWidth: 2,
@@ -189,6 +189,6 @@ export default StyleSheet.create({
     },
     checkText: {
         fontSize: theme.fontSize.size16,
-        color: theme.colors.gray1,
+        color: theme.colors.grayV1,
     },
 });

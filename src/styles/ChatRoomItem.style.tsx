@@ -7,14 +7,18 @@ export default StyleSheet.create({
     container: {
         width: width - 30,
         borderWidth: 2,
-        borderColor: theme.colors.lightGray,
+        borderColor: theme.colors.grayV3,
         borderRadius: 10,
         paddingLeft: 16,
         alignItems: 'flex-start',
         justifyContent: 'center',
         height: 87,
         marginBottom: 10,
-        
+
+    },
+    inactiveContainer: {
+        opacity: 0.6,
+        borderColor: theme.colors.grayV1,
     },
     wrapper: {
         width: '100%',
@@ -25,14 +29,17 @@ export default StyleSheet.create({
     },
     timeText: {
         fontSize: 12,
-        color: theme.colors.gray1,
+        color: theme.colors.grayV1,
         fontWeight: '500',
         marginBottom: 2,
+    },
+    inactiveText: {
+        color: theme.colors.grayV2,
     },
     message: {
         width: 24,
         height: 18,
-        backgroundColor: theme.colors.brandColor,
+        backgroundColor: theme.colors.Galdae,
         borderRadius: 30,
         justifyContent: 'center',
         alignItems: 'center',
@@ -51,7 +58,7 @@ export default StyleSheet.create({
     locationText: {
         fontSize: 16,
         fontWeight: '700',
-        color: theme.colors.black,
+        color: theme.colors.blackV0,
         marginRight: 3.5,
     },
     locationIcon: {
@@ -78,7 +85,7 @@ export default StyleSheet.create({
     },
     personText: {
         fontSize: 12,
-        color: theme.colors.gray1,
+        color: theme.colors.grayV1,
         fontWeight: '500',
     },
 

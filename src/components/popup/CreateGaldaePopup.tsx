@@ -39,7 +39,7 @@ export interface CreateGaldaePopupProps {
               <BasicText
                 text={departureDateTime}
                 fontSize={theme.fontSize.size14}
-                color={theme.colors.black}
+                color={theme.colors.blackV0}
                 style={styles.timeText}
               />
 
@@ -48,14 +48,14 @@ export interface CreateGaldaePopupProps {
                 <BasicText
                   text={departureLocation}
                   fontSize={theme.fontSize.size18}
-                  color={theme.colors.black}
+                  color={theme.colors.blackV0}
                   style={styles.departureText}
                 />
                 <SVG name="arrow_right_line" width={18} height={18}/>
                 <BasicText
                   text={destination}
                   fontSize={theme.fontSize.size18}
-                  color={theme.colors.black}
+                  color={theme.colors.blackV0}
                   style={styles.departureText}
                 />
               </View>
@@ -63,7 +63,7 @@ export interface CreateGaldaePopupProps {
               <BasicText
                 text="위 경로로 갈대를 생성하시겠습니까?"
                 fontSize={theme.fontSize.size14}
-                color={theme.colors.black}
+                color={theme.colors.blackV0}
                 style={styles.timeText}
               />
 
@@ -73,7 +73,7 @@ export interface CreateGaldaePopupProps {
                   textStyle={styles.cancelBtnText}
                   buttonStyle={styles.cancelBtn}
                   enabledColors={{
-                    backgroundColor: theme.colors.brandColor,
+                    backgroundColor: theme.colors.Galdae,
                     textColor: theme.colors.white,
                     borderColor: theme.colors.transparent,
                   }}

@@ -53,13 +53,13 @@ const SVGTextButton: React.FC<SVGTextButtonProps> = React.memo(({
   disabled,
   loading,
   enabledColors = {
-    backgroundColor: theme.colors.brandColor,
+    backgroundColor: theme.colors.Galdae,
     textColor: theme.colors.white,
     borderColor: theme.colors.transparent,
   },
   disabledColors = {
-    backgroundColor: theme.colors.gray0,
-    textColor: theme.colors.gray1,
+    backgroundColor: theme.colors.grayV0,
+    textColor: theme.colors.grayV1,
     borderColor: theme.colors.transparent,
   },
   accessibilityLabel,

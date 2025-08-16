@@ -3,19 +3,35 @@
  */
 export const theme = {
     colors: {
-      brandColor: '#66D760',
-      brandSubColor:'#DAFFCD',
+      Galdae: '#00DDAC',
+      Galdae2:'#9AF2E3',
+      Galdae3:'#CEFEF6',
+      GaldaeDark:'#00D0A2',
+
       white:'#FFFFFF',
-      lightGray:'#F8F8F8',
-      lightGray2:'#F6F6F6',
-      gray0:'#D7D7D7',
-      gray1:'#9C9C9C',
-      gray2:'#6C6C6C',
-      caption1:'#9D9D9D',
-      black:'#121212',
-      red:'#FF5354',
-      sub:'#FDFD94',
-      sub2:'#CEF8BF',
+
+      grayV0:'#D2D6DE',
+      grayV1:'#E3E5EB',
+      grayV2:'#EFF1F5',
+      grayV3:'#F4F7FA',
+
+      blackV0:'#191919',
+      blackV1:'#21232A',
+      blackV2:'#3D3F4D',
+      blackV3:'#777E91',
+
+      red:'#FF4A4A',
+      red2:'#FEE9E9',
+
+      blue:'#2186FF',
+      blue2:'#E8EDFF',
+
+      yellow:'#FFEC6B',
+      yellow2:'#FFFDD6',
+
+      subOrg:'#FFCF82',
+      sunPk:'#FFC2C3',
+
       transparent:'transparent',
       enabledBorder:'transparent',
       popupBackGround:'rgba(108, 108, 108, 0.2)',

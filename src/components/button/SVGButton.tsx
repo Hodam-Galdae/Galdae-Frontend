@@ -43,7 +43,7 @@ const SVGButton: React.FC<SVGButtonProps> = React.memo(({
   },
   disabledColors = {
     backgroundColor: theme.colors.transparent,
-    textColor: theme.colors.gray1,
+    textColor: theme.colors.grayV1,
     borderColor: theme.colors.transparent,
   },
   accessibilityLabel,

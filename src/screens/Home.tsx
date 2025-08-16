@@ -1,13 +1,13 @@
 /* eslint-disable react-native/no-inline-styles */
 // Home.tsx 테스트
-import React, {useState, useRef,useEffect} from 'react';
-import {ScrollView, View, TouchableOpacity,ActivityIndicator,RefreshControl,Alert} from 'react-native';
+import React, { useState, useRef, useEffect } from 'react';
+import { ScrollView, View, TouchableOpacity, ActivityIndicator, RefreshControl, Alert } from 'react-native';
 import { CreatePostRequest } from '../types/postTypes'; // API 요청 타입 가져오기
 import styles from '../styles/Home.style';
 import BasicButton from '../components/button/BasicButton';
 import BasicText from '../components/BasicText';
 import SVGTextButton from '../components/button/SVGTextButton';
-import {theme} from '../styles/theme';
+import { theme } from '../styles/theme';
 import SVGButton from '../components/button/SVGButton';
 import SVG from '../components/SVG';
 import TextTag from '../components/tag/TextTag';
@@ -15,26 +15,26 @@ import DeletePopup from '../components/popup/DeletePopup';
 import FloatingButton from '../components/button/FloatingButton';
 import GaldaeItem from '../components/GaldaeItem';
 import CreateGaldaePopup from '../components/popup/CreateGaldaePopup';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import moment from 'moment-timezone/builds/moment-timezone-with-data';
 import ToastPopup from '../components/popup/ToastPopup';
 import { useAppDispatch } from '../modules/redux/store';
 import NowGaldaeSameGender from '../components/popup/NowGaldaeSameGender';
 import { fetchMyGaldaeHistory } from '../modules/redux/slice/myGaldaeSlice';
-import {fetchHomeGaldaePosts} from  '../modules/redux/slice/homeGaldaeSlice';
+import { fetchHomeGaldaePosts } from '../modules/redux/slice/homeGaldaeSlice';
 //type
-import {MyCreatedPost} from '../types/getTypes';
+import { MyCreatedPost } from '../types/getTypes';
 
 //API
 import { createPost } from '../api/postApi'; // 갈대 생성 API 불러오기
 import { deletePost } from '../api/postApi';
-import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useSelector } from 'react-redux';
 import { RootState } from '../modules/redux/RootReducer'; // store.ts에서 RootState 가져오기
 import { fetchMyCreatedGaldae } from '../modules/redux/slice/myCreatedGaldaeSlice';
 
 // type
-import {GaldaeItemType } from '../types/getTypes';
+import { GaldaeItemType } from '../types/getTypes';
 
 // redux
 //import {  useSelector } from 'react-redux';
@@ -81,16 +81,16 @@ const Home: React.FC<HomeProps> = () => {
   const [departureAmPm, setDepartureAmPm] = useState<'오전' | '오후'>('오전');
   // 출발지 관련 상태
   const [departureLargeName, setDepartureLargeName] = useState<string>('출발지 선택');
-  const [departureLargeId, setDepartureLargeId] = useState<number|null>(null);
+  const [departureLargeId, setDepartureLargeId] = useState<number | null>(null);
 
   const [departureSmallName, setDepartureSmallName] = useState<string>('출발지 선택');
-  const [departureSmallId, setDepartureSmallId] = useState<number|null>(null);
+  const [departureSmallId, setDepartureSmallId] = useState<number | null>(null);
   const [sameGenderPopupVisible, setSameGenderPopupVisible] = useState(false);
   const [destinationLargeName, setDestinationLargeName] = useState<string>('도착지 선택');
-  const [destinationLargeId, setDestinationLargeId] = useState<number|null>(null);
+  const [destinationLargeId, setDestinationLargeId] = useState<number | null>(null);
 
   const [destinationSmallName, setDestinationSmallName] = useState<string>('도착지 선택');
-  const [destinationSmallId, setDestinationSmallId] = useState<number|null>(null);
+  const [destinationSmallId, setDestinationSmallId] = useState<number | null>(null);
   const dispatch = useAppDispatch();
   const [departureHour, setDepartureHour] = useState<number>(0);
   const [departureMinute, setDepartureMinute] = useState<number>(0);
@@ -109,43 +109,43 @@ const Home: React.FC<HomeProps> = () => {
     dispatch(fetchMyCreatedGaldae());
   }, [dispatch]);
 
-// 새로고침 시 실행할 함수 (예: 데이터 다시 불러오기)
-const onRefresh = async () => {
-  setRefreshing(true);
-  try {
-    dispatch(fetchMyCreatedGaldae());
-    dispatch(fetchHomeGaldaePosts());
-    formatDepartureDateTime();
-  } catch (error) {
-   // console.error('새로고침 에러:', error);
-  } finally {
-    setRefreshing(false);
-  }
-};
+  // 새로고침 시 실행할 함수 (예: 데이터 다시 불러오기)
+  const onRefresh = async () => {
+    setRefreshing(true);
+    try {
+      dispatch(fetchMyCreatedGaldae());
+      dispatch(fetchHomeGaldaePosts());
+      formatDepartureDateTime();
+    } catch (error) {
+      // console.error('새로고침 에러:', error);
+    } finally {
+      setRefreshing(false);
+    }
+  };
 
-// 컴포넌트가 마운트될 때 데이터 호출
-useEffect(() => {
-  dispatch(fetchHomeGaldaePosts());
-}, [dispatch]);
-// const handlePress = () => {
-//   setLoading(true);
-//   // 버튼 클릭 시 원하는 로직을 수행하고, 완료 후 로딩 상태를 false로 전환합니다.
-//   setTimeout(() => {
-//     setLoading(false);
-//   }, 2000);
-// };
+  // 컴포넌트가 마운트될 때 데이터 호출
+  useEffect(() => {
+    dispatch(fetchHomeGaldaePosts());
+  }, [dispatch]);
+  // const handlePress = () => {
+  //   setLoading(true);
+  //   // 버튼 클릭 시 원하는 로직을 수행하고, 완료 후 로딩 상태를 false로 전환합니다.
+  //   setTimeout(() => {
+  //     setLoading(false);
+  //   }, 2000);
+  // };
 
   const handleCreateGaldaeConfirm = async () => {
 
     setCreateGaldaeLoading(true);
     // 사용자가 선택한 값들을 조합하여 ISO 8601 형식의 출발일시 생성
     const formattedDepartureTime = getFormattedDepartureTime();
-  if(departureLargeId === null || departureSmallId === null || destinationLargeId === null || destinationSmallId === null){
-    Alert.alert('출발지 또는 도착지를 다시 선택해주세요!');
-    return;
-   }
+    if (departureLargeId === null || departureSmallId === null || destinationLargeId === null || destinationSmallId === null) {
+      Alert.alert('출발지 또는 도착지를 다시 선택해주세요!');
+      return;
+    }
     const generateGaldaeData: CreatePostRequest = {
-      subDepartureId:departureSmallId, // 예시 값 (실제 값에 맞게 수정)
+      subDepartureId: departureSmallId, // 예시 값 (실제 값에 맞게 수정)
       majorDepartureId: departureLargeId,
       majorArrivalId: destinationLargeId,
       subArrivalId: destinationSmallId,
@@ -156,7 +156,7 @@ useEffect(() => {
       isFavoriteRoute: false,
     };
 
-   // console.log('🚀 서버로 보낼 갈대 생성 데이터:', generateGaldaeData);
+    // console.log('🚀 서버로 보낼 갈대 생성 데이터:', generateGaldaeData);
 
     try {
       await createPost(generateGaldaeData);
@@ -170,7 +170,7 @@ useEffect(() => {
         setToastVisible(false);
       }, 2000);
     } catch (error) {
-     // console.error('❌ 갈대 생성 실패:', error);
+      // console.error('❌ 갈대 생성 실패:', error);
     } finally {
       setCreateGaldaeLoading(false);
     }
@@ -190,7 +190,7 @@ useEffect(() => {
     setDepartureAmPm(amPm);
     setDepartureHour(hour);
     setDepartureMinute(minute);
-   // console.log( `${selectedDate}  ${amPm} ${hour} ${minute}`);
+    // console.log( `${selectedDate}  ${amPm} ${hour} ${minute}`);
   };
   // 출발일시 문자열 포맷 함수
   const formatDepartureDateTime = () => {
@@ -201,32 +201,31 @@ useEffect(() => {
     // 예: "2025년 11월 12일 (수)"
     const formattedDate = dateObj.format('YYYY년 M월 D일 (ddd)');
     // 예: "오전 2 : 30" (분이 10 미만일 경우 앞에 0 추가)
-    const formattedTime = `${departureAmPm} ${departureHour} : ${
-      departureMinute < 10 ? '0' + departureMinute : departureMinute
-    }`;
+    const formattedTime = `${departureAmPm} ${departureHour} : ${departureMinute < 10 ? '0' + departureMinute : departureMinute
+      }`;
     return `${formattedDate} ${formattedTime}`;
   };
-// 출발일시를 ISO 8601 형식으로 변환하는 함수 예시
-const getFormattedDepartureTime = (): string => {
-  // 12시간 형식을 24시간 형식으로 변환
-  if (!departureDate) {
-    return '출발 시간 선택';
-  }
+  // 출발일시를 ISO 8601 형식으로 변환하는 함수 예시
+  const getFormattedDepartureTime = (): string => {
+    // 12시간 형식을 24시간 형식으로 변환
+    if (!departureDate) {
+      return '출발 시간 선택';
+    }
     let hour24 = departureHour;
-  if (departureAmPm === '오후' && departureHour < 12) {
-    hour24 += 12;
-  } else if (departureAmPm === '오전' && departureHour === 12) {
-    hour24 = 0;
-  }
-  // 선택한 날짜와 시간 정보를 Asia/Seoul 타임존의 moment 객체로 생성
-  const selectedMoment = moment.utc(departureDate).set({
-    hour: hour24,
-    minute: departureMinute,
-    second: 0,
-    millisecond: 0,
-  });
-  return selectedMoment.toISOString(); // UTC 기준 ISO 문자열 반환
-};
+    if (departureAmPm === '오후' && departureHour < 12) {
+      hour24 += 12;
+    } else if (departureAmPm === '오전' && departureHour === 12) {
+      hour24 = 0;
+    }
+    // 선택한 날짜와 시간 정보를 Asia/Seoul 타임존의 moment 객체로 생성
+    const selectedMoment = moment.utc(departureDate).set({
+      hour: hour24,
+      minute: departureMinute,
+      second: 0,
+      millisecond: 0,
+    });
+    return selectedMoment.toISOString(); // UTC 기준 ISO 문자열 반환
+  };
   const toggleFastGaldaeStartPopup = () => {
     fastGaldaeStartPopupRef.current?.open();
   };
@@ -242,21 +241,21 @@ const getFormattedDepartureTime = (): string => {
   const openCreateGaldaePopup = () => {
     const formattedDepartureTime = getFormattedDepartureTime();
 
-    if(departureLargeName === '출발지 선택' || departureSmallName === '출발지 선택' || destinationLargeName === '도착지 선택' || destinationSmallName === '도착지 선택'){
+    if (departureLargeName === '출발지 선택' || departureSmallName === '출발지 선택' || destinationLargeName === '도착지 선택' || destinationSmallName === '도착지 선택') {
       Alert.alert('출발지 또는 도착지를 제대로 선택해주세요!');
       return;
-   }else if(formattedDepartureTime === '출발 시간 선택'){
-    Alert.alert('출발 시간을 선택해주세요!');
-    return;
- }
- // 출발 시간을 moment 객체로 변환하여 현재 시간과 비교
- const departureMoment = moment(formattedDepartureTime.replace(/Z$/, ''));
-// console.log(` departureMoment:
-//  ${departureMoment}`);
- if (departureMoment.isBefore(moment())) {
-   Alert.alert('알림', '현재 시간보다 이후의 시간을 선택해주세요!');
-   return;
- }
+    } else if (formattedDepartureTime === '출발 시간 선택') {
+      Alert.alert('출발 시간을 선택해주세요!');
+      return;
+    }
+    // 출발 시간을 moment 객체로 변환하여 현재 시간과 비교
+    const departureMoment = moment(formattedDepartureTime.replace(/Z$/, ''));
+    // console.log(` departureMoment:
+    //  ${departureMoment}`);
+    if (departureMoment.isBefore(moment())) {
+      Alert.alert('알림', '현재 시간보다 이후의 시간을 선택해주세요!');
+      return;
+    }
     setgenerateLoading(true);
     setgenerateLoading(false);
     setCreateGaldaePopupVisible(true);
@@ -275,10 +274,10 @@ const getFormattedDepartureTime = (): string => {
   const handleCreateCaledaeConfirm = () => {
     const formattedDepartureTime = getFormattedDepartureTime();
 
-    if(departureLargeName === '출발지 선택' || departureSmallName === '출발지 선택' || destinationLargeName === '도착지 선택' || destinationSmallName === '도착지 선택'){
+    if (departureLargeName === '출발지 선택' || departureSmallName === '출발지 선택' || destinationLargeName === '도착지 선택' || destinationSmallName === '도착지 선택') {
       Alert.alert('출발지 또는 도착지를 제대로 선택해주세요!');
       return;
-    }else if(formattedDepartureTime === '출발 시간 선택'){
+    } else if (formattedDepartureTime === '출발 시간 선택') {
       Alert.alert('출발 시간 선택');
       return;
     }
@@ -288,19 +287,19 @@ const getFormattedDepartureTime = (): string => {
     setToastVisible(true);
   };
   const handleDeletePost = async () => {
-      if (!selectedPostId) {return;}
-      try {
-        await deletePost(selectedPostId);
-        dispatch(fetchMyCreatedGaldae());
-        Alert.alert('삭제 완료', '선택한 갈대가 삭제되었습니다.');
-        setDeletePopupVisible(false);
-        setSelectedPostId(null);
-        dispatch(fetchMyGaldaeHistory());
-        dispatch(fetchHomeGaldaePosts());
-      } catch (error) {
-        Alert.alert('삭제 실패', '글 삭제에 실패했습니다. 다시 시도해주세요.');
-       // console.error(error);
-      }
+    if (!selectedPostId) { return; }
+    try {
+      await deletePost(selectedPostId);
+      dispatch(fetchMyCreatedGaldae());
+      Alert.alert('삭제 완료', '선택한 갈대가 삭제되었습니다.');
+      setDeletePopupVisible(false);
+      setSelectedPostId(null);
+      dispatch(fetchMyGaldaeHistory());
+      dispatch(fetchHomeGaldaePosts());
+    } catch (error) {
+      Alert.alert('삭제 실패', '글 삭제에 실패했습니다. 다시 시도해주세요.');
+      // console.error(error);
+    }
   };
   const handleSwitch = () => {
     setDepartureLargeName(destinationLargeName);
@@ -314,10 +313,10 @@ const getFormattedDepartureTime = (): string => {
     setDestinationSmallName(departureSmallName);
   };
   return (
-    <View style={{height:'100%'}}>
+    <View style={{ height: '100%' }}>
       <ScrollView refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }>
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }>
         <BasicButton
           text="어플 공지사항/안내"
           //onPress={handlePress}
@@ -329,22 +328,22 @@ const getFormattedDepartureTime = (): string => {
 
           {myCreatedGaldaeList.length > 0 && (
             <View style={styles.madeGaldaeContainer}>
-            <BasicText text="생성한 갈대" style={styles.madeGaldae} />
-             {myCreatedGaldaeLoading ? (
-              <ActivityIndicator size="large" color={theme.colors.brandColor} />
-            ) : (
-              <ScrollView horizontal showsHorizontalScrollIndicator={false} scrollEventThrottle={16}>
-                {myCreatedGaldaeList.map((item, index) => (
-                  <TouchableOpacity key={index} style={styles.newGaldaeList} onPress={()=>navigation.navigate('NowGaldaeDetail', {postId: item.postId})} onLongPress={() => handleLongPress(item)} delayLongPress={100}>
-                    <BasicText text={moment(item.createdAt).fromNow()} style={styles.newGaldaeTimeText} />
-                    <BasicText text={`${item.departure}`} style={styles.newGaldaeDepartText} numberOfLines={1} ellipsizeMode="tail"/>
-                    <SVG name="arrow_down_fill" style={styles.newGaldaeArrowIcon} />
-                    <BasicText text={`${item.arrival}`} style={styles.newGaldaeDestText} numberOfLines={1} ellipsizeMode="tail"/>
-                  </TouchableOpacity>
-                ))}
-              </ScrollView>
-            )}
-          </View>
+              <BasicText text="생성한 갈대" style={styles.madeGaldae} />
+              {myCreatedGaldaeLoading ? (
+                <ActivityIndicator size="large" color={theme.colors.Galdae} />
+              ) : (
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} scrollEventThrottle={16}>
+                  {myCreatedGaldaeList.map((item: any, index: number) => (
+                    <TouchableOpacity key={index} style={styles.newGaldaeList} onPress={() => navigation.navigate('NowGaldaeDetail', { postId: item.postId })} onLongPress={() => handleLongPress(item)} delayLongPress={100}>
+                      <BasicText text={moment(item.createdAt).fromNow()} style={styles.newGaldaeTimeText} />
+                      <BasicText text={`${item.departure}`} style={styles.newGaldaeDepartText} numberOfLines={1} ellipsizeMode="tail" />
+                      <SVG name="arrow_down_fill" style={styles.newGaldaeArrowIcon} />
+                      <BasicText text={`${item.arrival}`} style={styles.newGaldaeDestText} numberOfLines={1} ellipsizeMode="tail" />
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
+              )}
+            </View>
           )}
 
 
@@ -414,34 +413,34 @@ const getFormattedDepartureTime = (): string => {
               onPress={handleMorePress}
               enabledColors={{
                 backgroundColor: 'transparent',
-                textColor: theme.colors.gray1,
+                textColor: theme.colors.grayV1,
                 borderColor: 'transparent',
               }}
-              //buttonStyle={styles.button}
-              //textStyle={styles.text}
+            //buttonStyle={styles.button}
+            //textStyle={styles.text}
             />
           </View>
 
           <View style={styles.nowGaldaeList}>
-          {
-            postsLoading ? (
-              <ActivityIndicator size="small" color={theme.colors.brandColor} />
-            ) : posts.length === 0  ? (
-              <View style={styles.noData}>
-                <SVG name="information_line" />
-                <BasicText text="갈대가 없습니다" color={theme.colors.gray1} />
-              </View>
-            ) : (
-              posts.map(item => (
-                <GaldaeItem
-                  key={item.postId}
-                  item={item}
-                  onPress={ !item.isSameGender && item.passengerGenderType === 'SAME' ? () =>setSameGenderPopupVisible(true) : ()=> navigation.navigate('NowGaldaeDetail', {postId: item.postId}) }
-                  onLongPress={() => handleLongPress(item)}
-                />
-              ))
-            )
-          }
+            {
+              postsLoading ? (
+                <ActivityIndicator size="small" color={theme.colors.Galdae} />
+              ) : posts.length === 0 ? (
+                <View style={styles.noData}>
+                  <SVG name="information_line" />
+                  <BasicText text="갈대가 없습니다" color={theme.colors.grayV1} />
+                </View>
+              ) : (
+                posts.map(item => (
+                  <GaldaeItem
+                    key={item.postId}
+                    item={item}
+                    onPress={!item.isSameGender && item.passengerGenderType === 'SAME' ? () => setSameGenderPopupVisible(true) : () => navigation.navigate('NowGaldaeDetail', { postId: item.postId })}
+                    onLongPress={() => handleLongPress(item)}
+                  />
+                ))
+              )
+            }
           </View>
         </ScrollView>
       </ScrollView>
@@ -449,7 +448,7 @@ const getFormattedDepartureTime = (): string => {
       <Portal>
         <FastGaldaeStartPopup
           ref={fastGaldaeStartPopupRef}
-          onConfirm={(largeName,largeId, smallName, smallId) => {
+          onConfirm={(largeName, largeId, smallName, smallId) => {
             setDepartureLargeName(largeName);
             setDepartureLargeId(largeId);
 
@@ -457,14 +456,14 @@ const getFormattedDepartureTime = (): string => {
             setDepartureSmallId(smallId);
           }}
           selectedStartPlaceId={destinationSmallId}
-         // onClose={() => console.log('팝업 닫힘')}
+        // onClose={() => console.log('팝업 닫힘')}
         />
       </Portal>
 
       <Portal>
         <FastGaldaeEndPopup
           ref={fastGaldaeEndPopupRef}
-          onConfirm={(largeName,largeId, smallName, smallId) => {
+          onConfirm={(largeName, largeId, smallName, smallId) => {
             setDestinationLargeName(largeName);
             setDestinationLargeId(largeId);
 
@@ -472,7 +471,7 @@ const getFormattedDepartureTime = (): string => {
             setDestinationSmallId(smallId);
           }}
           selectedStartPlaceId={departureSmallId}
-         // onClose={() => console.log('팝업 닫힘')}
+        // onClose={() => console.log('팝업 닫힘')}
         />
       </Portal>
 
@@ -480,7 +479,7 @@ const getFormattedDepartureTime = (): string => {
         <FastGaldaeTimePopup
           ref={fastGaldaeTimePopupRef}
           onConfirm={handleTimePopupConfirm}
-          //onClose={() => console.log('팝업 닫힘')}
+        //onClose={() => console.log('팝업 닫힘')}
         />
       </Portal>
 
@@ -501,19 +500,19 @@ const getFormattedDepartureTime = (): string => {
       />
       <NowGaldaeSameGender
         visible={sameGenderPopupVisible}
-        onConfirm={()=>{setSameGenderPopupVisible(false);}}
+        onConfirm={() => { setSameGenderPopupVisible(false); }}
       />
       <DeletePopup
-      visible={deletePopupVisible}
-      onCancel={() => {
-        setDeletePopupVisible(false);
-        setSelectedPostId(null);
-      }}
-      onConfirm={handleDeletePost}
-      title="선택하신 갈대를"
-      message="삭제하시겠습니까?"
-      buttonText="삭제하기"
-    />
+        visible={deletePopupVisible}
+        onCancel={() => {
+          setDeletePopupVisible(false);
+          setSelectedPostId(null);
+        }}
+        onConfirm={handleDeletePost}
+        title="선택하신 갈대를"
+        message="삭제하시겠습니까?"
+        buttonText="삭제하기"
+      />
     </View>
   );
 };

@@ -88,8 +88,8 @@ const VerifySchool: React.FC<VerifySchoolProps> = ({setNextStep}) => {
                 styles.verifyContainer,
                 methodSelected === 0
                   ? {
-                      backgroundColor: theme.colors.brandSubColor,
-                      borderColor: theme.colors.brandColor,
+                      backgroundColor: theme.colors.Galdae2,
+                      borderColor: theme.colors.Galdae,
                     }
                   : null,
               ]}>
@@ -109,8 +109,8 @@ const VerifySchool: React.FC<VerifySchoolProps> = ({setNextStep}) => {
                 styles.verifyContainer,
                 methodSelected === 1
                   ? {
-                      backgroundColor: theme.colors.brandSubColor,
-                      borderColor: theme.colors.brandColor,
+                      backgroundColor: theme.colors.Galdae2,
+                      borderColor: theme.colors.Galdae,
                     }
                   : null,
               ]}>
@@ -140,8 +140,8 @@ const VerifySchool: React.FC<VerifySchoolProps> = ({setNextStep}) => {
         onPress={clickEvent}
         disabled={false}
         disabledColors={{
-          backgroundColor: theme.colors.lightGray,
-          textColor: theme.colors.black,
+          backgroundColor: theme.colors.grayV3,
+          textColor: theme.colors.blackV0,
         }}
         buttonStyle={styles.nextButton}
         textStyle={styles.nextText}

@@ -48,7 +48,7 @@ export default StyleSheet.create({
     searchBtn:{
       height:42,
       borderWidth:2,
-      borderColor:theme.colors.lightGray,
+      borderColor:theme.colors.grayV3,
       borderRadius:theme.borderRadius.size10,
     },
     searchPos:{
@@ -80,7 +80,7 @@ export default StyleSheet.create({
     borderedListBox:{
       width:'100%',
       height:195,
-      borderColor:theme.colors.gray0,
+      borderColor:theme.colors.grayV0,
       borderRadius:theme.borderRadius.size10,
       borderWidth:1,
       paddingStart:24,

@@ -6,14 +6,14 @@ export default StyleSheet.create({
     width: '100%',
     padding: 12,
     borderWidth: 2,
-    borderColor: theme.colors.lightGray,
+    borderColor: theme.colors.grayV3,
     borderRadius: 10,
     backgroundColor: theme.colors.white,
   },
   text: {
     fontSize: theme.fontSize.size14,
     fontWeight: '400',
-    color: theme.colors.gray2,
+    color: theme.colors.grayV2,
   },
   selectContainer: {
     backgroundColor: theme.colors.white,

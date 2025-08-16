@@ -90,7 +90,7 @@ const OnBoarding1 = () => {
       <BasicText text="새롭게 변경된" style={styles.title} />
       <BasicText
         text="같이 갈 그대, 갈대"
-        style={[styles.title, {color: theme.colors.brandColor}]}
+        style={[styles.title, {color: theme.colors.Galdae}]}
       />
       <BasicText text="반갑습니다:)" style={styles.title} />
       <SVG width={72} name="GaldaeLogo" style={styles.logo} />
@@ -126,7 +126,7 @@ const OnBoarding1 = () => {
 const OnBoarding2 = () => {
   return (
     <View
-      style={[styles.container, {backgroundColor: theme.colors.brandColor}]}>
+      style={[styles.container, {backgroundColor: theme.colors.Galdae}]}>
       <SVG name="LogoYellow" />
     </View>
   );
@@ -289,7 +289,7 @@ const OnBoarding4 = () => {
           style={{
             fontSize: 28,
             fontWeight: '700',
-            color: theme.colors.brandColor,
+            color: theme.colors.Galdae,
           }}
           text="환영합니다!"
         />
@@ -299,7 +299,7 @@ const OnBoarding4 = () => {
               marginTop: 17,
               fontSize: 20,
               fontWeight: '700',
-              color: theme.colors.black,
+              color: theme.colors.blackV0,
               textAlign: 'center',
             }}
             text={'편리한 이동을 위한\n당신만의 갈대를 만들어보세요!'}

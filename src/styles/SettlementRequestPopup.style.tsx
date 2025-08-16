@@ -26,18 +26,18 @@ export default StyleSheet.create({
     width: 68,
     height: 5,
     borderRadius: 2.5,
-    backgroundColor: theme.colors.gray0,
+    backgroundColor: theme.colors.grayV0,
   },
   content: {},
   settlementLastText: {
     fontSize: theme.fontSize.size14,
     fontWeight: '500',
-    color: theme.colors.black,
+    color: theme.colors.blackV0,
   },
   settlementCloseBtn: {
     width: 30,
     height: 30,
-    backgroundColor: theme.colors.brandSubColor,
+    backgroundColor: theme.colors.Galdae2,
     position: 'absolute',
     borderRadius: 999,
     right: 15,
@@ -49,7 +49,7 @@ export default StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 22,
-    backgroundColor: theme.colors.lightGray,
+    backgroundColor: theme.colors.grayV3,
     paddingVertical: 10,
     borderRadius: 10,
   },
@@ -61,10 +61,10 @@ export default StyleSheet.create({
   bankText: {
     fontSize: theme.fontSize.size14,
     fontWeight: '400',
-    color: theme.colors.black,
+    color: theme.colors.blackV0,
   },
   bankEdit: {
-    color: theme.colors.gray2,
+    color: theme.colors.grayV2,
     fontSize: theme.fontSize.size12,
     fontWeight: '400',
     marginTop: 4,
@@ -99,7 +99,7 @@ export default StyleSheet.create({
   },
   settlementTitle: {
     fontSize: theme.fontSize.size20,
-    color: theme.colors.black,
+    color: theme.colors.blackV0,
     fontWeight: '700',
     paddingLeft: 10,
     marginTop: 20,
@@ -108,7 +108,7 @@ export default StyleSheet.create({
   settlementTime: {
     paddingLeft: 10,
     fontSize: theme.fontSize.size12,
-    color: theme.colors.gray1,
+    color: theme.colors.grayV1,
     fontWeight: '500',
     marginTop: 8,
   },
@@ -130,7 +130,7 @@ export default StyleSheet.create({
   },
   settlementLastCostBox: {
     paddingTop: 15,
-    backgroundColor: theme.colors.lightGray,
+    backgroundColor: theme.colors.grayV3,
     height: 128,
     borderRadius: 10,
     width: (width - 37) / 2,
@@ -138,15 +138,15 @@ export default StyleSheet.create({
   settlementLocationText: {
     fontSize: theme.fontSize.size16,
     fontWeight: '700',
-    color: theme.colors.black,
+    color: theme.colors.blackV0,
   },
   settlementBtn: {
-    backgroundColor: theme.colors.brandColor,
+    backgroundColor: theme.colors.Galdae,
     paddingVertical: 10,
     marginTop: 11,
   },
   settlementCostText: {
-    color: theme.colors.black,
+    color: theme.colors.blackV0,
     fontSize: theme.fontSize.size20,
     fontWeight: '700',
   },
@@ -154,7 +154,7 @@ export default StyleSheet.create({
     alignItems: 'flex-end',
   },
   settlementCostEditText: {
-    color: theme.colors.gray2,
+    color: theme.colors.grayV2,
     fontSize: theme.fontSize.size12,
     fontWeight: '400',
     textDecorationLine: 'underline',

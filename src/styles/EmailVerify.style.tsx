@@ -22,7 +22,7 @@ export default StyleSheet.create({
     title: {
         fontSize: theme.fontSize.size20,
         fontWeight: '700',
-        color: theme.colors.black,
+        color: theme.colors.blackV0,
         marginTop: 30,
         marginBottom: 25,
     },
@@ -32,7 +32,7 @@ export default StyleSheet.create({
     subTitle: {
         fontSize: theme.fontSize.size16,
         fontWeight: '500',
-        color: theme.colors.black,
+        color: theme.colors.blackV0,
         marginBottom: 20,
     },
     alert: {
@@ -43,11 +43,11 @@ export default StyleSheet.create({
     },
     input: {
         borderWidth: 2,
-        borderColor: theme.colors.lightGray,
+        borderColor: theme.colors.grayV3,
         width: '100%',
         paddingHorizontal: 20,
         paddingVertical: 12,
-        color: theme.colors.black,
+        color: theme.colors.blackV0,
         fontSize: 14,
         fontWeight: '500',
         marginBottom: 10,
@@ -57,7 +57,7 @@ export default StyleSheet.create({
         textAlign: 'center',
         fontSize: theme.fontSize.size14,
         fontWeight: '500',
-        color: theme.colors.gray1,
+        color: theme.colors.grayV1,
         marginBottom: 20,
         marginTop: 20,
     },
@@ -66,6 +66,6 @@ export default StyleSheet.create({
         textAlign: 'center',
         fontSize: theme.fontSize.size14,
         fontWeight: '500',
-        color: theme.colors.brandColor,
+        color: theme.colors.Galdae,
     }
 });

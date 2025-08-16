@@ -63,14 +63,14 @@ const ArrayPopup = forwardRef<FastGaldaeTimePopupRef, FastGaldaePopupProps>(
                 iconName={selectedSortOrder === 'latest' ? 'check_circle_fill' : 'check_circle_line'}
                 />
 
-                <BasicText text="최신순" style={styles.font} color={selectedSortOrder === 'latest' ? theme.colors.black : theme.colors.gray2}  onPress={() => handleSelect('latest')}/>
+                <BasicText text="최신순" style={styles.font} color={selectedSortOrder === 'latest' ? theme.colors.blackV0 : theme.colors.grayV2}  onPress={() => handleSelect('latest')}/>
             </View>
             <View style={styles.latest}>
                 <SVGButton
                 onPress={() => handleSelect('departureTime')}
                 iconName={selectedSortOrder === 'departureTime' ? 'check_circle_fill' : 'check_circle_line'}
                 />
-                <BasicText text="시간임박순" style={styles.font} color={selectedSortOrder === 'departureTime' ? theme.colors.black : theme.colors.gray2}  onPress={() => handleSelect('departureTime')}/>
+                <BasicText text="시간임박순" style={styles.font} color={selectedSortOrder === 'departureTime' ? theme.colors.blackV0 : theme.colors.grayV2}  onPress={() => handleSelect('departureTime')}/>
             </View>
 
         </View>

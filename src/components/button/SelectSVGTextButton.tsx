@@ -40,13 +40,13 @@ const SelectSVGTextButton: React.FC<CarrierButtonProps> = ({
   const defaultEnabledColors = useMemo(() => {
     return selected
       ? {
-          backgroundColor: theme.colors.brandColor, // 선택 시 배경색
+          backgroundColor: theme.colors.Galdae, // 선택 시 배경색
           textColor: theme.colors.white,              // 선택 시 텍스트 색상
           borderColor: 'transparent',
         }
       : {
-          backgroundColor: theme.colors.lightGray,    // 기본 배경색
-          textColor: theme.colors.gray1,              // 기본 텍스트 색상
+          backgroundColor: theme.colors.grayV3,    // 기본 배경색
+          textColor: theme.colors.grayV1,              // 기본 텍스트 색상
           borderColor: 'transparent',
         };
   }, [selected]);

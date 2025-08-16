@@ -49,7 +49,7 @@ const MyGaldaeItem: React.FC<MyGaldaeItemProps> = ({ item, onPress, onLongPress 
             text={`(${item.passengerCount}/${item.totalPassengerCount})`}
             fontWeight={500}
             fontSize={theme.fontSize.size16}
-            color={theme.colors.gray1}
+            color={theme.colors.grayV1}
           />
         </View>
 
@@ -67,13 +67,13 @@ const MyGaldaeItem: React.FC<MyGaldaeItemProps> = ({ item, onPress, onLongPress 
             <BasicText
               text={item.arrangeTime === 'POSSIBLE' ? '시간 협의가능' : '시간 협의불가'}
               style={styles.fromMainLocation}
-              color={theme.colors.gray2}
+              color={theme.colors.grayV2}
               fontSize={theme.fontSize.size10}
             />
             <BasicText
               text={formatDepartureTime(item.departureTime)}
               style={styles.fromSubLocation}
-              color={theme.colors.black}
+              color={theme.colors.blackV0}
               fontSize={theme.fontSize.size14}
             />
           </View>

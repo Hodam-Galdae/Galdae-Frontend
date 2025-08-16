@@ -70,7 +70,7 @@ const ChatItem: React.FC<{item: Chat}> = React.memo(({item}) => {
                         : 'flex-start',
                     backgroundColor:
                       item.sender === item.nickname
-                        ? theme.colors.brandSubColor
+                        ? theme.colors.Galdae2
                         : theme.colors.white,
                   },
                 ]}>

@@ -42,13 +42,13 @@ const BasicButton: React.FC<BasicButtonProps> = React.memo(({ //리렌더링 방
   disabled,
   loading,
   enabledColors = {
-    backgroundColor: theme.colors.brandColor,
+    backgroundColor: theme.colors.Galdae,
     textColor: theme.colors.white,
     borderColor: theme.colors.transparent,
   },
   disabledColors = {
-    backgroundColor: theme.colors.gray0,
-    textColor:  theme.colors.gray1,
+    backgroundColor: theme.colors.grayV0,
+    textColor:  theme.colors.grayV1,
     borderColor: theme.colors.transparent,
   },
   //시각 장애인이나 다른 보조 기술(예: 스크린 리더)을 사용하는 사용자가 앱을 더 쉽게 이용할 수 있도록 버튼이나 다른 UI 요소에 설명을 제공하는 역할

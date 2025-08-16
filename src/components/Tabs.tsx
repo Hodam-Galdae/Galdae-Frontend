@@ -30,7 +30,7 @@ const Tabs = ({ selectedIndex, onSelectHandler, menus }: Props) => {
             left: 0,
             width: width,
             borderBottomWidth: 3,
-            borderBottomColor: theme.colors.brandColor,
+            borderBottomColor: theme.colors.Galdae,
             transform: [{ translateX: animatedValue }],
             bottom: 0,
             zIndex: 999,
@@ -54,7 +54,7 @@ const Tabs = ({ selectedIndex, onSelectHandler, menus }: Props) => {
             style={{
               fontSize: theme.fontSize.size18,
               fontWeight: '700',
-              color: selectedIndex === i ? theme.colors.brandColor : theme.colors.gray1,
+              color: selectedIndex === i ? theme.colors.Galdae : theme.colors.grayV1,
               marginBottom: 10,
             }}
           >
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     slider: {
         width: '100%',
         height: 3,
-        backgroundColor: theme.colors.lightGray,
+        backgroundColor: theme.colors.grayV3,
         position: 'absolute',
         left: 0,
         bottom: 0,

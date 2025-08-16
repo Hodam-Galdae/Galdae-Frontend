@@ -54,7 +54,7 @@ const TermsOfUse: React.FC<HomeProps> = () => {
             enabledColors={
               {
                 backgroundColor:theme.colors.white,
-                textColor:theme.colors.gray2,
+                textColor:theme.colors.grayV2,
               }
             }
             onPress={menu.onPress}

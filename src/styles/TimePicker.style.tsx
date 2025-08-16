@@ -31,7 +31,7 @@ export default StyleSheet.create({
         justifyContent: 'space-between', // 양 끝으로 배치
         paddingVertical: 6,
         borderWidth: 2,
-        borderColor: theme.colors.lightGray,
+        borderColor: theme.colors.grayV3,
         borderRadius: theme.borderRadius.size10,
         //width: '100%',
         alignItems: 'center',
@@ -44,7 +44,7 @@ export default StyleSheet.create({
       },
       pickerButtonText: {
         fontSize: theme.fontSize.size22,
-        color: theme.colors.black,
+        color: theme.colors.blackV0,
         marginLeft:26,
       },
       upDownIcon:{
@@ -61,7 +61,7 @@ export default StyleSheet.create({
         backgroundColor: theme.colors.white,
         borderWidth: 2,
         borderTopWidth:0,
-        borderColor: theme.colors.lightGray,
+        borderColor: theme.colors.grayV3,
         borderBottomLeftRadius:10,
         borderBottomEndRadius: 10,
         zIndex: 100,
@@ -72,7 +72,7 @@ export default StyleSheet.create({
       },
       dropdownItemText: {
         fontSize: theme.fontSize.size22,
-        color: theme.colors.black,
+        color: theme.colors.blackV0,
         fontWeight:'500',
       },
 });

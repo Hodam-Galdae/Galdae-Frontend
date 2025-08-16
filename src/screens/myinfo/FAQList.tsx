@@ -67,7 +67,7 @@ const FAQList = () => {
     <View>
      {
       loading ? (
-        <ActivityIndicator color={theme.colors.brandColor} />
+        <ActivityIndicator color={theme.colors.Galdae} />
       ) : (
       <FAQItem
       id={-1}
@@ -100,8 +100,8 @@ const FAQList = () => {
         }
         unselectedColors={{
           backgroundColor: theme.colors.white,
-          borderColor: theme.colors.brandColor,
-          textColor: theme.colors.brandColor,
+          borderColor: theme.colors.Galdae,
+          textColor: theme.colors.Galdae,
         }}
       />
     </View>

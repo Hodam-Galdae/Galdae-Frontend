@@ -15,7 +15,7 @@ export default StyleSheet.create({
   title: {
     fontSize: 22,
     fontWeight: '900',
-    color: theme.colors.black,
+    color: theme.colors.blackV0,
   },
   textWrapper: {
     display: 'flex',
@@ -37,6 +37,6 @@ export default StyleSheet.create({
   btnText: {
     fontSize: theme.fontSize.size16,
     fontWeight: '500',
-    color: theme.colors.black,
+    color: theme.colors.blackV0,
   },
 });

@@ -35,8 +35,8 @@ const SVGTextTag: React.FC<BasicDisplayProps> = ({
   text,
   enabledColors = {
     backgroundColor: theme.colors.white,
-    textColor: theme.colors.brandColor,
-    borderColor: theme.colors.brandColor,
+    textColor: theme.colors.Galdae,
+    borderColor: theme.colors.Galdae,
   },
   iconName,
   iconPosition = 'left',

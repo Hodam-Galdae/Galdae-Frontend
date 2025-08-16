@@ -20,7 +20,7 @@ export default StyleSheet.create({
     },
     title: {
         fontSize: theme.fontSize.size20,
-        color: theme.colors.black,
+        color: theme.colors.blackV0,
         marginTop: 130,
         fontWeight: '700',
         width: '100%',
@@ -32,7 +32,7 @@ export default StyleSheet.create({
         borderRadius: 10,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: theme.colors.brandColor,
+        backgroundColor: theme.colors.Galdae,
     },
     alertWrapper: {
         alignItems: 'center',
@@ -54,7 +54,7 @@ export default StyleSheet.create({
     },
     alert: {
         fontSize: theme.fontSize.size12,
-        color: theme.colors.gray1,
+        color: theme.colors.grayV1,
         fontWeight: '500',
         textDecorationLine: 'underline',
         marginBottom: 102,

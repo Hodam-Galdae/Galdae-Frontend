@@ -125,7 +125,7 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep, setIsLoading}) => {
                 <View style={styles.profileWrapper}>
                 {isImageLoading ? (
                   <View style={[styles.profileImg, { justifyContent: 'center', alignItems: 'center' }]}>
-                    <ActivityIndicator size="small" color={theme.colors.brandColor} />
+                    <ActivityIndicator size="small" color={theme.colors.Galdae} />
                   </View>
                 ) : imageUri ? (
                   <Image source={{ uri: imageUri }} style={styles.profileImg} resizeMode="cover" />
@@ -182,12 +182,12 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep, setIsLoading}) => {
                 placeholder="계좌번호 입력"
                 value={accountNumber}
                 onChangeText={setAccountNumber}
-                placeholderTextColor={theme.colors.gray2}
+                placeholderTextColor={theme.colors.grayV2}
               />
               <TextInput
                 style={styles.bankContainer}
                 placeholder="예금주 입력"
-                placeholderTextColor={theme.colors.gray2}
+                placeholderTextColor={theme.colors.grayV2}
                 value={accountName}
                 onChangeText={setAccountName}
               />
@@ -197,8 +197,8 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep, setIsLoading}) => {
               onPress={clickEvent}
               disabled={false}
               disabledColors={{
-                backgroundColor: theme.colors.lightGray,
-                textColor: theme.colors.black,
+                backgroundColor: theme.colors.grayV3,
+                textColor: theme.colors.blackV0,
               }}
               buttonStyle={styles.nextButton}
               textStyle={styles.nextText}

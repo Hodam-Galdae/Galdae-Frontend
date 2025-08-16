@@ -90,7 +90,7 @@ const Inquiry: React.FC<HomeProps> = () => {
                   style={styles.input}
                   value={title}
                   onChangeText={setTitle}
-                  placeholderTextColor={theme.colors.gray2} // 원하는 색상으로 지정
+                  placeholderTextColor={theme.colors.grayV2} // 원하는 색상으로 지정
                 />
                 <BasicInput
                 multiline
@@ -98,7 +98,7 @@ const Inquiry: React.FC<HomeProps> = () => {
                   style={styles.detail}
                   value={content}
                   onChangeText={setContent}
-                  placeholderTextColor={theme.colors.gray2} // 원하는 색상으로 지정
+                  placeholderTextColor={theme.colors.grayV2} // 원하는 색상으로 지정
                 />
                 <View style={styles.texts}>
                     <BasicText text="빠른 답변을 원하신다면 " style={styles.text}/>

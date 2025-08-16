@@ -65,8 +65,8 @@ const Logout: React.FC<HomeProps> = () => {
               enabledColors={
                 {
                   backgroundColor:theme.colors.white,
-                  textColor:theme.colors.brandColor,
-                  borderColor:theme.colors.brandColor,
+                  textColor:theme.colors.Galdae,
+                  borderColor:theme.colors.Galdae,
                 }
               }
             />

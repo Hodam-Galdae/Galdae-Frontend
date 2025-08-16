@@ -19,7 +19,7 @@ export default StyleSheet.create({
     messageText: {
         fontSize: 16,
         fontWeight: '400',
-        color: theme.colors.black,
+        color: theme.colors.blackV0,
     },
     userWrapper: {
         flexDirection: 'row',
@@ -35,22 +35,22 @@ export default StyleSheet.create({
     },
     userText: {
         fontSize: theme.fontSize.size14,
-        color: theme.colors.black,
+        color: theme.colors.blackV0,
         fontWeight: '500',
     },
     timeText: {
         fontSize: theme.fontSize.size12,
-        color: theme.colors.gray1,
+        color: theme.colors.grayV1,
         fontWeight: '500',
         marginHorizontal: 6,
     },
     enterBox: {
-        backgroundColor: theme.colors.gray0,
+        backgroundColor: theme.colors.grayV0,
         borderRadius: 20,
         paddingVertical: 5,
         paddingHorizontal: 26,
         alignSelf: 'center',
-        color: theme.colors.gray2,
+        color: theme.colors.grayV2,
     },
     image: {
         width: 230,
@@ -60,7 +60,7 @@ export default StyleSheet.create({
     },
     unreadText: {
         fontSize: theme.fontSize.size12,
-        color: theme.colors.brandColor,
+        color: theme.colors.Galdae,
         fontWeight: '500',
         marginHorizontal: 6,
     },

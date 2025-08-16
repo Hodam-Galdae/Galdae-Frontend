@@ -36,7 +36,7 @@ export default StyleSheet.create({
     },
     FAQContainer:{
       borderBottomWidth:1,
-      borderColor:theme.colors.gray0,
+      borderColor:theme.colors.grayV0,
     },
     FAQItem:{
       flexDirection:'row',
@@ -58,7 +58,7 @@ export default StyleSheet.create({
     },
     answerContainer:{
       width:'100%',
-      backgroundColor:theme.colors.lightGray,
+      backgroundColor:theme.colors.grayV3,
       padding:20,
       gap:20,
     },

@@ -36,21 +36,21 @@ export default StyleSheet.create({
       alignItems:'center',
       backgroundColor: theme.colors.white,
       borderRadius: theme.borderRadius.size10,
-      borderColor:theme.colors.brandColor,
+      borderColor:theme.colors.Galdae,
       borderWidth:1,
       width: 90,
     },
     newGaldaeTimeText:{
       fontSize: theme.fontSize.size10,
       marginBottom: 6,
-      color:theme.colors.gray2,
+      color:theme.colors.grayV2,
     },
     newGaldaeDepartText:{
       fontSize:theme.fontSize.size14,
       fontWeight:'500',
       marginBottom:5,
       maxWidth: 80,
-      //backgroundColor:theme.colors.brandColor,
+      //backgroundColor:theme.colors.Galdae,
     },
     noData:{
      //height:'100%',
@@ -58,7 +58,7 @@ export default StyleSheet.create({
       alignItems:'center',
       justifyContent:'center',
       gap:12,
-      //backgroundColor:theme.colors.brandColor,
+      //backgroundColor:theme.colors.Galdae,
     },
     newGaldaeDestText:{
       fontSize:theme.fontSize.size14,
@@ -72,13 +72,13 @@ export default StyleSheet.create({
       marginTop:(2),
       fontSize:theme.fontSize.size14,
       fontWeight: '500',
-      color:theme.colors.gray2,
+      color:theme.colors.grayV2,
       marginBottom:(14),
     },
     borderedBox:{
       width:'100%',
       justifyContent:'center',
-      borderColor:theme.colors.gray0,
+      borderColor:theme.colors.grayV0,
       borderRadius:theme.borderRadius.size10,
       borderWidth:2,
       paddingHorizontal:(35),
@@ -108,7 +108,7 @@ export default StyleSheet.create({
     subPosName: {
       fontSize: theme.fontSize.size16,
       fontWeight: '500',
-      color: theme.colors.gray1,
+      color: theme.colors.grayV1,
       lineHeight: (22), // mainPosName과 동일하게 지정
     },
     switchBtn:{
@@ -123,7 +123,7 @@ export default StyleSheet.create({
     },
     startTime:{
       fontSize:theme.fontSize.size14,
-      color:theme.colors.brandColor,
+      color:theme.colors.Galdae,
       fontWeight:'500',
       marginTop:(8),
     },
@@ -134,7 +134,7 @@ export default StyleSheet.create({
     },
     line:{
       borderTopWidth:1,
-      borderColor:theme.colors.gray0,
+      borderColor:theme.colors.grayV0,
     },
     generateButton:{
       width:'100%',
@@ -173,12 +173,12 @@ export default StyleSheet.create({
       marginTop:14,
       position:'relative',
       //height:500,
-      // backgroundColor:theme.colors.gray0,
+      // backgroundColor:theme.colors.grayV0,
     },
     borderedListBox:{
       width:'100%',
       height:195,
-      borderColor:theme.colors.gray0,
+      borderColor:theme.colors.grayV0,
       borderRadius:theme.borderRadius.size10,
       borderWidth:1,
       paddingStart:24,
@@ -228,7 +228,7 @@ export default StyleSheet.create({
         paddingVertical:9,
         paddingHorizontal:26,
         borderRadius:theme.borderRadius.size30,
-        backgroundColor:theme.colors.brandColor,
+        backgroundColor:theme.colors.Galdae,
         justifyContent:'center',
         alignItems:'center',
         alignSelf: 'center', // 가로 중앙 정렬

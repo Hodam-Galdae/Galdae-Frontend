@@ -201,7 +201,7 @@ const Login: React.FC = () => {
           text="같이 갈 그대,"
           style={{
             ...styles.title,
-            color: theme.colors.brandColor,
+            color: theme.colors.Galdae,
             marginBottom: 39,
           }}
         />
@@ -213,7 +213,7 @@ const Login: React.FC = () => {
 
       <View style={{marginBottom: 30}}>
         <TouchableOpacity onPress={signInWithApple}>
-          <View style={[styles.button, {backgroundColor: theme.colors.black}]}>
+          <View style={[styles.button, {backgroundColor: theme.colors.blackV0}]}>
             <SVG style={styles.icon} name="Apple" />
             <BasicText
               style={[styles.btnText, {color: theme.colors.white}]}

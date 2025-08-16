@@ -139,7 +139,7 @@ const FastGaldaeStartPopup = forwardRef<FastGaldaeStartPopupRef, FastGaldaePopup
                 <BasicText
                   text="출발지 설정"
                   fontSize={theme.fontSize.size16}
-                  color={theme.colors.black}
+                  color={theme.colors.blackV0}
                   style={styles.start}
                 />
 
@@ -161,13 +161,13 @@ const FastGaldaeStartPopup = forwardRef<FastGaldaeStartPopupRef, FastGaldaePopup
                       text="랜드마크"
                       viewStyle={styles.landMarkTag}
                       enabledColors={{
-                        backgroundColor: theme.colors.brandSubColor,
-                        textColor: theme.colors.brandColor,
+                        backgroundColor: theme.colors.Galdae2,
+                        textColor: theme.colors.Galdae,
                         borderColor:theme.colors.transparent,
                       }}
                     />
                     <BasicText text={smallCategoryName || '출발지 선택'} fontSize={theme.fontSize.size24} style={styles.title}/>
-                    <BasicText text={largeCategoryName || '출발지 선택'} fontSize={theme.fontSize.size16} color={theme.colors.gray1} style={styles.subTitle}/>
+                    <BasicText text={largeCategoryName || '출발지 선택'} fontSize={theme.fontSize.size16} color={theme.colors.grayV1} style={styles.subTitle}/>
                   </View>
 
                 </View>
@@ -189,11 +189,11 @@ const FastGaldaeStartPopup = forwardRef<FastGaldaeStartPopupRef, FastGaldaePopup
                           selected={largeCategoryName === majorPlace.majorPlace}
                           unselectedColors={{
                             backgroundColor: theme.colors.transparent,
-                            textColor: theme.colors.gray1,
+                            textColor: theme.colors.grayV1,
                             borderColor: theme.colors.transparent,
                           }}
                           selectedColors={{
-                            backgroundColor: theme.colors.brandColor,
+                            backgroundColor: theme.colors.Galdae,
                             textColor: theme.colors.white,
                             borderColor: theme.colors.transparent,
                           }}
@@ -218,11 +218,11 @@ const FastGaldaeStartPopup = forwardRef<FastGaldaeStartPopupRef, FastGaldaePopup
                             selected={smallCategoryName === subPlace.subPlace}
                             unselectedColors={{
                               backgroundColor: theme.colors.transparent,
-                              textColor: theme.colors.gray1,
+                              textColor: theme.colors.grayV1,
                               borderColor: theme.colors.transparent,
                             }}
                             selectedColors={{
-                              backgroundColor: theme.colors.brandColor,
+                              backgroundColor: theme.colors.Galdae,
                               textColor: theme.colors.white,
                               borderColor: theme.colors.transparent,
                             }}
@@ -244,13 +244,13 @@ const FastGaldaeStartPopup = forwardRef<FastGaldaeStartPopupRef, FastGaldaePopup
                    buttonStyle={styles.confirmButton}
                    textStyle={styles.confirmText}
                    enabledColors={{
-                     backgroundColor: theme.colors.brandColor,
+                     backgroundColor: theme.colors.Galdae,
                      textColor: theme.colors.white,
                      borderColor:theme.colors.transparent,
                    }}
                    disabledColors={{
-                     backgroundColor: theme.colors.lightGray,
-                     textColor: theme.colors.black,
+                     backgroundColor: theme.colors.grayV3,
+                     textColor: theme.colors.blackV0,
                      borderColor:theme.colors.transparent,
                    }}
                  />

@@ -245,7 +245,7 @@ const Announcement: React.FC<HomeProps> = () => {
                 <BasicText text="알림 받기를 설정하고 유용한 알림들을 받아보세요." style={styles.notiTitleText}/>
               </View>
               {loading ? (
-          <ActivityIndicator size="large" color={theme.colors.brandColor} />
+          <ActivityIndicator size="large" color={theme.colors.Galdae} />
         ) : (
           <View>
             {notiList.map((noti) => (

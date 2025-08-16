@@ -74,7 +74,7 @@ const NowGaldaeDetail: React.FC = () => {
   if (loading) {
     return (
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <ActivityIndicator size="large" color={theme.colors.brandColor} />
+        <ActivityIndicator size="large" color={theme.colors.Galdae} />
       </View>
     );
   }
@@ -164,7 +164,7 @@ const NowGaldaeDetail: React.FC = () => {
               text={`(${postDetail.passengerCount}/${postDetail.totalPassengerCount})`}
               fontWeight={500}
               fontSize={theme.fontSize.size16}
-              color={theme.colors.gray1}
+              color={theme.colors.grayV1}
             />
           </View>
           <View style={styles.toContainer}>
@@ -188,13 +188,13 @@ const NowGaldaeDetail: React.FC = () => {
                     : '시간 협의불가'
                 }
                 style={styles.fromMainLocation}
-                color={theme.colors.gray2}
+                color={theme.colors.grayV2}
                 fontSize={theme.fontSize.size10}
               />
               <BasicText
                 text={formatDepartureTime(postDetail.departureTime)}
                 style={styles.fromSubLocation}
-                color={theme.colors.black}
+                color={theme.colors.blackV0}
                 fontSize={theme.fontSize.size14}
               />
             </View>
@@ -221,7 +221,7 @@ const NowGaldaeDetail: React.FC = () => {
             />
             {isMapLoading && (
               <View style={[styles.map, { position: 'absolute', justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.6)' }]}>
-                <ActivityIndicator size="large" color={theme.colors.brandColor} />
+                <ActivityIndicator size="large" color={theme.colors.Galdae} />
               </View>
             )}
           </View>
@@ -275,8 +275,8 @@ const NowGaldaeDetail: React.FC = () => {
       loading={false}
       disabled={true}
       disabledColors={{
-        backgroundColor: theme.colors.lightGray,
-        textColor: theme.colors.black,
+        backgroundColor: theme.colors.grayV3,
+        textColor: theme.colors.blackV0,
       }}
     />
   ) : isFull ? (
@@ -287,8 +287,8 @@ const NowGaldaeDetail: React.FC = () => {
       loading={false}
       disabled={true}
       disabledColors={{
-        backgroundColor: theme.colors.lightGray,
-        textColor: theme.colors.black,
+        backgroundColor: theme.colors.grayV3,
+        textColor: theme.colors.blackV0,
       }}
     />
   ) : (

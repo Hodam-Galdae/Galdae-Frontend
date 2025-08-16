@@ -27,7 +27,7 @@ export default StyleSheet.create({
          alignItems:'center',
          justifyContent:'center',
          gap:12,
-         //backgroundColor:theme.colors.brandColor,
+         //backgroundColor:theme.colors.Galdae,
        },
     title:{
         marginLeft:15,
@@ -60,7 +60,7 @@ export default StyleSheet.create({
         backgroundColor:theme.colors.notification,
     },
     text:{
-        color:theme.colors.black,
+        color:theme.colors.blackV0,
         fontWeight:'500',
         fontSize:theme.fontSize.size18,
     },
@@ -68,7 +68,7 @@ export default StyleSheet.create({
         width:8,
         height:8,
         borderRadius:999,
-        backgroundColor:theme.colors.brandColor,
+        backgroundColor:theme.colors.Galdae,
         position:'absolute',
         top:12,
         right:15,

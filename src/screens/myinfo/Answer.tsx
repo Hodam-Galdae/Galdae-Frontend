@@ -76,7 +76,7 @@ const Answer: React.FC = () => {
                   value={title}
                   editable={false}
                   onChangeText={setTitle}
-                  placeholderTextColor={theme.colors.gray2} // 원하는 색상으로 지정
+                  placeholderTextColor={theme.colors.grayV2} // 원하는 색상으로 지정
                 />
                 <BasicInput
                   multiline
@@ -85,7 +85,7 @@ const Answer: React.FC = () => {
                   style={styles.detail}
                   value={content}
                   onChangeText={setContent}
-                  placeholderTextColor={theme.colors.gray2} // 원하는 색상으로 지정
+                  placeholderTextColor={theme.colors.grayV2} // 원하는 색상으로 지정
                 />
 
                 <TouchableOpacity style={styles.imgContainer} onPress={getImageByGallery}>
@@ -109,7 +109,7 @@ const Answer: React.FC = () => {
                   style={styles.answerContainer}
                   value={answer}
                   onChangeText={setAnswer}
-                  placeholderTextColor={theme.colors.gray2} // 원하는 색상으로 지정
+                  placeholderTextColor={theme.colors.grayV2} // 원하는 색상으로 지정
                 />
             </View>
       </View>

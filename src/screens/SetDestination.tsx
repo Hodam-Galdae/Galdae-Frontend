@@ -177,7 +177,7 @@ const SetDestination: React.FC = () => {
                 <BasicText
                   text={formatRelativeTime(item.timestamp)}
                   style={styles.searchDate}
-                  color={theme.colors.gray1}
+                  color={theme.colors.grayV1}
                   fontSize={theme.fontSize.size12}
                 />
                 <View style={styles.searchListBox}>
@@ -187,8 +187,8 @@ const SetDestination: React.FC = () => {
                       viewStyle={styles.start}
                       enabledColors={{
                         backgroundColor: theme.colors.white,
-                        textColor: theme.colors.gray0,
-                        borderColor: theme.colors.gray0,
+                        textColor: theme.colors.grayV0,
+                        borderColor: theme.colors.grayV0,
                       }}
                     />
                     <BasicText text={item.start.main} style={styles.mainPosName} />
@@ -203,8 +203,8 @@ const SetDestination: React.FC = () => {
                       viewStyle={styles.start}
                       enabledColors={{
                         backgroundColor: theme.colors.white,
-                        textColor: theme.colors.gray0,
-                        borderColor: theme.colors.gray0,
+                        textColor: theme.colors.grayV0,
+                        borderColor: theme.colors.grayV0,
                       }}
                     />
                     <BasicText text={item.end.main} style={styles.mainPosName} />

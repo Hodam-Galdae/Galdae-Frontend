@@ -25,7 +25,7 @@ export default StyleSheet.create({
         width: 100,
         height: 5,
         borderRadius: 2.5,
-        backgroundColor: theme.colors.gray0,
+        backgroundColor: theme.colors.grayV0,
         marginTop:12,
         marginBottom: 33, // ✅ 여백을 추가하여 쉽게 터치 가능
     },
@@ -45,7 +45,7 @@ export default StyleSheet.create({
     picture:{
       width: 150,
       height:150,
-      backgroundColor:theme.colors.lightGray,
+      backgroundColor:theme.colors.grayV3,
       borderRadius:10,
       marginTop:21,
       position:'relative',
@@ -79,15 +79,15 @@ export default StyleSheet.create({
       justifyContent:'center',
       alignItems:'center',
       gap:23,
-      //backgroundColor:theme.colors.gray0,
+      //backgroundColor:theme.colors.grayV0,
     },
     selectContainer:{
       width: '100%',
       height:226,
       borderRadius:10,
       borderWidth:2,
-      borderColor:theme.colors.lightGray,
-      //backgroundColor:theme.colors.black,
+      borderColor:theme.colors.grayV3,
+      //backgroundColor:theme.colors.blackV0,
     },
     select:{
       alignItems:'center',
@@ -100,7 +100,7 @@ export default StyleSheet.create({
     selectBtn:{
       paddingVertical:6,
       paddingHorizontal:22,
-      //backgroundColor:theme.colors.caption1,
+      //backgroundColor:theme.colors.blackV0,
   },
     selectText:{
       fontSize:theme.fontSize.size18,
@@ -150,7 +150,7 @@ export default StyleSheet.create({
     modalContent: {
       width: '100%',
       height:'60%',
-      backgroundColor: theme.colors.gray0,
+      backgroundColor: theme.colors.grayV0,
       borderRadius: 10,
       alignItems: 'center',
     },
@@ -195,7 +195,7 @@ export default StyleSheet.create({
       paddingVertical:9,
       paddingHorizontal:26,
       borderRadius:theme.borderRadius.size30,
-      backgroundColor:theme.colors.brandColor,
+      backgroundColor:theme.colors.Galdae,
       justifyContent:'center',
       alignItems:'center',
       alignSelf: 'center', // 가로 중앙 정렬
@@ -222,7 +222,7 @@ export default StyleSheet.create({
   },
   line:{
     borderTopWidth:2,
-    borderColor:theme.colors.gray0,
+    borderColor:theme.colors.grayV0,
     width:'100%',
     height:2,
     marginTop:15,
@@ -264,19 +264,19 @@ export default StyleSheet.create({
     },
     personText: {
         fontSize: theme.fontSize.size18,
-        color: theme.colors.black,
+        color: theme.colors.blackV0,
         marginRight: 4,
         fontWeight:'700',
     },
     personSubText: {
         fontSize: theme.fontSize.size14,
-        color: theme.colors.gray1,
+        color: theme.colors.grayV1,
         fontWeight:'500',
     },
     plusBtn: {
         width: 26,
         height: 26,
-        backgroundColor: theme.colors.gray0,
+        backgroundColor: theme.colors.grayV0,
         borderRadius: 999,
     },
     plusIcon: {
@@ -285,7 +285,7 @@ export default StyleSheet.create({
     },
     numberText: {
         fontSize: theme.fontSize.size24,
-        color: theme.colors.black,
+        color: theme.colors.blackV0,
         marginHorizontal: 10,
     },
     selectGender:{

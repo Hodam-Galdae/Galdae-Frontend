@@ -24,14 +24,14 @@ export default StyleSheet.create({
     input:{
         height:42,
         fontSize:theme.fontSize.size14,
-        color:theme.colors.gray2,
+        color:theme.colors.grayV2,
         fontWeight:'500',
         marginBottom:8,
     },
     detail:{
         height:312,
         fontSize:theme.fontSize.size14,
-        color:theme.colors.gray2,
+        color:theme.colors.grayV2,
         fontWeight:'500',
         textAlignVertical: 'top',  // ② 안드로이드에서 위쪽 정렬
         textAlign: 'left',         // ③ 가로 정렬 (iOS, 안드로이드 동일)
@@ -41,7 +41,7 @@ export default StyleSheet.create({
         marginTop:6,
         height:245,
         fontSize:theme.fontSize.size14,
-        color:theme.colors.gray2,
+        color:theme.colors.grayV2,
         fontWeight:'500',
         textAlignVertical: 'top',  // ② 안드로이드에서 위쪽 정렬
         textAlign: 'left',         // ③ 가로 정렬 (iOS, 안드로이드 동일)
@@ -64,7 +64,7 @@ export default StyleSheet.create({
         marginTop:10,
         width:57,
         height:57,
-        backgroundColor:theme.colors.lightGray,
+        backgroundColor:theme.colors.grayV3,
         borderRadius:theme.borderRadius.size10,
         justifyContent:'center',
         alignItems:'center',

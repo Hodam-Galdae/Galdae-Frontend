@@ -27,7 +27,7 @@ export default StyleSheet.create({
     searchText:{
         fontSize:theme.fontSize.size18,
         fontWeight:'500',
-        color:theme.colors.black,
+        color:theme.colors.blackV0,
     },
     search:{
         width:'100%',
@@ -42,7 +42,7 @@ export default StyleSheet.create({
     },
     contentText:{
         fontWeight:'500',
-        color:theme.colors.gray2
+        color:theme.colors.grayV2
     },
 
 });

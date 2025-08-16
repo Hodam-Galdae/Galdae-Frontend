@@ -1,3 +1,5 @@
+/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable comma-dangle */
 /* eslint-disable react/no-unstable-nested-components */
 
 import React from 'react';
@@ -28,25 +30,25 @@ function App(): React.JSX.Element {
             initialRouteName="홈"
             screenOptions={{
               header: () => <Header rightButton={<SVGButton iconName="Notification" onPress={()=>navigation.navigate('Notification')}/>}/>,
-              tabBarActiveTintColor: theme.colors.black,
-              tabBarInactiveTintColor: theme.colors.gray1,
+              tabBarActiveTintColor: theme.colors.Galdae,
+              tabBarInactiveTintColor: theme.colors.blackV3,
               tabBarStyle: {
                 height: Platform.select({
-                  ios: 80,
+                  ios: 82,
                   android: 74,
                 }),
                 borderTopLeftRadius: 20,
                 borderTopRightRadius: 20,
-                borderColor:theme.colors.white,
-                backgroundColor:theme.colors.white,
-                //overflow: 'hidden', // 둥근 모서리가 잘 보이도록 설정
+                borderColor: theme.colors.white,
+                borderTopWidth: 0.1,
+                backgroundColor: theme.colors.white,
                 // iOS용 그림자
-                shadowColor: theme.colors.gray1,
-                shadowOffset: { width: 0, height: 0 },
+                shadowColor: '#000000',
+                shadowOffset: { width: 0, height: -1 },
                 shadowOpacity: 0.05,
                 shadowRadius: 10,
                 // Android용 그림자
-                elevation: 4,
+                elevation: 6,
                 justifyContent: 'center',
                 alignItems: 'center',
               },
@@ -55,11 +57,11 @@ function App(): React.JSX.Element {
                   ios: 80,
                   android: 54,
                 }),
-                //backgroundColor:theme.colors.black,
+                //backgroundColor:theme.colors.blackV0,
                 justifyContent: 'center',
                 alignItems: 'center',
                 paddingTop: 10, // ← 아이콘을 아래로 조금 내림
-                paddingBottom: 10,
+                paddingBottom: 5,
               },
               tabBarLabelStyle: {
                 textAlign: 'center',
@@ -67,22 +69,8 @@ function App(): React.JSX.Element {
             }}
           >
             <Tab.Screen
-              name="내정보"
-              component={MyInfo}
-              options={{
-                tabBarIcon: ({ focused, size }) => {
-                  const iconName = focused ? 'ClickedMyInfoIcon' : 'MyInfoIcon';
-                  return (
-                    <View style={{ paddingHorizontal: 30,paddingVertical:20, }}>
-                      <SVG name={iconName} width={size} height={size} />
-                    </View>
-                  );
-                },
-              }}
-            />
-            <Tab.Screen
               name="홈"
-              component={Home}
+              component={Home as React.ComponentType<any>}
               options={{
                 tabBarIcon: ({ focused, size }) => {
                   const iconName = focused ? 'ClickedHomeIcon' : 'HomeIcon';
@@ -108,6 +96,21 @@ function App(): React.JSX.Element {
                 },
               }}
             />
+            <Tab.Screen
+              name="내정보"
+              component={MyInfo}
+              options={{
+                tabBarIcon: ({ focused, size }) => {
+                  const iconName = focused ? 'ClickedMyInfoIcon' : 'MyInfoIcon';
+                  return (
+                    <View style={{ paddingHorizontal: 30,paddingVertical:20, }}>
+                      <SVG name={iconName} width={size} height={size} />
+                    </View>
+                  );
+                },
+              }}
+            />
+
 
         </Tab.Navigator>
     );

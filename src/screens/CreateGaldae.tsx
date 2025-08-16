@@ -317,9 +317,9 @@ const CreateGaldae: React.FC = () => {
             </View>
           </View>
           <TouchableOpacity onPress={() => setSelectedChannel(!selectedChannel)}>
-            <View style={selectedChannel ? { ...styles.oftenBox, borderColor: theme.colors.brandColor } : styles.oftenBox}>
+            <View style={selectedChannel ? { ...styles.oftenBox, borderColor: theme.colors.Galdae } : styles.oftenBox}>
               <SVG name={selectedChannel ? 'CheckSelected' : 'Check'} width={18} height={18} style={styles.checkBtn} />
-              <BasicText text="자주가는 경로로 등록하기" style={selectedChannel ? { ...styles.checkText, color: theme.colors.black } : styles.checkText} />
+              <BasicText text="자주가는 경로로 등록하기" style={selectedChannel ? { ...styles.checkText, color: theme.colors.blackV0 } : styles.checkText} />
             </View>
           </TouchableOpacity>
           <BasicButton

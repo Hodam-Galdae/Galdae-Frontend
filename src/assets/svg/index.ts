@@ -1,11 +1,11 @@
 export {default as GaldaeLogo} from './GaldaeLogo.svg';
-export {default as Notification} from './notification_line 1.svg';
-export {default as ChatIcon} from './ChatIcon.svg';
-export {default as HomeIcon} from './HomeIcon.svg';
-export {default as MyInfoIcon} from './MyInfoIcon.svg';
-export {default as ClickedChatIcon} from './ClickedChatIcon.svg';
-export {default as ClickedHomeIcon} from './ClickedHomeIcon.svg';
-export {default as ClickedMyInfoIcon} from './ClickedMyInfoIcon.svg';
+export {default as Notification} from './notifications.svg';
+export {default as ChatIcon} from './message_3_line 2_not_click.svg';
+export {default as HomeIcon} from './home_not_click.svg';
+export {default as MyInfoIcon} from './person_not_click.svg';
+export {default as ClickedChatIcon} from './message_3_line 2.svg';
+export {default as ClickedHomeIcon} from './home.svg';
+export {default as ClickedMyInfoIcon} from './person.svg';
 export {default as More} from './More.svg';
 export {default as Search} from './Search.svg';
 export {default as Filter} from './Filter.svg';

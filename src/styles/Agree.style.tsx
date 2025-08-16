@@ -13,13 +13,13 @@ export default StyleSheet.create({
     marginTop: 30,
     fontSize: 20,
     fontWeight: '700',
-    color: theme.colors.black,
+    color: theme.colors.blackV0,
   },
   subTitle: {
     marginTop: 50,
     fontSize: 14,
     fontWeight: '500',
-    color: theme.colors.gray2,
+    color: theme.colors.grayV2,
   },
   agreeBtnWrapper: {
     width: '100%',
@@ -32,7 +32,7 @@ export default StyleSheet.create({
     borderRadius: 10,
     marginBottom: 30,
     borderWidth: 2,
-    borderColor: theme.colors.lightGray,
+    borderColor: theme.colors.grayV3,
   },
   agreeBtn: {
     marginLeft: 16,
@@ -41,7 +41,7 @@ export default StyleSheet.create({
   agreeText: {
     fontSize: theme.fontSize.size16,
     fontWeight: '500',
-    color: theme.colors.gray1,
+    color: theme.colors.grayV1,
   },
   agreeWrapper: {
     flexDirection: 'row',
@@ -50,7 +50,7 @@ export default StyleSheet.create({
     marginBottom: 10,
   },
   agreeDetailText: {
-    color: theme.colors.gray2,
+    color: theme.colors.grayV2,
     fontSize: theme.fontSize.size16,
     fontWeight: '500',
     textDecorationLine: 'underline',

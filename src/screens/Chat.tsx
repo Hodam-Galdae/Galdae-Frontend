@@ -1,6 +1,5 @@
 import React, {useState, useCallback} from 'react';
 import {View} from 'react-native';
-import Tabs from '../components/Tabs';
 import styles from '../styles/Chat.style';
 import ChatRoomItem from '../components/ChatRoomItem';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
@@ -39,31 +38,39 @@ type User = {
 
 const Chat: React.FC = () => {
   const navigation = useNavigation<ChatScreenNavigationProp>();
-  const [chatRoomData, setChatRoomData] = useState<ChatroomResponse[]>([]);
-  const [tab, setTab] = useState(0);
+  const [activeChatRoomData, setActiveChatRoomData] = useState<ChatroomResponse[]>([]);
+  const [inactiveChatRoomData, setInactiveChatRoomData] = useState<ChatroomResponse[]>([]);
 
   useFocusEffect(
     useCallback(() => {
-      if (tab === 0) {
-        // 참여중인 갈대 탭
-        getActiveChatroom().then(data => {
-          setChatRoomData(data);
-        });
-      } else {
-        // 완료된 갈대 탭
-        getInActiveChatroom().then(data => {
-          setChatRoomData(data);
-        });
-      }
-    }, [tab]),
+      // 참여중인 갈대와 완료된 갈대를 모두 가져오기
+      const fetchAllChatRooms = async () => {
+        try {
+          const [activeData, inactiveData] = await Promise.all([
+            getActiveChatroom(),
+            getInActiveChatroom(),
+          ]);
+          setActiveChatRoomData(activeData);
+          setInactiveChatRoomData(inactiveData);
+        } catch (error) {
+          console.error('채팅방 데이터 가져오기 실패:', error);
+        }
+      };
+
+      fetchAllChatRooms();
+    }, []),
   );
 
   const navigate = async(id: string) => {
-    const tagetRoom = chatRoomData.find(item => item.chatroomId === id);
+    // 활성 채팅방과 비활성 채팅방 모두에서 찾기
+    const targetRoom = activeChatRoomData.find(item => item.chatroomId === id) ||
+                      inactiveChatRoomData.find(item => item.chatroomId === id);
+
     const userInfo = await getUserInfo();
     const token = await EncryptedStorage.getItem('accessToken');
-    if(tagetRoom){
-      navigation.navigate('ChatRoom', { data: Object.freeze(tagetRoom), userInfo: {...userInfo, token}});
+
+    if(targetRoom){
+      navigation.navigate('ChatRoom', { data: Object.freeze(targetRoom), userInfo: {...userInfo, token}});
     }
     else{
      // console.log('error');
@@ -71,16 +78,14 @@ const Chat: React.FC = () => {
     }
   };
 
+  // 모든 채팅방 데이터를 하나의 배열로 합치기
+  const allChatRoomData = [...activeChatRoomData, ...inactiveChatRoomData];
+
   return (
     <View style={styles.container}>
-      <Tabs
-        menus={['참여중인 갈대', '완료된 갈대']}
-        onSelectHandler={index => setTab(index)}
-        selectedIndex={tab}
-      />
-      {chatRoomData.length !== 0 ? (
+      {allChatRoomData.length !== 0 ? (
         <FlatList
-          data={chatRoomData}
+          data={allChatRoomData}
           keyExtractor={item => item.chatroomId}
           renderItem={({item}) =>
             <ChatRoomItem
@@ -92,6 +97,7 @@ const Chat: React.FC = () => {
               currentPerson={item.currentMemberCount}
               maxPerson={item.maxMemberCount}
               message={item.notReadCount}
+              isActive={activeChatRoomData.some(activeItem => activeItem.chatroomId === item.chatroomId)}
             />
           }
         />
@@ -100,7 +106,7 @@ const Chat: React.FC = () => {
           <SVG name="information_line" />
           <BasicText
             text="참여중인 채팅방이 없습니다."
-            color={theme.colors.gray1}
+            color={theme.colors.grayV1}
           />
         </View>
       )}

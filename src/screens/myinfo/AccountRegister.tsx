@@ -148,7 +148,7 @@ const AccountRegister: React.FC<HomeProps> = () => {
                 value={depositor}
                 editable={editable}
                 onChangeText={setDepositor}
-                placeholderTextColor={theme.colors.gray2} // 원하는 색상으로 지정
+                placeholderTextColor={theme.colors.grayV2} // 원하는 색상으로 지정
               />
             <BasicText text="계좌 정보" style={styles.title}/>
             <BasicInput
@@ -157,7 +157,7 @@ const AccountRegister: React.FC<HomeProps> = () => {
                 value={account}
                 editable={editable}
                 onChangeText={setAccount}
-                placeholderTextColor={theme.colors.gray2} // 원하는 색상으로 지정
+                placeholderTextColor={theme.colors.grayV2} // 원하는 색상으로 지정
               />
             <View style={styles.completeBtnContainer}>
               <BasicButton
@@ -169,8 +169,8 @@ const AccountRegister: React.FC<HomeProps> = () => {
                 disabled={!account || !selectedBank || !depositor}
                 disabledColors={
                   {
-                      backgroundColor:theme.colors.lightGray,
-                      textColor:theme.colors.black,
+                      backgroundColor:theme.colors.grayV3,
+                      textColor:theme.colors.blackV0,
                       borderColor:theme.colors.transparent,
                   }
                 }

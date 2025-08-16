@@ -41,13 +41,13 @@ const GrayBorderTextButton: React.FC<SmallBorderTextButtonProps> = ({
   const enabledColors = selectedState
     ? {
         backgroundColor: theme.colors.white,
-        textColor: theme.colors.brandColor,
-        borderColor: theme.colors.brandColor,
+        textColor: theme.colors.Galdae,
+        borderColor: theme.colors.Galdae,
       }
     : {
         backgroundColor: theme.colors.white,
-        textColor: theme.colors.gray0,
-        borderColor: theme.colors.gray0,
+        textColor: theme.colors.grayV0,
+        borderColor: theme.colors.grayV0,
       };
   return (
     <BasicButton
@@ -58,8 +58,8 @@ const GrayBorderTextButton: React.FC<SmallBorderTextButtonProps> = ({
       enabledColors={enabledColors}
       disabledColors={{
         backgroundColor: 'transparent',
-        textColor: theme.colors.gray1,
-        borderColor: theme.colors.gray1,
+        textColor: theme.colors.grayV1,
+        borderColor: theme.colors.grayV1,
       }}
       buttonStyle={[stylesheet.smallBorderTextBtn, buttonStyle]}
       textStyle={[stylesheet.smallBorderBtnText, textStyle]}

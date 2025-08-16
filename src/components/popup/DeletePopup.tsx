@@ -37,13 +37,13 @@ export interface DeletePopupProps {
               <BasicText
                 text={title}
                 fontSize={theme.fontSize.size16}
-                color={theme.colors.black}
+                color={theme.colors.blackV0}
                 style={styles.titleText}
               />
               <BasicText
                 text={message}
                 fontSize={theme.fontSize.size16}
-                color={theme.colors.black}
+                color={theme.colors.blackV0}
                 style={styles.textPopUpText}
               />
               <View style={styles.cancelContainer}>
@@ -52,7 +52,7 @@ export interface DeletePopupProps {
                   textStyle={styles.cancelBtnText}
                   buttonStyle={styles.cancelBtn}
                   enabledColors={{
-                    backgroundColor: theme.colors.brandColor,
+                    backgroundColor: theme.colors.Galdae,
                     textColor: theme.colors.white,
                     borderColor: theme.colors.transparent,
                   }}

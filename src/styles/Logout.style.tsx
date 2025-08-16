@@ -28,7 +28,7 @@ export default StyleSheet.create({
         marginTop:50,
     },
     warnText:{
-        color:theme.colors.gray2,
+        color:theme.colors.grayV2,
         fontWeight:'500',
     },
     margin:{

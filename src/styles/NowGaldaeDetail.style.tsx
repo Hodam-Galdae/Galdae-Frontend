@@ -81,7 +81,7 @@ export default StyleSheet.create({
       map:{
         width:'100%',
         height:180,
-        //backgroundColor:theme.colors.brandColor,
+        //backgroundColor:theme.colors.Galdae,
         borderRadius:theme.borderRadius.size10,
         position:'relative',
       },
@@ -90,7 +90,7 @@ export default StyleSheet.create({
         right:10,
         padding:10,
         position:'absolute',
-        // backgroundColor:theme.colors.brandColor,
+        // backgroundColor:theme.colors.Galdae,
       },
       userInfo:{
         fontSize:theme.fontSize.size20,
@@ -102,7 +102,7 @@ export default StyleSheet.create({
         width:62,
         height:62,
         borderRadius:999,
-        //backgroundColor:theme.colors.brandColor,
+        //backgroundColor:theme.colors.Galdae,
       },
       profileImg:{
         width: '100%',
@@ -115,13 +115,13 @@ export default StyleSheet.create({
       },
       universityText:{
         fontSize:theme.fontSize.size12,
-        color:theme.colors.gray2,
+        color:theme.colors.grayV2,
         fontWeight:'500',
       },
       nameText:{
         fontSize:theme.fontSize.size18,
         fontWeight:'700',
-        color:theme.colors.brandColor,
+        color:theme.colors.Galdae,
       },
       badge:{
         marginRight:20,
@@ -137,7 +137,7 @@ export default StyleSheet.create({
         borderWidth:2,
         flexDirection:'row',
         alignItems:'center',
-        borderColor:theme.colors.lightGray,
+        borderColor:theme.colors.grayV3,
         borderRadius:theme.borderRadius.size10,
         paddingStart:20,
       },

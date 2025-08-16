@@ -98,7 +98,7 @@ const FastGaldaeTimePopup = forwardRef<FastGaldaeTimePopupRef, FastGaldaePopupPr
           <BasicText
             text="출발 일시"
             fontSize={theme.fontSize.size16}
-            color={theme.colors.black}
+            color={theme.colors.blackV0}
             style={styles.start}
           />
 
@@ -109,7 +109,7 @@ const FastGaldaeTimePopup = forwardRef<FastGaldaeTimePopupRef, FastGaldaePopupPr
           <BasicText
             text="시간 선택"
             fontSize={theme.fontSize.size16}
-            color={theme.colors.black}
+            color={theme.colors.blackV0}
             style={styles.start}
           />
 
@@ -132,13 +132,13 @@ const FastGaldaeTimePopup = forwardRef<FastGaldaeTimePopupRef, FastGaldaePopupPr
               buttonStyle={styles.confirmButton}
               textStyle={styles.confirmText}
               enabledColors={{
-                backgroundColor: theme.colors.brandColor,
+                backgroundColor: theme.colors.Galdae,
                 textColor: theme.colors.white,
                 borderColor:theme.colors.transparent,
               }}
               disabledColors={{
-                backgroundColor: theme.colors.lightGray,
-                textColor: theme.colors.black,
+                backgroundColor: theme.colors.grayV3,
+                textColor: theme.colors.blackV0,
                 borderColor:theme.colors.transparent,
               }}
             />

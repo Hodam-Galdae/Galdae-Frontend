@@ -34,7 +34,7 @@ const Settlement: React.FC = () => {
             text="정산 상세"
             style={{
               fontSize: theme.fontSize.size22,
-              color: theme.colors.black,
+              color: theme.colors.blackV0,
               fontWeight: '700',
             }}
           />
