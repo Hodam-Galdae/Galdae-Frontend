@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {Image, View} from 'react-native';
 import styles from '../styles/ChatItem.style';
@@ -45,12 +46,19 @@ const ChatItem: React.FC<{item: Chat}> = React.memo(({item}) => {
                   item.sender === item.nickname ? 'flex-end' : 'flex-start',
               },
             ]}>
+              {item.unreadCount !== undefined && item.unreadCount > 0 && (
+                  <BasicText
+                    style={[styles.unreadText, {marginTop: 4}]}
+                    text={`${item.unreadCount}`}
+                  />
+                )}
             {item.isShowTime && item.sender === item.nickname ? (
               <BasicText
                 style={styles.timeText}
                 text={moment.utc(item.time).hour() + ':' + moment.utc(item.time).minute()}
               />
             ) : null}
+
             {item.type === 'MESSAGE' ? (
               <View
                 style={[
@@ -67,12 +75,7 @@ const ChatItem: React.FC<{item: Chat}> = React.memo(({item}) => {
                   },
                 ]}>
                 <BasicText style={styles.messageText} text={item.content} />
-                {item.unreadCount !== undefined && item.unreadCount > 0 && (
-                  <BasicText 
-                    style={[styles.timeText, {marginTop: 4}]} 
-                    text={`안읽음 ${item.unreadCount}명`} 
-                  />
-                )}
+
               </View>
             ) : item.type === 'IMAGE' ? (
               <Image style={styles.image} source={{uri: item.content}} />
@@ -83,6 +86,7 @@ const ChatItem: React.FC<{item: Chat}> = React.memo(({item}) => {
                 text={moment.utc(item.time).hour() + ':' + moment.utc(item.time).minute()}
               />
             ) : null}
+
           </View>
         </View>
       )}

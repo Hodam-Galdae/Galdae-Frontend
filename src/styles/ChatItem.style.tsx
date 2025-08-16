@@ -58,4 +58,10 @@ export default StyleSheet.create({
         borderRadius: 10,
         resizeMode: 'cover',
     },
+    unreadText: {
+        fontSize: theme.fontSize.size12,
+        color: theme.colors.brandColor,
+        fontWeight: '500',
+        marginHorizontal: 6,
+    },
 });

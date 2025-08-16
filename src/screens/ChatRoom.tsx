@@ -112,8 +112,8 @@ const ChatRoom: React.FC = () => {
   const chatRoomData = params.data;
   const userInfo = params.userInfo;
   const userInfo2 = useSelector((state: RootState) => state.user);
-  console.log('userInfo2', userInfo2.token.startsWith('Bearer '));
-  console.log('userInfo', userInfo.token.startsWith('Bearer '));
+  console.log('userInfo2', userInfo2?.token?.startsWith('Bearer '));
+  console.log('userInfo', userInfo?.token?.startsWith('Bearer '));
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
@@ -182,10 +182,10 @@ useEffect(() => {
         },
       ]);
     }, []),
-    onUnreadCountReceived: useCallback((unreadData) => {
+   onUnreadCountReceived: useCallback((unreadData) => {
       console.log(unreadData);
       setUnreadCounts(unreadData);
-    }, []),
+    }, []), 
   });
 
   const sendPayment = async (settlementCost: string) => {
@@ -326,6 +326,19 @@ useEffect(() => {
           moment.utc(data[index - 1]?.time).hour() ===
             moment.utc(item.time).hour()
         );
+      // unreadCount 계산 로직 개선
+      let unreadCount = unreadCounts[item.chatId];
+      if (unreadCount === undefined) {
+        // unreadCounts에 없는 경우, 현재 메시지보다 큰 가장 작은 chatId의 값을 사용
+        const chatIds = Object.keys(unreadCounts).map(Number).sort((a, b) => a - b);
+        const currentChatId = item.chatId;
+        
+        // 현재 메시지보다 큰 가장 작은 chatId를 찾아서 그 값을 사용
+        const nextChatId = chatIds.find(id => id > currentChatId);
+        if (nextChatId !== undefined) {
+          unreadCount = unreadCounts[nextChatId];
+        }
+      }
       return item.chatType !== 'MONEY' ? (
         <ChatItem
           item={{
@@ -338,7 +351,7 @@ useEffect(() => {
             isShowProfile,
             isShowTime,
             nickname: userInfo.nickname,
-            unreadCount: unreadCounts[item.chatId],
+            unreadCount: unreadCount,
           }}
         />
       ) : (

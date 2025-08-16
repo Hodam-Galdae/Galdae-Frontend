@@ -46,7 +46,7 @@ export const useWebSocket = ({
             //     chatroomId: chatroomId,
             // },
             webSocketFactory: () => socket,
-            reconnectDelay: 5000,
+            reconnectDelay: 3000,
             heartbeatIncoming: 4000,
             heartbeatOutgoing: 4000,
             forceBinaryWSFrames: true,
