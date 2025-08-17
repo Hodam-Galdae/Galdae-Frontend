@@ -1,4 +1,5 @@
 import {StyleSheet} from 'react-native';
+import {theme} from './theme';
 
 export default StyleSheet.create({
   container: {
@@ -11,5 +12,14 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 12,
+  },
+  sectionHeader: {
+    paddingVertical: 10,
+    backgroundColor: theme.colors.white,
+  },
+  sectionTitle: {
+    fontSize: theme.fontSize.size18,
+    fontWeight: '700',
+    color: theme.colors.blackV0,
   },
 });

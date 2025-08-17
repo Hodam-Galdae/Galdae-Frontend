@@ -1,17 +1,15 @@
 import React, {useState, useCallback} from 'react';
-import {View} from 'react-native';
+import {View, SectionList} from 'react-native';
 import styles from '../styles/Chat.style';
 import ChatRoomItem from '../components/ChatRoomItem';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/native';
-import {FlatList} from 'react-native-gesture-handler';
 import {
   ChatroomResponse,
   getActiveChatroom,
   getInActiveChatroom,
 } from '../api/chatApi';
 import {useFocusEffect} from '@react-navigation/native';
-import SVG from '../components/SVG';
 import BasicText from '../components/BasicText';
 import {theme} from '../styles/theme';
 import EncryptedStorage from 'react-native-encrypted-storage';
@@ -36,6 +34,11 @@ type User = {
   token: string,
 }
 
+type SectionData = {
+  title: string;
+  data: ChatroomResponse[];
+};
+
 const Chat: React.FC = () => {
   const navigation = useNavigation<ChatScreenNavigationProp>();
   const [activeChatRoomData, setActiveChatRoomData] = useState<ChatroomResponse[]>([]);
@@ -50,6 +53,8 @@ const Chat: React.FC = () => {
             getActiveChatroom(),
             getInActiveChatroom(),
           ]);
+          console.log(`activeData`,activeData);
+          console.log(`inactiveData`,inactiveData);
           setActiveChatRoomData(activeData);
           setInactiveChatRoomData(inactiveData);
         } catch (error) {
@@ -78,35 +83,69 @@ const Chat: React.FC = () => {
     }
   };
 
-  // 모든 채팅방 데이터를 하나의 배열로 합치기
-  const allChatRoomData = [...activeChatRoomData, ...inactiveChatRoomData];
+  // 섹션 데이터 구성
+  const sections: SectionData[] = [];
+
+  if (activeChatRoomData.length > 0) {
+    sections.push({
+      title: '참여하고 있는 채팅',
+      data: activeChatRoomData,
+    });
+  }
+
+  if (inactiveChatRoomData.length > 0) {
+    sections.push({
+      title: '지난 채팅',
+      data: inactiveChatRoomData,
+    });
+  }
+
+  const renderSectionHeader = ({section}: {section: SectionData}) => (
+    <View style={styles.sectionHeader}>
+      <BasicText style={styles.sectionTitle} text={section.title} />
+    </View>
+  );
+
+  const renderItem = ({item}: {item: ChatroomResponse}) => (
+    <ChatRoomItem
+      //type={item.type}
+      onPress={navigate}
+      id={item.chatroomId}
+      time={item.departDate}
+      from={item.departPlace}
+      //from
+      to={item.arrivePlace}
+      currentPerson={item.currentMemberCount}
+      maxPerson={item.maxMemberCount}
+      message={item.notReadCount}
+      isActive={activeChatRoomData.some(activeItem => activeItem.chatroomId === item.chatroomId)}
+    />
+  );
 
   return (
     <View style={styles.container}>
-      {allChatRoomData.length !== 0 ? (
-        <FlatList
-          data={allChatRoomData}
+
+      {sections.length > 0 ? (
+        <SectionList
+          sections={sections}
           keyExtractor={item => item.chatroomId}
-          renderItem={({item}) =>
-            <ChatRoomItem
-              onPress={navigate}
-              id={item.chatroomId}
-              time={item.departDate}
-              from={item.departPlace}
-              to={item.arrivePlace}
-              currentPerson={item.currentMemberCount}
-              maxPerson={item.maxMemberCount}
-              message={item.notReadCount}
-              isActive={activeChatRoomData.some(activeItem => activeItem.chatroomId === item.chatroomId)}
-            />
-          }
+          renderItem={renderItem}
+          renderSectionHeader={renderSectionHeader}
         />
       ) : (
         <View style={styles.noData}>
-          <SVG name="information_line" />
           <BasicText
-            text="참여중인 채팅방이 없습니다."
-            color={theme.colors.grayV1}
+            text="현재 참여중인 채팅이 없습니다."
+            color={theme.colors.blackV3}
+          />
+          <BasicText
+            text="홈에 있는 서비스를 이용해 활성화해보세요!"
+            color={theme.colors.blackV3}
+          />
+          <BasicText
+            text="서비스 이용 가이드"
+            color={theme.colors.blue}
+            onPress={() => {}}// 추후 수정
           />
         </View>
       )}

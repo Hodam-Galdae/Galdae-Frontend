@@ -14,6 +14,8 @@ import SVG from '../components/SVG';
 import Header from './Header';
 import { theme } from '../styles/theme';
 import SVGButton from './button/SVGButton';
+import BasicText from '../components/BasicText';
+import styles from '../styles/Header.style';
 // 내비게이션 스택 타입 정의
 type RootStackParamList = {
   Notification: undefined;
@@ -86,6 +88,12 @@ function App(): React.JSX.Element {
               name="채팅"
               component={Chat}
               options={{
+                header: () => <Header
+                // rightButton={<SVGButton
+                //   iconName="Notification"
+                //   onPress={()=>navigation.navigate('Notification')}/>}
+                  title={<BasicText text="채팅" style={styles.mainTitle} />}
+                  />,
                 tabBarIcon: ({ focused, size }) => {
                   const iconName = focused ? 'ClickedChatIcon' : 'ChatIcon';
                   return (
@@ -100,6 +108,12 @@ function App(): React.JSX.Element {
               name="내정보"
               component={MyInfo}
               options={{
+                header: () => <Header
+                // rightButton={<SVGButton
+                //   iconName="Notification"
+                //   onPress={()=>navigation.navigate('Notification')}/>}
+                  title={<BasicText text="내 정보" style={styles.mainTitle} />}
+                  />,
                 tabBarIcon: ({ focused, size }) => {
                   const iconName = focused ? 'ClickedMyInfoIcon' : 'MyInfoIcon';
                   return (

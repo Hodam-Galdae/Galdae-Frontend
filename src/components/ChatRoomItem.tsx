@@ -3,7 +3,7 @@ import { TouchableOpacity, View } from 'react-native';
 import styles from '../styles/ChatRoomItem.style';
 import BasicText from './BasicText';
 import SVG from './SVG';
-import moment from 'moment';
+// import moment from 'moment';
 
 interface Props {
     id: string,
@@ -18,23 +18,23 @@ interface Props {
 }
 
 const ChatRoomItem = (props : Props) => {
-  const formatDepartureTime = (departureTime: string): string => {
-    return moment.utc(departureTime).format('YYYY년 MM월 DD일 (ddd) HH : mm');
-  };
+  // const formatDepartureTime = (departureTime: string): string => {
+  //   return moment.utc(departureTime).format('YYYY년 MM월 DD일 (ddd) HH : mm');
+  // };
   return (
     <TouchableOpacity onPress={() => props.onPress(props.id)}>
       <View style={[
         styles.container,
-        !props.isActive && styles.inactiveContainer,
+
       ]}>
         <View style={styles.wrapper}>
-          <BasicText
+          {/* <BasicText
             text={formatDepartureTime(props.time)}
             style={[
               styles.timeText,
               !props.isActive && styles.inactiveText,
             ]}
-          />
+          /> */}
           {props.message === 0 ? null :
             <View style={styles.message}>
               <BasicText style={styles.messageText} text={props.message.toString()}/>
@@ -42,7 +42,7 @@ const ChatRoomItem = (props : Props) => {
           }
         </View>
         <View style={styles.locationWrapper}>
-          <SVG name="LocationBlack" style={styles.locationIcon}/>
+          {/* <SVG name="LocationBlack" style={styles.locationIcon}/> */}
           <BasicText
             text={props.from}
             style={[
@@ -60,7 +60,7 @@ const ChatRoomItem = (props : Props) => {
           />
         </View>
         <View style={styles.personWrapper}>
-          {[...Array(props.currentPerson)].map((e, i: number) => {
+          {/* {[...Array(props.currentPerson)].map((e, i: number) => {
               return <SVG key={i} style={styles.personIcon} name="UserFill"/>;
           })}
           {[...Array(props.maxPerson - props.currentPerson)].map((e, i: number) => {
@@ -72,7 +72,7 @@ const ChatRoomItem = (props : Props) => {
               !props.isActive && styles.inactiveText,
             ]}
             text={'( ' + props.currentPerson + ' / ' + props.maxPerson + ' )'}
-          />
+          /> */}
         </View>
       </View>
     </TouchableOpacity>

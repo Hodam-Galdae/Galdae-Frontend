@@ -7,7 +7,7 @@ export default StyleSheet.create({
     container: {
         width: width - 30,
         borderWidth: 2,
-        borderColor: theme.colors.grayV3,
+        borderColor: theme.colors.grayV2,
         borderRadius: 10,
         paddingLeft: 16,
         alignItems: 'flex-start',
@@ -15,10 +15,6 @@ export default StyleSheet.create({
         height: 87,
         marginBottom: 10,
 
-    },
-    inactiveContainer: {
-        opacity: 0.6,
-        borderColor: theme.colors.grayV1,
     },
     wrapper: {
         width: '100%',

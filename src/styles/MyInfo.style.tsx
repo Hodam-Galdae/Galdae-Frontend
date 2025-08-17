@@ -15,8 +15,9 @@ export default StyleSheet.create({
     fontWeight: '500',
   },
   startGaldae:{
-    fontSize:theme.fontSize.size20,
+    fontSize:theme.fontSize.size18,
     fontWeight: '700',
+    color:theme.colors.blackV0,
     marginBottom:13,
   },
   userInfo:{
@@ -52,16 +53,18 @@ export default StyleSheet.create({
   userInfoText:{
     marginLeft:20,
     flexDirection:'column',
+    gap:4,
   },
+
   universityText:{
     fontSize:theme.fontSize.size12,
-    color:theme.colors.grayV2,
+    color:theme.colors.blackV3,
     fontWeight:'500',
   },
   nameText:{
     fontSize:theme.fontSize.size18,
     fontWeight:'700',
-    color:theme.colors.Galdae,
+    color:theme.colors.blackV0,
   },
   badge:{
     marginRight:20,
@@ -74,11 +77,11 @@ export default StyleSheet.create({
     width:'100%',
     height:96,
     justifyContent:'space-between',
-    borderWidth:2,
+    borderWidth:1,
     flexDirection:'row',
     alignItems:'center',
-    borderColor:theme.colors.grayV3,
-    borderRadius:theme.borderRadius.size10,
+    borderColor:theme.colors.grayV2,
+    borderRadius:theme.borderRadius.size12,
     paddingStart:20,
   },
   nowGaldaeTitle:{
@@ -150,7 +153,7 @@ export default StyleSheet.create({
     marginBottom:5,
   },
   myInfoTitle:{
-    fontSize:theme.fontSize.size20,
+    fontSize:theme.fontSize.size18,
     fontWeight: '700',
     marginTop:30,
     marginBottom:20,
@@ -169,7 +172,7 @@ export default StyleSheet.create({
     fontWeight:'700',
   },
   searchText:{
-    fontSize:theme.fontSize.size18,
+    fontSize:theme.fontSize.size16,
     fontWeight:'500',
     color:theme.colors.blackV0,
   },

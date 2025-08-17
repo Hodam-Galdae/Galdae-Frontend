@@ -97,7 +97,7 @@ export const exitChatroom = async (chatroomId: string): Promise<void> => {
 
 export const sendImage = async (image: FormData): Promise<string> => {
   const response = await axiosInstance.post('/chat/image', image, {
-    transformRequest: (data, headers) => {
+    transformRequest: () => {
       return image;
     },
   });

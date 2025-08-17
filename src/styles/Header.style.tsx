@@ -32,4 +32,13 @@ export default StyleSheet.create({
     width: 30,
     height: 30,
   },
+  mainTitle:{
+    fontSize: theme.fontSize.size22,
+    fontWeight: 'bold',
+    color: theme.colors.white,
+    lineHeight: Platform.select({
+      android: 40,
+
+    }),
+},
 });

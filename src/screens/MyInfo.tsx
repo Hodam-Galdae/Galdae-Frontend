@@ -1,18 +1,18 @@
 /* eslint-disable react-native/no-inline-styles */
 // MyInfo.tsx 테스트
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, ScrollView, Image, ActivityIndicator, Alert, RefreshControl, TouchableOpacity } from 'react-native';
+import { View, ScrollView, Image, ActivityIndicator, Alert, RefreshControl } from 'react-native';
 import SVG from '../components/SVG';
 import styles from '../styles/MyInfo.style';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
-import BasicButton from '../components/button/BasicButton';
+//import BasicButton from '../components/button/BasicButton';
 import BasicText from '../components/BasicText';
 import useImagePicker from '../hooks/useImagePicker';
 import SVGButton from '../components/button/SVGButton';
 import SVGTextButton from '../components/button/SVGTextButton';
-import moment from 'moment-timezone';
+//import moment from 'moment-timezone';
 import { theme } from '../styles/theme';
-import DeletePopup from '../components/popup/DeletePopup';
+//import DeletePopup from '../components/popup/DeletePopup';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useSelector } from 'react-redux';
 import { useAppDispatch } from '../modules/redux/store';
@@ -24,9 +24,9 @@ import { fetchHomeGaldaePosts } from '../modules/redux/slice/homeGaldaeSlice';
 
 //API
 import { updateMemberImage } from '../api/membersApi';
-import { deletePost } from '../api/postApi';
+//import { deletePost } from '../api/postApi';
 //type
-import { MyPostHistory } from '../types/getTypes';
+// import { MyPostHistory } from '../types/getTypes';
 
 // 내비게이션 스택 타입 정의
 type RootStackParamList = {
@@ -51,12 +51,13 @@ const MyInfo: React.FC = () => {
     { text: '이용약관', onPress: () => { navigation.navigate('TermsOfUse'); } },
     { text: 'FAQ/문의하기', onPress: () => { navigation.navigate('FAQ'); } },
     { text: '로그아웃', onPress: () => { navigation.navigate('Logout'); } },
+    { text: '탈퇴', onPress: () => { navigation.navigate('Logout'); } },
   ];
   const [refreshing, setRefreshing] = useState(false);
   const dispatch = useAppDispatch();
   const [isImageLoading, setIsImageLoading] = useState(false); // 이미지 업데이트 로딩 상태
-  const [deletePopupVisible, setDeletePopupVisible] = useState<boolean>(false);
-  const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
+  // const [deletePopupVisible, setDeletePopupVisible] = useState<boolean>(false);
+  //const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
   const navigation = useNavigation<nowGaldaeScreenNavigationProp>();
   //const [profileImg, setProfileImg] = useState<string>('');
   const { imageUri, getImageByGallery } = useImagePicker();
@@ -65,9 +66,9 @@ const MyInfo: React.FC = () => {
   const userInfo = useSelector((state: RootState) => state.myInfoSlice.userInfo);
   const profileImg = userInfo?.image || '';
   // 내 갈대 기록은 Redux slice에서 관리 (state.myGaldae)
-  const { history: myGaldaeHistory, loading: historyLoading } = useSelector(
-    (state: RootState) => state.myGaldaeSlice
-  );
+  // const { history: myGaldaeHistory, loading: historyLoading } = useSelector(
+  //   (state: RootState) => state.myGaldaeSlice
+  // );
 
   // 내 갈대 기록 조회: Redux를 통해 관리하므로 useEffect로 thunk dispatch
   useEffect(() => {
@@ -87,20 +88,20 @@ const MyInfo: React.FC = () => {
     }, [dispatch])
   );
 
-  const handleMorePress = () => {
-    navigation.navigate('MyGaldae');
-  };
+  // const handleMorePress = () => {
+  //   navigation.navigate('MyGaldae');
+  // };
 
 
 
   // 포스트 삭제를 위한 핸들러 (본인 글인 경우에만 활성화)
-  const handleLongPress = (post: MyPostHistory) => {
-    // 예시로 본인 글 여부는 post.isMine 속성으로 확인
-    if (post) { //.isMine
-      setSelectedPostId(post.postId);
-      setDeletePopupVisible(true);
-    }
-  };
+  // const handleLongPress = (post: MyPostHistory) => {
+  //   // 예시로 본인 글 여부는 post.isMine 속성으로 확인
+  //   if (post) { //.isMine
+  //     setSelectedPostId(post.postId);
+  //     setDeletePopupVisible(true);
+  //   }
+  // };
 
 
   // imageUri가 변경되면 imageBase64를 사용해서 updateMemberImage API 호출
@@ -137,22 +138,22 @@ const MyInfo: React.FC = () => {
     dispatch(fetchMyCreatedGaldae());
     setRefreshing(false);
   };
-  const handleDeletePost = async () => {
-    if (!selectedPostId) { return; }
-    try {
-      await deletePost(selectedPostId);
-      dispatch(fetchMyGaldaeHistory());
-      dispatch(fetchMyCreatedGaldae());
-      dispatch(fetchHomeGaldaePosts());
+  // const handleDeletePost = async () => {
+  //   if (!selectedPostId) { return; }
+  //   try {
+  //     await deletePost(selectedPostId);
+  //     dispatch(fetchMyGaldaeHistory());
+  //     dispatch(fetchMyCreatedGaldae());
+  //     dispatch(fetchHomeGaldaePosts());
 
-      //Alert.alert('삭제 완료', '선택한 갈대가 삭제되었습니다');
-      setDeletePopupVisible(false);
-      setSelectedPostId(null);
-    } catch (error) {
-      Alert.alert('삭제 실패', '글 삭제에 실패했습니다. 다시 시도해주세요.');
-      //console.error(error);
-    }
-  };
+  //     //Alert.alert('삭제 완료', '선택한 갈대가 삭제되었습니다');
+  //     setDeletePopupVisible(false);
+  //     setSelectedPostId(null);
+  //   } catch (error) {
+  //     Alert.alert('삭제 실패', '글 삭제에 실패했습니다. 다시 시도해주세요.');
+  //     //console.error(error);
+  //   }
+  // };
   return (
     <View>
       <ScrollView
@@ -160,13 +161,13 @@ const MyInfo: React.FC = () => {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
-        <BasicButton
+        {/* <BasicButton
           text="어플 공지사항/안내"
           //onPress={handlePress}
           //loading={loading}
           buttonStyle={styles.notiButton}
           textStyle={styles.notiText}
-        />
+        /> */}
         <ScrollView style={styles.container}>
           <BasicText text={`${userInfo?.nickname}의 갈대`} style={styles.startGaldae} />
 
@@ -210,10 +211,10 @@ const MyInfo: React.FC = () => {
                 </View>
               </View>
             </View>
-            {userInfo?.isAuthenticated && <SVG name="Badge" style={styles.badge} />}
+            {/* {userInfo?.isAuthenticated && <SVG name="Badge" style={styles.badge} />} */}
           </View>
 
-          <View style={styles.nowGaldaeTitle}>
+          {/* <View style={styles.nowGaldaeTitle}>
             <BasicText text="내 갈대기록" style={styles.nowGaldae} />
             <SVGTextButton
               iconName="More"
@@ -227,8 +228,8 @@ const MyInfo: React.FC = () => {
                 borderColor: 'transparent',
               }}
             />
-          </View>
-          {historyLoading ? (
+          </View> */}
+          {/* {historyLoading ? (
             <ActivityIndicator size="large" color={theme.colors.Galdae} />
           ) : myGaldaeHistory.length > 0 ? (
             <ScrollView horizontal showsHorizontalScrollIndicator={false} scrollEventThrottle={16}>
@@ -253,11 +254,11 @@ const MyInfo: React.FC = () => {
             </ScrollView>
           ) : (
             <BasicText text="갈대 기록이 없습니다." />
-          )}
+          )} */}
 
 
 
-          <BasicText text="내 정보" style={styles.myInfoTitle} />
+          <BasicText text="서비스 설정" style={styles.myInfoTitle} />
           <View style={styles.myInfos}>
             {myInfoMenu.map(menu => (
               <SVGTextButton
@@ -280,7 +281,7 @@ const MyInfo: React.FC = () => {
           </View>
         </ScrollView>
       </ScrollView>
-      <DeletePopup
+      {/* <DeletePopup
         visible={deletePopupVisible}
         onCancel={() => {
           setDeletePopupVisible(false);
@@ -290,7 +291,7 @@ const MyInfo: React.FC = () => {
         title="선택하신 갈대를"
         message="삭제하시겠습니까?"
         buttonText="삭제하기"
-      />
+      /> */}
     </View>
   );
 };
