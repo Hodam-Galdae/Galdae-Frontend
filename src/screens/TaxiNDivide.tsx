@@ -54,7 +54,7 @@ type RootStackParamList = {
 
 type nowGaldaeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
-const NowGaldae: React.FC<HomeProps> = () => {
+const TaxiNDivide: React.FC<HomeProps> = () => {
   const reduxPosts = useSelector((state: RootState) => state.galdaeSlice.posts);
   const reduxLoading = useSelector((state: RootState) => state.galdaeSlice.loading);
   const dispatch = useAppDispatch();
@@ -617,4 +617,4 @@ const NowGaldae: React.FC<HomeProps> = () => {
   );
 };
 
-export default NowGaldae;
+export default TaxiNDivide;

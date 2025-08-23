@@ -22,85 +22,88 @@ const GaldaeItem: React.FC<GaldaeItemProps> = ({ item, onPress, onLongPress }) =
 
   return (
     <TouchableOpacity onPress={onPress} onLongPress={item.isWriter ? onLongPress : undefined} delayLongPress={100}>
-      <View style={ !item.isSameGender && item.passengerGenderType === 'SAME' ?   styles.borderedListBoxComplete : styles.borderedListBox}>
-        {/* 사용자 닉네임 (null인 경우 익명 처리) */}
-        <BasicText text={item.userNickName || '익명'} style={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.galdaeOwnerCom : styles.galdaeOwner} />
+      <View style={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.borderedListBoxComplete : styles.borderedListBox}>
+        <View>
 
-        {/* 출발지 정보 */}
-        <View style={styles.fromContainer}>
-          <SVG name={!item.isSameGender && item.passengerGenderType === 'SAME' ? 'Car1' : 'Car'} />
-          <BasicText text={item.departure.subPlace} style={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.fromMainLocationCom : styles.fromMainLocation} />
-          <BasicText text={item.departure.majorPlace} style={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.fromSubLocationCom : styles.fromSubLocation} />
-        </View>
-
-        {/* 승객 수 아이콘 */}
-        <View style={styles.toContainer}>
-          <View style={styles.fromToLine}>
-            <SVG name={!item.isSameGender && item.passengerGenderType === 'SAME' ? 'FromToLine1' : 'FromToLine'} />
+          <View style={styles.fromToContainer}>
+            {/* 출발지 정보 */}
+            <View style={styles.fromContainer}>
+              {/* <SVG name={!item.isSameGender && item.passengerGenderType === 'SAME' ? 'Car1' : 'Car'} /> */}
+              <BasicText text={item.departure.subPlace} style={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.fromMainLocationCom : styles.fromMainLocation} />
+              <BasicText text={'안녕하세요저'} style={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.fromSubLocationCom : styles.fromSubLocation} numberOfLines={1} ellipsizeMode="tail" />
+            </View>
+            {/**item.departure.majorPlace */}
+            <SVG name={!item.isSameGender && item.passengerGenderType === 'SAME' ? 'arrow_forward' : 'arrow_forward'} />
+            {/* 도착지 정보 */}
+            <View style={styles.toContainer}>
+              {/* <SVG name={!item.isSameGender && item.passengerGenderType === 'SAME' ? 'Location1' : 'Location'} /> */}
+              <BasicText text={item.arrival.subPlace} style={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.fromMainLocationCom : styles.fromMainLocation} />
+              <BasicText text={'안녕하세요저는'} style={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.fromSubLocationCom : styles.fromSubLocation} numberOfLines={1} ellipsizeMode="tail" />
+            </View>
+            {/**item.arrival.majorPlace */}
           </View>
-          {Array(item.passengerCount)
-            .fill(null)
-            .map((_, idx) => (
-              <SVG key={`user-${item.postId}-${idx}`} name={!item.isSameGender && item.passengerGenderType === 'SAME' ? 'User1' : 'User'} />
-            ))}
-          {Array(item.totalPassengerCount - item.passengerCount)
-            .fill(null)
-            .map((_, idx) => (
-              <SVG key={`disabled-${item.postId}-${idx}`} name={!item.isSameGender && item.passengerGenderType === 'SAME' ? 'DisabledUser1' : 'DisabledUser' }/>
-            ))}
-          <BasicText
-            text={`(${item.passengerCount}/${item.totalPassengerCount})`}
-            fontWeight={500}
-            fontSize={theme.fontSize.size16}
-            color={!item.isSameGender && item.passengerGenderType === 'SAME' ? theme.colors.grayV0 : theme.colors.grayV1}
-          />
-        </View>
 
-        {/* 도착지 정보 */}
-        <View style={styles.toContainer}>
-          <SVG name={!item.isSameGender && item.passengerGenderType === 'SAME' ? 'Location1' : 'Location'} />
-          <BasicText text={item.arrival.subPlace} style={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.fromMainLocationCom : styles.fromMainLocation}  />
-          <BasicText text={item.arrival.majorPlace} style={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.fromSubLocationCom : styles.fromSubLocation} />
-        </View>
-
-        {/* 시간 정보 */}
-        <View style={styles.timeContainer}>
-          <SVG name={!item.isSameGender && item.passengerGenderType === 'SAME' ? 'Clock1' : 'Clock' }/>
-          <View>
-            <BasicText
-              text={item.arrangeTime === 'POSSIBLE' ? '시간 협의가능' : '시간 협의불가'}
-              style={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.fromSubLocationCom : styles.fromMainLocation}
-              color={theme.colors.grayV2}
-              fontSize={theme.fontSize.size10}
-            />
+          <View style={styles.departureTimeContainer}>
+            <BasicText text="출발 시간" style={styles.departureTimeTitle} />
             <BasicText
               text={formatDepartureTime(item.departureTime)}
               style={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.departureTimeCom : styles.departureTime}
 
             />
           </View>
-        </View>
-            {item.passengerGenderType && (
-              <View style={styles.tags}>
-                {!item.isSameGender && item.passengerGenderType === 'SAME' ? (
-                  <TextTag text="동성만"
-                  enabledColors={
-                    {
-                      backgroundColor:theme.colors.grayV2,
-                      textColor:theme.colors.grayV1,
-                      borderColor:theme.colors.grayV1,
-                    }
-                  }
-                  />
-                ) : item.passengerGenderType === 'SAME' ? (
-                  <TextTag text="동성만" />
-                ) : item.passengerGenderType === 'DONT_CARE' ? (
-                  <TextTag text="성별무관" />
-                ) : (
-                  <TextTag text="상관없음" />
-                )}
+
+          <View style={styles.passengerTimeContainer}>
+            {/* 승객 수 아이콘 */}
+            <View style={styles.passengerContainer}>
+              <View style={styles.fromToLine}>
+                <SVG name={!item.isSameGender && item.passengerGenderType === 'SAME' ? 'person_icon' : 'person_icon'} />
               </View>
+              <BasicText
+                text={`(${item.passengerCount}/${item.totalPassengerCount})`}
+                fontSize={theme.fontSize.size14}
+                color={!item.isSameGender && item.passengerGenderType === 'SAME' ? theme.colors.blackV3 : theme.colors.blackV3}
+              />
+
+            </View>
+
+            <TextTag
+              text={item.arrangeTime === 'POSSIBLE' ? '시간협의가능' : '시간협의불가'}
+              viewStyle={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.timePossibleCom : styles.timePossible}
+              textStyle={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.timePossibleTextCom : styles.timePossibleText}
+
+            />
+          </View>
+
+          {/* {item.passengerGenderType && (
+          <View style={styles.tags}>
+            {!item.isSameGender && item.passengerGenderType === 'SAME' ? (
+              <TextTag text="동성만"
+                enabledColors={
+                  {
+                    backgroundColor: theme.colors.grayV2,
+                    textColor: theme.colors.grayV1,
+                    borderColor: theme.colors.grayV1,
+                  }
+                }
+              />
+            ) : item.passengerGenderType === 'SAME' ? (
+              <TextTag text="동성만" />
+            ) : item.passengerGenderType === 'DONT_CARE' ? (
+              <TextTag text="성별무관" />
+            ) : (
+              <TextTag text="상관없음" />
             )}
+          </View>
+        )} */}
+        </View>
+
+        <View style={styles.typeContainer}>
+          <TextTag
+            text={'택시'}
+            viewStyle={styles.typePossible}
+            textStyle={styles.typePossibleText}
+          />
+        </View>
 
       </View>
     </TouchableOpacity>
