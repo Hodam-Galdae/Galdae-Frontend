@@ -20,8 +20,8 @@ export interface ChatRoomExitModalProps {
     visible,
     onCancel,
     onConfirm,
-    title = '현재 그룹을',
-    message = '정말 나가겠습니까?',
+    title = '채팅방을 나가시겠습니까?',
+    // message = '정말 나가겠습니까?',
     containerStyle,
   }) => {
     return (
@@ -33,18 +33,18 @@ export interface ChatRoomExitModalProps {
             </TouchableOpacity>
             <View style={styles.textPopUpcontent}>
               <BasicText
+                style={styles.textPopUpTitle}
                 text={title}
-                fontWeight={'500'}
-                fontSize={theme.fontSize.size16}
+                fontSize={theme.fontSize.size18}
                 color={theme.colors.blackV0}
               />
-              <BasicText
+              {/* <BasicText
                 text={message}
                 fontSize={theme.fontSize.size16}
                 fontWeight={'500'}
                 color={theme.colors.blackV0}
                 style={styles.textPopUpText}
-              />
+              /> */}
               <BasicButton
                 text="나가기"
                 textStyle={styles.cancelBtnText}

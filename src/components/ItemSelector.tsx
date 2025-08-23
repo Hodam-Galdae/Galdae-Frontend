@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {useState, useRef} from 'react';
 import styles from '../styles/ItemSelector.style';
 import BasicText from './BasicText';

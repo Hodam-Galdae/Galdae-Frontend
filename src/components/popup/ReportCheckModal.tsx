@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import { Modal,View, TouchableOpacity, StyleProp, ViewStyle } from 'react-native';
 import SVG from '../../components/SVG';
@@ -32,16 +33,15 @@ export interface ReportCheckModalProps {
             <View style={styles.textPopUpcontent}>
               <SVG name="Alert" style={{marginBottom: 20}}/>
               <BasicText
-                text={member.memberName + '님 을'}
-                fontWeight={'500'}
-                fontSize={theme.fontSize.size16}
-                color={theme.colors.blackV0}
+                style={styles.textPopUpTitle}
+                text={member.memberName + '님을'}
+                fontSize={theme.fontSize.size18}
+                color={theme.colors.blackV2}
               />
               <BasicText
                 text={'정말 신고하겠습니까?'}
-                fontSize={theme.fontSize.size16}
-                fontWeight={'500'}
-                color={theme.colors.blackV0}
+                fontSize={theme.fontSize.size18}
+                color={theme.colors.blackV2}
                 style={styles.textPopUpText}
               />
               <BasicButton
@@ -49,7 +49,7 @@ export interface ReportCheckModalProps {
                 textStyle={styles.cancelBtnText}
                 buttonStyle={styles.cancelBtn}
                 enabledColors={{
-                  backgroundColor: theme.colors.Galdae,
+                  backgroundColor: theme.colors.red,
                   textColor: theme.colors.white,
                   borderColor: theme.colors.transparent,
                 }}

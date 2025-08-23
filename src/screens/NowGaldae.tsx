@@ -468,8 +468,9 @@ const handleLongPress = (post: GaldaeItemType) => {
   return (
     <View style={styles.main}>
       <Header
+
         leftButton={<SVGButton iconName="arrow_left_line" onPress={goBack} />}
-        title={<BasicText text="실시간 갈대" style={styles.headerText} />}
+        title={<BasicText text="택시비 N빵" style={styles.headerText} />}
       />
       <View style={styles.galdaeList}>
         {departureLargeName && destinationLargeName && departureSmallName && destinationSmallName ? (
@@ -495,7 +496,7 @@ const handleLongPress = (post: GaldaeItemType) => {
           </SVGTextButton>
         ) : (
           <SVGTextButton
-            text={'목적지를 설정해주세요'}
+            text={'오늘은 누구와 절약 해볼까요?'}
             iconName="Search"
             iconPosition="right"
             style={styles.search}

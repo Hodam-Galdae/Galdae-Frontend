@@ -1,36 +1,37 @@
 import { StyleSheet, Dimensions } from 'react-native';
-import {theme} from '../styles/theme';
+import { theme } from '../styles/theme';
 
 const width = Dimensions.get('window').width;
 
 export default StyleSheet.create({
     container: {
+        flexDirection: 'row',
         width: width - 30,
-        borderWidth: 2,
+        borderWidth: 1,
         borderColor: theme.colors.grayV2,
         borderRadius: 10,
-        paddingLeft: 16,
-        alignItems: 'flex-start',
-        justifyContent: 'center',
-        height: 87,
+        paddingLeft: 15,
+        justifyContent: 'space-between',
+        height: 74,
         marginBottom: 10,
 
     },
-    wrapper: {
-        width: '100%',
-        paddingRight: 14,
+    iconLocationWrapper: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
+        gap: 12,
+        height: '100%',
     },
-    timeText: {
+    taxiIcon: {
         fontSize: 12,
-        color: theme.colors.grayV1,
-        fontWeight: '500',
-        marginBottom: 2,
+        width: 42,
+        height: 42,
     },
     inactiveText: {
-        color: theme.colors.grayV2,
+        color: theme.colors.blackV2,
+    },
+    inactiveText2: {
+        color: theme.colors.blackV3,
     },
     message: {
         width: 24,
@@ -46,16 +47,37 @@ export default StyleSheet.create({
         fontWeight: '700',
     },
     locationWrapper: {
-        flexDirection:'row',
+        flexDirection: 'row',
         justifyContent: 'flex-start',
         alignItems: 'center',
-        marginBottom: 8,
+        marginBottom:10,
+        gap: 4,
+        width:186,
+    },
+    locationStartWrapper: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        width: 100,
+        overflow: 'hidden',
+        flexWrap: 'nowrap',
+    },
+    locationEndWrapper: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        width: 100,
+        overflow: 'hidden',
+        flexWrap: 'nowrap',
     },
     locationText: {
-        fontSize: 16,
+        fontSize: 14,
         fontWeight: '700',
         color: theme.colors.blackV0,
-        marginRight: 3.5,
+        marginRight: 4,
+    },
+    locationSubText: {
+        fontSize: 14,
+        fontWeight: '500',
+        color: theme.colors.blackV1,
     },
     locationIcon: {
         marginTop: 2,
@@ -69,10 +91,32 @@ export default StyleSheet.create({
         height: 14,
         marginRight: 3.5,
     },
-    personWrapper: {
-        flexDirection:'row',
-        justifyContent: 'flex-start',
+    chatWrapper: {
+        flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'space-between',
+        width: 230,
+    },
+    lastChat: {
+        fontSize: 16,
+        fontWeight: '500',
+        color: theme.colors.blackV1,
+    },
+    inactiveLastChatText: {
+        color: theme.colors.blackV3,
+    },
+    chatInfoWrapper: {
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+        justifyContent: 'center',
+    },
+    personWrapper: {
+        flexDirection: 'column',
+        justifyContent: 'center',
+        gap: 10,
+        alignItems: 'flex-end',
+        marginRight: 15,
+        height: '100%',
     },
     personIcon: {
         width: 12,
@@ -80,8 +124,8 @@ export default StyleSheet.create({
         marginRight: 4,
     },
     personText: {
-        fontSize: 12,
-        color: theme.colors.grayV1,
+        fontSize: 14,
+        color: theme.colors.blackV3,
         fontWeight: '500',
     },
 

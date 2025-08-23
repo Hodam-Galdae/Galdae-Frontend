@@ -8,7 +8,7 @@ export default StyleSheet.create({
     },
     messageContainer: {
         maxWidth: '80%',
-        borderRadius: 10,
+        borderRadius: theme.borderRadius.size12,
         padding: 15,
         backgroundColor: theme.colors.white,
     },
@@ -40,17 +40,17 @@ export default StyleSheet.create({
     },
     timeText: {
         fontSize: theme.fontSize.size12,
-        color: theme.colors.grayV1,
+        color: theme.colors.blackV3,
         fontWeight: '500',
         marginHorizontal: 6,
     },
     enterBox: {
-        backgroundColor: theme.colors.grayV0,
-        borderRadius: 20,
+        borderRadius: 999,
+        backgroundColor: 'rgba(215, 215, 215, 0.50)',
         paddingVertical: 5,
         paddingHorizontal: 26,
         alignSelf: 'center',
-        color: theme.colors.grayV2,
+        color: theme.colors.blackV3,
     },
     image: {
         width: 230,

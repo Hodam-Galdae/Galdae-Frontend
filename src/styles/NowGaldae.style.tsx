@@ -13,6 +13,8 @@ export default StyleSheet.create({
         lineHeight: Platform.select({
           android: 40,
         }),
+        color: theme.colors.white,
+        letterSpacing: -0.44,
     },
     btns:{
       flexDirection:'row',
@@ -47,9 +49,9 @@ export default StyleSheet.create({
     },
     searchBtn:{
       height:42,
-      borderWidth:2,
-      borderColor:theme.colors.grayV3,
-      borderRadius:theme.borderRadius.size10,
+      borderWidth:1,
+      borderColor:theme.colors.grayV1,
+      borderRadius:999,
     },
     searchPos:{
       fontWeight:'700',

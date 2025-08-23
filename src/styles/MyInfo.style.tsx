@@ -3,6 +3,7 @@ import { theme } from './theme';
 export default StyleSheet.create({
   container: {
     padding: (15),
+    paddingTop: 26,
     position:'relative',
   },
   notiButton:{
@@ -18,7 +19,7 @@ export default StyleSheet.create({
     fontSize:theme.fontSize.size18,
     fontWeight: '700',
     color:theme.colors.blackV0,
-    marginBottom:13,
+    marginBottom:12,
   },
   userInfo:{
     fontSize:theme.fontSize.size20,
@@ -43,12 +44,20 @@ export default StyleSheet.create({
     bottom:0,
     right:0,
     backgroundColor:theme.colors.white,
-    padding:2,
+    padding:4,
+    borderRadius:999,
+
   },
   profileName:{
     flexDirection:'row',
     alignItems:'center',
-    gap:4,
+    gap:2,
+  },
+  genderIcon:{
+    width: 20,
+    height: 20,
+    marginRight: 2,
+
   },
   userInfoText:{
     marginLeft:20,
@@ -58,7 +67,7 @@ export default StyleSheet.create({
 
   universityText:{
     fontSize:theme.fontSize.size12,
-    color:theme.colors.blackV3,
+    color:theme.colors.blackV2,
     fontWeight:'500',
   },
   nameText:{
