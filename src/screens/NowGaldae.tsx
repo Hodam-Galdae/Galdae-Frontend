@@ -6,18 +6,14 @@ import styles from '../styles/NowGaldae.style';
 import Header from '../components/Header';
 import SVGButton from '../components/button/SVGButton';
 import BasicText from '../components/BasicText';
-// import FilterButton from '../components/button/FilterButton';
-import GrayBorderTextButton from '../components/button/GrayBorderTextButton';
-import SVGTextButton from '../components/button/SVGTextButton';
+
 import SVG from '../components/SVG';
 import GaldaeItem from '../components/GaldaeItem';
 import DeletePopup from '../components/popup/DeletePopup'; // DeletePopup import
 import NowGaldaeSameGender from '../components/popup/NowGaldaeSameGender';
 import { theme } from '../styles/theme';
-import FloatingButton from '../components/button/FloatingButton';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-//import ArrayPopup, { FastGaldaeTimePopupRef } from '../components/popup/ArrayPopup'; //ArrayPopup,
-// import FilterPopup from '../components/popup/FilterPopup';
+
 //api
 import { searchPosts, deletePost } from '../api/postApi';
 // type
@@ -75,10 +71,7 @@ const NowGaldae: React.FC<HomeProps> = () => {
     selectedTimeDiscuss: number | null; // null: 필터 미적용, 0: 시간협의가능, 1: 시간협의불가 (여기서는 0 사용)
     passengerNumber: number;
   }>({
-    // selectedDate: null,
-    // selectedAmPm: '오전',
-    // selectedHour: 0,
-    // selectedMinute: 0,
+
     formattedDepartureTime: '', // 빈 문자열로 초기화하여 필터 조건 미적용
     selectedGender: null,
     selectedTimeDiscuss: null,
@@ -87,12 +80,9 @@ const NowGaldae: React.FC<HomeProps> = () => {
   // FlatList의 스크롤 위치를 관리하기 위한 ref와 state 추가
   const flatListRef = useRef<FlatList>(null);
   const [scrollOffset, setScrollOffset] = useState(0);
-  // 팝업 ref
-  // const arrayPopupRef = useRef<FastGaldaeTimePopupRef>(null);
-  // const filterRef = useRef<FastGaldaeTimePopupRef>(null);
+
   // 정렬 상태: 'latest' (최신순, 내림차순) 또는 'soon' (시간 임박순, 오름차순)
   const [sortOrder, setSortOrder] = useState<'latest' | 'departureTime'>('latest');
-  const [arrayPopupVisible, setArrayPopupVisible] = useState(false);
   const navigation = useNavigation<nowGaldaeScreenNavigationProp>();
   const goBack = () => navigation.goBack();
   const route = useRoute<RouteProp<RootStackParamList, 'NowGaldae'>>();
@@ -178,64 +168,7 @@ const NowGaldae: React.FC<HomeProps> = () => {
     }
   }, [dispatch, departureLargeName, destinationLargeName, sortOrder]);
 
-  // const handleFilterPress = () => {
-  //   filterRef.current?.open();
-  // };
 
-  const handlePressTimeFilterBtn = () => {
-    setFilterOptions(prev => ({
-      ...prev,
-      // 현재 필터가 미적용(null)이라면 0 (시간협의가능)을 적용, 이미 적용중이면 해제(null)
-      selectedTimeDiscuss: prev.selectedTimeDiscuss === null ? 0 : null,
-    }));
-  };
-
-  const handlePressGenderFilterBtn = () => {
-    setFilterOptions(prev => ({
-      ...prev,
-      selectedGender: prev.selectedGender === null ? 'DONT_CARE' : null,
-    }));
-  };
-  // const handlePressSameGenderFilterBtn = () => {
-  //   setFilterOptions(prev => ({
-  //     ...prev,
-  //     selectedGender: prev.selectedGender === 'DONT_CARE' ? 'SAME' : 'SAME',
-  //   }));
-  // };
-  const toggleArrayPopup = () => {
-    // arrayPopupRef.current?.open();
-    setArrayPopupVisible(!arrayPopupVisible);
-
-  };
-
-  // FilterPopup의 onConfirm 콜백에서 선택된 필터 조건을 업데이트
-  // const handleFilterPopupConfirm = (
-  //   // selectedDate: string,
-  //   // selectedAmPm: '오전' | '오후',
-  //   // selectedHour: number,
-  //   // selectedMinute: number,
-  //   formattedDepartureTime: string,
-  //   selectedGender: 'SAME' | 'DONT_CARE',
-  //   selectedTimeDiscuss: number,
-  //   passengerNumber: number
-  // ) => {
-  //   const filterOptionsObj = {
-  //     // selectedDate,
-  //     // selectedAmPm,
-  //     // selectedHour,
-  //     // selectedMinute,
-  //     formattedDepartureTime,
-  //     selectedGender,
-  //     selectedTimeDiscuss,
-  //     passengerNumber,
-  //   };
-  //   //console.log('선택된 필터 옵션:', filterOptionsObj);
-  //   setFilterOptions(filterOptionsObj);
-  // };
-  // const handleFilterReset = () => {
-  //   handleCancelSearch();
-  //   filterRef.current?.close();
-  // };
   /**
    * 전부 초기화하는 로직
    */
@@ -357,59 +290,6 @@ const NowGaldae: React.FC<HomeProps> = () => {
 
     return filtered;
   }, [displayedPosts, filterOptions]);
-  // 추가 필터 적용 (날짜, 시간협의, 성별, 탑승인원 등)
-  // let finalFilteredData = displayedPosts;
-  // //console.log(`
-  //   ====================================
-  //   0️⃣현재 finalFilteredData 데이터: (필터적용전)
-
-  //   `,finalFilteredData);
-  //   if (filterOptions.formattedDepartureTime) {
-  //     finalFilteredData = finalFilteredData.filter((item) => {
-  //       const apiTime = moment.utc(item.departureTime).format('YYYY-MM-DDTHH:mm:ss[Z]');
-  //       const filterTime = moment.utc(filterOptions.formattedDepartureTime).format('YYYY-MM-DDTHH:mm:ss[Z]');
-  //       //console.log(apiTime, filterTime);
-  //       return apiTime === filterTime;
-  //     });
-  //   }
-
-  // //console.log(`
-  //   1️⃣현재 finalFilteredData 데이터:
-
-  //   `,finalFilteredData);
-  // if (filterOptions.selectedTimeDiscuss !== null) {
-  //   finalFilteredData = finalFilteredData.filter(
-  //     (item) => item.arrangeTime === (filterOptions.selectedTimeDiscuss === 0 ? 'POSSIBLE' : 'IMPOSSIBLE')
-  //   );
-  // }
-
-  // //console.log(`
-  //   2️⃣현재 finalFilteredData 데이터:
-
-  //   `,finalFilteredData);
-
-  // if (filterOptions.selectedGender !== null) {
-  //   finalFilteredData = finalFilteredData.filter(
-  //     (item) =>
-  //       item.passengerGenderType ===
-  //       (filterOptions.selectedGender === 'SAME' ? 'SAME' : 'DONT_CARE')
-  //   );
-  // }
-
-  // //console.log(`
-  //   3️⃣현재 finalFilteredData 데이터:
-
-  //   `,finalFilteredData);
-
-  // if (filterOptions.passengerNumber > 0) {
-  //   finalFilteredData = finalFilteredData.filter(
-  //     (item) => item.totalPassengerCount === filterOptions.passengerNumber
-  //   );
-  // }
-  // //console.log(`
-  //   4️⃣현재 finalFilteredData 데이터:
-  //   ====================================
-  //   `,finalFilteredData);
 
   const loadMoreData = async () => {
     if (isLoadingMore) { return; }
@@ -472,76 +352,9 @@ const NowGaldae: React.FC<HomeProps> = () => {
       <Header
 
         leftButton={<SVGButton iconName="arrow_left_line" onPress={goBack} />}
-        title={<BasicText text="택시비 N빵" style={styles.headerText} />}
+        title={<BasicText text="실시간 N빵 리스트" style={styles.headerText} />}
       />
       <View style={styles.galdaeList}>
-        {departureLargeName && destinationLargeName && departureSmallName && destinationSmallName ? (
-          <SVGTextButton
-            iconName="Cancel"
-            iconPosition="right"
-            style={styles.search}
-            buttonStyle={styles.searchBtn}
-            textStyle={styles.searchText}
-            SVGStyle={styles.searchSVG}
-            enabledColors={{
-              backgroundColor: theme.colors.white,
-              textColor: theme.colors.grayV2,
-            }}
-            onPress={handleCancelSearch}
-          >
-            <View style={styles.searchContent}>
-              <SVG name="location_line_gray2" />
-              <BasicText text={departureSmallName} color={theme.colors.grayV2} style={styles.searchPos} />
-              <SVG name="arrow_right_line_gray2" />
-              <BasicText text={destinationSmallName} color={theme.colors.grayV2} style={styles.searchPos} />
-            </View>
-          </SVGTextButton>
-        ) : (
-          <SVGTextButton
-            text={'오늘은 누구와 절약 해볼까요?'}
-            iconName="Search"
-            iconPosition="right"
-            style={styles.search}
-            buttonStyle={styles.searchBtn}
-            textStyle={styles.searchText}
-            SVGStyle={styles.searchSVG}
-            enabledColors={{
-              backgroundColor: theme.colors.white,
-              textColor: theme.colors.grayV2,
-            }}
-            onPress={() => navigation.navigate('SetDestination')}
-          />
-        )}
-
-        <View style={styles.btns}>
-          <View style={styles.filters}>
-            {/* <FilterButton onPress={handleFilterPress} /> */}
-            <GrayBorderTextButton text="시간협의가능" onPress={handlePressTimeFilterBtn} isSelected={filterOptions.selectedTimeDiscuss !== null} buttonStyle={styles.timeArrayBtn} textStyle={styles.timeArrayBtnText} />
-            <GrayBorderTextButton text="성별무관" onPress={handlePressGenderFilterBtn} isSelected={filterOptions.selectedGender !== null} buttonStyle={styles.genderArrayBtn} textStyle={styles.genderArrayBtnText} />
-            {/* <GrayBorderTextButton text="동성만" onPress={handlePressSameGenderFilterBtn} /> */}
-          </View>
-          <View style={styles.arrayBtn}>
-            <SVGTextButton
-              onPress={toggleArrayPopup}
-              text={sortOrder === 'latest' ? '최신순' : '시간 임박순'}
-              iconName="transfer_2_line"
-              iconPosition="right"
-              textStyle={styles.arrayBtnText}
-              enabledColors={{
-                backgroundColor: theme.colors.white,
-                textColor: theme.colors.blackV2,
-              }}
-            />
-            {
-              arrayPopupVisible && (
-                <View style={styles.arrayPanel}>
-                  <BasicText text="최신순" onPress={() => setSortOrder('latest')} style={sortOrder === 'latest' ? styles.arrayPanelClickText : styles.arrayPanelText} />
-                  <BasicText text="마감 임박순" onPress={() => setSortOrder('departureTime')} style={sortOrder === 'latest' ? styles.arrayPanelText : styles.arrayPanelClickText} />
-                </View>
-              )
-            }
-          </View>
-        </View>
 
         {reduxLoading || isLoadingMore ? (
           <View style={styles.noData}>
@@ -586,18 +399,7 @@ const NowGaldae: React.FC<HomeProps> = () => {
           />
         )}
       </View>
-      <FloatingButton onPress={() => navigation.navigate('CreateGaldae')} />
-      {/* <ArrayPopup
-        ref={arrayPopupRef}
-        onConfirm={(selectedSortOrder: 'latest' | 'departureTime') => {
-          setSortOrder(selectedSortOrder);
-        }}
-      /> */}
-      {/* <FilterPopup
-        ref={filterRef}
-        onConfirm={handleFilterPopupConfirm}
-        handleFilterReset={handleFilterReset}
-      /> */}
+
       <DeletePopup
         visible={deletePopupVisible}
         onCancel={() => {
