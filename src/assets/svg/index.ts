@@ -69,6 +69,7 @@ export {default as arrow_right_line_gray2} from './arrow_right_line_gray2.svg';
 export {default as arrow_down_fill} from './arrow_down_fill 1.svg';
 export {default as arrow_down_fill_gray2} from './arrow_down_fill_gray2.svg';
 export {default as arrow_left_line} from './arrow_left_line 1.svg';
+export {default as arrow_left_line2} from './arrow_left_line 2.svg';
 export {default as Profile} from './Profile.svg';
 export {default as Badge} from './Badge.svg';
 export {default as information_line} from './information_line 2.svg';

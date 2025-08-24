@@ -1,34 +1,34 @@
 /* eslint-disable react-native/no-inline-styles */
 // NowGaldaeDetail.tsx
-import React, {useEffect, useState} from 'react';
-import {View, Image, ActivityIndicator} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Image, ActivityIndicator } from 'react-native';
 //import { Modalize } from 'react-native-modalize';
-import {WebView} from 'react-native-webview';
+import { WebView } from 'react-native-webview';
 import BasicText from '../components/BasicText';
 import SVGButton from '../components/button/SVGButton';
-import {useNavigation, useRoute, RouteProp} from '@react-navigation/native';
+import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import Header from '../components/Header';
-import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import styles from '../styles/NowGaldaeDetail.style';
 import SVG from '../components/SVG';
-import {theme} from '../styles/theme';
+import { theme } from '../styles/theme';
 import TextTag from '../components/tag/TextTag';
 import BasicButton from '../components/button/BasicButton';
-import {ScrollView} from 'react-native-gesture-handler';
-import {useSelector} from 'react-redux';
-import {fetchPostDetail} from '../modules/redux/slice/postDetailSlice';
-import type {RootState} from '../modules/redux/RootReducer';
-import {useAppDispatch} from '../modules/redux/store';
+import { ScrollView } from 'react-native-gesture-handler';
+import { useSelector } from 'react-redux';
+import { fetchPostDetail } from '../modules/redux/slice/postDetailSlice';
+import type { RootState } from '../modules/redux/RootReducer';
+import { useAppDispatch } from '../modules/redux/store';
 import moment from 'moment';
-import {joinChatroom, ChatroomResponse} from '../api/chatApi';
+import { joinChatroom, ChatroomResponse } from '../api/chatApi';
 import { TouchableOpacity } from 'react-native';
 //import BigMapModal from '../components/popup/BigMapModal';
 
 type RootStackParamList = {
   CreateGaldae: undefined;
   NowGaldae: undefined;
-  NowGaldaeDetail: {postId: string};
-  ChatRoom: { data : Readonly<ChatroomResponse> },
+  NowGaldaeDetail: { postId: string };
+  ChatRoom: { data: Readonly<ChatroomResponse> },
 };
 
 type NowGaldaeDetailScreenNavigationProp = NativeStackNavigationProp<
@@ -44,10 +44,10 @@ const NowGaldaeDetail: React.FC = () => {
   const navigation = useNavigation<NowGaldaeDetailScreenNavigationProp>();
   //const mapModalRef = useRef<Modalize>(null);
   const route = useRoute<NowGaldaeDetailRouteProp>();
-  const {postId} = route.params; // 전달받은 postId
+  const { postId } = route.params; // 전달받은 postId
   //const [mapBig,setMapBig] = useState<boolean>(false);
   const [isMapLoading, setIsMapLoading] = useState(true);
-  const {postDetail, loading, error} = useSelector(
+  const { postDetail, loading, error } = useSelector(
     (state: RootState) => state.postDetailSlice,
   );
   const dispatch = useAppDispatch();
@@ -59,9 +59,9 @@ const NowGaldaeDetail: React.FC = () => {
 
   const goBack = () => navigation.goBack();
 
-  const handleParticipateGaldae = async() => {
+  const handleParticipateGaldae = async () => {
     const tagetRoom = await joinChatroom(postId);
-    navigation.replace('ChatRoom', { data: Object.freeze(tagetRoom)});
+    navigation.replace('ChatRoom', { data: Object.freeze(tagetRoom) });
     // 참여 로직 처리
   };
   const formatDepartureTime = (departureTime: string): string => {
@@ -73,7 +73,7 @@ const NowGaldaeDetail: React.FC = () => {
   // };
   if (loading) {
     return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <ActivityIndicator size="large" color={theme.colors.Galdae} />
       </View>
     );
@@ -81,7 +81,7 @@ const NowGaldaeDetail: React.FC = () => {
 
   if (error) {
     return (
-      <View style={{padding: 16}}>
+      <View style={{ padding: 16 }}>
         <BasicText text={`오류 발생: ${error}`} />
       </View>
     );
@@ -89,7 +89,7 @@ const NowGaldaeDetail: React.FC = () => {
 
   if (!postDetail) {
     return (
-      <View style={{padding: 16}}>
+      <View style={{ padding: 16 }}>
         <BasicText text="상세 정보가 없습니다" />
       </View>
     );
@@ -102,10 +102,11 @@ const NowGaldaeDetail: React.FC = () => {
   return (
     <View style={styles.main}>
       <Header
-        leftButton={<SVGButton iconName="arrow_left_line" onPress={goBack} />}
+        style={styles.header}
+        leftButton={<SVGButton iconName="arrow_left_line2" onPress={goBack} />}
         title={
           <View style={styles.headerTitle}>
-            <SVG name="location_line" width={22} height={22} />
+            {/* <SVG name="location_line" width={22} height={22} /> */}
             <BasicText
               text={postDetail.departure.subPlace}
               style={styles.headerText}
@@ -122,7 +123,27 @@ const NowGaldaeDetail: React.FC = () => {
         {/* <View style={styles.advertiseBox}>
           <BasicText text="advertiseBox" />
         </View> */}
-
+        <TouchableOpacity style={styles.map} >
+          <View style={styles.map}>
+            <WebView
+              source={{ uri: mapUrl }}
+              style={styles.map}
+              onLoadStart={() => setIsMapLoading(true)}
+              onLoadEnd={() => setIsMapLoading(false)}
+              pointerEvents="box-none"
+            />
+            {isMapLoading && (
+              <View style={[styles.map, { position: 'absolute', justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.6)' }]}>
+                <ActivityIndicator size="large" color={theme.colors.Galdae} />
+              </View>
+            )}
+          </View>
+          {/* <SVGButton
+            iconName="ToBigPic"
+            onPress={toBigMap}
+            buttonStyle={styles.toBigPicIcon}
+          /> */}
+        </TouchableOpacity>
         <View key={postDetail.departureTime} style={styles.borderedListBox}>
           {/**postDetail.userInfo?.name || */}
           <BasicText
@@ -210,27 +231,7 @@ const NowGaldaeDetail: React.FC = () => {
           </View>
         </View>
 
-        <TouchableOpacity style={styles.map} >
-          <View style={styles.map}>
-            <WebView
-              source={{uri: mapUrl}}
-              style={styles.map}
-              onLoadStart={() => setIsMapLoading(true)}
-              onLoadEnd={() => setIsMapLoading(false)}
-              pointerEvents="box-none"
-            />
-            {isMapLoading && (
-              <View style={[styles.map, { position: 'absolute', justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.6)' }]}>
-                <ActivityIndicator size="large" color={theme.colors.Galdae} />
-              </View>
-            )}
-          </View>
-          {/* <SVGButton
-            iconName="ToBigPic"
-            onPress={toBigMap}
-            buttonStyle={styles.toBigPicIcon}
-          /> */}
-        </TouchableOpacity>
+
 
         <BasicText text="유저정보" style={styles.userInfo} />
 
@@ -239,13 +240,13 @@ const NowGaldaeDetail: React.FC = () => {
             <View style={styles.profile}>
               {
                 postDetail.userInfo.profileImage ? (
-                <Image
-                  source={{ uri: postDetail.userInfo.profileImage }}
-                  style={styles.profileImg}
-                  resizeMode="cover"
-                />
+                  <Image
+                    source={{ uri: postDetail.userInfo.profileImage }}
+                    style={styles.profileImg}
+                    resizeMode="cover"
+                  />
                 ) : (
-                <SVG name="profileImg" style={styles.profileImg} />
+                  <SVG name="profileImg" style={styles.profileImg} />
                 )
               }
 
@@ -267,39 +268,39 @@ const NowGaldaeDetail: React.FC = () => {
         </View>
 
         <View style={styles.participateContainer}>
-        {postDetail.isParticipated ? (
-    <BasicButton
-      text="이미 참여한 갈대입니다."
-      buttonStyle={styles.participateBtn}
-      textStyle={styles.participateText}
-      loading={false}
-      disabled={true}
-      disabledColors={{
-        backgroundColor: theme.colors.grayV3,
-        textColor: theme.colors.blackV0,
-      }}
-    />
-  ) : isFull ? (
-    <BasicButton
-      text="참여불가"
-      buttonStyle={styles.participateBtn}
-      textStyle={styles.participateText}
-      loading={false}
-      disabled={true}
-      disabledColors={{
-        backgroundColor: theme.colors.grayV3,
-        textColor: theme.colors.blackV0,
-      }}
-    />
-  ) : (
-    <BasicButton
-      text="참여하기"
-      buttonStyle={styles.participateBtn}
-      textStyle={styles.participateText}
-      loading={false}
-      onPress={handleParticipateGaldae}
-    />
-  )}
+          {postDetail.isParticipated ? (
+            <BasicButton
+              text="이미 참여한 갈대입니다."
+              buttonStyle={styles.participateBtn}
+              textStyle={styles.participateText}
+              loading={false}
+              disabled={true}
+              disabledColors={{
+                backgroundColor: theme.colors.grayV3,
+                textColor: theme.colors.blackV0,
+              }}
+            />
+          ) : isFull ? (
+            <BasicButton
+              text="참여불가"
+              buttonStyle={styles.participateBtn}
+              textStyle={styles.participateText}
+              loading={false}
+              disabled={true}
+              disabledColors={{
+                backgroundColor: theme.colors.grayV3,
+                textColor: theme.colors.blackV0,
+              }}
+            />
+          ) : (
+            <BasicButton
+              text="참여하기"
+              buttonStyle={styles.participateBtn}
+              textStyle={styles.participateText}
+              loading={false}
+              onPress={handleParticipateGaldae}
+            />
+          )}
         </View>
       </ScrollView>
 
