@@ -121,3 +121,6 @@ export {default as Kakao} from './Kakao.svg';
 export {default as Apple} from './Apple.svg';
 export {default as profileImg} from './profileImg.svg';
 export {default as Naver} from './Naver.svg';
+export {default as Taxi} from './Taxi.svg';
+export {default as Ott} from './Ott.svg';
+export {default as Delivery} from './Delivery.svg';
