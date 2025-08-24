@@ -1,11 +1,11 @@
-import React, { useMemo } from 'react';
-import { Text, TextProps, TextStyle } from 'react-native';
+import React, {useMemo} from 'react';
+import {Text, TextProps, TextStyle} from 'react-native';
 
 // 기본 폰트 이름 (Noto Sans CJK KR)
 const fontName = 'NotoSansKR';
 
 // 폰트 매핑: 각 폰트 굵기에 따른 폰트 패밀리 이름
-const fontMapping: { [key: string]: string } = {
+const fontMapping: {[key: string]: string} = {
   '100': `${fontName}-Thin`,
   '200': `${fontName}-ExtraLight`,
   '300': `${fontName}-Light`,
@@ -47,14 +47,14 @@ const BasicText: React.FC<BasicTextProps> = ({
   // useMemo를 사용하여 computedStyle 계산: fontFamily, fontSize, color
   const computedStyle: TextStyle = useMemo(() => {
     return {
-      ...(fontSize ? { fontSize } : {}),
-      ...(color ? { color } : {}),
+      ...(fontSize ? {fontSize} : {}),
+      ...(color ? {color} : {}),
       fontFamily,
     };
   }, [fontFamily, fontSize, color]);
 
   return (
-    <Text {...props} style={[ style,computedStyle]}>
+    <Text {...props} style={[style, computedStyle]}>
       {children ?? text}
     </Text>
   );
