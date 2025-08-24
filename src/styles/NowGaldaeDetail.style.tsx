@@ -1,5 +1,5 @@
 
-import { Platform, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { theme } from './theme';
 
 
@@ -7,6 +7,9 @@ export default StyleSheet.create({
     main:{
       flex: 1,
 
+    },
+    header:{
+      backgroundColor:theme.colors.white,
     },
     headerTitle:{
         flexDirection:'row',
@@ -16,9 +19,6 @@ export default StyleSheet.create({
     headerText:{
         fontSize: theme.fontSize.size22,
         fontWeight: 'bold',
-        // lineHeight:Platform.select({
-        //     android:50,
-        // }),
     },
     content: {
       flex: 1,

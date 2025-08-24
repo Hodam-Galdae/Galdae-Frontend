@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 // Onboarding.tsx 임시 테스트
 import React, {useRef, useEffect, useState} from 'react';
 import {View, Animated, Dimensions} from 'react-native';
@@ -32,7 +33,7 @@ const OnboardingScreen: React.FC<OnboardingProps> = ({navigation}) => {
     };
 
     autoLogin();
-  }, []);
+  }, [dispatch, navigation]);
 
   const pages = [
     <OnBoarding1 />,
@@ -51,7 +52,7 @@ const OnboardingScreen: React.FC<OnboardingProps> = ({navigation}) => {
     }, 2000);
 
     return () => clearTimeout(timer);
-  }, [current]);
+  }, [current, navigation, pages.length]);
 
   return pages[current];
 };
@@ -77,7 +78,7 @@ const OnBoarding1 = () => {
       duration: 1000,
       useNativeDriver: false,
     }).start();
-  }, []);
+  }, [height, position1, position2, width]);
 
   return (
     <View style={styles.container}>
@@ -175,7 +176,7 @@ const OnBoarding3 = () => {
         useNativeDriver: true,
       }),
     ]).start();
-  }, []);
+  }, [height, opacity, position1, position2, position3, position4, position5, width]);
 
   return (
     <View style={styles.wrapper}>
@@ -267,7 +268,7 @@ const OnBoarding4 = () => {
       duration: 500,
       useNativeDriver: true,
     }).start();
-  }, []);
+  }, [opacity]);
 
   return (
     <View style={styles.wrapper}>

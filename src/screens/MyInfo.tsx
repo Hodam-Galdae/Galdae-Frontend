@@ -183,7 +183,7 @@ const MyInfo: React.FC = () => {
                 ) : imageUri ? (
                   <Image source={{ uri: imageUri }} style={styles.profileImg} resizeMode="cover" />
                 ) : (
-                  <SVG name="profileImg" style={styles.profileImg} />
+                  <SVG name="DefaultProfile" style={styles.profileImg} />
                 )}
                 <SVGButton iconName="camera_2_line" buttonStyle={styles.profileCamera} onPress={getImageByGallery} />
               </View>
@@ -200,6 +200,7 @@ const MyInfo: React.FC = () => {
                       })
                     }
                   />
+                  <SVG name={ 'male' } style={styles.genderIcon} /> {/** 추후에는 성별에 따른 아이콘 적용해야 함 */}
                   <SVGButton
                     iconName="edit_line"
                     onPress={() =>

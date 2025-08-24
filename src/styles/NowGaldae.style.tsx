@@ -13,6 +13,8 @@ export default StyleSheet.create({
         lineHeight: Platform.select({
           android: 40,
         }),
+        color: theme.colors.white,
+        letterSpacing: -0.44,
     },
     btns:{
       flexDirection:'row',
@@ -47,9 +49,9 @@ export default StyleSheet.create({
     },
     searchBtn:{
       height:42,
-      borderWidth:2,
-      borderColor:theme.colors.grayV3,
-      borderRadius:theme.borderRadius.size10,
+      borderWidth:1,
+      borderColor:theme.colors.grayV1,
+      borderRadius:999,
     },
     searchPos:{
       fontWeight:'700',
@@ -58,6 +60,59 @@ export default StyleSheet.create({
       marginLeft:20,
       fontSize:theme.fontSize.size14,
       fontWeight:'500',
+      color:theme.colors.grayV0,
+    },
+    timeArrayBtn:{
+      backgroundColor:theme.colors.blue2,
+      borderWidth:0,
+    },
+    timeArrayBtnText:{
+      color:theme.colors.blue,
+      fontWeight:'500',
+      fontSize:theme.fontSize.size14,
+    },
+    genderArrayBtn:{
+      backgroundColor:theme.colors.yellow2,
+      borderWidth:0,
+    },
+    genderArrayBtnText:{
+      color:theme.colors.GaldaeDark,
+      fontWeight:'500',
+      fontSize:theme.fontSize.size14,
+    },
+    arrayBtnText:{
+      color:theme.colors.blackV2,
+      fontSize:theme.fontSize.size14,
+      fontWeight:'500',
+    },
+    arrayPanel:{
+      flexDirection:'column',
+      alignItems:'flex-start',
+      justifyContent:'center',
+      gap:12,
+      width:100,
+      height:84,
+      borderWidth:1,
+      borderColor:theme.colors.grayV0,
+      borderRadius:theme.borderRadius.size12,
+      backgroundColor:theme.colors.white,
+      paddingHorizontal:10,
+      paddingVertical:15,
+      position:'absolute',
+      top:30,
+      right:-4,
+      zIndex:1000,
+    },
+    arrayPanelClickText:{
+      fontSize:theme.fontSize.size16,
+      fontWeight:'500',
+      color:theme.colors.blackV0,
+      letterSpacing:-0.28,
+    },
+    arrayPanelText:{
+      fontSize:theme.fontSize.size16,
+      fontWeight:'500',
+      color:theme.colors.grayV0,
     },
     searchSVG:{
       marginRight:20,

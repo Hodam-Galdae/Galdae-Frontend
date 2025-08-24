@@ -82,10 +82,10 @@ android {
     defaultConfig {
         applicationId "com.hodam.galdae"
         minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
+        targetSdkVersion 35
         multiDexEnabled true
-        versionCode 7
-        versionName "1.1.1"
+        versionCode 11
+        versionName "1.1.5"
     }
     signingConfigs {
         debug {

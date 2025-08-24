@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {useState} from 'react';
 import {
   Modal,
@@ -15,6 +16,7 @@ import ItemSelector from '../ItemSelector';
 import SVGButton from '../button/SVGButton';
 import useImagePicker from '../../hooks/useImagePicker';
 import useDidMountEffect from '../../hooks/useDidMountEffect';
+import {theme} from '../../styles/theme';
 
 export interface ReportPopupProps {
   visible: boolean;
@@ -66,14 +68,19 @@ const ReportPopup: React.FC<ReportPopupProps> = ({
               />
             </View>
             {selected === reportText.length - 1 ? (
+              <>
               <TextInput
                 value={reason}
                 onChangeText={setReason}
                 textAlignVertical="top"
                 style={styles.input}
                 multiline
+                maxLength={100}
                 placeholder="신고사유를 입력해주세요."
+                placeholderTextColor={theme.colors.blackV3}
               />
+              <BasicText text={`(${reason.length}/100)`} style={styles.inputText} />
+              </>
             ) : null}
           </View>
           <View style={styles.wrapper}>

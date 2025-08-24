@@ -1,7 +1,6 @@
-import {StyleSheet, Dimensions} from 'react-native';
+import {StyleSheet} from 'react-native';
 import {theme} from './theme';
 
-const width = Dimensions.get('window').width;
 
 export default StyleSheet.create({
   rootContainer: {
@@ -20,6 +19,9 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  headerContainer: {
+    backgroundColor: theme.colors.white,
+  },
   container: {
     paddingTop: 50,
     flex: 1,
@@ -33,7 +35,7 @@ export default StyleSheet.create({
   addBtn: {
     width: 30,
     height: 30,
-    backgroundColor: theme.colors.Galdae2,
+    backgroundColor: theme.colors.Galdae3,
     marginRight: 10,
     borderRadius: 999,
   },
@@ -48,11 +50,11 @@ export default StyleSheet.create({
     flex: 1,
     height: 'auto',
     flexWrap: 'wrap',
-    borderRadius: 10,
-    backgroundColor: '#E9E9E9',
+    borderRadius: theme.borderRadius.size12,
+    backgroundColor: theme.colors.grayV2,
     fontSize: theme.fontSize.size14,
     fontWeight: '500',
-    color: theme.colors.blackV0,
+    color: theme.colors.blackV3,
     paddingHorizontal: 12,
     paddingVertical: 10,
   },
@@ -115,11 +117,12 @@ export default StyleSheet.create({
   },
   menuText: {
     color: theme.colors.blackV0,
-    fontSize: theme.fontSize.size20,
+    fontSize: theme.fontSize.size22,
     fontWeight: '700',
-    marginTop: 57,
+    marginTop:67,
     marginBottom: 36,
     paddingLeft: 20,
+    letterSpacing: -0.4,
   },
   menuUserIcon: {
     marginRight: 15,
@@ -131,7 +134,7 @@ export default StyleSheet.create({
     marginRight: 10,
   },
   menuUserMe: {
-    backgroundColor: theme.colors.Galdae2,
+    backgroundColor: theme.colors.Galdae3,
     width: 18,
     height: 18,
     borderRadius: 999,
@@ -157,9 +160,9 @@ export default StyleSheet.create({
   },
   menuUserBtn: {
     backgroundColor: theme.colors.Galdae,
-    paddingHorizontal: 7,
-    paddingVertical: 5,
-    borderRadius: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 7,
+    borderRadius: theme.borderRadius.size12,
   },
   menuUserBtnText: {
     fontSize: theme.fontSize.size14,

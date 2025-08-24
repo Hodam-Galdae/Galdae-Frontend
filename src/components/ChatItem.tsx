@@ -46,12 +46,12 @@ const ChatItem: React.FC<{item: Chat}> = React.memo(({item}) => {
                   item.sender === item.nickname ? 'flex-end' : 'flex-start',
               },
             ]}>
-              {item.unreadCount !== undefined && item.unreadCount > 0 && (
-                  <BasicText
-                    style={[styles.unreadText, {marginTop: 4}]}
-                    text={`${item.unreadCount}`}
-                  />
-                )}
+            {item.unreadCount !== undefined && item.unreadCount > 0 && item.sender === item.nickname && (
+                <BasicText
+                  style={[styles.unreadText, {marginTop: 4}]}
+                  text={`${item.unreadCount}`}
+                />
+              )}
             {item.isShowTime && item.sender === item.nickname ? (
               <BasicText
                 style={styles.timeText}
@@ -70,7 +70,7 @@ const ChatItem: React.FC<{item: Chat}> = React.memo(({item}) => {
                         : 'flex-start',
                     backgroundColor:
                       item.sender === item.nickname
-                        ? theme.colors.Galdae2
+                        ? theme.colors.blue2
                         : theme.colors.white,
                   },
                 ]}>
@@ -87,6 +87,12 @@ const ChatItem: React.FC<{item: Chat}> = React.memo(({item}) => {
               />
             ) : null}
 
+            {item.unreadCount !== undefined && item.unreadCount > 0 && item.sender !== item.nickname && (
+                <BasicText
+                  style={[styles.unreadText, {marginTop: 4}]}
+                  text={`${item.unreadCount}`}
+                />
+              )}
           </View>
         </View>
       )}

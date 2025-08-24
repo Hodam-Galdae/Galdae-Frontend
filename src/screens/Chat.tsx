@@ -53,8 +53,8 @@ const Chat: React.FC = () => {
             getActiveChatroom(),
             getInActiveChatroom(),
           ]);
-          console.log(`activeData`,activeData);
-          console.log(`inactiveData`,inactiveData);
+          console.log('activeData',activeData);
+          console.log('inactiveData',inactiveData);
           setActiveChatRoomData(activeData);
           setInactiveChatRoomData(inactiveData);
         } catch (error) {
@@ -95,7 +95,7 @@ const Chat: React.FC = () => {
 
   if (inactiveChatRoomData.length > 0) {
     sections.push({
-      title: '지난 채팅',
+      title: '종료된 채팅',
       data: inactiveChatRoomData,
     });
   }

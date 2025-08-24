@@ -18,6 +18,7 @@ import {
 } from 'react-native';
 import {RouteProp, useRoute} from '@react-navigation/native';
 import styles from '../styles/ChatRoom.style';
+import {theme} from '../styles/theme';
 import ChatItem from '../components/ChatItem';
 import SVGButton from '../components/button/SVGButton';
 import BasicText from '../components/BasicText';
@@ -185,7 +186,7 @@ useEffect(() => {
    onUnreadCountReceived: useCallback((unreadData) => {
       console.log(unreadData);
       setUnreadCounts(unreadData);
-    }, []), 
+    }, []),
   });
 
   const sendPayment = async (settlementCost: string) => {
@@ -332,7 +333,7 @@ useEffect(() => {
         // unreadCounts에 없는 경우, 현재 메시지보다 큰 가장 작은 chatId의 값을 사용
         const chatIds = Object.keys(unreadCounts).map(Number).sort((a, b) => a - b);
         const currentChatId = item.chatId;
-        
+
         // 현재 메시지보다 큰 가장 작은 chatId를 찾아서 그 값을 사용
         const nextChatId = chatIds.find(id => id > currentChatId);
         if (nextChatId !== undefined) {
@@ -392,6 +393,7 @@ useEffect(() => {
   return (
     <KeyboardAvoidingView style={styles.rootContainer} behavior={'padding'}>
       <Header
+        style={styles.headerContainer}
         leftButton={
           <SVGButton onPress={() => navigation.goBack()} iconName="LeftArrow" />
         }
@@ -431,7 +433,7 @@ useEffect(() => {
         <BasicText style={styles.menuText}>
           {'참여자 목록 ( ' +
             members.length +
-            '/' +
+            ' / ' +
             chatRoomData.maxMemberCount +
             ' )'}
         </BasicText>
@@ -502,6 +504,7 @@ useEffect(() => {
                 value={message}
                 onChangeText={setMessage}
                 placeholder="메시지를 입력하세요."
+                placeholderTextColor={theme.colors.blackV3}
                 multiline={true}
               />
               <SVGButton
