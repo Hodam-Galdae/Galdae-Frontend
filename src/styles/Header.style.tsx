@@ -2,22 +2,14 @@ import {StyleSheet} from 'react-native';
 import {Platform} from 'react-native';
 import {theme} from '../styles/theme';
 export default StyleSheet.create({
-  mainTabContainer: {
-    flexDirection: 'column',
-    backgroundColor: theme.colors.Galdae,
-    paddingTop: 48,
-    paddingBottom: 20,
-    paddingHorizontal: 20,
-    gap: 32,
-    borderBottomLeftRadius: theme.borderRadius.size30,
-    borderBottomRightRadius: theme.borderRadius.size30,
-  },
+
   headerContainer: {
+    height: 80,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: theme.colors.Galdae,
-
+    paddingHorizontal: 20,
     // iOS 전용 그림자
     shadowColor: theme.colors.grayV1,
     shadowOffset: {width: 0, height: 2},
@@ -30,16 +22,24 @@ export default StyleSheet.create({
       paddingTop: 20,
     }),
   },
+  searchContainer: {
+    paddingHorizontal: 20,
+    backgroundColor: theme.colors.Galdae,
+    paddingTop: 12,
+    paddingBottom: 20,
+    borderBottomLeftRadius: theme.borderRadius.size30,
+    borderBottomRightRadius: theme.borderRadius.size30,
+  },
 
   backContainer: {
     width: 30,
     height: 30,
   },
   titleContainer: {
-    height: 30,
     flexDirection: 'row',
-    alignItems: 'center',
     gap: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   logoContainer: {
     height: 30,
@@ -56,14 +56,20 @@ export default StyleSheet.create({
       android: 40,
     }),
   },
+  headerButton: {
+    width: 120,
+    height: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   universityName: {
-    fontSize: theme.fontSize.size20,
+    fontSize: theme.fontSize.size22,
     fontWeight: '700',
     color: theme.colors.white,
     paddingBottom: 4,
   },
   universityLocation: {
-    fontSize: theme.fontSize.size12,
+    fontSize: theme.fontSize.size14,
     fontWeight: '700',
     color: theme.colors.white,
     borderWidth: 1,

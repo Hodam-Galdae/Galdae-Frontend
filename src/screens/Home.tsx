@@ -14,23 +14,22 @@ import {
 import styles from '../styles/Home.style';
 // import BasicButton from '../components/button/BasicButton';
 import BasicText from '../components/BasicText';
-import SVGTextButton from '../components/button/SVGTextButton';
+import SVGButton from '../components/button/SVGButton';
 import {theme} from '../styles/theme';
 // import SVGButton from '../components/button/SVGButton';
 import SVG from '../components/SVG';
 // import TextTag from '../components/tag/TextTag';
 import DeletePopup from '../components/popup/DeletePopup';
-import FloatingButton from '../components/button/FloatingButton';
+//import FloatingButton from '../components/button/FloatingButton';
 import GaldaeItem from '../components/GaldaeItem';
+import ServiceButton from '../components/ServiceButton';
 // import CreateGaldaePopup from '../components/popup/CreateGaldaePopup';
 import {useNavigation} from '@react-navigation/native';
-import moment from 'moment-timezone/builds/moment-timezone-with-data';
 import ToastPopup from '../components/popup/ToastPopup';
 import {useAppDispatch} from '../modules/redux/store';
 import NowGaldaeSameGender from '../components/popup/NowGaldaeSameGender';
 import {fetchMyGaldaeHistory} from '../modules/redux/slice/myGaldaeSlice';
 import {fetchHomeGaldaePosts} from '../modules/redux/slice/homeGaldaeSlice';
-
 //type
 import {MyCreatedPost} from '../types/getTypes';
 
@@ -54,6 +53,7 @@ type RootStackParamList = {
   CreateGaldae: undefined;
   NowGaldae: undefined;
   NowGaldaeDetail: {postId: string};
+  TaxiNDivide: undefined;
 };
 
 type LoginScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -106,12 +106,12 @@ const Home: React.FC<HomeProps> = () => {
   // const fastGaldaeStartPopupRef = useRef<FastGaldaeStartPopupRef>(null);
   // const fastGaldaeEndPopupRef = useRef<FastGaldaeEndPopupRef>(null);
   // const fastGaldaeTimePopupRef = useRef<FastGaldaeTimePopupRef>(null);
-  const myCreatedGaldaeList = useSelector(
-    (state: RootState) => state.myCreatedGaldaeSlice.list,
-  );
-  const myCreatedGaldaeLoading = useSelector(
-    (state: RootState) => state.myCreatedGaldaeSlice.loading,
-  );
+  // const myCreatedGaldaeList = useSelector(
+  //   (state: RootState) => state.myCreatedGaldaeSlice.list,
+  // );
+  // const myCreatedGaldaeLoading = useSelector(
+  //   (state: RootState) => state.myCreatedGaldaeSlice.loading,
+  // );
 
   // dispatch 생성
   // const [createGaldaeBoolean, setCreateGaldaeBoolean] = useState<boolean>(false);
@@ -334,6 +334,7 @@ const Home: React.FC<HomeProps> = () => {
   //   setDestinationLargeName(departureLargeName);
   //   setDestinationSmallName(departureSmallName);
   // };
+
   return (
     <View style={{height: '100%'}}>
       <ScrollView
@@ -341,7 +342,7 @@ const Home: React.FC<HomeProps> = () => {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }>
         <ScrollView style={styles.container}>
-          {myCreatedGaldaeList.length > 0 && (
+          {/* {myCreatedGaldaeList.length > 0 && (
             <View style={styles.madeGaldaeContainer}>
               <BasicText text="생성한 갈대" style={styles.madeGaldae} />
               {myCreatedGaldaeLoading ? (
@@ -387,7 +388,7 @@ const Home: React.FC<HomeProps> = () => {
                 </ScrollView>
               )}
             </View>
-          )}
+          )} */}
 
           {/* 기존 빠른 갈대 섹션 (주석처리) */}
           {/* <BasicText text="빠른 갈대" style={styles.startGaldae} /> */}
@@ -452,45 +453,29 @@ const Home: React.FC<HomeProps> = () => {
           {/* 새로운 서비스 섹션 */}
           <BasicText text="내 서비스" style={styles.serviceTitle} />
           <View style={styles.serviceContainer}>
-            <View style={styles.serviceButtonContainer}>
-              <TouchableOpacity style={styles.serviceButton}>
-                <SVG name="Taxi" style={styles.serviceIcon} />
-              </TouchableOpacity>
-              <BasicText text="택시비n빵" style={styles.serviceButtonText} />
-            </View>
-
-            <View style={styles.serviceButtonContainer}>
-              <TouchableOpacity
-                style={[styles.serviceButton, {paddingLeft: 6}]}>
-                <SVG name="Ott" style={styles.serviceIcon} />
-              </TouchableOpacity>
-              <BasicText text="구독료n빵" style={styles.serviceButtonText} />
-            </View>
-
-            <View style={styles.serviceButtonContainer}>
-              <TouchableOpacity style={styles.serviceButton}>
-                <SVG name="Delivery" style={styles.serviceIcon} />
-              </TouchableOpacity>
-              <BasicText text="배달n빵" style={styles.serviceButtonText} />
-            </View>
-          </View>
-
-          <View style={styles.nowGaldaeTitle}>
-            <BasicText text="실시간 갈대" style={styles.nowGaldae} />
-            <SVGTextButton
-              iconName="More"
-              text="더보기"
-              iconPosition="right"
-              onPress={handleMorePress}
-              enabledColors={{
-                backgroundColor: 'transparent',
-                textColor: theme.colors.grayV1,
-                borderColor: 'transparent',
-              }}
-              //buttonStyle={styles.button}
-              //textStyle={styles.text}
+            <ServiceButton
+              iconName="Taxi"
+              text="택시비 N빵"
+              onPress={() => navigation.navigate('TaxiNDivide')}
+            />
+            <ServiceButton
+              iconName="Ott"
+              text="구독료 N빵"
+              customStyle={{paddingLeft: 6}}
+            />
+            <ServiceButton
+              iconName="Delivery"
+              text="배달 N빵"
             />
           </View>
+
+          <TouchableOpacity style={styles.nowGaldaeTitle} onPress={handleMorePress}>
+            <BasicText text="실시간 N빵" style={styles.nowGaldae} onPress={handleMorePress}/>
+            <SVGButton
+              iconName="MoreIcon"
+              onPress={handleMorePress}
+            />
+          </TouchableOpacity>
 
           <View style={styles.nowGaldaeList}>
             {postsLoading ? (
@@ -563,7 +548,7 @@ const Home: React.FC<HomeProps> = () => {
       {/*   departureLocation={departureSmallName} // 출발지 소분류 (예: "정문") */}
       {/*   destination={destinationSmallName} // 도착지 소분류 (예: "던킨도너츠") */}
       {/* /> */}
-      <FloatingButton onPress={() => navigation.navigate('CreateGaldae')} />
+      {/* <FloatingButton onPress={() => navigation.navigate('CreateGaldae')} /> */}
       <ToastPopup
         visible={toastVisible}
         text="갈대가 생성되었습니다!"

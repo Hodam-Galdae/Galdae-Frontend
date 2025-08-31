@@ -171,7 +171,7 @@ export default StyleSheet.create({
     alignContent: 'flex-end',
   },
   typePossible: {
-    backgroundColor: theme.colors.yellow,
+    backgroundColor: theme.colors.yellow2,
     borderWidth: 0,
     paddingHorizontal: 10,
     paddingVertical: 4,

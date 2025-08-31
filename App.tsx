@@ -42,7 +42,7 @@ import messaging from '@react-native-firebase/messaging';
 import {requestUserPermission} from './src/utils/notification';
 import notifee from '@notifee/react-native';
 import {PortalProvider} from '@gorhom/portal';
-
+import TaxiNDivide from './src/screens/TaxiNDivide';
 function App() {
   useEffect(() => {
     if (Platform.OS === 'android') {
@@ -177,6 +177,7 @@ function App() {
                   <Stack.Screen name="Logout" component={Logout} />
                   <Stack.Screen name="WithDraw" component={WithDraw} />
                   <Stack.Screen name="Notification" component={Notification} />
+                  <Stack.Screen name="TaxiNDivide" component={TaxiNDivide} />
                 </Stack.Navigator>
               </NavigationContainer>
             </PortalProvider>

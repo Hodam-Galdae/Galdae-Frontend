@@ -2,17 +2,17 @@
 
 /* eslint-disable react/no-unstable-nested-components */
 
-import React, {useState} from 'react';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {useNavigation} from '@react-navigation/native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {Platform, View} from 'react-native';
+import React, { useState } from 'react';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { Platform, View } from 'react-native';
 import Home from '../screens/Home';
 import MyInfo from '../screens/MyInfo';
 import Chat from '../screens/Chat';
 import SVG from '../components/SVG';
 import Header from './Header';
-import {theme} from '../styles/theme';
+import { theme } from '../styles/theme';
 import SVGButton from './button/SVGButton';
 import BasicText from '../components/BasicText';
 import SearchBar from '../components/SearchBar';
@@ -35,34 +35,10 @@ function App(): React.JSX.Element {
     <Tab.Navigator
       initialRouteName="홈"
       screenOptions={{
-        header: () => (
-          <View style={styles.mainTabContainer}>
-            <Header
-              title={
-                <View style={styles.titleContainer}>
-                  <BasicText
-                    text={universityName}
-                    style={styles.universityName}
-                  />
-                  <BasicText
-                    text={universityLocation}
-                    style={styles.universityLocation}
-                  />
-                </View>
-              }
-              rightButton={
-                <SVGButton
-                  iconName="Notification"
-                  onPress={() => navigation.navigate('Notification')}
-                />
-              }
-            />
-            <SearchBar
-              text="오늘은 누구와 절약 해볼까요?"
-              textColor={theme.colors.grayV0}
-            />
-          </View>
-        ),
+        // header: () => (
+        //  
+        // ),
+        //header: () => <Header rightButton={<SVGButton iconName="Notification" onPress={()=>navigation.navigate('Notification')}/>}/>,
         tabBarActiveTintColor: theme.colors.Galdae,
         tabBarInactiveTintColor: theme.colors.blackV3,
         tabBarStyle: {
@@ -77,7 +53,7 @@ function App(): React.JSX.Element {
           backgroundColor: theme.colors.white,
           // iOS용 그림자
           shadowColor: '#000000',
-          shadowOffset: {width: 0, height: -1},
+          shadowOffset: { width: 0, height: -1 },
           shadowOpacity: 0.05,
           shadowRadius: 10,
           // Android용 그림자
@@ -104,10 +80,41 @@ function App(): React.JSX.Element {
         name="홈"
         component={Home as React.ComponentType<any>}
         options={{
-          tabBarIcon: ({focused, size}) => {
+          header: () => (
+            <View>
+              <Header
+                leftStyle={styles.headerButton}
+                leftButton={
+                  <View style={styles.titleContainer}>
+                    <BasicText
+                      text={universityName}
+                      style={styles.universityName}
+                    />
+                    <BasicText
+                      text={universityLocation}
+                      style={styles.universityLocation}
+                    />
+                  </View>
+                }
+                rightButton={
+                  <SVGButton
+                    iconName="Notification"
+                    onPress={() => navigation.navigate('Notification')}
+                  />
+                }
+              />
+              <View style={styles.searchContainer}>
+              <SearchBar
+                text="오늘은 누구와 절약 해볼까요?"
+                textColor={theme.colors.grayV0}
+              />
+              </View>
+            </View>
+          ),
+          tabBarIcon: ({ focused, size }) => {
             const iconName = focused ? 'ClickedHomeIcon' : 'HomeIcon';
             return (
-              <View style={{paddingHorizontal: 30, paddingVertical: 20}}>
+              <View style={{ paddingHorizontal: 30, paddingVertical: 20 }}>
                 <SVG name={iconName} width={size} height={size} />
               </View>
             );
@@ -126,10 +133,10 @@ function App(): React.JSX.Element {
               title={<BasicText text="채팅" style={styles.mainTitle} />}
             />
           ),
-          tabBarIcon: ({focused, size}) => {
+          tabBarIcon: ({ focused, size }) => {
             const iconName = focused ? 'ClickedChatIcon' : 'ChatIcon';
             return (
-              <View style={{paddingHorizontal: 30, paddingVertical: 20}}>
+              <View style={{ paddingHorizontal: 30, paddingVertical: 20 }}>
                 <SVG name={iconName} width={size} height={size} />
               </View>
             );
@@ -148,10 +155,10 @@ function App(): React.JSX.Element {
               title={<BasicText text="내 정보" style={styles.mainTitle} />}
             />
           ),
-          tabBarIcon: ({focused, size}) => {
+          tabBarIcon: ({ focused, size }) => {
             const iconName = focused ? 'ClickedMyInfoIcon' : 'MyInfoIcon';
             return (
-              <View style={{paddingHorizontal: 30, paddingVertical: 20}}>
+              <View style={{ paddingHorizontal: 30, paddingVertical: 20 }}>
                 <SVG name={iconName} width={size} height={size} />
               </View>
             );
