@@ -42,7 +42,7 @@ import messaging from '@react-native-firebase/messaging';
 import {requestUserPermission} from './src/utils/notification';
 import notifee from '@notifee/react-native';
 import {PortalProvider} from '@gorhom/portal';
-import TaxiNDivide from './src/screens/TaxiNDivide';
+import TaxiNDivide from './src/screens/category/taxi/TaxiNDivide';
 function App() {
   useEffect(() => {
     if (Platform.OS === 'android') {

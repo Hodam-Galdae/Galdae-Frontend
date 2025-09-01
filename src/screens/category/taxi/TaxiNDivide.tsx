@@ -2,35 +2,35 @@ import React, { useMemo, useRef, useState, useEffect } from 'react';
 import { View, FlatList, ActivityIndicator, RefreshControl, Alert } from 'react-native';
 import moment from 'moment';
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
-import styles from '../styles/NowGaldae.style';
-import Header from '../components/Header';
-import SVGButton from '../components/button/SVGButton';
-import BasicText from '../components/BasicText';
- import FilterButton from '../components/button/FilterButton';
-import SVGTextButton from '../components/button/SVGTextButton';
-import SVG from '../components/SVG';
-import GaldaeItem from '../components/GaldaeItem';
-import DeletePopup from '../components/popup/DeletePopup'; // DeletePopup import
-import NowGaldaeSameGender from '../components/popup/NowGaldaeSameGender';
-import { theme } from '../styles/theme';
-import FloatingButton from '../components/button/FloatingButton';
+import styles from '../../../styles/NowGaldae.style';
+import Header from '../../../components/Header';
+import SVGButton from '../../../components/button/SVGButton';
+import BasicText from '../../../components/BasicText';
+ import FilterButton from '../../../components/button/FilterButton';
+import SVGTextButton from '../../../components/button/SVGTextButton';
+import SVG from '../../../components/SVG';
+import GaldaeItem from '../../../components/GaldaeItem';
+import DeletePopup from '../../../components/popup/DeletePopup'; // DeletePopup import
+import NowGaldaeSameGender from '../../../components/popup/NowGaldaeSameGender';
+import { theme } from '../../../styles/theme';
+import FloatingButton from '../../../components/button/FloatingButton';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { FastGaldaeTimePopupRef } from '../components/popup/ArrayPopup'; //ArrayPopup,
-import FilterPopup from '../components/popup/FilterPopup';
+import { FastGaldaeTimePopupRef } from '../../../components/popup/ArrayPopup'; //ArrayPopup,
+import FilterPopup from '../../../components/popup/FilterPopup';
 //api
-import { searchPosts, deletePost } from '../api/postApi';
+import { searchPosts, deletePost } from '../../../api/postApi';
 // type
-import { GetPostsRequest } from '../types/postTypes';
-import { GaldaeItemType, GaldaeApiResponse } from '../types/getTypes';
+import { GetPostsRequest } from '../../../types/postTypes';
+import { GaldaeItemType, GaldaeApiResponse } from '../../../types/getTypes';
 // redux
 import { useSelector } from 'react-redux';
-import { useAppDispatch } from '../modules/redux/store';
-import { fetchGaldaePosts } from '../modules/redux/slice/galdaeSlice';
-import { fetchMyCreatedGaldae } from '../modules/redux/slice/myCreatedGaldaeSlice';
-import { fetchMyGaldaeHistory } from '../modules/redux/slice/myGaldaeSlice';
-import { fetchHomeGaldaePosts } from '../modules/redux/slice/homeGaldaeSlice';
-import { RootState } from '../modules/redux/RootReducer';
-import SelectTextButton from '../components/button/SelectTextButton';
+import { useAppDispatch } from '../../../modules/redux/store';
+import { fetchGaldaePosts } from '../../../modules/redux/slice/galdaeSlice';
+import { fetchMyCreatedGaldae } from '../../../modules/redux/slice/myCreatedGaldaeSlice';
+import { fetchMyGaldaeHistory } from '../../../modules/redux/slice/myGaldaeSlice';
+import { fetchHomeGaldaePosts } from '../../../modules/redux/slice/homeGaldaeSlice';
+import { RootState } from '../../../modules/redux/RootReducer';
+import SelectTextButton from '../../../components/button/SelectTextButton';
 
 type HomeProps = {
   navigation: any;
