@@ -6,8 +6,7 @@ import styles from '../styles/NowGaldae.style';
 import Header from '../components/Header';
 import SVGButton from '../components/button/SVGButton';
 import BasicText from '../components/BasicText';
-// import FilterButton from '../components/button/FilterButton';
-import GrayBorderTextButton from '../components/button/GrayBorderTextButton';
+ import FilterButton from '../components/button/FilterButton';
 import SVGTextButton from '../components/button/SVGTextButton';
 import SVG from '../components/SVG';
 import GaldaeItem from '../components/GaldaeItem';
@@ -16,8 +15,8 @@ import NowGaldaeSameGender from '../components/popup/NowGaldaeSameGender';
 import { theme } from '../styles/theme';
 import FloatingButton from '../components/button/FloatingButton';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-//import ArrayPopup, { FastGaldaeTimePopupRef } from '../components/popup/ArrayPopup'; //ArrayPopup,
-// import FilterPopup from '../components/popup/FilterPopup';
+import { FastGaldaeTimePopupRef } from '../components/popup/ArrayPopup'; //ArrayPopup,
+import FilterPopup from '../components/popup/FilterPopup';
 //api
 import { searchPosts, deletePost } from '../api/postApi';
 // type
@@ -31,6 +30,7 @@ import { fetchMyCreatedGaldae } from '../modules/redux/slice/myCreatedGaldaeSlic
 import { fetchMyGaldaeHistory } from '../modules/redux/slice/myGaldaeSlice';
 import { fetchHomeGaldaePosts } from '../modules/redux/slice/homeGaldaeSlice';
 import { RootState } from '../modules/redux/RootReducer';
+import SelectTextButton from '../components/button/SelectTextButton';
 
 type HomeProps = {
   navigation: any;
@@ -89,7 +89,7 @@ const TaxiNDivide: React.FC<HomeProps> = () => {
   const [scrollOffset, setScrollOffset] = useState(0);
   // 팝업 ref
   // const arrayPopupRef = useRef<FastGaldaeTimePopupRef>(null);
-  // const filterRef = useRef<FastGaldaeTimePopupRef>(null);
+   const filterRef = useRef<FastGaldaeTimePopupRef>(null);
   // 정렬 상태: 'latest' (최신순, 내림차순) 또는 'soon' (시간 임박순, 오름차순)
   const [sortOrder, setSortOrder] = useState<'latest' | 'departureTime'>('latest');
   const [arrayPopupVisible, setArrayPopupVisible] = useState(false);
@@ -178,9 +178,9 @@ const TaxiNDivide: React.FC<HomeProps> = () => {
     }
   }, [dispatch, departureLargeName, destinationLargeName, sortOrder]);
 
-  // const handleFilterPress = () => {
-  //   filterRef.current?.open();
-  // };
+  const handleFilterPress = () => {
+    filterRef.current?.open();
+  };
 
   const handlePressTimeFilterBtn = () => {
     setFilterOptions(prev => ({
@@ -209,33 +209,33 @@ const TaxiNDivide: React.FC<HomeProps> = () => {
   };
 
   // FilterPopup의 onConfirm 콜백에서 선택된 필터 조건을 업데이트
-  // const handleFilterPopupConfirm = (
-  //   // selectedDate: string,
-  //   // selectedAmPm: '오전' | '오후',
-  //   // selectedHour: number,
-  //   // selectedMinute: number,
-  //   formattedDepartureTime: string,
-  //   selectedGender: 'SAME' | 'DONT_CARE',
-  //   selectedTimeDiscuss: number,
-  //   passengerNumber: number
-  // ) => {
-  //   const filterOptionsObj = {
-  //     // selectedDate,
-  //     // selectedAmPm,
-  //     // selectedHour,
-  //     // selectedMinute,
-  //     formattedDepartureTime,
-  //     selectedGender,
-  //     selectedTimeDiscuss,
-  //     passengerNumber,
-  //   };
-  //   //console.log('선택된 필터 옵션:', filterOptionsObj);
-  //   setFilterOptions(filterOptionsObj);
-  // };
-  // const handleFilterReset = () => {
-  //   handleCancelSearch();
-  //   filterRef.current?.close();
-  // };
+  const handleFilterPopupConfirm = (
+    // selectedDate: string,
+    // selectedAmPm: '오전' | '오후',
+    // selectedHour: number,
+    // selectedMinute: number,
+    formattedDepartureTime: string,
+    selectedGender: 'SAME' | 'DONT_CARE',
+    selectedTimeDiscuss: number,
+    passengerNumber: number
+  ) => {
+    const filterOptionsObj = {
+      // selectedDate,
+      // selectedAmPm,
+      // selectedHour,
+      // selectedMinute,
+      formattedDepartureTime,
+      selectedGender,
+      selectedTimeDiscuss,
+      passengerNumber,
+    };
+    //console.log('선택된 필터 옵션:', filterOptionsObj);
+    setFilterOptions(filterOptionsObj);
+  };
+  const handleFilterReset = () => {
+    handleCancelSearch();
+    filterRef.current?.close();
+  };
   /**
    * 전부 초기화하는 로직
    */
@@ -515,9 +515,30 @@ const TaxiNDivide: React.FC<HomeProps> = () => {
 
         <View style={styles.btns}>
           <View style={styles.filters}>
-            {/* <FilterButton onPress={handleFilterPress} /> */}
-            <GrayBorderTextButton text="시간협의가능" onPress={handlePressTimeFilterBtn} isSelected={filterOptions.selectedTimeDiscuss !== null} buttonStyle={styles.timeArrayBtn} textStyle={styles.timeArrayBtnText} />
-            <GrayBorderTextButton text="성별무관" onPress={handlePressGenderFilterBtn} isSelected={filterOptions.selectedGender !== null} buttonStyle={styles.genderArrayBtn} textStyle={styles.genderArrayBtnText} />
+            <FilterButton onPress={handleFilterPress} />
+            <SelectTextButton text="시간협의가능" selected={filterOptions.selectedTimeDiscuss !== null} unselectedColors={{
+              backgroundColor: theme.colors.white,
+              textColor: theme.colors.blackV3,
+              borderColor: theme.colors.blackV3,
+            }}
+            selectedColors={{
+              backgroundColor: theme.colors.Galdae,
+              textColor: theme.colors.white,
+              borderColor: theme.colors.Galdae,
+            }}
+            onPress={handlePressTimeFilterBtn} />
+
+            <SelectTextButton text="성별무관" selected={filterOptions.selectedGender !== null} unselectedColors={{
+              backgroundColor: theme.colors.white,
+              textColor: theme.colors.blackV3,
+              borderColor: theme.colors.blackV3,
+            }}
+            selectedColors={{
+              backgroundColor: theme.colors.Galdae,
+              textColor: theme.colors.white,
+              borderColor: theme.colors.Galdae,
+            }}
+            onPress={handlePressGenderFilterBtn} />
             {/* <GrayBorderTextButton text="동성만" onPress={handlePressSameGenderFilterBtn} /> */}
           </View>
           <View style={styles.arrayBtn}>
@@ -593,11 +614,11 @@ const TaxiNDivide: React.FC<HomeProps> = () => {
           setSortOrder(selectedSortOrder);
         }}
       /> */}
-      {/* <FilterPopup
+      <FilterPopup
         ref={filterRef}
         onConfirm={handleFilterPopupConfirm}
         handleFilterReset={handleFilterReset}
-      /> */}
+      />
       <DeletePopup
         visible={deletePopupVisible}
         onCancel={() => {

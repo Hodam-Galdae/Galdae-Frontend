@@ -11,11 +11,12 @@ export interface HeaderProps {
   title?: React.ReactNode;
   rightButton?: React.ReactNode;
   leftStyle?: StyleProp<ViewStyle>;
+  style?: StyleProp<ViewStyle>;
 }
 
-const Header: React.FC<HeaderProps> = ({title, rightButton , leftButton, leftStyle}) => {
+const Header: React.FC<HeaderProps> = ({title, rightButton , leftButton, leftStyle, style}) => {
   return (
-    <SafeAreaView style={styles.headerContainer}>
+    <SafeAreaView style={[styles.headerContainer, style]}>
       <View style={[styles.backContainer, leftStyle]}>{leftButton}</View>
       <View style={styles.logoContainer}>{title && title}</View>
       <View style={styles.notificationContainer}>{rightButton}</View>

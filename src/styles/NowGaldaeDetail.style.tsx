@@ -6,6 +6,7 @@ import { theme } from './theme';
 export default StyleSheet.create({
     main:{
       flex: 1,
+      position:'relative',
 
     },
     header:{
@@ -23,7 +24,7 @@ export default StyleSheet.create({
     content: {
       flex: 1,
       position:'relative',
-      padding: 15,
+      padding: 18,
     },
     advertiseBox:{
       width:'100%',
@@ -34,19 +35,49 @@ export default StyleSheet.create({
     },
     borderedListBox:{
         width:'100%',
-        height:195,
-        paddingTop:20,
-        marginBottom:50,
+        padding:20,
+        borderColor:theme.colors.grayV2,
+        borderRadius:theme.borderRadius.size12,
+        borderWidth:1,
+        flexDirection:'row',
+        gap:(30),
+      },
+      menuContainer:{
+        flexDirection:'column',
+        gap:(15),
+        alignItems:'flex-start',
+      },
+      menuText:{
+        fontSize:theme.fontSize.size16,
+        fontWeight:'500',
+        color:theme.colors.blackV3,
+        textAlign:'center',
+        lineHeight:(25),
+        justifyContent:'center',
+        alignItems:'center',
       },
       galdaeOwner:{
-        fontSize:theme.fontSize.size20,
-        fontWeight:'700',
-        marginBottom:20,
+        fontSize:theme.fontSize.size16,
+        color:theme.colors.blackV0,
+        fontWeight:'500',
+        marginLeft:10,
+        marginBottom:5,
+        marginTop:30,
+      },
+      writeUserName:{
+        fontSize:theme.fontSize.size16,
+        fontWeight:'500',
+        color:theme.colors.blackV0,
+        textAlign:'center',
+        lineHeight:(25),
+        justifyContent:'center',
+        alignItems:'center',
       },
       fromContainer:{
         flexDirection:'row',
-        marginTop:(8),
-        gap:(8),
+        gap:(5),
+        alignItems:'center',
+        justifyContent:'flex-end',
       },
       fromMainLocation:{
         fontSize:theme.fontSize.size16,
@@ -55,12 +86,6 @@ export default StyleSheet.create({
       fromSubLocation:{
         fontSize:theme.fontSize.size16,
         fontWeight:'500',
-      },
-      toContainer:{
-        flexDirection:'row',
-        gap:(8),
-        marginTop:(7),
-        alignItems:'center',
       },
       fromToLine:{
         width:(20),
@@ -74,8 +99,6 @@ export default StyleSheet.create({
       },
       timeContainer:{
         flexDirection:'row',
-        gap:(8),
-        marginTop:(6),
         alignItems:'center',
       },
       map:{
@@ -132,26 +155,36 @@ export default StyleSheet.create({
       },
       userInfoBox:{
         width:'100%',
-        height:96,
-        justifyContent:'space-between',
-        borderWidth:2,
+        minHeight:110,
+        justifyContent:'flex-start',
+        borderWidth:1,
         flexDirection:'row',
+        alignItems:'flex-start',
+        borderColor:theme.colors.grayV2,
+        borderRadius:theme.borderRadius.size12,
+        padding:20,
+      },
+      messageText:{
+        fontSize:theme.fontSize.size16,
+        fontWeight:'500',
+        color:theme.colors.blackV3,
+        textAlign:'center',
+        lineHeight:(25),
+        justifyContent:'center',
         alignItems:'center',
-        borderColor:theme.colors.grayV3,
-        borderRadius:theme.borderRadius.size10,
-        paddingStart:20,
       },
       participateContainer:{
-        alignSelf:'center',
+        position:'absolute',
+        bottom:30,
         width:'100%',
-        marginTop:35,
-        marginBottom:35,
-        //height:42,
+        paddingHorizontal:20,
+
       },
       participateBtn:{
         width:'100%',
-        borderRadius:theme.borderRadius.size10,
-        height:42,
+        borderRadius:theme.borderRadius.size30,
+        paddingVertical:12,
+
       },
       participateText:{
         fontSize:theme.fontSize.size16,

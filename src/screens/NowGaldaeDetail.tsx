@@ -1,9 +1,9 @@
 /* eslint-disable react-native/no-inline-styles */
 // NowGaldaeDetail.tsx
-import React, { useEffect, useState } from 'react';
-import { View, Image, ActivityIndicator } from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
+import { View, ActivityIndicator } from 'react-native';
 //import { Modalize } from 'react-native-modalize';
-import { WebView } from 'react-native-webview';
+import { WebView, WebViewMessageEvent } from 'react-native-webview';
 import BasicText from '../components/BasicText';
 import SVGButton from '../components/button/SVGButton';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
@@ -12,7 +12,6 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import styles from '../styles/NowGaldaeDetail.style';
 import SVG from '../components/SVG';
 import { theme } from '../styles/theme';
-import TextTag from '../components/tag/TextTag';
 import BasicButton from '../components/button/BasicButton';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
@@ -22,6 +21,7 @@ import { useAppDispatch } from '../modules/redux/store';
 import moment from 'moment';
 import { joinChatroom, ChatroomResponse } from '../api/chatApi';
 import { TouchableOpacity } from 'react-native';
+import ParticipateModal from '../components/popup/ParticipateModal';
 //import BigMapModal from '../components/popup/BigMapModal';
 
 type RootStackParamList = {
@@ -46,12 +46,23 @@ const NowGaldaeDetail: React.FC = () => {
   const route = useRoute<NowGaldaeDetailRouteProp>();
   const { postId } = route.params; // 전달받은 postId
   //const [mapBig,setMapBig] = useState<boolean>(false);
+  // ✅ 웹뷰에서 받은 예상 시간/거리 정보를 보관
+  const [eta, setEta] = useState<{
+    minutes: number;
+    distance: number;   // m
+    duration: number;   // sec
+    at: string;         // ISO timestamp (중복 수신 디듬돌)
+  } | null>(null);
+
+  // ✅ 중복 메시지 방지 (안드로이드에서 간혹 2번 들어오는 경우 대비)
+  const lastMessageIdRef = useRef<string | null>(null);
+
   const [isMapLoading, setIsMapLoading] = useState(true);
   const { postDetail, loading, error } = useSelector(
     (state: RootState) => state.postDetailSlice,
   );
   const dispatch = useAppDispatch();
-
+  const [isParticipating, setIsParticipating] = useState(false);
   // 컴포넌트 마운트 시 Redux를 통해 상세 정보를 불러옴
   useEffect(() => {
     dispatch(fetchPostDetail(postId));
@@ -60,9 +71,14 @@ const NowGaldaeDetail: React.FC = () => {
   const goBack = () => navigation.goBack();
 
   const handleParticipateGaldae = async () => {
+    setIsParticipating(true);
+   // const tagetRoom = await joinChatroom(postId);
+    //navigation.replace('ChatRoom', { data: Object.freeze(tagetRoom) });
+    // 참여 로직 처리
+  };
+  const handleNavigateChatRoom = async () => {
     const tagetRoom = await joinChatroom(postId);
     navigation.replace('ChatRoom', { data: Object.freeze(tagetRoom) });
-    // 참여 로직 처리
   };
   const formatDepartureTime = (departureTime: string): string => {
     return moment.utc(departureTime).format('YYYY년 MM월 DD일 (ddd) HH : mm');
@@ -98,6 +114,35 @@ const NowGaldaeDetail: React.FC = () => {
   // 지도 URL은 departure와 arrival의 좌표를 사용
   const mapUrl = `https://galdae-kakao-map.vercel.app/?startLat=${postDetail.departure.latitude}&startLng=${postDetail.departure.longtitude}&endLat=${postDetail.arrival.latitude}&endLng=${postDetail.arrival.longtitude}`;
   //const mapUrl = 'https://galdae-kakao-map.vercel.app/?startLat=37.5665&startLng=126.9780&endLat=37.4979&endLng=127.0276'; //테스트용
+
+  // ✅ WebView 메시지 수신 처리
+  const handleWebViewMessage = (e: WebViewMessageEvent) => {
+    try {
+      const data = JSON.parse(e.nativeEvent.data);
+
+      // 타입 분기(필요 시 확장)
+      if (data?.type === 'estimatedTime') {
+        // 고유성 체크용 키(내용+시간) 구성
+        const msgId = `${data.estimatedTime}-${data.distance}-${data.duration}-${data.timestamp ?? ''}`;
+        if (lastMessageIdRef.current === msgId) {return;} // 같은 메시지 무시
+        lastMessageIdRef.current = msgId;
+
+        setEta({
+          minutes: Number(data.estimatedTime),
+          distance: Number(data.distance),
+          duration: Number(data.duration),
+          at: data.timestamp ?? new Date().toISOString(),
+        });
+
+        // ✅ Redux에 저장하고 싶다면(옵션):
+        // dispatch(setEstimatedTime({ postId, ... 위 값들 }));
+      }
+    } catch (err) {
+      // JSON이 아니거나 포맷이 다르면 무시
+      console.warn('웹뷰 메시지 파싱 실패:', err, e.nativeEvent.data);
+    }
+  };
+
   // console.log(`mapUrl: ${mapUrl}`);
   return (
     <View style={styles.main}>
@@ -131,6 +176,7 @@ const NowGaldaeDetail: React.FC = () => {
               onLoadStart={() => setIsMapLoading(true)}
               onLoadEnd={() => setIsMapLoading(false)}
               pointerEvents="box-none"
+              onMessage={handleWebViewMessage}
             />
             {isMapLoading && (
               <View style={[styles.map, { position: 'absolute', justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.6)' }]}>
@@ -144,140 +190,118 @@ const NowGaldaeDetail: React.FC = () => {
             buttonStyle={styles.toBigPicIcon}
           /> */}
         </TouchableOpacity>
+
+        <BasicText
+          text={'그룹 정보'}
+          style={styles.galdaeOwner}
+        />
         <View key={postDetail.departureTime} style={styles.borderedListBox}>
           {/**postDetail.userInfo?.name || */}
-          <BasicText
-            text={`${postDetail.userInfo?.nickname}님의 갈대` || '작성자'}
-            style={styles.galdaeOwner}
-          />
-          <View style={styles.fromContainer}>
-            <SVG name="Car" />
+          <View style={styles.menuContainer}>
             <BasicText
-              text={postDetail.departure.subPlace}
-              style={styles.fromMainLocation}
+              text={'빵장'}
+              style={styles.menuText}
             />
             <BasicText
-              text={postDetail.departure.majorPlace}
-              style={styles.fromSubLocation}
+              text={'출발지'}
+              style={styles.menuText}
             />
+            <BasicText
+              text={'도착지'}
+              style={styles.menuText}
+            />
+            <BasicText
+              text={'출발 시간'}
+              style={styles.menuText}
+            />
+            <BasicText
+              text={'인원'}
+              style={styles.menuText}
+            />
+            <BasicText
+              text={'소요시간'}
+              style={styles.menuText}
+            />
+
           </View>
-          <View style={styles.toContainer}>
-            <View style={styles.fromToLine}>
-              <SVG name="FromToLine" />
-            </View>
-            {Array(postDetail.passengerCount)
-              .fill(null)
-              .map((_, idx) => (
-                <SVG
-                  key={`user-${postDetail.departureTime}-${idx}`}
-                  name="User"
-                />
-              ))}
-            {Array(postDetail.totalPassengerCount - postDetail.passengerCount)
-              .fill(null)
-              .map((_, idx) => (
-                <SVG
-                  key={`disabled-${postDetail.departureTime}-${idx}`}
-                  name="DisabledUser"
-                />
-              ))}
+
+          <View style={styles.menuContainer}>
             <BasicText
-              text={`(${postDetail.passengerCount}/${postDetail.totalPassengerCount})`}
-              fontWeight={500}
-              fontSize={theme.fontSize.size16}
-              color={theme.colors.grayV1}
+              text={`${postDetail.userInfo?.nickname}` || '작성자'}
+              style={styles.writeUserName}
             />
-          </View>
-          <View style={styles.toContainer}>
-            <SVG name="Location" />
-            <BasicText
-              text={postDetail.arrival.subPlace}
-              style={styles.fromMainLocation}
-            />
-            <BasicText
-              text={postDetail.arrival.majorPlace}
-              style={styles.fromSubLocation}
-            />
-          </View>
-          <View style={styles.timeContainer}>
-            <SVG name="Clock" />
-            <View>
+            <View style={styles.fromContainer}>
               <BasicText
-                text={
-                  postDetail.arrangeTime === 'POSSIBLE'
-                    ? '시간 협의가능'
-                    : '시간 협의불가'
-                }
-                style={styles.fromMainLocation}
-                color={theme.colors.grayV2}
-                fontSize={theme.fontSize.size10}
+                text={postDetail.departure.majorPlace}
+                style={styles.writeUserName}
               />
               <BasicText
-                text={formatDepartureTime(postDetail.departureTime)}
-                style={styles.fromSubLocation}
-                color={theme.colors.blackV0}
-                fontSize={theme.fontSize.size14}
+                text={postDetail.departure.subPlace}
+                style={styles.writeUserName}
               />
             </View>
-          </View>
-          <View style={styles.tags}>
-            {postDetail.passengerGenderType === 'SAME' ? (
-              <TextTag text="동성만" />
-            ) : postDetail.passengerGenderType === 'DONT_CARE' ? (
-              <TextTag text="성별무관" />
-            ) : (
-              <TextTag text="상관없음" />
+
+            <View style={styles.fromContainer}>
+              <BasicText
+                text={postDetail.arrival.majorPlace}
+                style={styles.writeUserName}
+              />
+              <BasicText
+                text={postDetail.arrival.subPlace}
+                style={styles.writeUserName}
+              />
+            </View>
+            <BasicText
+                  text={formatDepartureTime(postDetail.departureTime)}
+                  style={styles.writeUserName}
+                />
+            <BasicText
+              text={`${postDetail.passengerCount}/${postDetail.totalPassengerCount}`}
+              style={styles.writeUserName}
+            />
+            {/* <View style={styles.tags}>
+              {postDetail.passengerGenderType === 'SAME' ? (
+                <TextTag text="동성만" />
+              ) : postDetail.passengerGenderType === 'DONT_CARE' ? (
+                <TextTag text="성별무관" />
+              ) : (
+                <TextTag text="상관없음" />
+              )}
+            </View> */}
+            {eta && (
+              <BasicText
+                text={`${eta.minutes}분 `}
+                style={styles.writeUserName}
+              />
             )}
           </View>
         </View>
 
 
 
-        <BasicText text="유저정보" style={styles.userInfo} />
+        <BasicText text="빵장의 한마디" style={styles.galdaeOwner} />
 
         <View style={styles.userInfoBox}>
-          <View style={styles.userInfos}>
-            <View style={styles.profile}>
-              {
-                postDetail.userInfo.profileImage ? (
-                  <Image
-                    source={{ uri: postDetail.userInfo.profileImage }}
-                    style={styles.profileImg}
-                    resizeMode="cover"
-                  />
-                ) : (
-                  <SVG name="profileImg" style={styles.profileImg} />
-                )
-              }
-
-            </View>
-            <View style={styles.userInfoText}>
-              <BasicText
-                text={postDetail.userInfo.university}
-                style={styles.universityText}
-              />
-              <BasicText
-                text={postDetail.userInfo.nickname}
-                style={styles.nameText}
-              />
-            </View>
-          </View>
-          {postDetail.userInfo.isAuthenticated && (
-            <SVG name="Badge" style={styles.badge} />
-          )}
+         <BasicText text={postDetail.userInfo?.nickname} style={styles.messageText} />
         </View>
 
-        <View style={styles.participateContainer}>
+
+      </ScrollView>
+      <View style={styles.participateContainer}>
           {postDetail.isParticipated ? (
             <BasicButton
-              text="이미 참여한 갈대입니다."
+              text="이미 참여한 N빵"
               buttonStyle={styles.participateBtn}
               textStyle={styles.participateText}
               loading={false}
               disabled={true}
+              enabledColors={{
+                backgroundColor: theme.colors.grayV2,
+                textColor: theme.colors.grayV0,
+              }}
               disabledColors={{
-                backgroundColor: theme.colors.grayV3,
-                textColor: theme.colors.blackV0,
+                backgroundColor: theme.colors.grayV2,
+                textColor: theme.colors.grayV0,
               }}
             />
           ) : isFull ? (
@@ -302,14 +326,23 @@ const NowGaldaeDetail: React.FC = () => {
             />
           )}
         </View>
-      </ScrollView>
-
       {/* { mapBig && (
           <BigMapModal
             ref={mapModalRef}
             mapUrl={mapUrl}
           />
         )} */}
+        {isParticipating && (
+          <ParticipateModal
+            visible={isParticipating}
+            onCancel={() => setIsParticipating(false)}
+            onConfirm={handleNavigateChatRoom}
+            fromMajor={postDetail.departure.majorPlace}
+            fromSub={postDetail.departure.subPlace}
+            toMajor={postDetail.arrival.majorPlace}
+            toSub={postDetail.arrival.subPlace}
+          />
+        )}
     </View>
   );
 };

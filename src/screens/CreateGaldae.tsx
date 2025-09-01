@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable quotes */
 // CreateGaldae.tsx
 import React, { useState, useRef } from 'react';
 import moment from 'moment-timezone/builds/moment-timezone-with-data';
-import { TouchableOpacity, View, ScrollView, Alert } from 'react-native';
+import { TouchableOpacity, View, ScrollView, Alert, TextInput } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from '../styles/CreateGaldae.style';
 import BasicText from '../components/BasicText';
@@ -9,7 +11,6 @@ import PositionBox from '../components/PostionBox';
 import SVGButton from '../components/button/SVGButton';
 import { theme } from '../styles/theme';
 import BasicButton from '../components/button/BasicButton';
-import SVG from '../components/SVG';
 import Header from '../components/Header';
 import SelectTextButton from '../components/button/SelectTextButton';
 import FastGaldaeStartPopup, { FastGaldaeStartPopupRef } from '../components/popup/FastGaldaeStartPopup';
@@ -18,7 +19,7 @@ import FastGaldaeTimePopup, { FastGaldaeTimePopupRef } from '../components/popup
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useAppDispatch } from '../modules/redux/store';
 import { fetchMyGaldaeHistory } from '../modules/redux/slice/myGaldaeSlice';
-import {fetchHomeGaldaePosts} from  '../modules/redux/slice/homeGaldaeSlice';
+import { fetchHomeGaldaePosts } from '../modules/redux/slice/homeGaldaeSlice';
 import { fetchMyCreatedGaldae } from '../modules/redux/slice/myCreatedGaldaeSlice';
 import { fetchGaldaePosts } from '../modules/redux/slice/galdaeSlice';
 import { fetchFrequentRoutes } from '../modules/redux/slice/frequentRouteSlice';
@@ -29,12 +30,14 @@ import { GetPostsRequest } from '../types/postTypes';
 // ✅ 갈대 생성 요청 타입
 import { CreatePostRequest } from '../types/postTypes';
 import { Portal } from '@gorhom/portal';
+import ParticipateModal from '../components/popup/ParticipateModal';
 
 // 내비게이션 스택 타입 정의
 type RootStackParamList = {
   CreateGaldae: undefined;
   NowGaldae: undefined;
   NowGaldaeDetail: { postId: string };
+  TaxiNDivide: undefined;
 };
 
 const CreateGaldae: React.FC = () => {
@@ -48,22 +51,24 @@ const CreateGaldae: React.FC = () => {
   const [departureDate, setDepartureDate] = useState<string | null>(null); // "YYYY-MM-DD" 형식
   const [departureAmPm, setDepartureAmPm] = useState<'오전' | '오후'>('오전');
   // 출발지 상태 (이름과 ID)
-  const [departureLargeName, setDepartureLargeName] = useState<'출발지 선택'|string>('출발지 선택');
-  const [departureLargeId, setDepartureLargeId] = useState<number|null>(null);
-  const [departureSmallName, setDepartureSmallName] = useState<'출발지 선택' |string>('출발지 선택');
-  const [departureSmallId, setDepartureSmallId] = useState<number|null>(null);
+  const [departureLargeName, setDepartureLargeName] = useState<'출발지 선택' | string>('출발지 선택');
+  const [departureLargeId, setDepartureLargeId] = useState<number | null>(null);
+  const [departureSmallName, setDepartureSmallName] = useState<'출발지 선택' | string>('-');
+  const [departureSmallId, setDepartureSmallId] = useState<number | null>(null);
   // 도착지 상태 (이름과 ID)
   const [destinationLargeName, setDestinationLargeName] = useState<'도착지 선택' | string>('도착지 선택');
-  const [destinationLargeId, setDestinationLargeId] = useState<number|null>(null);
-  const [destinationSmallName, setDestinationSmallName] = useState<'도착지 선택' | string>('도착지 선택');
-  const [destinationSmallId, setDestinationSmallId] = useState<number|null>(null);
+  const [destinationLargeId, setDestinationLargeId] = useState<number | null>(null);
+  const [destinationSmallName, setDestinationSmallName] = useState<'도착지 선택' | string>('-');
+  const [destinationSmallId, setDestinationSmallId] = useState<number | null>(null);
   const [departureHour, setDepartureHour] = useState<number>(0);
   const [departureMinute, setDepartureMinute] = useState<number>(0);
+  const [messageLength, setMessageLength] = useState<number>(0);
+  const [message, setMessage] = useState<string>('');
   const dispatch = useAppDispatch();
   const fastGaldaeStartPopupRef = useRef<FastGaldaeStartPopupRef>(null);
   const fastGaldaeEndPopupRef = useRef<FastGaldaeEndPopupRef>(null);
   const fastGaldaeTimePopupRef = useRef<FastGaldaeTimePopupRef>(null);
-
+  const [participating, setParticipating] = useState<boolean>(false);
   const passengerNumberHandler = (type: string) => {
     if (type === 'PLUS' && passengerNumber < 4) {
       setPassengerNumber(passengerNumber + 1);
@@ -74,31 +79,31 @@ const CreateGaldae: React.FC = () => {
 
   // ✅ 갈대 생성 API 호출 함수
   const handleCreateGaldaeConfirm = async () => {
-    if(departureLargeName === '출발지 선택' || departureSmallName === '출발지 선택' || destinationLargeName === '도착지 선택' || destinationSmallName === '도착지 선택'){
+    if (departureLargeName === '출발지 선택' || departureSmallName === '출발지 선택' || destinationLargeName === '도착지 선택' || destinationSmallName === '도착지 선택') {
       Alert.alert('출발지 또는 도착지를 제대로 선택해주세요!');
       return;
-   }
-   if(departureLargeId === null || departureSmallId === null || destinationLargeId === null || destinationSmallId === null){
-    Alert.alert('출발지 또는 도착지를 다시 선택해주세요!');
-    return;
-   }
-   if(formatDepartureDateTime() === '출발 시간 선택'){
-    Alert.alert('출발 시간을 선택해주세요!');
-    return;
- }
+    }
+    if (departureLargeId === null || departureSmallId === null || destinationLargeId === null || destinationSmallId === null) {
+      Alert.alert('출발지 또는 도착지를 다시 선택해주세요!');
+      return;
+    }
+    if (formatDepartureDateTime() === '출발 시간 선택') {
+      Alert.alert('출발 시간을 선택해주세요!');
+      return;
+    }
 
 
     // 출발 일시를 Asia/Seoul 타임존의 ISO 8601 형식으로 변환
     const formattedDepartureTime = getFormattedDepartureTime();
-// 출발 시간을 moment 객체로 변환하여 현재 시간과 비교
- const departureMoment = moment(formattedDepartureTime.replace(/Z$/, ''));
- //console.log(` departureMoment:
-  // ${departureMoment}`);
- if (departureMoment.isBefore(moment())) {
-   Alert.alert('알림', '현재 시간보다 이후의 시간을 선택해주세요!');
-   return;
- }
- setLoading(true);
+    // 출발 시간을 moment 객체로 변환하여 현재 시간과 비교
+    const departureMoment = moment(formattedDepartureTime.replace(/Z$/, ''));
+    //console.log(` departureMoment:
+    // ${departureMoment}`);
+    if (departureMoment.isBefore(moment())) {
+      Alert.alert('알림', '현재 시간보다 이후의 시간을 선택해주세요!');
+      return;
+    }
+    setLoading(true);
     const postData: CreatePostRequest = {
       majorDepartureId: departureLargeId,
       subDepartureId: departureSmallId,
@@ -111,34 +116,34 @@ const CreateGaldae: React.FC = () => {
       isFavoriteRoute: selectedChannel,
     };
 
-   // console.log('🚀 서버로 보낼 갈대 생성 데이터:', postData);
+    // console.log('🚀 서버로 보낼 갈대 생성 데이터:', postData);
 
     try {
       const response = await createPost(postData); // 서버에서 postId 반환
-     // console.log('✅ 생성된 갈대 postId:', response.postId);
+      // console.log('✅ 생성된 갈대 postId:', response.postId);
       dispatch(fetchMyGaldaeHistory());
       dispatch(fetchMyCreatedGaldae());
       dispatch(fetchHomeGaldaePosts());
       dispatch(fetchFrequentRoutes());
       const params: GetPostsRequest = {
-              pageNumber: 0,
-              pageSize: 20,
-              direction: 'DESC' ,
-              properties:  ['create_at'] ,
-            };
-     dispatch(fetchGaldaePosts(params));
+        pageNumber: 0,
+        pageSize: 20,
+        direction: 'DESC',
+        properties: ['create_at'],
+      };
+      dispatch(fetchGaldaePosts(params));
 
       if (response.postId) {
         // 상세 페이지로 이동하면서 postId 전달
-        navigation.replace('NowGaldaeDetail', { postId: response.postId });
+        //navigation.replace('NowGaldaeDetail', { postId: response.postId });
+        setParticipating(true);
       }
     } catch (error) {
-     // console.error('❌ 갈대 생성 실패:', error);
+      // console.error('❌ 갈대 생성 실패:', error);
     } finally {
       setLoading(false);
     }
   };
-
   const toggleFastGaldaeStartPopup = () => {
     fastGaldaeStartPopupRef.current?.open();
   };
@@ -159,7 +164,7 @@ const CreateGaldae: React.FC = () => {
   ) => {
     setDepartureDate(selectedDate);
     setDepartureAmPm(amPm);
-    setDepartureHour(hour);
+    setDepartureHour(amPm === '오후' && hour < 12 ? hour + 12 : amPm === '오전' && hour === 12 ? 0 : hour);
     setDepartureMinute(minute);
   };
 
@@ -180,8 +185,8 @@ const CreateGaldae: React.FC = () => {
     }
     const dateObj = moment(departureDate, 'YYYY-MM-DD');
     const formattedDate = dateObj.format('YYYY년 M월 D일 (ddd)');
-    const formattedTime = `${departureAmPm} ${departureHour} : ${departureMinute < 10 ? '0' + departureMinute : departureMinute}`;
-    return `출발일시: ${formattedDate} ${formattedTime}`;
+    const formattedTime = `${departureHour === 0 ? '00' : departureHour} : ${departureMinute < 10 ? '0' + departureMinute : departureMinute}`;
+    return `${formattedDate} ${formattedTime}`;
   };
   const getFormattedDepartureTime = (): string => {
     if (!departureDate) {
@@ -196,14 +201,14 @@ const CreateGaldae: React.FC = () => {
       hour24 = 0;
     }
 
-     // 선택한 날짜와 시간 정보를 Asia/Seoul 타임존의 moment 객체로 생성
-      const selectedMoment = moment.utc(departureDate).set({
-        hour: hour24,
-        minute: departureMinute,
-        second: 0,
-        millisecond: 0,
-      });
-      return selectedMoment.toISOString(); // UTC 기준 ISO 문자열 반환
+    // 선택한 날짜와 시간 정보를 Asia/Seoul 타임존의 moment 객체로 생성
+    const selectedMoment = moment.utc(departureDate).set({
+      hour: hour24,
+      minute: departureMinute,
+      second: 0,
+      millisecond: 0,
+    });
+    return selectedMoment.toISOString(); // UTC 기준 ISO 문자열 반환
   };
   const handleSwitch = () => {
     setDepartureLargeName(destinationLargeName);
@@ -217,16 +222,17 @@ const CreateGaldae: React.FC = () => {
     setDestinationSmallName(departureSmallName);
   };
   const isFormValid =
-  departureLargeId !== null &&
-  departureSmallId !== null &&
-  destinationLargeId !== null &&
-  destinationSmallId !== null &&
-  departureDate !== null;
+    departureLargeId !== null &&
+    departureSmallId !== null &&
+    destinationLargeId !== null &&
+    destinationSmallId !== null &&
+    departureDate !== null;
   return (
     <View>
       <Header
-        leftButton={<SVGButton iconName="arrow_left_line" onPress={goBack} />}
-        title={<BasicText text="갈대 생성하기" style={styles.mainTitle} />}
+        style={styles.header}
+        leftButton={<SVGButton iconName="arrow_left_line2" onPress={goBack} />}
+        title={<BasicText text="택시비 N빵 생성" style={styles.mainTitle} />}
       />
       <ScrollView>
         <View style={styles.container}>
@@ -268,6 +274,10 @@ const CreateGaldae: React.FC = () => {
               buttonStyle={styles.selectBtn}
               textStyle={styles.selectText}
               onPress={() => setSelectedGender(0)}
+              unselectedColors={{
+                backgroundColor: theme.colors.grayV3,
+                textColor: theme.colors.grayV0,
+              }}
             />
             <SelectTextButton
               text="동성만"
@@ -275,6 +285,10 @@ const CreateGaldae: React.FC = () => {
               buttonStyle={styles.selectBtn}
               textStyle={styles.selectText}
               onPress={() => setSelectedGender(1)}
+              unselectedColors={{
+                backgroundColor: theme.colors.grayV3,
+                textColor: theme.colors.grayV0,
+              }}
             />
           </View>
           <BasicText style={styles.subTitle} text="시간 협의 가능 여부를 선택해주세요." />
@@ -285,6 +299,10 @@ const CreateGaldae: React.FC = () => {
               buttonStyle={styles.selectBtn}
               textStyle={styles.selectText}
               onPress={() => setSelectedTimeDiscuss(0)}
+              unselectedColors={{
+                backgroundColor: theme.colors.grayV3,
+                textColor: theme.colors.grayV0,
+              }}
             />
             <SelectTextButton
               text="불가능"
@@ -292,9 +310,13 @@ const CreateGaldae: React.FC = () => {
               buttonStyle={styles.selectBtn}
               textStyle={styles.selectText}
               onPress={() => setSelectedTimeDiscuss(1)}
+              unselectedColors={{
+                backgroundColor: theme.colors.grayV3,
+                textColor: theme.colors.grayV0,
+              }}
             />
           </View>
-          <BasicText text="*최대 4명" style={styles.warnText} />
+          <BasicText text="*최대 인원" style={styles.warnText} />
           <View style={styles.personWrapper}>
             <View style={styles.personBox}>
               <BasicText text="탑승인원" style={styles.personText} />
@@ -316,12 +338,26 @@ const CreateGaldae: React.FC = () => {
               />
             </View>
           </View>
-          <TouchableOpacity onPress={() => setSelectedChannel(!selectedChannel)}>
+          {/* <TouchableOpacity onPress={() => setSelectedChannel(!selectedChannel)}>
             <View style={selectedChannel ? { ...styles.oftenBox, borderColor: theme.colors.Galdae } : styles.oftenBox}>
               <SVG name={selectedChannel ? 'CheckSelected' : 'Check'} width={18} height={18} style={styles.checkBtn} />
               <BasicText text="자주가는 경로로 등록하기" style={selectedChannel ? { ...styles.checkText, color: theme.colors.blackV0 } : styles.checkText} />
             </View>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
+          <View style={styles.messageWrapper}>
+            <BasicText style={styles.personText} text="빵장의 한마디" />
+            <BasicText text={`(${messageLength}/200)`} style={styles.personSubText} />
+          </View>
+          <TextInput
+            style={styles.messageInput}
+            value={message}
+            onChangeText={setMessage}
+            onChange={(e) => setMessageLength(e.nativeEvent.text.length)}
+            maxLength={200}
+            multiline={true}
+            placeholder={`동승자에게 전달하고 싶은 정보를 알려주세요! \n ex) 짐 정보, 우천 시 장소 변경 등`}
+            placeholderTextColor={theme.colors.blackV3}
+          />
           <BasicButton
             text="생성하기"
             buttonStyle={styles.generateButton}
@@ -329,6 +365,10 @@ const CreateGaldae: React.FC = () => {
             loading={loading}
             disabled={!isFormValid} // 🔒 조건 미충족 시 비활성화
             onPress={handleCreateGaldaeConfirm}
+            disabledColors={{
+              backgroundColor: theme.colors.grayV2,
+              textColor: theme.colors.grayV0,
+            }}
           />
         </View>
       </ScrollView>
@@ -343,7 +383,7 @@ const CreateGaldae: React.FC = () => {
             setDepartureSmallId(smallId);
           }}
           selectedStartPlaceId={destinationSmallId} // ✅ 출발지에서 선택한 소분류 ID 전달
-          //onClose={() => console.log('팝업 닫힘')}
+        //onClose={() => console.log('팝업 닫힘')}
         />
       </Portal>
 
@@ -357,7 +397,7 @@ const CreateGaldae: React.FC = () => {
             setDestinationSmallId(smallId);
           }}
           selectedStartPlaceId={departureSmallId} // ✅ 출발지에서 선택한 소분류 ID 전달
-         //onClose={() => console.log('팝업 닫힘')}
+        //onClose={() => console.log('팝업 닫힘')}
         />
       </Portal>
 
@@ -365,9 +405,21 @@ const CreateGaldae: React.FC = () => {
         <FastGaldaeTimePopup
           ref={fastGaldaeTimePopupRef}
           onConfirm={handleTimePopupConfirm}
-          //onClose={() => console.log('팝업 닫힘')}
+        //onClose={() => console.log('팝업 닫힘')}
         />
       </Portal>
+      {participating && (
+        <ParticipateModal
+          title="생성 완료"
+          visible={participating}
+          onCancel={() => setParticipating(false)}
+          onConfirm={() => navigation.navigate('TaxiNDivide')}
+          fromMajor={departureLargeName}
+          fromSub={departureSmallName}
+          toMajor={destinationLargeName}
+          toSub={destinationSmallName}
+        />
+      )}
     </View>
   );
 };

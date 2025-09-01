@@ -20,7 +20,8 @@ const PositionBox: React.FC<PositionBoxProps> = ({title, subTitle, isOrigin, onP
             <View style={styles.container}>
                 <TextTag
                     text={isOrigin ? '출발지' : '도착지'}
-                    viewStyle={styles.tag}
+                    viewStyle={isOrigin ? styles.tag : styles.tagDestination}
+                    textStyle={isOrigin ? styles.tagText : styles.tagDestinationText}
                 />
                 <BasicText text={title} style={styles.title}/>
                 <BasicText text={subTitle} style={styles.subTitle}/>

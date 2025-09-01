@@ -25,7 +25,7 @@ const stylesheet = StyleSheet.create({
     //작은 텍스트 버튼
     smallBorderTextBtn:{
         borderWidth:1,
-        paddingHorizontal:(10),
+        paddingHorizontal:(8),
         paddingVertical:(5),
         alignItems:'center',
         justifyContent:'center',

@@ -14,13 +14,14 @@ export default StyleSheet.create({
         fontSize:theme.fontSize.size16,
       },
       medium: {
-        fontSize:theme.fontSize.size14,
+        fontSize:theme.fontSize.size18,
       },
       circle:{
         marginBottom:7,
       },
       clickedCircle:{
-        backgroundColor: theme.colors.Galdae,
+        backgroundColor: theme.colors.blue,
+        fontWeight:'700',
         borderRadius:'50%',
         position:'absolute',
         bottom:0,
@@ -32,7 +33,8 @@ export default StyleSheet.create({
       },
       clickedDate:{
         color: theme.colors.white,
-        fontSize: theme.fontSize.size14,
+        fontWeight:'700',
+        fontSize: theme.fontSize.size18,
         justifyContent: 'center',
         alignItems: 'center',
       },

@@ -19,9 +19,9 @@ export default StyleSheet.create({
   },
   borderedListBoxComplete: {
     width: '100%',
-    borderColor: theme.colors.grayV2,
+    borderColor: theme.colors.grayV3,
     borderRadius: theme.borderRadius.size10,
-    backgroundColor: theme.colors.grayV2,
+    backgroundColor: theme.colors.grayV3,
     borderWidth: 1,
     paddingStart: 15,
     paddingEnd: 15,
@@ -68,7 +68,7 @@ export default StyleSheet.create({
   fromMainLocationCom: {
     fontSize: theme.fontSize.size16,
     fontWeight: '700',
-    color: theme.colors.grayV2,
+    color: theme.colors.blackV3,
   },
   fromSubLocation: {
     fontSize: theme.fontSize.size16,
@@ -78,7 +78,7 @@ export default StyleSheet.create({
   fromSubLocationCom: {
     fontSize: theme.fontSize.size16,
     fontWeight: '500',
-    color: theme.colors.grayV1,
+    color: theme.colors.blackV3,
   },
   departureTimeContainer: {
     flexDirection: 'row',
@@ -91,13 +91,18 @@ export default StyleSheet.create({
     fontWeight: '700',
     fontSize: theme.fontSize.size14,
   },
+  departureTimeTitleCom:{
+    color: theme.colors.blackV3,
+    fontWeight: '500',
+    fontSize: theme.fontSize.size14,
+  },
   departureTime: {
     color: theme.colors.grayV0,
     fontWeight: '500',
     fontSize: theme.fontSize.size14,
   },
   departureTimeCom: {
-    color: theme.colors.grayV1,
+    color: theme.colors.grayV0,
     fontWeight: '500',
     fontSize: theme.fontSize.size14,
   },
@@ -122,9 +127,9 @@ export default StyleSheet.create({
   tags: {
     flexDirection: 'row',
     gap: (4),
-    marginTop: (16),
     alignItems: 'center',
   },
+
   timeContainer: {
     flexDirection: 'row',
     gap: (8),

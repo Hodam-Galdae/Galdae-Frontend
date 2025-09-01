@@ -104,6 +104,10 @@ export default StyleSheet.create({
   },
     selectText:{
       fontSize:theme.fontSize.size18,
+      fontWeight:'700',
+    },
+    selectTextUnselected:{
+      fontSize:theme.fontSize.size18,
       fontWeight:'500',
     },
     confirmButton:{

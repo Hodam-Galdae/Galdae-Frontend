@@ -44,7 +44,7 @@ const GaldaeItem: React.FC<GaldaeItemProps> = ({ item, onPress, onLongPress }) =
           </View>
 
           <View style={styles.departureTimeContainer}>
-            <BasicText text="출발 시간" style={styles.departureTimeTitle} />
+            <BasicText text="출발 시간" style={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.departureTimeTitleCom : styles.departureTimeTitle } />
             <BasicText
               text={formatDepartureTime(item.departureTime)}
               style={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.departureTimeCom : styles.departureTime}
@@ -68,33 +68,40 @@ const GaldaeItem: React.FC<GaldaeItemProps> = ({ item, onPress, onLongPress }) =
 
             <TextTag
               text={item.arrangeTime === 'POSSIBLE' ? '시간협의가능' : '시간협의불가'}
-              viewStyle={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.timePossibleCom : styles.timePossible}
-              textStyle={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.timePossibleTextCom : styles.timePossibleText}
+              viewStyle={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.timePossible : styles.timePossible}
+              textStyle={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.timePossibleText : styles.timePossibleText}
 
             />
-          </View>
 
-          {/* {item.passengerGenderType && (
-          <View style={styles.tags}>
-            {!item.isSameGender && item.passengerGenderType === 'SAME' ? (
-              <TextTag text="동성만"
-                enabledColors={
-                  {
-                    backgroundColor: theme.colors.grayV2,
-                    textColor: theme.colors.grayV1,
-                    borderColor: theme.colors.grayV1,
-                  }
-                }
-              />
-            ) : item.passengerGenderType === 'SAME' ? (
-              <TextTag text="동성만" />
-            ) : item.passengerGenderType === 'DONT_CARE' ? (
-              <TextTag text="성별무관" />
-            ) : (
-              <TextTag text="상관없음" />
+            {item.passengerGenderType && (
+              <View style={styles.tags}>
+                {!item.isSameGender && item.passengerGenderType === 'SAME' ? (
+                  <TextTag text="동성만"
+                    enabledColors={
+                      {
+                        backgroundColor: theme.colors.grayV2,
+                        textColor: theme.colors.grayV1,
+                        borderColor: theme.colors.grayV1,
+                      }
+                    }
+                    viewStyle={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.timePossible : styles.timePossible}
+              textStyle={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.timePossibleText : styles.timePossibleText}
+                  />
+                ) : item.passengerGenderType === 'SAME' ? (
+                  <TextTag text="동성만" viewStyle={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.timePossible : styles.timePossible}
+                  textStyle={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.timePossibleText : styles.timePossibleText}/>
+                ) : item.passengerGenderType === 'DONT_CARE' ? (
+                  <TextTag text="성별무관" viewStyle={!item.isSameGender && item.passengerGenderType === 'DONT_CARE' ? styles.timePossible : styles.timePossible}
+                  textStyle={!item.isSameGender && item.passengerGenderType === 'DONT_CARE' ? styles.timePossibleText : styles.timePossibleText}/>
+                ) : (
+                  <TextTag text="상관없음" viewStyle={!item.isSameGender && item.passengerGenderType === 'DONT_CARE' ? styles.timePossible : styles.timePossible}
+                  textStyle={!item.isSameGender && item.passengerGenderType === 'DONT_CARE' ? styles.timePossibleText : styles.timePossibleText}/>
+                )}
+              </View>
             )}
           </View>
-        )} */}
+
+
         </View>
 
         <View style={styles.typeContainer}>

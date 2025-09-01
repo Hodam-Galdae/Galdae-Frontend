@@ -15,11 +15,29 @@ export default StyleSheet.create({
         paddingVertical: 20,
     },
     tag: {
-        borderColor: theme.colors.Galdae,
-        borderWidth: 1,
-        color: theme.colors.Galdae,
+        borderWidth: 0,
+        color: theme.colors.GaldaeDark,
+        backgroundColor: theme.colors.yellow2,
         fontSize: theme.fontSize.size14,
         marginBottom: 12,
+        paddingVertical:6,
+    },
+    tagText: {
+        color: theme.colors.GaldaeDark,
+        fontSize: theme.fontSize.size14,
+    },
+    tagDestination: {
+        borderWidth: 0,
+        color: theme.colors.blue,
+        backgroundColor: theme.colors.Galdae3,
+        fontSize: theme.fontSize.size14,
+        marginBottom: 12,
+        paddingVertical:6,
+    },
+    tagDestinationText: {
+        color: theme.colors.blue,
+        fontSize: theme.fontSize.size14,
+
     },
     title: {
         fontSize: theme.fontSize.size18,
@@ -30,7 +48,7 @@ export default StyleSheet.create({
     subTitle: {
         fontSize: theme.fontSize.size16,
         fontWeight: '500',
-        color: theme.colors.grayV1,
+        color: theme.colors.blackV3,
         lineHeight: (22), // mainPosName과 동일하게 지정
     },
 });

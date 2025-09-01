@@ -63,20 +63,22 @@ export default StyleSheet.create({
       color:theme.colors.grayV0,
     },
     timeArrayBtn:{
-      backgroundColor:theme.colors.blue2,
-      borderWidth:0,
+      backgroundColor:theme.colors.white,
+      borderWidth:1,
+      borderColor:theme.colors.blackV3,
     },
     timeArrayBtnText:{
-      color:theme.colors.blue,
+      color:theme.colors.blackV3,
       fontWeight:'500',
       fontSize:theme.fontSize.size14,
     },
     genderArrayBtn:{
-      backgroundColor:theme.colors.yellow2,
-      borderWidth:0,
+      backgroundColor:theme.colors.white,
+      borderWidth:1,
+      borderColor:theme.colors.blackV3,
     },
     genderArrayBtnText:{
-      color:theme.colors.GaldaeDark,
+      color:theme.colors.blackV3,
       fontWeight:'500',
       fontSize:theme.fontSize.size14,
     },
