@@ -2,16 +2,16 @@
  * 내 갈대 조회 타입 (홈화면)
  */
 export interface MyCreatedPost {
-    postId:string;
-    departure: string; // 출발지
-    arrival: string; // 도착지
-    createdAt: string; // 생성 시간 (ISO 8601 형식)
+  postId: string;
+  departure: string; // 출발지
+  arrival: string; // 도착지
+  createdAt: string; // 생성 시간 (ISO 8601 형식)
 }
 /**
  * 내 갈대 기록 조회 타입
  */
 export interface MyPostHistory {
-  postId:string;
+  postId: string;
   departure: {
     majorPlace: string;
     subPlace: string;
@@ -47,52 +47,67 @@ export interface GaldaeItemType {
   createdAt: string; // 생성 시간 (ISO 8601 형식)
   userNickName: string | null;
   isCompleted: boolean;
-  isSameGender:boolean;
-  isWriter:boolean;
+  isSameGender: boolean;
+  isWriter: boolean;
 }
 /**
  * 실시간 갈대 API 조회 타입
  */
 export interface GaldaeApiResponse {
-    content: GaldaeItemType[]; // 갈대 아이템 리스트
-    pageable: {
-      pageNumber: number;
-      pageSize: number;
-      sort: {
-        empty: boolean;
-        sorted: boolean;
-        unsorted: boolean;
-      };
-      offset: number;
-      unpaged: boolean;
-      paged: boolean;
-    };
-    first: boolean;
-    last: boolean;
-    size: number;
-    number: number;
+  content: GaldaeItemType[]; // 갈대 아이템 리스트
+  pageable: {
+    pageNumber: number;
+    pageSize: number;
     sort: {
       empty: boolean;
       sorted: boolean;
       unsorted: boolean;
     };
-    numberOfElements: number;
+    offset: number;
+    unpaged: boolean;
+    paged: boolean;
+  };
+  first: boolean;
+  last: boolean;
+  size: number;
+  number: number;
+  sort: {
     empty: boolean;
-  }
+    sorted: boolean;
+    unsorted: boolean;
+  };
+  numberOfElements: number;
+  empty: boolean;
+}
 
-
+/**
+ * 실시간 OTT 타입
+ */
+export interface OTTItemType {
+  postId: string;
+  postService: string;
+  postType: string;
+  totalPersonCount: number;
+  personCount: number;
+  price: number;
+  createdAt: string; // 생성 시간 (ISO 8601 형식)
+  userNickName: string | null;
+  isCompleted: boolean;
+  isParticipated: boolean;
+  isWriter: boolean;
+}
 /**
  * 사용자 정보 조회 타입
  */
 export interface UserInfo {
-    nickname: string;
-    university: string;
-    image: string | null;
-    bankType: string;
-    depositor: string;
-    accountNumber:string;
-    isAuthenticated:boolean;
-  }
+  nickname: string;
+  university: string;
+  image: string | null;
+  bankType: string;
+  depositor: string;
+  accountNumber: string;
+  isAuthenticated: boolean;
+}
 /**
  * 사용자 프로필 이미지 변경 api 타입
  */

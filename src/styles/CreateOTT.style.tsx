@@ -8,10 +8,16 @@ import { theme } from '../styles/theme';
 const screenWidth = Dimensions.get('window').width;
 
 export default StyleSheet.create({
+    scrollViewContent:{
+        flexGrow: 1,
+        height: '100%',
+        justifyContent: 'space-between',
+    },
     container: {
         flex: 1,
+        height: '100%',
+        position: 'relative',
         justifyContent: 'center',
-        backgroundColor: theme.colors.white,
         paddingLeft: 24,
         paddingTop: 30,
         paddingRight: 24,
@@ -19,6 +25,9 @@ export default StyleSheet.create({
     },
     header: {
         backgroundColor: theme.colors.white,
+    },
+    generateButtonWrapper:{
+       
     },
     generateButton: {
         width: screenWidth - 50,
@@ -198,9 +207,9 @@ export default StyleSheet.create({
     },
     numberText: {
         fontSize: theme.fontSize.size20,
-        fontWeight: '700',
         color: theme.colors.blackV0,
         marginHorizontal: 10,
+        fontWeight: '700',
     },
     oftenBox: {
         width: screenWidth - 50,
@@ -222,5 +231,78 @@ export default StyleSheet.create({
     checkText: {
         fontSize: theme.fontSize.size16,
         color: theme.colors.grayV1,
+    },
+    // 은행 선택 드롭다운 스타일
+    bankPickerContainer: {
+        marginBottom: 10,
+        borderWidth: 1,
+        borderColor: theme.colors.grayV2,
+        borderRadius: theme.borderRadius.size12,
+        backgroundColor: theme.colors.white,
+    },
+    bankSVGText: {
+        flexDirection: 'row',
+        gap: 8,
+    },
+    bankPickerButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingHorizontal: 20,
+        height: 42,
+    },
+    bankPickerText: {
+        fontSize: theme.fontSize.size14,
+        color: theme.colors.blackV0,
+        fontWeight: '500',
+    },
+    bankPickerIcon: {
+        // 아이콘에 여백을 주고 싶다면 추가
+        // marginLeft: 8,
+        width: 20,
+        height: 20,
+    },
+    bankDropdown: {
+        //height: 322,
+    },
+    bankDropdownItem: {
+        paddingVertical: 14,
+        paddingHorizontal: 21,
+        flexDirection: 'row',
+        gap: 8,
+        alignItems: 'center',
+        borderTopWidth: 1,
+        borderColor: theme.colors.grayV2,
+        borderRadius: theme.borderRadius.size12,
+        backgroundColor: theme.colors.white,
+
+    },
+    bankDropdownText: {
+        fontSize: theme.fontSize.size14,
+        color: theme.colors.blackV0,
+    },
+    priceWrapper:{
+        width: screenWidth - 50,
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 15,
+        marginBottom: 30,
+    },
+    priceInput:{
+        flex: 1,
+        height: 46,
+        borderWidth: 1,
+        borderColor: theme.colors.grayV2,
+        borderRadius: theme.borderRadius.size12,
+        backgroundColor: theme.colors.white,
+        paddingHorizontal: 20,
+        fontSize: theme.fontSize.size18,
+        color: theme.colors.blackV0,
+        fontWeight: '700',
+    },
+    priceText:{
+        fontSize: theme.fontSize.size18,
+        color: theme.colors.blackV0,
+        fontWeight: '700',
     },
 });

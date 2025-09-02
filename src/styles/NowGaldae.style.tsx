@@ -58,7 +58,7 @@ export default StyleSheet.create({
     },
     searchText:{
       marginLeft:20,
-      fontSize:theme.fontSize.size14,
+      fontSize:theme.fontSize.size16,
       fontWeight:'500',
       color:theme.colors.grayV0,
     },

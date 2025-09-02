@@ -176,13 +176,13 @@ export default StyleSheet.create({
     alignContent: 'flex-end',
   },
   typePossible: {
-    backgroundColor: theme.colors.yellow2,
+    backgroundColor: theme.colors.blue2,
     borderWidth: 0,
     paddingHorizontal: 10,
     paddingVertical: 4,
   },
   typePossibleText: {
-    color: theme.colors.Galdae,
+    color: theme.colors.blue,
     fontSize: theme.fontSize.size12,
     fontWeight: '700',
   },

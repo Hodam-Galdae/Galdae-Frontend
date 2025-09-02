@@ -1,13 +1,13 @@
 import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
-import BasicText from '../components/BasicText';
-import SVG from '../components/SVG';
-import TextTag from '../components/tag/TextTag';
+import BasicText from '../../../components/BasicText';
+import SVG from '../../../components/SVG';
+import TextTag from '../../../components/tag/TextTag';
 import moment from 'moment';
-import { theme } from '../styles/theme';
-import styles from '../styles/GaldaeItem.style';
+import { theme } from '../../../styles/theme';
+import styles from '../../../styles/GaldaeItem.style';
 // Type
-import { GaldaeItemType } from '../types/getTypes';
+import { GaldaeItemType } from '../../../types/getTypes';
 
 interface GaldaeItemProps {
   item: GaldaeItemType;
@@ -15,7 +15,7 @@ interface GaldaeItemProps {
   onLongPress?: () => void;
 }
 
-const GaldaeItem: React.FC<GaldaeItemProps> = ({ item, onPress, onLongPress }) => {
+const TaxiItem: React.FC<GaldaeItemProps> = ({ item, onPress, onLongPress }) => {
   const formatDepartureTime = (departureTime: string): string => {
     return moment.utc(departureTime).format('YYYY년 MM월 DD일 (ddd) HH : mm');
   };
@@ -117,4 +117,4 @@ const GaldaeItem: React.FC<GaldaeItemProps> = ({ item, onPress, onLongPress }) =
   );
 };
 
-export default GaldaeItem;
+export default TaxiItem;

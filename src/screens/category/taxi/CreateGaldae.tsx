@@ -5,32 +5,32 @@ import React, { useState, useRef } from 'react';
 import moment from 'moment-timezone/builds/moment-timezone-with-data';
 import { TouchableOpacity, View, ScrollView, Alert, TextInput } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import styles from '../styles/CreateGaldae.style';
-import BasicText from '../components/BasicText';
-import PositionBox from '../components/PostionBox';
-import SVGButton from '../components/button/SVGButton';
-import { theme } from '../styles/theme';
-import BasicButton from '../components/button/BasicButton';
-import Header from '../components/Header';
-import SelectTextButton from '../components/button/SelectTextButton';
-import FastGaldaeStartPopup, { FastGaldaeStartPopupRef } from '../components/popup/FastGaldaeStartPopup';
-import FastGaldaeEndPopup, { FastGaldaeEndPopupRef } from '../components/popup/FastGaldaeEndPopup';
-import FastGaldaeTimePopup, { FastGaldaeTimePopupRef } from '../components/popup/FastGaldaeTimePopup';
+import styles from '../../../styles/CreateGaldae.style';
+import BasicText from '../../../components/BasicText';
+import PositionBox from '../../../components/PostionBox';
+import SVGButton from '../../../components/button/SVGButton';
+import { theme } from '../../../styles/theme';
+import BasicButton from '../../../components/button/BasicButton';
+import Header from '../../../components/Header';
+import SelectTextButton from '../../../components/button/SelectTextButton';
+import FastGaldaeStartPopup, { FastGaldaeStartPopupRef } from '../../../components/popup/FastGaldaeStartPopup';
+import FastGaldaeEndPopup, { FastGaldaeEndPopupRef } from '../../../components/popup/FastGaldaeEndPopup';
+import FastGaldaeTimePopup, { FastGaldaeTimePopupRef } from '../../../components/popup/FastGaldaeTimePopup';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useAppDispatch } from '../modules/redux/store';
-import { fetchMyGaldaeHistory } from '../modules/redux/slice/myGaldaeSlice';
-import { fetchHomeGaldaePosts } from '../modules/redux/slice/homeGaldaeSlice';
-import { fetchMyCreatedGaldae } from '../modules/redux/slice/myCreatedGaldaeSlice';
-import { fetchGaldaePosts } from '../modules/redux/slice/galdaeSlice';
-import { fetchFrequentRoutes } from '../modules/redux/slice/frequentRouteSlice';
+import { useAppDispatch } from '../../../modules/redux/store';
+import { fetchMyGaldaeHistory } from '../../../modules/redux/slice/myGaldaeSlice';
+import { fetchHomeGaldaePosts } from '../../../modules/redux/slice/homeGaldaeSlice';
+import { fetchMyCreatedGaldae } from '../../../modules/redux/slice/myCreatedGaldaeSlice';
+import { fetchGaldaePosts } from '../../../modules/redux/slice/galdaeSlice';
+import { fetchFrequentRoutes } from '../../../modules/redux/slice/frequentRouteSlice';
 // API
-import { createPost } from '../api/postApi'; // ✅ 갈대 생성 API 추가
+import { createPost } from '../../../api/postApi'; // ✅ 갈대 생성 API 추가
 //type
-import { GetPostsRequest } from '../types/postTypes';
+import { GetPostsRequest } from '../../../types/postTypes';
 // ✅ 갈대 생성 요청 타입
-import { CreatePostRequest } from '../types/postTypes';
+import { CreatePostRequest } from '../../../types/postTypes';
 import { Portal } from '@gorhom/portal';
-import ParticipateModal from '../components/popup/ParticipateModal';
+import ParticipateModal from '../../../components/popup/ParticipateModal';
 
 // 내비게이션 스택 타입 정의
 type RootStackParamList = {

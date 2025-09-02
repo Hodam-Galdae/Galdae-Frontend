@@ -1,0 +1,186 @@
+
+import { StyleSheet, Platform } from 'react-native';
+import { theme } from './theme';
+
+
+export default StyleSheet.create({
+    main: {
+        flex: 1,
+    },
+    headerText: {
+        fontSize: theme.fontSize.size22,
+        fontWeight: 'bold',
+        lineHeight: Platform.select({
+            android: 40,
+        }),
+        color: theme.colors.white,
+        letterSpacing: -0.44,
+    },
+    btns: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginTop: (18),
+        marginBottom: 8,
+    },
+    filters: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: (4),
+
+    },
+    arrayBtn: {
+        alignItems: 'center',
+    },
+    galdaeList: {
+        paddingTop: 30,
+        paddingHorizontal: 15,
+        flex: 1,
+    },
+    search: {
+        width: '100%',
+        justifyContent: 'space-between',
+    },
+    searchContent: {
+        marginLeft: 20,
+        flexDirection: 'row',
+        gap: 4,
+        alignItems: 'center',
+    },
+    searchBtn: {
+        height: 42,
+        borderWidth: 1,
+        borderColor: theme.colors.grayV1,
+        borderRadius: 999,
+    },
+    searchPos: {
+        fontWeight: '700',
+    },
+    searchText: {
+        marginLeft: 20,
+        fontSize: theme.fontSize.size16,
+        fontWeight: '500',
+        color: theme.colors.grayV0,
+    },
+    timeArrayBtn: {
+        backgroundColor: theme.colors.white,
+        borderWidth: 1,
+        borderColor: theme.colors.blackV3,
+    },
+    timeArrayBtnText: {
+        color: theme.colors.blackV3,
+        fontWeight: '500',
+        fontSize: theme.fontSize.size14,
+    },
+    genderArrayBtn: {
+        backgroundColor: theme.colors.white,
+        borderWidth: 1,
+        borderColor: theme.colors.blackV3,
+    },
+    genderArrayBtnText: {
+        color: theme.colors.blackV3,
+        fontWeight: '500',
+        fontSize: theme.fontSize.size14,
+    },
+    arrayBtnText: {
+        color: theme.colors.blackV2,
+        fontSize: theme.fontSize.size14,
+        fontWeight: '500',
+    },
+    arrayPanel: {
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+        justifyContent: 'center',
+        gap: 12,
+        width: 100,
+        height: 84,
+        borderWidth: 1,
+        borderColor: theme.colors.grayV0,
+        borderRadius: theme.borderRadius.size12,
+        backgroundColor: theme.colors.white,
+        paddingHorizontal: 10,
+        paddingVertical: 15,
+        position: 'absolute',
+        top: 30,
+        right: -4,
+        zIndex: 1000,
+    },
+    arrayPanelClickText: {
+        fontSize: theme.fontSize.size16,
+        fontWeight: '500',
+        color: theme.colors.blackV0,
+        letterSpacing: -0.28,
+    },
+    arrayPanelText: {
+        fontSize: theme.fontSize.size16,
+        fontWeight: '500',
+        color: theme.colors.grayV0,
+    },
+    searchSVG: {
+        marginRight: 20,
+    },
+    scroll: {
+        // height:'75%',
+        flexGrow: 1,       // 스크롤 가능한 영역도 남은 공간 전부 쓰기
+    },
+    nowGaldaeList: {
+        marginTop: 14,
+        position: 'relative',
+        //height:'100%',
+    },
+    noData: {
+        height: '75%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 12,
+    },
+    borderedListBox: {
+        width: '100%',
+        height: 195,
+        borderColor: theme.colors.grayV0,
+        borderRadius: theme.borderRadius.size10,
+        borderWidth: 1,
+        paddingStart: 24,
+        paddingTop: 14,
+        marginBottom: 12,
+    },
+    galdaeOwner: {
+        fontSize: theme.fontSize.size12,
+        fontWeight: '700',
+    },
+    fromContainer: {
+        flexDirection: 'row',
+        marginTop: (8),
+        gap: (8),
+    },
+    fromMainLocation: {
+        fontSize: theme.fontSize.size16,
+        fontWeight: '700',
+    },
+    fromSubLocation: {
+        fontSize: theme.fontSize.size16,
+        fontWeight: '500',
+    },
+    toContainer: {
+        flexDirection: 'row',
+        gap: (8),
+        marginTop: (7),
+        alignItems: 'center',
+    },
+    fromToLine: {
+        width: (20),
+        alignItems: 'center',
+    },
+    tags: {
+        flexDirection: 'row',
+        gap: (4),
+        marginTop: (16),
+        alignItems: 'center',
+    },
+    timeContainer: {
+        flexDirection: 'row',
+        gap: (8),
+        marginTop: (6),
+        alignItems: 'center',
+    },
+});

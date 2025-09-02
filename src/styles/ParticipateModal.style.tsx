@@ -71,5 +71,9 @@ export default StyleSheet.create({
     textPopUpText: {
         //marginBottom: 20,
     },
-
+    onlySubTitleText: {
+        fontSize: theme.fontSize.size14,
+        color: theme.colors.blackV0,
+        marginBottom: 30,
+    },
 });

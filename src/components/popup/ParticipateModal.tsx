@@ -12,6 +12,7 @@ export interface ParticipateModalProps {
     onCancel?: () => void;
     onConfirm: () => void;
     title?: string;
+    subTitle?: string;
     fromMajor?: string;
     fromSub?: string;
     toMajor?: string;
@@ -24,10 +25,11 @@ const ParticipateModal: React.FC<ParticipateModalProps> = ({
     onCancel,
     onConfirm,
     title = '참여완료',
-    fromMajor = '학교',
-    fromSub = '학교',
-    toMajor = '학교',
-    toSub = '학교',
+    subTitle = '넷플릭스',
+    fromMajor,
+    fromSub,
+    toMajor,
+    toSub,
 
     containerStyle,
 }) => {
@@ -47,45 +49,59 @@ const ParticipateModal: React.FC<ParticipateModalProps> = ({
                             fontSize={theme.fontSize.size18}
                             color={theme.colors.blackV0}
                         />
-                        <View style={styles.locationContainer}>
-                            <View style={styles.fromContainer}>
+                        {
+                            toMajor && toSub && (
+                                <View style={styles.locationContainer}>
+                                    <View style={styles.fromContainer}>
+                                        <BasicText
+                                            text={fromMajor}
+                                            fontSize={theme.fontSize.size16}
+                                            fontWeight={'500'}
+                                            color={theme.colors.blackV0}
+                                            style={styles.textPopUpText}
+                                        />
+                                        <BasicText
+                                            text={fromSub}
+                                            fontSize={theme.fontSize.size16}
+                                            fontWeight={'500'}
+                                            color={theme.colors.blackV0}
+                                            style={styles.textPopUpText}
+                                            numberOfLines={1}
+                                            ellipsizeMode="tail"
+                                        />
+                                    </View>
+                                    <SVG name="arrow_forward" style={styles.arrowForward} />
+                                    <View style={styles.fromContainer}>
+                                        <BasicText
+                                            text={toMajor}
+                                            fontSize={theme.fontSize.size16}
+                                            fontWeight={'500'}
+                                            color={theme.colors.blackV0}
+                                            style={styles.textPopUpText}
+                                        />
+                                        <BasicText
+                                            text={toSub}
+                                            fontSize={theme.fontSize.size16}
+                                            fontWeight={'500'}
+                                            color={theme.colors.blackV0}
+                                            style={styles.textPopUpText}
+                                            numberOfLines={1}
+                                            ellipsizeMode="tail"
+                                        />
+                                    </View>
+                                </View>
+                            )
+                        }
+                        {
+                            subTitle && (
                                 <BasicText
-                                    text={fromMajor}
-                                    fontSize={theme.fontSize.size16}
-                                    fontWeight={'500'}
+                                    style={styles.onlySubTitleText}
+                                    text={subTitle}
+                                    fontSize={theme.fontSize.size14}
                                     color={theme.colors.blackV0}
-                                    style={styles.textPopUpText}
                                 />
-                                <BasicText
-                                    text={fromSub}
-                                    fontSize={theme.fontSize.size16}
-                                    fontWeight={'500'}
-                                    color={theme.colors.blackV0}
-                                    style={styles.textPopUpText}
-                                    numberOfLines={1}
-                                    ellipsizeMode="tail"
-                                />
-                            </View>
-                            <SVG name="arrow_forward" style={styles.arrowForward}/>
-                            <View style={styles.fromContainer}>
-                                <BasicText
-                                    text={toMajor}
-                                    fontSize={theme.fontSize.size16}
-                                    fontWeight={'500'}
-                                    color={theme.colors.blackV0}
-                                    style={styles.textPopUpText}
-                                />
-                                <BasicText
-                                    text={toSub}
-                                    fontSize={theme.fontSize.size16}
-                                    fontWeight={'500'}
-                                    color={theme.colors.blackV0}
-                                    style={styles.textPopUpText}
-                                    numberOfLines={1}
-                                    ellipsizeMode="tail"
-                                />
-                            </View>
-                        </View>
+                            )
+                        }
                         <BasicButton
                             text="채팅방으로 이동"
                             textStyle={styles.cancelBtnText}

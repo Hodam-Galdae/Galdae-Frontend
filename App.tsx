@@ -8,9 +8,9 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import MainTab from './src/components/MainTab';
 import Login from './src/screens/Login';
 import SignUp from './src/screens/SignUp';
-import CreateGaldae from './src/screens/CreateGaldae';
+import CreateGaldae from './src/screens/category/taxi/CreateGaldae';
 import NowGaldae from './src/screens/NowGaldae';
-import NowGaldaeDetail from './src/screens/NowGaldaeDetail';
+import NowGaldaeDetail from './src/screens/category/taxi/NowGaldaeDetail';
 import Onboarding from './src/screens/Onboarding';
 import ChatRoom from './src/screens/ChatRoom';
 import SetDestination from './src/screens/SetDestination';
@@ -43,6 +43,9 @@ import {requestUserPermission} from './src/utils/notification';
 import notifee from '@notifee/react-native';
 import {PortalProvider} from '@gorhom/portal';
 import TaxiNDivide from './src/screens/category/taxi/TaxiNDivide';
+import OTTNDivide from './src/screens/category/ott/OTTNDivide';
+import OTTDetail from './src/screens/category/ott/OTTDetail';
+import CreateOTT from './src/screens/category/ott/CreateOTT';
 function App() {
   useEffect(() => {
     if (Platform.OS === 'android') {
@@ -131,6 +134,7 @@ function App() {
                   <Stack.Screen name="Onboarding" component={Onboarding} />
                   <Stack.Screen name="Login" component={Login} />
                   <Stack.Screen name="CreateGaldae" component={CreateGaldae} />
+                  <Stack.Screen name="CreateOTT" component={CreateOTT} />
                   <Stack.Screen name="NowGaldae" component={NowGaldae} />
                   <Stack.Screen
                     name="NowGaldaeDetail"
@@ -178,6 +182,8 @@ function App() {
                   <Stack.Screen name="WithDraw" component={WithDraw} />
                   <Stack.Screen name="Notification" component={Notification} />
                   <Stack.Screen name="TaxiNDivide" component={TaxiNDivide} />
+                  <Stack.Screen name="OTTNDivide" component={OTTNDivide} />
+                  <Stack.Screen name="OTTDetail" component={OTTDetail} />
                 </Stack.Navigator>
               </NavigationContainer>
             </PortalProvider>

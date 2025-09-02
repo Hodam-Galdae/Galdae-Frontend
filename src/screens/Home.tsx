@@ -21,7 +21,7 @@ import SVG from '../components/SVG';
 // import TextTag from '../components/tag/TextTag';
 import DeletePopup from '../components/popup/DeletePopup';
 //import FloatingButton from '../components/button/FloatingButton';
-import GaldaeItem from '../components/GaldaeItem';
+import TaxiItem from './category/taxi/TexiItem';
 import ServiceButton from '../components/ServiceButton';
 // import CreateGaldaePopup from '../components/popup/CreateGaldaePopup';
 import {useNavigation} from '@react-navigation/native';
@@ -54,6 +54,7 @@ type RootStackParamList = {
   NowGaldae: undefined;
   NowGaldaeDetail: {postId: string};
   TaxiNDivide: undefined;
+  OTTNDivide: undefined;
 };
 
 type LoginScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -462,6 +463,7 @@ const Home: React.FC<HomeProps> = () => {
               iconName="Ott"
               text="구독료 N빵"
               customStyle={{paddingLeft: 6}}
+              onPress={() => navigation.navigate('OTTNDivide')}
             />
             <ServiceButton
               iconName="Delivery"
@@ -487,7 +489,7 @@ const Home: React.FC<HomeProps> = () => {
               </View>
             ) : (
               posts.map(item => (
-                <GaldaeItem
+                <TaxiItem
                   key={item.postId}
                   item={item}
                   onPress={

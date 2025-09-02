@@ -8,7 +8,7 @@ import SVGButton from '../components/button/SVGButton';
 import BasicText from '../components/BasicText';
 
 import SVG from '../components/SVG';
-import GaldaeItem from '../components/GaldaeItem';
+import TaxiItem from './category/taxi/TexiItem';
 import DeletePopup from '../components/popup/DeletePopup'; // DeletePopup import
 import NowGaldaeSameGender from '../components/popup/NowGaldaeSameGender';
 import { theme } from '../styles/theme';
@@ -390,7 +390,7 @@ const NowGaldae: React.FC<HomeProps> = () => {
             //removeClippedSubviews={true} // 렌더링 최적화
             onEndReachedThreshold={0.5} // 화면의 50% 정도 남았을 때 다음 페이지를 불러옴
             renderItem={({ item }) => (
-              <GaldaeItem
+              <TaxiItem
                 item={item}
                 onPress={!item.isSameGender && item.passengerGenderType === 'SAME' ? () => setSameGenderPopupVisible(true) : () => navigation.navigate('NowGaldaeDetail', { postId: item.postId })}
                 onLongPress={() => handleLongPress(item)}
