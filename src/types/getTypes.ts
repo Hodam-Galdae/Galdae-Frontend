@@ -86,7 +86,7 @@ export interface GaldaeApiResponse {
 export interface OTTItemType {
   postId: string;
   postService: string;
-  postType: string;
+  postType: 'OTT' | 'TV' | 'MUSIC' | 'PRODUCTIVITY' | 'EDUCATION' | 'MEMBERSHIP' | 'ETC';
   totalPersonCount: number;
   personCount: number;
   price: number;
@@ -94,6 +94,30 @@ export interface OTTItemType {
   userNickName: string | null;
   isCompleted: boolean;
   isParticipated: boolean;
+  isWriter: boolean;
+}
+/**
+ * 실시간 배달 타입
+ */
+export interface DeliveryItemType {
+  postId: string;
+  departure: {
+    majorPlace: string;
+    subPlace: string;
+  };
+  arrival: {
+    majorPlace: string;
+    subPlace: string;
+  };
+  departureTime: string; // ISO 8601 형식
+  passengerGenderType: 'SAME' | 'DONT_CARE';
+  arrangeTime: 'POSSIBLE' | 'IMPOSSIBLE';
+  totalPassengerCount: number;
+  passengerCount: number;
+  createdAt: string; // 생성 시간 (ISO 8601 형식)
+  userNickName: string | null;
+  isCompleted: boolean;
+  isSameGender: boolean;
   isWriter: boolean;
 }
 /**

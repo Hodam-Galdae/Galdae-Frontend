@@ -148,7 +148,7 @@ export default StyleSheet.create({
     borderWidth: 0,
   },
   timeNotPossible: {
-    backgroundColor: theme.colors.grayV2,
+    backgroundColor: theme.colors.yellow2,
     borderColor: theme.colors.grayV2,
     borderWidth: 0,
   },
@@ -163,7 +163,7 @@ export default StyleSheet.create({
     fontWeight: '500',
   },
   timeNotPossibleText: {
-    color: theme.colors.white,
+    color: theme.colors.red,
     fontSize: theme.fontSize.size12,
     fontWeight: '500',
   },

@@ -21,6 +21,7 @@ import moment from 'moment';
 import { joinChatroom, ChatroomResponse } from '../../../api/chatApi';
 import ParticipateModal from '../../../components/popup/ParticipateModal';
 import { OTTItemType } from '../../../types/getTypes';
+import TextTag from '../../../components/tag/TextTag';
 
 type RootStackParamListd = {
     CreateGaldae: undefined;
@@ -47,7 +48,7 @@ const OTTDetail: React.FC = () => {
     // const { postDetail, loading, error } = useSelector(
     //     (state: RootState) => state.postDetailSlice,
     // );
-    const postDetail : OTTItemType = {
+    const postDetail: OTTItemType = {
         postId: '1',
         postService: '넷플릭스',
         postType: 'OTT',
@@ -64,7 +65,7 @@ const OTTDetail: React.FC = () => {
     const [isParticipating, setIsParticipating] = useState(false);
     // 컴포넌트 마운트 시 Redux를 통해 상세 정보를 불러옴
     useEffect(() => {
-       // dispatch(fetchPostDetail(postId));  // OTT 상세 정보 조회
+        // dispatch(fetchPostDetail(postId));  // OTT 상세 정보 조회
     }, [dispatch, postId]);
 
     const goBack = () => navigation.goBack();
@@ -152,7 +153,44 @@ const OTTDetail: React.FC = () => {
                             text={'인원'}
                             style={styles.menuText}
                         />
-
+                        <View style={styles.tags}>
+                            {postDetail.postType === 'OTT' ? (
+                                <TextTag text="OTT"
+                                    viewStyle={styles.timePossible}
+                                    textStyle={styles.timePossibleText}
+                                />
+                            ) : postDetail.postType === 'TV' ? (
+                                <TextTag text="방송"
+                                    viewStyle={styles.timeNotPossible}
+                                    textStyle={styles.timeNotPossibleText}
+                                />
+                            ) : postDetail.postType === 'MUSIC' ? (
+                                <TextTag text="음악"
+                                    viewStyle={styles.timePossible}
+                                    textStyle={styles.timeNotPossibleText}
+                                />
+                            ) : postDetail.postType === 'PRODUCTIVITY' ? (
+                                <TextTag text="생산성"
+                                    viewStyle={styles.timePossible}
+                                    textStyle={styles.timePossibleText}
+                                />
+                            ) : postDetail.postType === 'EDUCATION' ? (
+                                <TextTag text="교육"
+                                    viewStyle={styles.timePossible}
+                                    textStyle={styles.timePossibleText}
+                                />
+                            ) : postDetail.postType === 'MEMBERSHIP' ? (
+                                <TextTag text="멤버쉽"
+                                    viewStyle={styles.timePossible}
+                                    textStyle={styles.timePossibleText}
+                                />
+                            ) : (
+                                <TextTag text="기타"
+                                    viewStyle={styles.timePossible}
+                                    textStyle={styles.timePossibleText}
+                                />
+                            )}
+                        </View>
                     </View>
 
                     <View style={styles.menuContainer}>

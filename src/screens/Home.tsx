@@ -55,6 +55,7 @@ type RootStackParamList = {
   NowGaldaeDetail: {postId: string};
   TaxiNDivide: undefined;
   OTTNDivide: undefined;
+  DeliveryNDivide: undefined;
 };
 
 type LoginScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -468,6 +469,7 @@ const Home: React.FC<HomeProps> = () => {
             <ServiceButton
               iconName="Delivery"
               text="배달 N빵"
+              onPress={() => navigation.navigate('DeliveryNDivide')}
             />
           </View>
 

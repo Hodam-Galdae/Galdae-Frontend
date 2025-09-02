@@ -46,6 +46,9 @@ import TaxiNDivide from './src/screens/category/taxi/TaxiNDivide';
 import OTTNDivide from './src/screens/category/ott/OTTNDivide';
 import OTTDetail from './src/screens/category/ott/OTTDetail';
 import CreateOTT from './src/screens/category/ott/CreateOTT';
+import DeliveryNDivide from './src/screens/category/delivery/DeliveryNDivide';
+import DeliveryDetail from './src/screens/category/delivery/DeliveryDetail';
+import CreateDelivery from './src/screens/category/delivery/CreateDelivery';
 function App() {
   useEffect(() => {
     if (Platform.OS === 'android') {
@@ -184,6 +187,9 @@ function App() {
                   <Stack.Screen name="TaxiNDivide" component={TaxiNDivide} />
                   <Stack.Screen name="OTTNDivide" component={OTTNDivide} />
                   <Stack.Screen name="OTTDetail" component={OTTDetail} />
+                  <Stack.Screen name="DeliveryNDivide" component={DeliveryNDivide} />
+                  <Stack.Screen name="DeliveryDetail" component={DeliveryDetail} />
+                  <Stack.Screen name="CreateDelivery" component={CreateDelivery} />
                 </Stack.Navigator>
               </NavigationContainer>
             </PortalProvider>

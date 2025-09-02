@@ -22,6 +22,7 @@ import moment from 'moment';
 import { joinChatroom, ChatroomResponse } from '../../../api/chatApi';
 import { TouchableOpacity } from 'react-native';
 import ParticipateModal from '../../../components/popup/ParticipateModal';
+import TextTag from '../../../components/tag/TextTag';
 //import BigMapModal from '../components/popup/BigMapModal';
 
 type RootStackParamList = {
@@ -72,7 +73,7 @@ const NowGaldaeDetail: React.FC = () => {
 
   const handleParticipateGaldae = async () => {
     setIsParticipating(true);
-   // const tagetRoom = await joinChatroom(postId);
+    // const tagetRoom = await joinChatroom(postId);
     //navigation.replace('ChatRoom', { data: Object.freeze(tagetRoom) });
     // 참여 로직 처리
   };
@@ -124,7 +125,7 @@ const NowGaldaeDetail: React.FC = () => {
       if (data?.type === 'estimatedTime') {
         // 고유성 체크용 키(내용+시간) 구성
         const msgId = `${data.estimatedTime}-${data.distance}-${data.duration}-${data.timestamp ?? ''}`;
-        if (lastMessageIdRef.current === msgId) {return;} // 같은 메시지 무시
+        if (lastMessageIdRef.current === msgId) { return; } // 같은 메시지 무시
         lastMessageIdRef.current = msgId;
 
         setEta({
@@ -196,84 +197,118 @@ const NowGaldaeDetail: React.FC = () => {
           style={styles.galdaeOwner}
         />
         <View key={postDetail.departureTime} style={styles.borderedListBox}>
-          {/**postDetail.userInfo?.name || */}
-          <View style={styles.menuContainer}>
-            <BasicText
-              text={'빵장'}
-              style={styles.menuText}
-            />
-            <BasicText
-              text={'출발지'}
-              style={styles.menuText}
-            />
-            <BasicText
-              text={'도착지'}
-              style={styles.menuText}
-            />
-            <BasicText
-              text={'출발 시간'}
-              style={styles.menuText}
-            />
-            <BasicText
-              text={'인원'}
-              style={styles.menuText}
-            />
-            <BasicText
-              text={'소요시간'}
-              style={styles.menuText}
-            />
-
-          </View>
-
-          <View style={styles.menuContainer}>
-            <BasicText
-              text={`${postDetail.userInfo?.nickname}` || '작성자'}
-              style={styles.writeUserName}
-            />
-            <View style={styles.fromContainer}>
+          <View style={styles.borderedListBoxContainer}>
+            {/**postDetail.userInfo?.name || */}
+            <View style={styles.menuContainer}>
               <BasicText
-                text={postDetail.departure.majorPlace}
-                style={styles.writeUserName}
+                text={'빵장'}
+                style={styles.menuText}
               />
               <BasicText
-                text={postDetail.departure.subPlace}
-                style={styles.writeUserName}
+                text={'출발지'}
+                style={styles.menuText}
               />
+              <BasicText
+                text={'도착지'}
+                style={styles.menuText}
+              />
+              <BasicText
+                text={'출발 시간'}
+                style={styles.menuText}
+              />
+              <BasicText
+                text={'인원'}
+                style={styles.menuText}
+              />
+              <BasicText
+                text={'소요시간'}
+                style={styles.menuText}
+              />
+
             </View>
 
-            <View style={styles.fromContainer}>
+            <View style={styles.menuContainer}>
               <BasicText
-                text={postDetail.arrival.majorPlace}
+                text={`${postDetail.userInfo?.nickname}` || '작성자'}
                 style={styles.writeUserName}
               />
-              <BasicText
-                text={postDetail.arrival.subPlace}
-                style={styles.writeUserName}
-              />
-            </View>
-            <BasicText
-                  text={formatDepartureTime(postDetail.departureTime)}
+              <View style={styles.fromContainer}>
+                <BasicText
+                  text={postDetail.departure.majorPlace}
                   style={styles.writeUserName}
                 />
-            <BasicText
-              text={`${postDetail.passengerCount}/${postDetail.totalPassengerCount}`}
-              style={styles.writeUserName}
-            />
-            {/* <View style={styles.tags}>
-              {postDetail.passengerGenderType === 'SAME' ? (
-                <TextTag text="동성만" />
-              ) : postDetail.passengerGenderType === 'DONT_CARE' ? (
-                <TextTag text="성별무관" />
-              ) : (
-                <TextTag text="상관없음" />
-              )}
-            </View> */}
-            {eta && (
+                <BasicText
+                  text={postDetail.departure.subPlace}
+                  style={styles.writeUserName}
+                />
+              </View>
+
+              <View style={styles.fromContainer}>
+                <BasicText
+                  text={postDetail.arrival.majorPlace}
+                  style={styles.writeUserName}
+                />
+                <BasicText
+                  text={postDetail.arrival.subPlace}
+                  style={styles.writeUserName}
+                />
+              </View>
               <BasicText
-                text={`${eta.minutes}분 `}
+                text={formatDepartureTime(postDetail.departureTime)}
                 style={styles.writeUserName}
               />
-            )}
+              <BasicText
+                text={`${postDetail.passengerCount}/${postDetail.totalPassengerCount}`}
+                style={styles.writeUserName}
+              />
+
+              {eta && (
+                <BasicText
+                  text={`${eta.minutes}분 `}
+                  style={styles.writeUserName}
+                />
+              )}
+            </View>
+
+          </View>
+          <View style={styles.tagsContainer}>
+
+            <View style={styles.tags}>
+              {postDetail.arrangeTime === 'POSSIBLE' ? (
+                <TextTag text="시간협의가능"
+                viewStyle={styles.timePossible}
+                textStyle={styles.timePossibleText}
+                />
+              ) : postDetail.arrangeTime === 'IMPOSSIBLE' ? (
+                <TextTag text="시간협의불가"
+                viewStyle={styles.timeNotPossible}
+                textStyle={styles.timeNotPossibleText}
+                />
+              ) : (
+                <TextTag text="시간협의불가"
+                viewStyle={styles.timeNotPossible}
+                textStyle={styles.timeNotPossibleText}
+                />
+              )}
+            </View>
+            <View style={styles.tags}>
+              {postDetail.passengerGenderType === 'SAME' ? (
+                <TextTag text="동성만"
+                viewStyle={styles.timePossible}
+                textStyle={styles.timePossibleText}
+                />
+              ) : postDetail.passengerGenderType === 'DONT_CARE' ? (
+                <TextTag text="성별무관"
+                viewStyle={styles.timePossible}
+                textStyle={styles.timePossibleText}
+                />
+              ) : (
+                <TextTag text="상관없음"
+                viewStyle={styles.timePossible}
+                textStyle={styles.timePossibleText}
+                />
+              )}
+            </View>
           </View>
         </View>
 
@@ -282,67 +317,67 @@ const NowGaldaeDetail: React.FC = () => {
         <BasicText text="빵장의 한마디" style={styles.galdaeOwner} />
 
         <View style={styles.userInfoBox}>
-         <BasicText text={postDetail.userInfo?.nickname} style={styles.messageText} />
+          <BasicText text={postDetail.userInfo?.nickname} style={styles.messageText} />
         </View>
 
 
       </ScrollView>
       <View style={styles.participateContainer}>
-          {postDetail.isParticipated ? (
-            <BasicButton
-              text="이미 참여한 N빵"
-              buttonStyle={styles.participateBtn}
-              textStyle={styles.participateText}
-              loading={false}
-              disabled={true}
-              enabledColors={{
-                backgroundColor: theme.colors.grayV2,
-                textColor: theme.colors.grayV0,
-              }}
-              disabledColors={{
-                backgroundColor: theme.colors.grayV2,
-                textColor: theme.colors.grayV0,
-              }}
-            />
-          ) : isFull ? (
-            <BasicButton
-              text="참여불가"
-              buttonStyle={styles.participateBtn}
-              textStyle={styles.participateText}
-              loading={false}
-              disabled={true}
-              disabledColors={{
-                backgroundColor: theme.colors.grayV3,
-                textColor: theme.colors.blackV0,
-              }}
-            />
-          ) : (
-            <BasicButton
-              text="참여하기"
-              buttonStyle={styles.participateBtn}
-              textStyle={styles.participateText}
-              loading={false}
-              onPress={handleParticipateGaldae}
-            />
-          )}
-        </View>
+        {postDetail.isParticipated ? (
+          <BasicButton
+            text="이미 참여한 N빵"
+            buttonStyle={styles.participateBtn}
+            textStyle={styles.participateText}
+            loading={false}
+            disabled={true}
+            enabledColors={{
+              backgroundColor: theme.colors.grayV2,
+              textColor: theme.colors.grayV0,
+            }}
+            disabledColors={{
+              backgroundColor: theme.colors.grayV2,
+              textColor: theme.colors.grayV0,
+            }}
+          />
+        ) : isFull ? (
+          <BasicButton
+            text="참여불가"
+            buttonStyle={styles.participateBtn}
+            textStyle={styles.participateText}
+            loading={false}
+            disabled={true}
+            disabledColors={{
+              backgroundColor: theme.colors.grayV3,
+              textColor: theme.colors.blackV0,
+            }}
+          />
+        ) : (
+          <BasicButton
+            text="참여하기"
+            buttonStyle={styles.participateBtn}
+            textStyle={styles.participateText}
+            loading={false}
+            onPress={handleParticipateGaldae}
+          />
+        )}
+      </View>
       {/* { mapBig && (
           <BigMapModal
             ref={mapModalRef}
             mapUrl={mapUrl}
           />
         )} */}
-        {isParticipating && (
-          <ParticipateModal
-            visible={isParticipating}
-            onCancel={() => setIsParticipating(false)}
-            onConfirm={handleNavigateChatRoom}
-            fromMajor={postDetail.departure.majorPlace}
-            fromSub={postDetail.departure.subPlace}
-            toMajor={postDetail.arrival.majorPlace}
-            toSub={postDetail.arrival.subPlace}
-          />
-        )}
+      {isParticipating && (
+        <ParticipateModal
+          visible={isParticipating}
+          onCancel={() => setIsParticipating(false)}
+          onConfirm={handleNavigateChatRoom}
+          fromMajor={postDetail.departure.majorPlace}
+          fromSub={postDetail.departure.subPlace}
+          toMajor={postDetail.arrival.majorPlace}
+          toSub={postDetail.arrival.subPlace}
+        />
+      )}
     </View>
   );
 };

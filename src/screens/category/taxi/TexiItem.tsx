@@ -68,8 +68,8 @@ const TaxiItem: React.FC<GaldaeItemProps> = ({ item, onPress, onLongPress }) => 
 
             <TextTag
               text={item.arrangeTime === 'POSSIBLE' ? '시간협의가능' : '시간협의불가'}
-              viewStyle={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.timePossible : styles.timePossible}
-              textStyle={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.timePossibleText : styles.timePossibleText}
+              viewStyle={item.arrangeTime === 'POSSIBLE' ? styles.timePossible : styles.timeNotPossible}
+              textStyle={item.arrangeTime === 'POSSIBLE' ? styles.timePossibleText : styles.timeNotPossibleText}
 
             />
 

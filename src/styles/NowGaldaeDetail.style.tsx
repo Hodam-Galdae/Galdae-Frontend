@@ -7,6 +7,7 @@ export default StyleSheet.create({
     main:{
       flex: 1,
       position:'relative',
+      paddingBottom:100,
 
     },
     header:{
@@ -39,6 +40,8 @@ export default StyleSheet.create({
         borderColor:theme.colors.grayV2,
         borderRadius:theme.borderRadius.size12,
         borderWidth:1,
+      },
+      borderedListBoxContainer:{
         flexDirection:'row',
         gap:(30),
       },
@@ -59,7 +62,7 @@ export default StyleSheet.create({
       galdaeOwner:{
         fontSize:theme.fontSize.size16,
         color:theme.colors.blackV0,
-        fontWeight:'500',
+        fontWeight:'700',
         marginLeft:10,
         marginBottom:5,
         marginTop:30,
@@ -91,11 +94,47 @@ export default StyleSheet.create({
         width:(20),
         alignItems:'center',
       },
+      tagsContainer:{
+        flexDirection:'row',
+        gap:(4),
+        marginTop:(5),
+        alignItems:'center',
+      },
       tags:{
         flexDirection:'row',
         gap:(4),
         marginTop:(16),
         alignItems:'center',
+      },
+      timePossible:{
+        backgroundColor:theme.colors.blue2,
+        borderWidth:0,
+        paddingHorizontal:6,
+        paddingVertical:4,
+      },
+      timeNotPossible:{
+        backgroundColor:theme.colors.yellow2,
+        borderWidth:0,
+      },
+      timePossibleText:{
+        color:theme.colors.blue,
+        fontSize:theme.fontSize.size12,
+        fontWeight:'500',
+      },
+      timeNotPossibleText:{
+        color:theme.colors.red,
+        fontSize:theme.fontSize.size12,
+        fontWeight:'500',
+      },
+      timePossibleTextCom:{
+        color:theme.colors.white,
+        fontSize:theme.fontSize.size12,
+        fontWeight:'500',
+      },
+      timeNotPossibleTextCom:{
+        color:theme.colors.white,
+        fontSize:theme.fontSize.size12,
+        fontWeight:'500',
       },
       timeContainer:{
         flexDirection:'row',
@@ -172,6 +211,7 @@ export default StyleSheet.create({
         lineHeight:(25),
         justifyContent:'center',
         alignItems:'center',
+        marginBottom:10,
       },
       participateContainer:{
         position:'absolute',
