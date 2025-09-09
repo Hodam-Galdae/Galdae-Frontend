@@ -12,7 +12,7 @@ import SVG from '../components/SVG';
 import {login} from '@react-native-seoul/kakao-login';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {
-  loginWithGoogle,
+  // loginWithGoogle,
   loginWithKakao,
   loginWithNaver,
   AuthResponse,
@@ -51,6 +51,7 @@ const Login: React.FC = () => {
       setIsLoading(true);
       const token = (await login()).accessToken;
       const response = await loginWithKakao(token);
+      console.log('🔵 [카카오 로그인] 성공:', response);
       await EncryptedStorage.setItem('accessToken', response.accessToken);
       await EncryptedStorage.setItem(
         'refreshToken',
@@ -58,7 +59,7 @@ const Login: React.FC = () => {
       );
       handleGoNextPage(response);
     } catch (err) {
-     // console.error('login err : ', err);
+      console.error('login err : ', err);
     } finally {
       setIsLoading(false);
     }
@@ -67,8 +68,10 @@ const Login: React.FC = () => {
   const signInWithNaver = async (): Promise<void> => {
     try {
       setIsLoading(true);
-      const { failureResponse, successResponse } = await NaverLogin.login();
+      const { successResponse } = await NaverLogin.login();
+      console.log('🔵 [네이버 로그인] 성공:', successResponse);
       const response = await loginWithNaver(successResponse?.accessToken || '');
+      console.log('🔵 [네이버 로그인] 성공:', response);
       await EncryptedStorage.setItem('accessToken', response.accessToken);
       await EncryptedStorage.setItem(
         'refreshToken',
@@ -76,31 +79,31 @@ const Login: React.FC = () => {
       );
       handleGoNextPage(response);
     } catch (err) {
-     // console.error('login err : ', err);
+      console.error('login err : ', err);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const signInWithGoogle = async (): Promise<void> => {
-    try {
-      setIsLoading(true);
-      await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
-      await GoogleSignin.signIn();
-      const token = (await GoogleSignin.getTokens()).accessToken;
-      const response = await loginWithGoogle(token || '');
-      await EncryptedStorage.setItem('accessToken', response.accessToken);
-      await EncryptedStorage.setItem(
-        'refreshToken',
-        response.refreshToken || '',
-      );
-      handleGoNextPage(response);
-    } catch (err) {
-     // console.error('login err : ', err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  // const signInWithGoogle = async (): Promise<void> => {
+  //   try {
+  //     setIsLoading(true);
+  //     await GoogleSignin.hasPlayServices({showPlayServicesUpdateDialog: true});
+  //     await GoogleSignin.signIn();
+  //     const {accessToken} = await GoogleSignin.getTokens();
+  //     const response = await loginWithGoogle(accessToken || '');
+  //     await EncryptedStorage.setItem('accessToken', response.accessToken);
+  //     await EncryptedStorage.setItem(
+  //       'refreshToken',
+  //       response.refreshToken || '',
+  //     );
+  //     handleGoNextPage(response);
+  //   } catch (err) {
+  //    // console.error('login err : ', err);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
   const signInWithApple = async (): Promise<void> => {
     try {
@@ -116,8 +119,9 @@ const Login: React.FC = () => {
       );
 
       if (credentialState === appleAuth.State.AUTHORIZED) {
-        const {fullName, authorizationCode, email} = appleAuthRequestResponse;
+        const {authorizationCode} = appleAuthRequestResponse;
         const response = await loginWithApple(authorizationCode || '');
+        console.log('🔵 [애플 로그인] 성공:', response);
         await EncryptedStorage.setItem('accessToken', response.accessToken);
         await EncryptedStorage.setItem(
           'refreshToken',
@@ -126,7 +130,7 @@ const Login: React.FC = () => {
         handleGoNextPage(response);
       }
     } catch (err) {
-     // console.error('login err : ', err);
+      console.error('login err : ', err);
     } finally {
       setIsLoading(false);
     }
@@ -134,21 +138,25 @@ const Login: React.FC = () => {
 
   const handleGoNextPage = async (response: AuthResponse) => {
     const user = await getUserInfo();
+    console.log('🔵 [handleGoNextPage] 성공:', user);
     await EncryptedStorage.setItem('memberId', user.id);
     dispatch(setUser({...user, token: 'Bearer ' + response.accessToken}));
-
+    console.log('🔵 [handleGoNextPage] response:', response);
     // 학생 인증 완료
-    if (response.isAuthenticated === 'CERTIFIED') {
+    if (response.isSelectedUniversity === true) {
+      console.log('🔵 [handleGoNextPage] 인증:', response.isJoined);
       navigation.replace('MainTab');
       return;
     }
 
-    if (response.isAuthenticated === 'NOT_CERTIFIED') {
+    if (response.isSelectedUniversity === false) {
+      console.log('🔵 [handleGoNextPage] 미인증:', response.isJoined);
       navigation.replace('SignUp', {data: response.isJoined});
       return;
     }
 
     // if (response.isAuthenticated === 'PENDING') {
+    //   console.log('🔵 [handleGoNextPage] 대기:', response.isJoined);
     //   navigation.replace('ReviewInProgress');
     //   return;
     // }
@@ -217,7 +225,7 @@ const Login: React.FC = () => {
             <SVG style={styles.icon} name="Apple" />
             <BasicText
               style={[styles.btnText, {color: theme.colors.white}]}
-              text="Sign in with Apple"
+              text="애플 로그인"
             />
           </View>
         </TouchableOpacity>
@@ -230,13 +238,13 @@ const Login: React.FC = () => {
               },
             ]}>
             <SVG style={styles.icon} name="Naver" />
-            <BasicText style={[styles.btnText, {color: theme.colors.white}]} text="Sign in with Naver" />
+            <BasicText style={[styles.btnText, {color: theme.colors.white}]} text="네이버 로그인" />
           </View>
         </TouchableOpacity>
         <TouchableOpacity onPress={signInWithKakao}>
           <View style={[styles.button, {backgroundColor: '#FEE500'}]}>
             <SVG style={styles.icon} name="Kakao" />
-            <BasicText style={styles.btnText} text="Sign in with Kakao" />
+            <BasicText style={styles.btnText} text="카카오 로그인" />
           </View>
         </TouchableOpacity>
       </View>

@@ -64,4 +64,12 @@ export default StyleSheet.create({
         fontWeight: '500',
         marginHorizontal: 6,
     },
+    timeWrapper: {
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+        justifyContent: 'flex-start',
+    },
+    timeWrapperRight:{
+        alignItems: 'flex-end',
+    },
 });

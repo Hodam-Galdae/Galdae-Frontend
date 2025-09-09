@@ -42,7 +42,7 @@ export default StyleSheet.create({
   sendBtn: {
     width: 34,
     height: 34,
-    backgroundColor: theme.colors.Galdae,
+    backgroundColor: theme.colors.blue,
     marginLeft: 12,
     borderRadius: 999,
   },
@@ -95,7 +95,7 @@ export default StyleSheet.create({
   extraViewItemText: {
     marginTop: 6,
     fontSize: 14,
-    color: theme.colors.grayV2,
+    color: theme.colors.blackV0,
     fontWeight: '500',
   },
   inputWrapper: {
@@ -173,5 +173,14 @@ export default StyleSheet.create({
     position: 'absolute',
     right: 20,
     bottom: 30,
+  },
+  overlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    zIndex: 998,
   },
 });

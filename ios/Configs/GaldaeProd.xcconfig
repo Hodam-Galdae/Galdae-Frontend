@@ -1,0 +1,10 @@
+//
+//  GaldaeProd.xcconfig
+//  Galdae
+//
+//  Created by heeyeon on 9/9/25.
+//
+
+PRODUCT_BUNDLE_IDENTIFIER = com.example.galdae
+DISPLAY_NAME = Galdae
+ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon

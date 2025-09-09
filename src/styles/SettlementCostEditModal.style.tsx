@@ -33,7 +33,7 @@ export default StyleSheet.create({
   title: {
     fontSize: theme.fontSize.size16,
     color: theme.colors.blackV0,
-    fontWeight: '500',
+    fontWeight: '700',
     marginBottom: 21,
     width: '100%',
     marginTop: 37,
@@ -52,7 +52,7 @@ export default StyleSheet.create({
   btn: {
     backgroundColor: theme.colors.Galdae,
     width: '100%',
-    borderRadius: 10,
+    borderRadius: 99,
     textAlign: 'center',
     alignItems: 'center',
     justifyContent: 'center',

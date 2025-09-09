@@ -8,7 +8,22 @@
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest",
-    "cm": "cz"
+    "cm": "cz",
+    "android:dev": "ENVFILE=.env.development react-native run-android --variant devDebug",
+    "android:prod": "ENVFILE=.env.production react-native run-android --variant prodRelease",
+
+    "ios:dev": "ENVFILE=.env.development react-native run-ios --scheme Galdae-Dev",
+    "ios:prod": "ENVFILE=.env.production react-native run-ios --scheme Galdae-Prod",
+
+    "build:android:dev": "ENVFILE=.env.development cd android && ./gradlew assembleDevDebug",
+    "build:android:prod": "ENVFILE=.env.production cd android && ./gradlew assembleProdRelease",
+
+    "build:ios:dev": "ENVFILE=.env.development xcodebuild -workspace ios/Galdae.xcworkspace -scheme Galdae-Dev -configuration Debug -sdk iphonesimulator",
+    "build:ios:prod": "ENVFILE=.env.production xcodebuild -workspace ios/Galdae.xcworkspace -scheme Galdae-Prod -configuration Release -sdk iphonesimulator",
+
+    "clean:metro": "watchman watch-del-all || true && rm -rf $TMPDIR/metro-* && rm -rf node_modules/.cache/metro",
+    "clean:android": "cd android && ./gradlew clean",
+    "clean:ios": "cd ios && xcodebuild -alltargets clean"
   },
   "dependencies": {
     "@babel/plugin-transform-modules-commonjs": "^7.26.3",
@@ -37,6 +52,7 @@
     "moment-timezone": "^0.5.47",
     "react": "18.3.1",
     "react-native": "^0.77.0",
+    "react-native-config": "^1.5.9",
     "react-native-encrypted-storage": "^4.0.3",
     "react-native-fs": "^2.20.0",
     "react-native-gesture-handler": "^2.23.1",

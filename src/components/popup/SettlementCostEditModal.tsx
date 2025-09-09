@@ -13,12 +13,14 @@ export interface SettlementCostEditModalProps {
   visible: boolean;
   onCancel: () => void;
   onConfirm: (cost: number) => void;
+  title?: string;
 }
 
 const SettlementCostEditModal: React.FC<SettlementCostEditModalProps> = ({
   visible,
   onCancel,
   onConfirm,
+  title = '정산 금액 수정',
 }) => {
   const [cost, setCost] = useState<string>('');
 
@@ -30,15 +32,21 @@ const SettlementCostEditModal: React.FC<SettlementCostEditModalProps> = ({
             <SVG name="CancelBlack" style={styles.cancelIcon} />
           </TouchableOpacity>
 
-          <BasicText text="정산 금액 수정" style={styles.title} />
+          <BasicText text={title} style={styles.title} />
           <TextInput
-            value={cost}
-            onChangeText={setCost}
+            value={cost ? parseInt(cost, 10).toLocaleString() + '원' : ''}
+            onChangeText={(text) => {
+              // 숫자만 입력 가능하도록 필터링하고 쉼표 제거
+              const numericValue = text.replace(/[^0-9]/g, '');
+              setCost(numericValue);
+            }}
             style={styles.input}
             keyboardType="numeric"
+            placeholder="금액을 입력하세요"
           />
+
           <TouchableOpacity
-            onPress={() => onConfirm(Number.parseInt(cost))}
+            onPress={() => onConfirm(Number.parseInt(cost, 10))}
             style={styles.btn}>
             <BasicText text="완료" style={styles.btnText} />
           </TouchableOpacity>

@@ -29,10 +29,10 @@ export default StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
     backgroundColor: theme.colors.white,
-    borderRadius: 10,
+    borderRadius: 12,
     marginBottom: 30,
     borderWidth: 2,
-    borderColor: theme.colors.grayV3,
+    borderColor: theme.colors.grayV2,
   },
   agreeBtn: {
     marginLeft: 16,
@@ -41,7 +41,7 @@ export default StyleSheet.create({
   agreeText: {
     fontSize: theme.fontSize.size16,
     fontWeight: '500',
-    color: theme.colors.grayV1,
+    color: theme.colors.blackV0,
   },
   agreeWrapper: {
     flexDirection: 'row',

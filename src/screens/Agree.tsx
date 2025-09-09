@@ -99,7 +99,7 @@ const Agree: React.FC<AgreeProps> = ({setNextStep, goTermsDetailPage}) => {
                 <SVG
                   width={20}
                   height={20}
-                  name={selected[i] ? 'CheckSelected' : 'CheckLine'}
+                  name={selected[i] ? 'CheckSelected' : 'Check'}
                   style={styles.agreeIcon}
                 />
               </TouchableOpacity>

@@ -1,14 +1,15 @@
-import React, {forwardRef, useImperativeHandle, useRef, useState, useEffect} from 'react';
-import {View, TouchableOpacity} from 'react-native';
-import {Modalize} from 'react-native-modalize';
+/* eslint-disable react-native/no-inline-styles */
+import React, { forwardRef, useImperativeHandle, useRef, useState, useEffect } from 'react';
+import { View, TouchableOpacity } from 'react-native';
+import { Modalize } from 'react-native-modalize';
 import BasicText from '../BasicText';
 import styles from '../../styles/SettlementRequestPopup.style';
 import BasicButton from '../button/BasicButton';
 import SVGButton from '../button/SVGButton';
 import SVG from '../SVG';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import SettlementCostEditModal from './SettlementCostEditModal';
-import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import {
   ChatroomResponse,
   MemberResponse,
@@ -36,7 +37,7 @@ type RootStackParamList = {
 const SettlementRequestPopup = forwardRef<
   SettlementRequestPopupRef,
   SettlementRequestPopupProps
->(({chatRoomData, member, sendPayment}, ref) => {
+>(({ chatRoomData, member, sendPayment }, ref) => {
   const modalizeRef = useRef<Modalize>(null);
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList, 'Payment'>>();
   // 외부에서 open/close 함수를 사용할 수 있도록 함
@@ -101,7 +102,7 @@ const SettlementRequestPopup = forwardRef<
       overlayStyle={styles.background}
       modalStyle={styles.container}
       withHandle={false} // 기본 핸들을 비활성화
-      {...({swipeToClose: true, swipeThreshold: 10} as any)}>
+      {...({ swipeToClose: true, swipeThreshold: 10 } as any)}>
       <View style={[styles.settlementContainer]}>
         <SVGButton
           iconName="CloseFill"
@@ -110,7 +111,7 @@ const SettlementRequestPopup = forwardRef<
         />
         {!isLastSettlement ? (
           <View>
-            <View style={[styles.settlementCostContainer, {marginTop: 70}]}>
+            <View style={[styles.settlementCostContainer, { marginTop: 70 }]}>
               <BasicText text="결제 금액" style={styles.settlementCostText} />
               <View style={styles.settlementCostTextContainer}>
                 <BasicText style={styles.settlementCostText}>
@@ -125,7 +126,7 @@ const SettlementRequestPopup = forwardRef<
                 </TouchableOpacity>
               </View>
             </View>
-            <View style={[styles.settlementCostContainer, {marginTop: 23}]}>
+            <View style={[styles.settlementCostContainer, { marginTop: 23 }]}>
               <BasicText text="정산 금액" style={styles.settlementCostText} />
               <BasicText style={styles.settlementCostText}>
                 {Math.ceil(settlementCost / member.length) + '원'}
@@ -133,7 +134,7 @@ const SettlementRequestPopup = forwardRef<
             </View>
             <View style={styles.bankContainer}>
               <SVG width={26} height={26} style={styles.bankIcon} name={
-                               banks.find((bank: BankOption) => bank.name === myData.bankType)?.svg || 'Bank_KB'} />
+                banks.find((bank: BankOption) => bank.name === myData.bankType)?.svg || 'Bank_KB'} />
               <BasicText style={styles.bankText}>
                 {`${myData.bankType} ${myData.accountNumber}`}
               </BasicText>

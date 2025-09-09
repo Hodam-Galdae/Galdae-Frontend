@@ -4,7 +4,7 @@
 // 채팅 메시지 수신 시 채팅 목록 업데이트
 // 안 읽은 사람 수 구독
 
-import React, {useState, useEffect, useRef, useCallback} from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   View,
   PanResponder,
@@ -15,10 +15,11 @@ import {
   KeyboardEvent,
   Animated,
   Dimensions,
+  TouchableOpacity,
 } from 'react-native';
-import {RouteProp, useRoute} from '@react-navigation/native';
+import { RouteProp, useRoute } from '@react-navigation/native';
 import styles from '../styles/ChatRoom.style';
-import {theme} from '../styles/theme';
+import { theme } from '../styles/theme';
 import ChatItem from '../components/ChatItem';
 import SVGButton from '../components/button/SVGButton';
 import BasicText from '../components/BasicText';
@@ -26,16 +27,16 @@ import SettlementBox from '../components/SettlementBox';
 import useImagePicker from '../hooks/useImagePicker';
 import SVG from '../components/SVG';
 import BasicButton from '../components/button/BasicButton';
-import {useNavigation} from '@react-navigation/native';
-import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import SettlementRequestPopup from '../components/popup/SettlementRequestPopup';
-import {SettlementRequestPopupRef} from '../components/popup/SettlementRequestPopup';
+import { SettlementRequestPopupRef } from '../components/popup/SettlementRequestPopup';
 import ReportModal from '../components/popup/ReportModal';
 import ChatRoomExitModal from '../components/popup/ChatRoomExitModal';
 import ReportCheckModal from '../components/popup/ReportCheckModal';
 import useDidMountEffect from '../hooks/useDidMountEffect';
 import Header from '../components/Header';
-import {useWebSocket} from '../hooks/useWebSocket';
+import { useWebSocket } from '../hooks/useWebSocket';
 import {
   ChatResponse,
   ChatroomResponse,
@@ -46,11 +47,12 @@ import {
   exitChatroom,
 } from '../api/chatApi';
 import moment from 'moment';
-import {createReport} from '../api/reportApi';
+import { createReport } from '../api/reportApi';
 import RNFS from 'react-native-fs';
 import Loading from '../components/Loading';
 import { useSelector } from 'react-redux';
 import { RootState } from '../modules/redux/RootReducer';
+import SettlementCostEditModal from '../components/popup/SettlementCostEditModal';
 
 type SettlementType = {
   accountNumber: String;
@@ -66,8 +68,8 @@ type RenderItem = {
 };
 
 type RootStackParamList = {
-  ChatRoom: {data: Readonly<ChatroomResponse>, userInfo: Readonly<User>};
-  Settlement: {data: Readonly<SettlementType>};
+  ChatRoom: { data: Readonly<ChatroomResponse>, userInfo: Readonly<User> };
+  Settlement: { data: Readonly<SettlementType> };
 };
 
 type User = {
@@ -85,14 +87,16 @@ const ChatRoom: React.FC = () => {
   const [message, setMessage] = useState<string>('');
   const [showExtraView, setShowExtraView] = useState<boolean>(false);
   const [keyboardHeight, setKeyboardHeight] = useState<number>(0);
+  const [isSettlementRequestPopupOpen, setSettlementRequestPopupOpen] = useState<boolean>(false);
   const [isVisibleReportPopup, setIsVisibleReportPopup] =
     useState<boolean>(false);
   const [isVisibleReportCheckPopup, setIsVisibleReportCheckPopup] =
     useState<boolean>(false);
   const [isVisibleExitPopup, setIsVisibleExitPopup] = useState<boolean>(false);
-  const [unreadCounts, setUnreadCounts] = useState<{[key: number]: number}>({});
+  const [isSideMenuOpen, setIsSideMenuOpen] = useState<boolean>(false);
+  const [unreadCounts, setUnreadCounts] = useState<{ [key: number]: number }>({});
   const chatListRef = useRef<FlatList>(null);
-  const {imageUri, imageType, imageName, getImageByCamera, getImageByGallery} =
+  const { imageUri, imageType, imageName, getImageByCamera, getImageByGallery } =
     useImagePicker();
   const navigation =
     useNavigation<
@@ -103,11 +107,11 @@ const ChatRoom: React.FC = () => {
   const settlementRequestPopupRef = useRef<SettlementRequestPopupRef>(null);
   const translateX = useRef(new Animated.Value(SIDE_MENU_WIDTH)).current;
   const translateY = useRef(new Animated.Value(100)).current;
-  const {params} = useRoute<RouteProp<RootStackParamList, 'ChatRoom'>>();
+  const { params } = useRoute<RouteProp<RootStackParamList, 'ChatRoom'>>();
   const [members, setMembers] = useState<MemberResponse[]>([]);
-  const [reportImage, setReportImage] = useState({uri: '', name: ''});
+  const [reportImage, setReportImage] = useState({ uri: '', name: '' });
   const reportData = useRef({
-    member: {memberId: '', memberName: '', memberImage: ''},
+    member: { memberId: '', memberName: '', memberImage: '' },
     reason: '',
   });
   const chatRoomData = params.data;
@@ -155,7 +159,7 @@ const ChatRoom: React.FC = () => {
         
         
         
-        `,chatData);
+        `, chatData);
       setData(chatData);
     };
 
@@ -163,11 +167,11 @@ const ChatRoom: React.FC = () => {
   }, [chatRoomData]);
 
   // ChatRoom 컴포넌트 안
-useEffect(() => {
-  console.log('★ 최신 unreadCounts:', unreadCounts);
-}, [unreadCounts]);
+  useEffect(() => {
+    console.log('★ 최신 unreadCounts:', unreadCounts);
+  }, [unreadCounts]);
 
-  const {isLoading, sendMessage: wsSendMessage} = useWebSocket({
+  const { isLoading, sendMessage: wsSendMessage } = useWebSocket({
     chatroomId: chatRoomData.chatroomId,
     token: userInfo.token.startsWith('Bearer ') ? userInfo.token : 'Bearer ' + userInfo.token,
     onMessageReceived: useCallback((receiveData) => {
@@ -183,7 +187,7 @@ useEffect(() => {
         },
       ]);
     }, []),
-   onUnreadCountReceived: useCallback((unreadData) => {
+    onUnreadCountReceived: useCallback((unreadData) => {
       console.log(unreadData);
       setUnreadCounts(unreadData);
     }, []),
@@ -221,7 +225,7 @@ useEffect(() => {
   useEffect(() => {
     if (chatListRef.current) {
       setTimeout(
-        () => chatListRef.current?.scrollToEnd({animated: false}),
+        () => chatListRef.current?.scrollToEnd({ animated: false }),
         100,
       );
     }
@@ -255,6 +259,7 @@ useEffect(() => {
 
   const openSideMenu = () => {
     fetchMembers();
+    setIsSideMenuOpen(true);
     Animated.timing(translateX, {
       toValue: 0,
       duration: 300,
@@ -263,6 +268,7 @@ useEffect(() => {
   };
 
   const closeSideMenu = () => {
+    setIsSideMenuOpen(false);
     Animated.timing(translateX, {
       toValue: SIDE_MENU_WIDTH,
       duration: 300,
@@ -290,7 +296,7 @@ useEffect(() => {
     formData.append('reportRequestDto', `file:///${filePath}`);
 
     if (reportImage.uri !== '') {
-      let imageFile = {uri: imageUri, type: imageType, name: imageName};
+      let imageFile = { uri: imageUri, type: imageType, name: imageName };
       formData.append('profileImage', imageFile as any);
     }
 
@@ -303,19 +309,27 @@ useEffect(() => {
   };
 
   const openSettlement = async () => {
+
+    setSettlementRequestPopupOpen(true);
+  };
+
+  const closeSettlement = async (cost: number) => {
+    console.log('입력된 정산금액:', cost);
+    // 여기서 정산금액을 사용해서 필요한 로직을 처리할 수 있습니다
     await fetchMembers();
     Keyboard.dismiss();
+    setSettlementRequestPopupOpen(false);
     settlementRequestPopupRef.current?.open();
   };
 
   const renderItem = useCallback(
-    ({item, index}: RenderItem) => {
+    ({ item, index }: RenderItem) => {
       const isShowTime =
         !(
           moment.utc(data[index + 1]?.time).minute() ===
-            moment.utc(item.time).minute() &&
+          moment.utc(item.time).minute() &&
           moment.utc(data[index + 1]?.time).hour() ===
-            moment.utc(item.time).hour()
+          moment.utc(item.time).hour()
         ) || data[index + 1]?.sender !== item.sender;
 
       const isShowProfile =
@@ -323,9 +337,9 @@ useEffect(() => {
         data[index - 1]?.sender !== item.sender ||
         !(
           moment.utc(data[index - 1]?.time).minute() ===
-            moment.utc(item.time).minute() &&
+          moment.utc(item.time).minute() &&
           moment.utc(data[index - 1]?.time).hour() ===
-            moment.utc(item.time).hour()
+          moment.utc(item.time).hour()
         );
       // unreadCount 계산 로직 개선
       let unreadCount = unreadCounts[item.chatId];
@@ -377,7 +391,7 @@ useEffect(() => {
       if (imageUri !== '') {
         try {
           const formData = new FormData();
-          let imageFile = {uri: imageUri, type: imageType, name: imageName};
+          let imageFile = { uri: imageUri, type: imageType, name: imageName };
           formData.append('image', imageFile as any);
           const url = await sendImage(formData);
 
@@ -423,12 +437,20 @@ useEffect(() => {
         }
         rightButton={<SVGButton onPress={openSideMenu} iconName="Kebab" />}
       />
+      {/* 오버레이 */}
+      {isSideMenuOpen && (
+        <TouchableOpacity
+          style={styles.overlay}
+          activeOpacity={1}
+          onPress={closeSideMenu}
+        />
+      )}
       {/* 사이드바 */}
       <Animated.View
         {...panResponder.panHandlers}
         style={[
           styles.sideMenu,
-          {transform: [{translateX}], width: SIDE_MENU_WIDTH},
+          { transform: [{ translateX }], width: SIDE_MENU_WIDTH },
         ]}>
         <BasicText style={styles.menuText}>
           {'참여자 목록 ( ' +
@@ -481,13 +503,13 @@ useEffect(() => {
           data={data}
           extraData={data}
           scrollEnabled={true}
-          contentContainerStyle={{flexGrow: 1}}
+          contentContainerStyle={{ flexGrow: 1 }}
           keyboardShouldPersistTaps="handled"
           keyExtractor={item => item.chatId.toString()}
           renderItem={renderItem}
-          ListFooterComponent={<View style={{height: 30}} />}
+          ListFooterComponent={<View style={{ height: 30 }} />}
           onContentSizeChange={() =>
-            chatListRef.current?.scrollToEnd({animated: false})
+            chatListRef.current?.scrollToEnd({ animated: false })
           }
         />
         <View>
@@ -517,17 +539,9 @@ useEffect(() => {
               <View
                 style={[
                   styles.extraView,
-                  {height: keyboardHeight || EXTRA_MENU_HEIGHT},
+                  { height: keyboardHeight || EXTRA_MENU_HEIGHT },
                 ]}>
-                <View style={styles.extraViewContainer}>
-                  <SVGButton
-                    onPress={getImageByGallery}
-                    iconName="Picture"
-                    SVGStyle={styles.extraViewItemIcon}
-                    buttonStyle={styles.extraViewItem}
-                  />
-                  <BasicText text="앨범" style={styles.extraViewItemText} />
-                </View>
+
                 <View style={styles.extraViewContainer}>
                   <SVGButton
                     onPress={getImageByCamera}
@@ -536,6 +550,15 @@ useEffect(() => {
                     buttonStyle={styles.extraViewItem}
                   />
                   <BasicText text="카메라" style={styles.extraViewItemText} />
+                </View>
+                <View style={styles.extraViewContainer}>
+                  <SVGButton
+                    onPress={getImageByGallery}
+                    iconName="Picture"
+                    SVGStyle={styles.extraViewItemIcon}
+                    buttonStyle={styles.extraViewItem}
+                  />
+                  <BasicText text="앨범" style={styles.extraViewItemText} />
                 </View>
                 {chatRoomData.isRoomManager ? (
                   <View style={styles.extraViewContainer}>
@@ -579,6 +602,12 @@ useEffect(() => {
           onConfirm={reportUser}
           member={reportData.current.member}
           onCancel={() => setIsVisibleReportCheckPopup(false)}
+        />
+        <SettlementCostEditModal
+          visible={isSettlementRequestPopupOpen}
+          onConfirm={(cost) => closeSettlement(cost)}
+          onCancel={() => setSettlementRequestPopupOpen(false)}
+          title="정산 금액 입력"
         />
       </View>
     </KeyboardAvoidingView>

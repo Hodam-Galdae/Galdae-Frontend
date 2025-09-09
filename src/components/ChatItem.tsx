@@ -1,10 +1,10 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import {Image, View} from 'react-native';
+import { Image, View } from 'react-native';
 import styles from '../styles/ChatItem.style';
 import BasicText from './BasicText';
 import SVG from './SVG';
-import {theme} from '../styles/theme';
+import { theme } from '../styles/theme';
 import moment from 'moment';
 
 type Chat = {
@@ -20,7 +20,7 @@ type Chat = {
   unreadCount?: number;
 };
 
-const ChatItem: React.FC<{item: Chat}> = React.memo(({item}) => {
+const ChatItem: React.FC<{ item: Chat }> = React.memo(({ item }) => {
 
   return (
     <View style={styles.container}>
@@ -33,7 +33,7 @@ const ChatItem: React.FC<{item: Chat}> = React.memo(({item}) => {
               {item.senderImage === null ? (
                 <SVG name="DefaultProfile" style={styles.userImage} />
               ) : (
-                <Image style={styles.userImage} source={{uri: item.senderImage}} />
+                <Image style={styles.userImage} source={{ uri: item.senderImage }} />
               )}
               <BasicText text={item.sender} />
             </View>
@@ -46,18 +46,20 @@ const ChatItem: React.FC<{item: Chat}> = React.memo(({item}) => {
                   item.sender === item.nickname ? 'flex-end' : 'flex-start',
               },
             ]}>
-            {item.unreadCount !== undefined && item.unreadCount > 0 && item.sender === item.nickname && (
-                <BasicText
-                  style={[styles.unreadText, {marginTop: 4}]}
-                  text={`${item.unreadCount}`}
-                />
-              )}
+          <View style={styles.timeWrapperRight}>
+          {item.unreadCount !== undefined && item.unreadCount > 0 && item.sender === item.nickname && (
+              <BasicText
+                style={[styles.unreadText, { marginTop: 4 }]}
+                text={`${item.unreadCount}`}
+              />
+            )}
             {item.isShowTime && item.sender === item.nickname ? (
               <BasicText
                 style={styles.timeText}
                 text={moment.utc(item.time).hour() + ':' + moment.utc(item.time).minute()}
               />
             ) : null}
+          </View>
 
             {item.type === 'MESSAGE' ? (
               <View
@@ -78,21 +80,24 @@ const ChatItem: React.FC<{item: Chat}> = React.memo(({item}) => {
 
               </View>
             ) : item.type === 'IMAGE' ? (
-              <Image style={styles.image} source={{uri: item.content}} />
-            ) : null}
-            {item.isShowTime && item.sender !== item.nickname ? (
-              <BasicText
-                style={styles.timeText}
-                text={moment.utc(item.time).hour() + ':' + moment.utc(item.time).minute()}
-              />
+              <Image style={styles.image} source={{ uri: item.content }} />
             ) : null}
 
+            <View style={styles.timeWrapper}>
             {item.unreadCount !== undefined && item.unreadCount > 0 && item.sender !== item.nickname && (
                 <BasicText
-                  style={[styles.unreadText, {marginTop: 4}]}
+                  style={[styles.unreadText, { marginTop: 4 }]}
                   text={`${item.unreadCount}`}
                 />
               )}
+              {item.isShowTime && item.sender !== item.nickname ? (
+                <BasicText
+                  style={styles.timeText}
+                  text={moment.utc(item.time).hour() + ':' + moment.utc(item.time).minute()}
+                />
+              ) : null}
+
+            </View>
           </View>
         </View>
       )}
