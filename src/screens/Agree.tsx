@@ -1,25 +1,26 @@
 // SignUp.tsx 테스트
-import React, {useState} from 'react';
-import {View, TouchableOpacity} from 'react-native';
+import React, { useState } from 'react';
+import { View, TouchableOpacity } from 'react-native';
 import BasicText from '../components/BasicText';
 import styles from '../styles/Agree.style';
-import {theme} from '../styles/theme';
+import { theme } from '../styles/theme';
 import SVG from '../components/SVG';
 import BasicButton from '../components/button/BasicButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { StepName } from './SignUp';
 interface AgreeProps {
-  setNextStep: (name: string) => void;
+  setNextStep: (name: StepName) => void;
   goTermsDetailPage: (data: number) => void;
 }
 
-const Agree: React.FC<AgreeProps> = ({setNextStep, goTermsDetailPage}) => {
+const Agree: React.FC<AgreeProps> = ({ setNextStep, goTermsDetailPage }) => {
   const agreeDetailTexts = [
-    '[필수] 위치정보 수집 및 이용 동의',
     '[필수] 서비스 이용약관 동의',
-    '[필수] 만 17세 이상입니다다',
+    '[필수] 위치정보 수집 및 이용 동의',
+    '[필수] 개인정보 수집 및 이용 동의',
+    // '[필수] 만 17세 이상입니다다',
     '[필수] 전체 이용약관',
-    '[필수] 개인인정보 수집 및 이용 동의',
+
   ];
 
   const [selected, setSelected] = useState<boolean[]>(
@@ -40,17 +41,17 @@ const Agree: React.FC<AgreeProps> = ({setNextStep, goTermsDetailPage}) => {
     setSelected(newArr);
   };
 
-  const clickEvent = async() => {
+  const clickEvent = async () => {
     if (!selected.every(value => value)) {
       return;
     }
 
-    try{
+    try {
       await AsyncStorage.setItem('agree', 'agreeAll');
-      setNextStep('setUserInfo');
+      setNextStep('VerifySchool');
     }
-    catch(e) {
-     // console.log(e);
+    catch (e) {
+      // console.log(e);
     }
   };
 
@@ -61,7 +62,9 @@ const Agree: React.FC<AgreeProps> = ({setNextStep, goTermsDetailPage}) => {
           더 나은 서비스를 위해{'\n'}약관을 마련했습니다.
         </BasicText>
         <BasicText style={styles.subTitle}>
-        이용자 편의에 따라 더욱 적합한 서비스 제공을 위해{'\n'}서비스 운영 정책을 마련했습니다. {'\n\n'}필수 동의 후 서버 입장이 가능합니다.
+          원활한 서비스 이용과 회원님의 권리·의무 사항 안내를 위해 아래{'\n'}의 이용약관을 제공합니다. {'\n'}가입 전 반드시 내용을 확인해 주시기 바랍니다.
+          {'\n'}모든 항목은 필수 동의 사항이며, 동의하지 않을 경우 회원가입이
+          {'\n'}제한됩니다
         </BasicText>
       </View>
 
@@ -71,9 +74,9 @@ const Agree: React.FC<AgreeProps> = ({setNextStep, goTermsDetailPage}) => {
             style={
               selected.every(value => value)
                 ? {
-                    ...styles.agreeBtnWrapper,
-                    borderColor: theme.colors.Galdae,
-                  }
+                  ...styles.agreeBtnWrapper,
+                  borderColor: theme.colors.Galdae,
+                }
                 : styles.agreeBtnWrapper
             }>
             <SVG
@@ -86,7 +89,7 @@ const Agree: React.FC<AgreeProps> = ({setNextStep, goTermsDetailPage}) => {
               text="모두 동의합니다"
               style={
                 selected.every(value => value)
-                  ? {...styles.agreeText, color: theme.colors.blackV0}
+                  ? { ...styles.agreeText, color: theme.colors.blackV0 }
                   : styles.agreeText
               }
             />
@@ -104,7 +107,7 @@ const Agree: React.FC<AgreeProps> = ({setNextStep, goTermsDetailPage}) => {
                 />
               </TouchableOpacity>
               <TouchableOpacity onPress={() => goTermsDetailPage(i)}>
-                <BasicText style={styles.agreeDetailText} text={e} />
+                <BasicText style={selected[i] ? styles.agreeDetailText : styles.agreeDetailTextSelected} text={e} />
               </TouchableOpacity>
             </View>
           );

@@ -184,3 +184,24 @@ export interface Term {
   title: string;
   content: string;
 }
+/**
+ * 대학교 및 지역 목록 조회 API
+ * /on-boarding/university/list
+ */
+export interface UniversityAndRegion {
+  universityList : University[];
+  universityAreaName: string;
+}
+
+/**
+ * 대학교 및 지역 목록 조회 API 응답 (배열)
+ * /on-boarding/university/list
+ */
+export type UniversityAndRegionList = UniversityAndRegion[];
+/**
+ * 대학교 목록 조회 API 대학
+ */
+export interface University {
+  universityName: string;
+}
+

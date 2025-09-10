@@ -1,4 +1,4 @@
-import {StyleSheet, Dimensions} from 'react-native';
+import {StyleSheet} from 'react-native';
 import {theme} from './theme';
 
 export default StyleSheet.create({
@@ -7,6 +7,9 @@ export default StyleSheet.create({
     justifyContent: 'flex-start',
     position: 'relative',
     // alignItems: 'center',
+    backgroundColor: theme.colors.white,
+  },
+  headerStyle: {
     backgroundColor: theme.colors.white,
   },
   bar: {

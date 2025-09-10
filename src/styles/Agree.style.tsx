@@ -19,7 +19,7 @@ export default StyleSheet.create({
     marginTop: 50,
     fontSize: 14,
     fontWeight: '500',
-    color: theme.colors.grayV2,
+    color: theme.colors.gray2,
   },
   agreeBtnWrapper: {
     width: '100%',
@@ -31,7 +31,7 @@ export default StyleSheet.create({
     backgroundColor: theme.colors.white,
     borderRadius: 12,
     marginBottom: 30,
-    borderWidth: 2,
+    borderWidth: 1,
     borderColor: theme.colors.grayV2,
   },
   agreeBtn: {
@@ -50,7 +50,13 @@ export default StyleSheet.create({
     marginBottom: 10,
   },
   agreeDetailText: {
-    color: theme.colors.grayV2,
+    color: theme.colors.blackV1,
+    fontSize: theme.fontSize.size16,
+    fontWeight: '500',
+    textDecorationLine: 'underline',
+  },
+  agreeDetailTextSelected: {
+    color: theme.colors.blackV3,
     fontSize: theme.fontSize.size16,
     fontWeight: '500',
     textDecorationLine: 'underline',
@@ -61,8 +67,8 @@ export default StyleSheet.create({
   nextButton: {
     marginTop: 40,
     width: '100%',
-    borderRadius: theme.borderRadius.size10,
-    height: 42,
+    borderRadius: theme.borderRadius.size30,
+    height: 48,
     marginBottom: 40,
   },
   nextText: {

@@ -14,7 +14,7 @@ export const theme = {
       grayV1:'#E3E5EB',
       grayV2:'#EFF1F5',
       grayV3:'#F4F7FA',
-
+      gray2:'#6C6C6C',
       blackV0:'#191919',
       blackV1:'#21232A',
       blackV2:'#3D3F4D',
@@ -52,6 +52,7 @@ export const theme = {
       size22: 22,
       size23: 23,
       size24: 24,
+      size32: 32,
       size28: 28,
     },
     borderRadius: {

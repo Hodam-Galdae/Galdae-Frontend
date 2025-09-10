@@ -192,10 +192,10 @@ export const emailVerify = async (
     console.log('🔵 [이메일 인증] 파일 생성 완료:', filePath);
 
     form.append('universityAuthCommand', {
-      uri: `file:///${filePath}`,
+      uri: `file://${filePath}`,
       type: 'application/json',
       name: fileName,
-    });
+    } as any);
 
     const response = await axiosInstance.post<string>('/auth/university', form, {
       transformRequest: (data, headers) => {

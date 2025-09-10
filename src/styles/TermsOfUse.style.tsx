@@ -7,6 +7,9 @@ export default StyleSheet.create({
     container:{
         height:'100%',
     },
+    headerStyle:{
+        backgroundColor: theme.colors.white,
+    },
     headerText:{
         fontSize: theme.fontSize.size22,
         fontWeight: 'bold',
@@ -42,7 +45,7 @@ export default StyleSheet.create({
     },
     contentText:{
         fontWeight:'500',
-        color:theme.colors.grayV2
+        color:theme.colors.gray2,
     },
 
 });

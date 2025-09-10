@@ -92,4 +92,7 @@ export default StyleSheet.create({
     marginRight: 12,
     backgroundColor: theme.colors.grayV3,
   },
+  imageContainer: {
+    alignItems: 'center',
+  },
 });

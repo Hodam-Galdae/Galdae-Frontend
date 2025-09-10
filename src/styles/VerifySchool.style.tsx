@@ -11,7 +11,7 @@ export default StyleSheet.create({
   nextButton: {
     marginTop: 40,
     width: '100%',
-    borderRadius: theme.borderRadius.size10,
+    borderRadius: theme.borderRadius.size30,
     height: 42,
     marginBottom: 40,
   },
@@ -30,7 +30,10 @@ export default StyleSheet.create({
     // marginBottom: 70,
   },
   selectorBox: {
-    height: 55,
+    height: 46,
+    fontSize: theme.fontSize.size14,
+    fontWeight: '500',
+    color: theme.colors.blackV0,
   },
   verifyContainer: {
     backgroundColor: theme.colors.grayV3,
@@ -67,5 +70,18 @@ export default StyleSheet.create({
     position: 'absolute',
     bottom: -10,
     left: 0,
+  },
+  input: {
+    marginTop: 10,
+    borderWidth: 1,
+    borderColor: theme.colors.grayV2,
+    width: '100%',
+    paddingHorizontal: 20,
+    paddingVertical: 14,
+    borderRadius: theme.borderRadius.size12,
+    fontSize: theme.fontSize.size14,
+    fontWeight: '500',
+    color: theme.colors.blackV0,
+    marginBottom: 10,
   },
 });

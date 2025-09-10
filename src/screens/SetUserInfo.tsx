@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {useState} from 'react';
 import {
   View,
@@ -23,9 +24,9 @@ import {checkNickname, join} from '../api/authApi';
 import useImagePicker from '../hooks/useImagePicker';
 import RNFS from 'react-native-fs';
 import {banks} from '../constants/bankOptions';
-
+import { StepName } from './SignUp';
 interface AgreeProps {
-  setNextStep: (name: string) => void;
+  setNextStep: (name: StepName) => void;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -33,7 +34,7 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep, setIsLoading}) => {
   const [genderSelected, setGenderSelected] = useState<number>(-1);
   const [bankSelect, setBankSelect] = useState<number>(-1);
   const [name, setName] = useState<string>('');
-  const [isImageLoading, setIsImageLoading] = useState(false); // 이미지 업데이트 로딩 상태
+  const [isImageLoading] = useState(false); // 이미지 업데이트 로딩 상태
   const [accountNumber, setAccountNumber] = useState<string|undefined>(undefined);
   const [accountName, setAccountName] = useState<string|undefined>(undefined);
   const [alertNameText, setAlertNameText] = useState<string>('');
@@ -92,18 +93,18 @@ const SetUserInfo: React.FC<AgreeProps> = ({setNextStep, setIsLoading}) => {
         const filePath = `${RNFS.TemporaryDirectoryPath}/${fileName}`;
         await RNFS.writeFile(filePath, JSON.stringify(data), 'utf8');
         formData.append('joinRequestCommand', {
-          uri: `file:///${filePath}`,
+          uri: `file://${filePath}`,
           type: 'application/json',
           name: fileName,
-        });
+        } as any);
         if (imageUri) {
           //console.log('hi');
           let imageFile = {uri: imageUri, type: imageType, name: imageName};
-          formData.append('profileImage', imageFile);
+          formData.append('profileImage', imageFile as any);
         }
 
         await join(formData);
-        setNextStep('verifySchool');
+        setNextStep('MainTab');
       } catch (e) {
         //console.log(e);
       } finally {

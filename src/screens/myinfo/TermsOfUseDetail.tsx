@@ -25,7 +25,7 @@ const TermsOfUseDetail: React.FC = () => {
     const terms:term[] = [
         {
             index:0,
-            title: '개인정보 취급방침',
+            title: '개인정보 수집 및 이용 동의',
             content: `주식회사 호담(이하 “회사”)는 「정보통신망 이용촉진 및 정보보호 등에 관한 법률」, 「개인정보 보호법」, 「통신비밀보호법」, 「전기통신사업법」 등 정보통신서비스제공자가 준수하여야 할 관련 법령상의 개인정보보호 규정을 준수하며, 관련 법령에 의거한 개인정보취급방침을 정하여 이용자 권익 보호에 최선을 다하고 있습니다.
 회사가 개인정보취급방침을 통하여 이용자가 제공하는 개인정보를 어떠한 용도와 방식으로 이용하고 있으며, 개인정보보호를 위해 어떠한 조치가 취해지고 있는지 알려드립니다. 회사는 개인정보취급방침을 개정하는 경우 웹사이트 공지사항(또는 개별공지)을 통하여 공지할 것입니다.
 본 방침은 2024년 08월 28일부터 시행됩니다.
@@ -130,7 +130,7 @@ IP Address, 쿠키, 방문 일시, 서비스 이용 기록, 불량 이용 기록
         },
         {
             index:1,
-            title:'위치기반 서비스',
+            title:'위치정보 수집 및 이용 동의',
             content: `
 제 1 조(목적)
 
@@ -1091,7 +1091,7 @@ IP Address, 쿠키, 방문 일시, 서비스 이용 기록, 불량 이용 기록
         },
         {
             index:3,
-            title:'서비스 이용약관',
+            title:'서비스 이용약관 동의',
             content:`
 제 1 조 (목적)
 본 서비스의 약관은 동일한 출도착지에서 택시 같이 타고 가기(동승,카풀) 서비스를 이용하려는 승객 회원(이하 “그룹 생성자”, “동승자”이라합니다)이 ㈜호담(이하 “회사”라 합니다)가 제공하는 갈대(GALDAE) 서비스의 이용과 관련하여 회사와 회원 간의 권리, 의무, 조건, 절차 및 기타 각종 필요 사항의 규정함을 목적으로 합니다.
@@ -1189,11 +1189,13 @@ IP Address, 쿠키, 방문 일시, 서비스 이용 기록, 불량 이용 기록
     return (
       <View style={styles.container}>
             <Header
-            leftButton={<SVGButton iconName="arrow_left_line" onPress={goBack}/>}
-            title={<BasicText text={selectedTerm?.title} style={styles.headerText}/>}
+            style={styles.headerStyle}
+            leftButton={<SVGButton iconName="arrow_left_line2" onPress={goBack}/>}
+            title={<BasicText text={'약관 상세보기'} style={styles.headerText}/>}
             />
 
         <ScrollView style={styles.content}>
+            <BasicText text={selectedTerm ? selectedTerm.title : '내용이 없습니다.'} style={styles.title} />
             <BasicText text={selectedTerm ? selectedTerm.content : '내용이 없습니다.'} style={styles.contentText} />
         </ScrollView>
       </View>

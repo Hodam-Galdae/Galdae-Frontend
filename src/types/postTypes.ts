@@ -9,7 +9,7 @@ export interface CreatePostRequest {
   majorArrivalId: number;
   subArrivalId: number;
   departureTime: string;
-  passengerType?: 'SAME'  | 'DONT_CARE'; // 예시에서는 "SAME"으로 내려오지만, 필요 시 다른 값도 허용 가능
+  passengerType?: 'SAME' | 'DONT_CARE'; // 예시에서는 "SAME"으로 내려오지만, 필요 시 다른 값도 허용 가능
   arrangeTime?: 'POSSIBLE' | 'IMPOSSIBLE';
   passengerCount?: number;
   isFavoriteRoute?: boolean;
@@ -45,4 +45,70 @@ export interface SearchPostsRequest extends GetPostsRequest {
  */
 export interface GetPostDetailRequest {
   postId: string;
+}
+/**
+ * 지역 및 학교 선택 API
+ * /on-boarding/university-area
+ */
+export interface GetUniversityAreaRequest {
+  university: string;
+  universityArea: string;
+}
+
+/**
+ * 토큰 재발급 API
+ * /on-boarding/reissue
+ */
+export interface ReissueTokenRequest {
+  refreshToken: string;
+  memberId: string;
+}
+
+/**
+ * 회원 가입 API
+ * /on-boarding/join
+ */
+export interface JoinRequest {
+  joinRequestDTO: JoinRequestDTO;
+  profileImage: string;
+}
+
+/**
+ * 회원 가입 API 데이터
+ * /on-boarding/join
+ */
+export interface JoinRequestDTO {
+  nickname: string;
+  gender: string;
+  bankType: string;
+  accountNumber: string;
+  depositor: string;
+  deviceToken: string;
+}
+
+/**
+ * 닉네임 중복 검사 API
+ * /on-boarding/check/nickname
+ */
+export interface CheckNicknameRequest {
+  nickname: string;
+}
+
+/**
+ * 대학교 인증 API
+ * /mail/verify
+ */
+export interface VerifyUniversityRequest {
+  code: string;
+}
+
+/**
+ * 대학교 인증 메일 발송 API
+ * /mail/send
+ */
+export interface SendUniversityMailRequest {
+  email: string;
+  studentId: string;
+  department: string;
+
 }

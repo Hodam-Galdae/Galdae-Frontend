@@ -49,6 +49,11 @@ import CreateOTT from './src/screens/category/ott/CreateOTT';
 import DeliveryNDivide from './src/screens/category/delivery/DeliveryNDivide';
 import DeliveryDetail from './src/screens/category/delivery/DeliveryDetail';
 import CreateDelivery from './src/screens/category/delivery/CreateDelivery';
+// import ContinueSignUp from './src/screens/ContinueSignUp';
+// import SetUserInfo from './src/screens/SetUserInfo';
+// import VerifySchool from './src/screens/VerifySchool';
+// import SchoolCardVerify from './src/screens/SchoolCardVerify';
+// import EmailVerify from './src/screens/EmailVerify';
 function App() {
   useEffect(() => {
     if (Platform.OS === 'android') {
@@ -190,6 +195,11 @@ function App() {
                   <Stack.Screen name="DeliveryNDivide" component={DeliveryNDivide} />
                   <Stack.Screen name="DeliveryDetail" component={DeliveryDetail} />
                   <Stack.Screen name="CreateDelivery" component={CreateDelivery} />
+                  {/* <Stack.Screen name="ContinueSignUp" component={ContinueSignUp} /> */}
+                  {/* <Stack.Screen name="SetUserInfo" component={SetUserInfo} />
+                  <Stack.Screen name="VerifySchool" component={VerifySchool} />
+                  <Stack.Screen name="SchoolCardVerify" component={SchoolCardVerify} />
+                  <Stack.Screen name="EmailVerify" component={EmailVerify} /> */}
                 </Stack.Navigator>
               </NavigationContainer>
             </PortalProvider>

@@ -13,9 +13,9 @@ import {certifyCard} from '../api/authApi';
 import {useSelector} from 'react-redux';
 import {RootState} from '../modules/redux/RootReducer';
 import RNFS from 'react-native-fs';
-
+import { StepName } from './SignUp';
 interface SchoolCardVerifyProps {
-  setNextStep: () => void;
+  setNextStep: (name: StepName) => void;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -41,28 +41,23 @@ const SchoolCardVerify: React.FC<SchoolCardVerifyProps> = ({setNextStep, setIsLo
         const fileName = `${userInfo}.json`;
         const filePath = `${RNFS.TemporaryDirectoryPath}/${fileName}`;
         await RNFS.writeFile(filePath, JSON.stringify(universityAuthCommand), 'utf8');
-  
+
         form.append('universityAuthCommand', {
-          uri: `file:///${filePath}`,
+          uri: `file://${filePath}`,
           type: 'application/json',
           name: fileName,
-        });
-  
+        } as any);
+
         let imageFile = {uri: imageUri, type: imageType, name: imageName};
-        form.append('studentCard', imageFile);
+        form.append('studentCard', imageFile as any);
         await certifyCard(form);
-        setNextStep();
+        setNextStep('SetUserInfo');
       } catch(err) {
 
       } finally {
         setIsLoading(false);
       }
-      
     }
-  };
-
-  const handlePicturePress = () => {
-    pictureModalRef.current?.open();
   };
 
   return (
@@ -104,7 +99,7 @@ const SchoolCardVerify: React.FC<SchoolCardVerifyProps> = ({setNextStep, setIsLo
       </View>
 
       <View>
-        <View style={{alignItems: 'center'}}>
+        <View style={styles.imageContainer}>
           {!imageUri ? (
             <View style={styles.btnWrapper}>
             <SVGButton
