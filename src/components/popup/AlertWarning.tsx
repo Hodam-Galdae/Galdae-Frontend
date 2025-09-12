@@ -5,9 +5,9 @@ import BasicText from '../../components/BasicText';
 import BasicButton from '../../components/button/BasicButton';
 import { theme } from '../../styles/theme';
 //import {  } from '../utils/ScreenScaler';
-import styles from '../../styles/ParticipateModal.style';
+import styles from '../../styles/AlertWarning.style';
 
-export interface ParticipateModalProps {
+export interface AlertWarningProps {
     visible: boolean;
     onCancel?: () => void;
     onConfirm: () => void;
@@ -20,16 +20,13 @@ export interface ParticipateModalProps {
     containerStyle?: StyleProp<ViewStyle>;
 }
 
-const ParticipateModal: React.FC<ParticipateModalProps> = ({
+const AlertWarning: React.FC<AlertWarningProps> = ({
     visible,
     onCancel,
     onConfirm,
     title = '지금 돌아가시면 학생 인증부터 다시 진행해야 합니다.',
     subTitle = '그래도 돌아가시겠습니까?',
-    fromMajor,
-    fromSub,
-    toMajor,
-    toSub,
+
 
     containerStyle,
 }) => {
@@ -50,69 +47,40 @@ const ParticipateModal: React.FC<ParticipateModalProps> = ({
                             color={theme.colors.blackV0}
                         />
                         {
-                            toMajor && toSub && (
-                                <View style={styles.locationContainer}>
-                                    <View style={styles.fromContainer}>
-                                        <BasicText
-                                            text={fromMajor}
-                                            fontSize={theme.fontSize.size16}
-                                            fontWeight={'500'}
-                                            color={theme.colors.blackV0}
-                                            style={styles.textPopUpText}
-                                        />
-                                        <BasicText
-                                            text={fromSub}
-                                            fontSize={theme.fontSize.size16}
-                                            fontWeight={'500'}
-                                            color={theme.colors.blackV0}
-                                            style={styles.textPopUpText}
-                                            numberOfLines={1}
-                                            ellipsizeMode="tail"
-                                        />
-                                    </View>
-                                    <SVG name="arrow_forward" style={styles.arrowForward} />
-                                    <View style={styles.fromContainer}>
-                                        <BasicText
-                                            text={toMajor}
-                                            fontSize={theme.fontSize.size16}
-                                            fontWeight={'500'}
-                                            color={theme.colors.blackV0}
-                                            style={styles.textPopUpText}
-                                        />
-                                        <BasicText
-                                            text={toSub}
-                                            fontSize={theme.fontSize.size16}
-                                            fontWeight={'500'}
-                                            color={theme.colors.blackV0}
-                                            style={styles.textPopUpText}
-                                            numberOfLines={1}
-                                            ellipsizeMode="tail"
-                                        />
-                                    </View>
-                                </View>
-                            )
-                        }
-                        {
                             subTitle && (
                                 <BasicText
                                     style={styles.onlySubTitleText}
                                     text={subTitle}
-                                    fontSize={theme.fontSize.size14}
+                                    fontSize={theme.fontSize.size18}
                                     color={theme.colors.blackV0}
                                 />
                             )
                         }
-                        <BasicButton
-                            text="채팅방으로 이동"
-                            textStyle={styles.cancelBtnText}
-                            buttonStyle={styles.cancelBtn}
-                            enabledColors={{
-                                backgroundColor: theme.colors.blue,
-                                textColor: theme.colors.white,
-                                borderColor: theme.colors.transparent,
-                            }}
-                            onPress={onConfirm}
-                        />
+                        <View style={styles.buttonContainer}>
+                            <BasicButton
+                                text="취소"
+                                textStyle={styles.cancelBtnText}
+                                buttonStyle={styles.cancelBtn}
+                                enabledColors={{
+                                    backgroundColor: theme.colors.blue2,
+                                    textColor: theme.colors.blue,
+                                    borderColor: theme.colors.transparent,
+                                }}
+                                onPress={onCancel}
+                            />
+                            <BasicButton
+                                text="돌아가기"
+                                textStyle={styles.cancelBtnText}
+                                buttonStyle={styles.cancelBtn}
+                                enabledColors={{
+                                    backgroundColor: theme.colors.blue,
+                                    textColor: theme.colors.white,
+                                    borderColor: theme.colors.transparent,
+                                }}
+                                onPress={onConfirm}
+                            />
+
+                        </View>
                     </View>
                 </View>
             </View>
@@ -120,4 +88,4 @@ const ParticipateModal: React.FC<ParticipateModalProps> = ({
     );
 };
 
-export default ParticipateModal;
+export default AlertWarning;

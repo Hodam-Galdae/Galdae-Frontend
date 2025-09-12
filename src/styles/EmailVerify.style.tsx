@@ -40,7 +40,7 @@ export default StyleSheet.create({
         fontWeight: '500',
         color: theme.colors.red,
         marginBottom: 4,
-        alignSelf: 'center',
+        //alignSelf: 'center',
     },
     input: {
 

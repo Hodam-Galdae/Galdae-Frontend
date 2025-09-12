@@ -71,7 +71,7 @@ const ItemSelector: React.FC<ItemSelectorProps> = ({
             text={selected < 0 ? hint : items[selected]}
             style={[styles.text, textStyle]}
           />
-          <SVG name={isOpen ? 'UpArrow' : 'DownArrow'} width={16} height={16} />
+          <SVG name={isOpen ? 'up_line' : 'down_line'} width={16} height={16} />
         </View>
       </TouchableOpacity>
       <Animated.View

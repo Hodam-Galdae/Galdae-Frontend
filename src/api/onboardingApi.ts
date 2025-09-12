@@ -4,7 +4,7 @@ import axios from 'axios';
 import {
     GetUniversityAreaRequest,
     ReissueTokenRequest,
-    JoinRequest,
+    //JoinRequest,
     CheckNicknameRequest,
 } from '../types/postTypes';
 import { UniversityAndRegionList } from '../types/getTypes';
@@ -81,12 +81,24 @@ export const reissueToken = async (
  * 만약 서버가 이미지 업로드를 multipart/form-data로 요구한다면,
  * 이 함수 대신 FormData 버전을 사용해야 함(주석 참고).
  */
-export const join = async (payload: JoinRequest): Promise<TokenResponse> => {
-    const { data } = await axiosInstance.post<TokenResponse>(
-        '/on-boarding/join',
-        payload,
-    );
-    return data;
+export const join = async (form: any): Promise<any> => {
+    console.log('🔵 [회원가입] 요청 시작');
+    console.log('🔵 [회원가입] form 데이터:', form);
+
+    try {
+        const response = await axiosInstance.post<TokenResponse>('/on-boarding/join', form, {
+            transformRequest: (data, headers) => {
+                console.log('🔵 [회원가입] data:', data);
+                console.log('🔵 [회원가입] headers:', headers);
+                return form;
+            },
+        });
+        console.log('✅ [회원가입] 성공:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('❌ [회원가입] 실패:', error);
+        throw error;
+    }
 };
 
 /** (선택) 멀티파트 전송이 필요할 때 사용할 대안 버전 — 서버 요구사항이 바뀌면 이걸 쓰세요. */
@@ -109,9 +121,13 @@ export const join = async (payload: JoinRequest): Promise<TokenResponse> => {
 export const checkNickname = async (
     payload: CheckNicknameRequest,
 ): Promise<boolean> => {
+    console.log('🔵 [닉네임 중복 검사] 요청 시작');
+    console.log('🔵 [닉네임 중복 검사] payload:', payload);
+
     const { data } = await axiosInstance.post<boolean>(
         '/on-boarding/check/nickname',
         payload,
     );
+    console.log('✅ [닉네임 중복 검사] 성공:', data);
     return data;
 };

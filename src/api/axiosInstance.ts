@@ -18,6 +18,7 @@ const MULTIPART_URLS = [
   '/report',
   '/question',
   '/chat/image',
+  '/on-boarding/join',
 ];
 
 const axiosInstance = axios.create({
@@ -103,7 +104,7 @@ axiosInstance.interceptors.response.use(
       //refresh token 발급
       try {
         console.log('🔄 [Axios Response] 토큰 갱신 요청 시작');
-        const res = await axios.post(API_BASE_URL + '/auth/reissue', { refreshToken, memberId });
+        const res = await axios.post(API_BASE_URL + '/on-boarding/reissue', { refreshToken, memberId });
         console.log('✅ [Axios Response] 토큰 갱신 성공');
 
         await EncryptedStorage.setItem('accessToken', res.data.accessToken);

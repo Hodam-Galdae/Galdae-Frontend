@@ -143,13 +143,13 @@ const Login: React.FC = () => {
     dispatch(setUser({...user, token: 'Bearer ' + response.accessToken}));
     console.log('🔵 [handleGoNextPage] response:', response);
     // 학생 인증 완료
-    if (response.isSelectedUniversity === true) {
+    if (response.isJoined === true) {
       console.log('🔵 [handleGoNextPage] 인증:', response.isJoined);
       navigation.replace('MainTab');
       return;
     }
 
-    if (response.isSelectedUniversity === false) {
+    if (response.isJoined === false) {
       console.log('🔵 [handleGoNextPage] 미인증:', response.isJoined);
       navigation.replace('SignUp', {data: response.isJoined});
       return;

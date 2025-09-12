@@ -229,7 +229,7 @@ const SignUp: React.FC = () => {
   return (
     <View style={styles.container}>
       {isLoading && <Loading />}
-      {alertWarning && <AlertWarning visible={alertWarning} onCancel={() => setAlertWarning(false)} onConfirm={() => setNowPageName('ContinueSignUp')}/>}
+      {alertWarning && <AlertWarning visible={alertWarning} onCancel={() => setAlertWarning(false)} onConfirm={() => {setAlertWarning(false); setNowPageName('ContinueSignUp')}}/>}
       <Header
         style={styles.headerStyle}
         title={<SVG name="GaldaeLogo" />}
