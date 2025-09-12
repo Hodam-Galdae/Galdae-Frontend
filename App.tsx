@@ -49,6 +49,7 @@ import CreateOTT from './src/screens/category/ott/CreateOTT';
 import DeliveryNDivide from './src/screens/category/delivery/DeliveryNDivide';
 import DeliveryDetail from './src/screens/category/delivery/DeliveryDetail';
 import CreateDelivery from './src/screens/category/delivery/CreateDelivery';
+import SignupSuccess from './src/screens/SignupSuccess';
 // import ContinueSignUp from './src/screens/ContinueSignUp';
 // import SetUserInfo from './src/screens/SetUserInfo';
 // import VerifySchool from './src/screens/VerifySchool';
@@ -195,6 +196,7 @@ function App() {
                   <Stack.Screen name="DeliveryNDivide" component={DeliveryNDivide} />
                   <Stack.Screen name="DeliveryDetail" component={DeliveryDetail} />
                   <Stack.Screen name="CreateDelivery" component={CreateDelivery} />
+                  <Stack.Screen name="SignupSuccess" component={SignupSuccess} />
                   {/* <Stack.Screen name="ContinueSignUp" component={ContinueSignUp} /> */}
                   {/* <Stack.Screen name="SetUserInfo" component={SetUserInfo} />
                   <Stack.Screen name="VerifySchool" component={VerifySchool} />

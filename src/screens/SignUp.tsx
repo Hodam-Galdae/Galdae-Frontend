@@ -19,6 +19,7 @@ import Loading from '../components/Loading';
 import ContinueSignUp from './ContinueSignUp';
 import VerifySchoolCode from './VerifySchoolCode';
 import AlertWarning from '../components/popup/AlertWarning';
+//import SignupSuccess from './SignupSuccess';
 type RootStackParamList = {
   SignUp: { data: Readonly<boolean> };
   ReviewInProgress: undefined;
@@ -44,15 +45,16 @@ export type StepName =
   | 'SetUserInfo'
  // | 'SchoolCardVerify'
   | 'EmailVerify'
-  | 'VerifySchoolCode';
+  | 'VerifySchoolCode'
+//  | 'SignupSuccess';
 
 type FlowKey = 'preference' | 'full';
 
 const FLOW_STEPS: Record<FlowKey, StepName[]> = {
   preference: ['Agree', 'VerifySchool', 'ContinueSignUp'],
-  full: ['Agree', 'VerifySchool', 'ContinueSignUp', 'EmailVerify','VerifySchoolCode','SetUserInfo' ],
+  full: ['Agree', 'VerifySchool', 'ContinueSignUp', 'EmailVerify','VerifySchoolCode','SetUserInfo',],
 };
-const FULL_ONLY_STEPS: StepName[] = [  'EmailVerify', 'VerifySchoolCode','SetUserInfo'];
+const FULL_ONLY_STEPS: StepName[] = [  'EmailVerify', 'VerifySchoolCode','SetUserInfo',];
 
 const SignUp: React.FC = () => {
   const navigation = useNavigation<SignUpScreenNavigationProp>();
@@ -142,7 +144,7 @@ const SignUp: React.FC = () => {
     //   setIsLoading={setIsLoading}
     //   setNextStep={setNextStepByName}
     // />,
-    
+    // <SignupSuccess />,
   ];
   const goBack = () => {
     if (nowStep === 0) {
@@ -166,6 +168,8 @@ const SignUp: React.FC = () => {
       setNowPageName('ContinueSignUp');
     } else if (nowPageName === 'VerifySchoolCode') {
       setNowPageName('EmailVerify');
+    // } else if (nowPageName === 'SignupSuccess') {
+    //   navigation.replace('MainTab');
     }
     // else if (nowPageName === 'SchoolCardVerify') {
     //   setNowPageName('EmailVerify');
@@ -215,8 +219,13 @@ const SignUp: React.FC = () => {
       // case 'SchoolCardVerify':
       //   result = 4;
       //   break;
-      
+    //   case 'SignupSuccess':
+    //     result = 6;
+    //     break;
+    
+    
     }
+
     return result;
   };
 
@@ -229,7 +238,7 @@ const SignUp: React.FC = () => {
   return (
     <View style={styles.container}>
       {isLoading && <Loading />}
-      {alertWarning && <AlertWarning visible={alertWarning} onCancel={() => setAlertWarning(false)} onConfirm={() => {setAlertWarning(false); setNowPageName('ContinueSignUp')}}/>}
+      {alertWarning && <AlertWarning visible={alertWarning} onCancel={() => setAlertWarning(false)} onConfirm={() => {setAlertWarning(false); setNowPageName('ContinueSignUp');}}/>}
       <Header
         style={styles.headerStyle}
         title={<SVG name="GaldaeLogo" />}

@@ -132,3 +132,4 @@ export { default as female } from './female.svg';
 export { default as person_icon } from './person_icon.svg';
 export { default as arrow_forward } from './arrow_forward.svg';
 export { default as MoreIcon } from './moveTo.svg';
+export { default as SignupSuccess } from './signup_success.svg';

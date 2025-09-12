@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState, useEffect } from 'react';
@@ -27,12 +28,18 @@ import useImagePicker from '../hooks/useImagePicker';
 import RNFS from 'react-native-fs';
 import { banks } from '../constants/bankOptions';
 import { StepName } from './SignUp';
+import { useNavigation } from '@react-navigation/native';
+
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 interface AgreeProps {
   setNextStep: (name: StepName) => void;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
-
+type RootStackParamList = {
+  SignupSuccess: undefined;
+};
 const SetUserInfo: React.FC<AgreeProps> = ({ setNextStep, setIsLoading }) => {
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [genderSelected, setGenderSelected] = useState<number>(-1);
   const [bankSelect, setBankSelect] = useState<number>(-1);
   const [name, setName] = useState<string>('');
@@ -95,7 +102,8 @@ const SetUserInfo: React.FC<AgreeProps> = ({ setNextStep, setIsLoading }) => {
         dumpForm(formData);
   
         await join(formData);
-        setNextStep('MainTab');
+        //setNextStep('SignupSuccess');
+        navigation.navigate('SignupSuccess');
     } catch (e) {
       //console.log(e);
     } finally {
