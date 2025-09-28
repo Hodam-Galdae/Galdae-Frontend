@@ -131,7 +131,7 @@ const topItem = myGaldaeHistory.length > 0 ? myGaldaeHistory[0] : null;
           />
         ) : (
           <View style={styles.borderBox}>
-            <BasicText text="갈대가 없습니다" style={styles.noGaldaeText} />
+            <BasicText text="N빵이 없습니다" style={styles.noGaldaeText} />
           </View>
         )}
 
@@ -150,14 +150,14 @@ const topItem = myGaldaeHistory.length > 0 ? myGaldaeHistory[0] : null;
             )}
             ListEmptyComponent={
               <View style={styles.borderBox}>
-                <BasicText text="기록이 없습니다" style={styles.noGaldaeText} />
+                <BasicText text="자주가는 경로가 없습니다" style={styles.noGaldaeText} />
               </View>
             }
           />
         )}
 
         <BasicButton
-          text="갈대 생성하기"
+          text="N빵 생성하기"
           buttonStyle={styles.generateButton}
           textStyle={styles.generateText}
           onPress={() => navigation.navigate('CreateGaldae')}
@@ -170,7 +170,7 @@ const topItem = myGaldaeHistory.length > 0 ? myGaldaeHistory[0] : null;
           setSelectedPostId(null);
         }}
         onConfirm={handleDeletePost}
-        title="선택하신 갈대를"
+        title="선택하신 N빵을"
         message="삭제하시겠습니까?"
         buttonText="삭제하기"
       />

@@ -1,53 +1,63 @@
 import React from 'react';
-import { TouchableOpacity, View } from 'react-native';
+import { TouchableOpacity, View, Text } from 'react-native';
 import BasicText from '../../../components/BasicText';
 import SVG from '../../../components/SVG';
 import TextTag from '../../../components/tag/TextTag';
-import moment from 'moment';
+//import moment from 'moment';
 import { theme } from '../../../styles/theme';
 import styles from '../../../styles/DeliveryItem.style';
 // Type
-import { DeliveryItemType } from '../../../types/getTypes';
+import { OrderListItem   } from '../../../types/orderTypes';
 
-interface GaldaeItemProps {
-    item: DeliveryItemType;
+interface DeliveryItemProps {
+    item: OrderListItem;
     onPress: () => void;
-    onLongPress?: () => void;
+    searchKeyword: string;
 }
 
-const TaxiItem: React.FC<GaldaeItemProps> = ({ item, onPress, onLongPress }) => {
-    const formatDepartureTime = (departureTime: string): string => {
-        return moment.utc(departureTime).format('YYYY년 MM월 DD일 (ddd) HH : mm');
+const DeliveryItem: React.FC<DeliveryItemProps> = ({ item, onPress, searchKeyword }) => {
+const renderHighlightedText = (text: string, keyword: string) => {
+        if (!keyword) return <Text style={styles.fromMainLocation}>{text}</Text>;
+        const parts = text.split(new RegExp(`(${keyword})`, 'gi')); // 키워드 기준으로 split
+        return (
+            <Text style={styles.fromMainLocation}>
+                {parts.map((part, index) =>
+                    part.toLowerCase() === keyword.toLowerCase() ? (
+                        <Text key={index} style={{ color: theme.colors.blue }}>
+                            {part}
+                        </Text>
+                    ) : (
+                        <Text key={index}>{part}</Text>
+                    )
+                )}
+            </Text>
+        );
     };
 
     return (
-        <TouchableOpacity onPress={onPress} onLongPress={item.isWriter ? onLongPress : undefined} delayLongPress={100}>
-            <View style={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.borderedListBoxComplete : styles.borderedListBox}>
+        <TouchableOpacity onPress={onPress} >
+            <View style={styles.borderedListBox}>
                 <View>
 
                     <View style={styles.fromToContainer}>
                         {/* 출발지 정보 */}
-                        <View style={styles.fromContainer}>
-                            {/* <SVG name={!item.isSameGender && item.passengerGenderType === 'SAME' ? 'Car1' : 'Car'} /> */}
-                            <BasicText text={item.departure.subPlace} style={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.fromMainLocationCom : styles.fromMainLocation} />
-                            <BasicText text={'안녕하세요저'} style={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.fromSubLocationCom : styles.fromSubLocation} numberOfLines={1} ellipsizeMode="tail" />
+                        <View style={ styles.fromContainer}>
+                            {renderHighlightedText(item.restaurantName, searchKeyword)}
                         </View>
-                        {/**item.departure.majorPlace */}
-                        <SVG name={!item.isSameGender && item.passengerGenderType === 'SAME' ? 'arrow_forward' : 'arrow_forward'} />
+
+                        <SVG name={'arrow_forward'} />
                         {/* 도착지 정보 */}
                         <View style={styles.toContainer}>
-                            {/* <SVG name={!item.isSameGender && item.passengerGenderType === 'SAME' ? 'Location1' : 'Location'} /> */}
-                            <BasicText text={item.arrival.subPlace} style={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.fromMainLocationCom : styles.fromMainLocation} />
-                            <BasicText text={'안녕하세요저는'} style={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.fromSubLocationCom : styles.fromSubLocation} numberOfLines={1} ellipsizeMode="tail" />
+                            <BasicText text={item.orderLocation} style={styles.fromMainLocation} />
                         </View>
-                        {/**item.arrival.majorPlace */}
+
                     </View>
 
                     <View style={styles.departureTimeContainer}>
-                        <BasicText text="주문 시간" style={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.departureTimeTitleCom : styles.departureTimeTitle} />
+                        <BasicText text="주문 시간" style={styles.departureTimeTitle} />
                         <BasicText
-                            text={formatDepartureTime(item.departureTime)}
-                            style={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.departureTimeCom : styles.departureTime}
+                            text={item.orderAt}
+                            style={styles.departureTime}
 
                         />
                     </View>
@@ -56,49 +66,22 @@ const TaxiItem: React.FC<GaldaeItemProps> = ({ item, onPress, onLongPress }) => 
                         {/* 승객 수 아이콘 */}
                         <View style={styles.passengerContainer}>
                             <View style={styles.fromToLine}>
-                                <SVG name={!item.isSameGender && item.passengerGenderType === 'SAME' ? 'person_icon' : 'person_icon'} />
+                                <SVG name={'person_icon'} />
                             </View>
                             <BasicText
-                                text={`(${item.passengerCount}/${item.totalPassengerCount})`}
+                                text={`(${item.currentPersonCount}/${item.maximumPersonCount})`}
                                 fontSize={theme.fontSize.size14}
-                                color={!item.isSameGender && item.passengerGenderType === 'SAME' ? theme.colors.blackV3 : theme.colors.blackV3}
+                                color={theme.colors.blackV3}
                             />
 
                         </View>
 
                         <TextTag
-                            text={item.arrangeTime === 'POSSIBLE' ? '시간협의가능' : '시간협의불가'}
-                            viewStyle={item.arrangeTime === 'POSSIBLE' ? styles.timePossible : styles.timeNotPossible}
-                            textStyle={item.arrangeTime === 'POSSIBLE' ? styles.timePossibleText : styles.timeNotPossibleText}
+                            text={item.isTimeNegotiable ? '시간협의가능' : '시간협의불가'}
+                            viewStyle={item.isTimeNegotiable ? styles.timePossible : styles.timeNotPossible}
+                            textStyle={item.isTimeNegotiable ? styles.timePossibleText : styles.timeNotPossibleText}
 
                         />
-
-                        {/* {item.passengerGenderType && (
-                            <View style={styles.tags}>
-                                {!item.isSameGender && item.passengerGenderType === 'SAME' ? (
-                                    <TextTag text="동성만"
-                                        enabledColors={
-                                            {
-                                                backgroundColor: theme.colors.grayV2,
-                                                textColor: theme.colors.grayV1,
-                                                borderColor: theme.colors.grayV1,
-                                            }
-                                        }
-                                        viewStyle={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.timePossible : styles.timePossible}
-                                        textStyle={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.timePossibleText : styles.timePossibleText}
-                                    />
-                                ) : item.passengerGenderType === 'SAME' ? (
-                                    <TextTag text="동성만" viewStyle={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.timePossible : styles.timePossible}
-                                        textStyle={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.timePossibleText : styles.timePossibleText} />
-                                ) : item.passengerGenderType === 'DONT_CARE' ? (
-                                    <TextTag text="성별무관" viewStyle={!item.isSameGender && item.passengerGenderType === 'DONT_CARE' ? styles.timePossible : styles.timePossible}
-                                        textStyle={!item.isSameGender && item.passengerGenderType === 'DONT_CARE' ? styles.timePossibleText : styles.timePossibleText} />
-                                ) : (
-                                    <TextTag text="상관없음" viewStyle={!item.isSameGender && item.passengerGenderType === 'DONT_CARE' ? styles.timePossible : styles.timePossible}
-                                        textStyle={!item.isSameGender && item.passengerGenderType === 'DONT_CARE' ? styles.timePossibleText : styles.timePossibleText} />
-                                )}
-                            </View>
-                        )} */}
                     </View>
 
 
@@ -117,4 +100,4 @@ const TaxiItem: React.FC<GaldaeItemProps> = ({ item, onPress, onLongPress }) => 
     );
 };
 
-export default TaxiItem;
+export default DeliveryItem;

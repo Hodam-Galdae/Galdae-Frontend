@@ -13,21 +13,22 @@ import SVG from '../../../components/SVG';
 import { theme } from '../../../styles/theme';
 import BasicButton from '../../../components/button/BasicButton';
 import { ScrollView } from 'react-native-gesture-handler';
-// import { useSelector } from 'react-redux';
-// import { fetchPostDetail } from '../../../modules/redux/slice/postDetailSlice';
-// import type { RootState } from '../../../modules/redux/RootReducer';
+import { useSelector } from 'react-redux';
+import { fetchSubscribeDetail } from '../../../modules/redux/slice/subScribeSlice';
+import type { RootState } from '../../../modules/redux/RootReducer';
 import { useAppDispatch } from '../../../modules/redux/store';
 import moment from 'moment';
-import { joinChatroom, ChatroomResponse } from '../../../api/chatApi';
+import { joinGroup } from '../../../api/groupApi';
+import { GroupJoinResponse } from '../../../types/groupTypes';
 import ParticipateModal from '../../../components/popup/ParticipateModal';
-import { OTTItemType } from '../../../types/getTypes';
+import { SubscribeDetailResponse } from '../../../types/subScribeTypes';
 import TextTag from '../../../components/tag/TextTag';
 
 type RootStackParamListd = {
     CreateGaldae: undefined;
     NowGaldae: undefined;
-    OTTDetail: { postId: string };
-    ChatRoom: { data: Readonly<ChatroomResponse> },
+    OTTDetail: { subscribeId: string };
+    ChatRoom: { data: Readonly<any> },
     OTTNDivide: undefined,
 };
 
@@ -43,30 +44,19 @@ type OTTDetailRouteProp = RouteProp<
 const OTTDetail: React.FC = () => {
     const navigation = useNavigation<OTTDetailScreenNavigationProp>();
     const route = useRoute<OTTDetailRouteProp>();
-    const { postId } = route.params; // 전달받은 postId
+    const { subscribeId } = route.params; // 전달받은 postId
 
-    // const { postDetail, loading, error } = useSelector(
-    //     (state: RootState) => state.postDetailSlice,
-    // );
-    const postDetail: OTTItemType = {
-        postId: '1',
-        postService: '넷플릭스',
-        postType: 'OTT',
-        totalPersonCount: 1,
-        price: 10000,
-        personCount: 1,
-        createdAt: '2025-01-01',
-        userNickName: 'test',
-        isCompleted: false,
-        isWriter: true,
-        isParticipated: false,
-    };
+    const { detail, detailLoading, detailError } = useSelector(
+        (state: RootState) => state.subscribeSlice,
+    );
+
     const dispatch = useAppDispatch();
     const [isParticipating, setIsParticipating] = useState(false);
     // 컴포넌트 마운트 시 Redux를 통해 상세 정보를 불러옴
     useEffect(() => {
-        // dispatch(fetchPostDetail(postId));  // OTT 상세 정보 조회
-    }, [dispatch, postId]);
+        dispatch(fetchSubscribeDetail(subscribeId));  // OTT 상세 정보 조회
+        console.log('🚀 OTT 상세 정보 불러오기:', subscribeId);
+    }, [dispatch, subscribeId]);
 
     const goBack = () => navigation.goBack();
 
@@ -77,11 +67,8 @@ const OTTDetail: React.FC = () => {
         // 참여 로직 처리
     };
     const handleNavigateChatRoom = async () => {
-        const tagetRoom = await joinChatroom(postId);
-        navigation.replace('ChatRoom', { data: Object.freeze(tagetRoom) });
-    };
-    const formatDepartureTime = (departureTime: string): string => {
-        return moment.utc(departureTime).format('YYYY년 MM월 DD일 (ddd) HH : mm');
+        const tagetRoom = await joinGroup(subscribeId);
+       // navigation.replace('ChatRoom', { data: Object.freeze(tagetRoom.chatroomId) });
     };
 
     // if (loading) {
@@ -100,16 +87,16 @@ const OTTDetail: React.FC = () => {
     //     );
     // }
 
-    if (!postDetail) {
+    if (!detail) {
         return (
             <View style={{ padding: 16 }}>
                 <BasicText text="상세 정보가 없습니다" />
             </View>
         );
     }
-    const isFull = postDetail.personCount >= postDetail.totalPersonCount;
+    const isFull = detail.joinedPersonCount >= detail.totalPersonCount;
 
-
+console.log(`OTT 상세 정보: ${detail}`,detail);
     // console.log(`mapUrl: ${mapUrl}`);
     return (
         <View style={styles.main}>
@@ -119,7 +106,7 @@ const OTTDetail: React.FC = () => {
                 title={
                     <View style={styles.headerTitle}>
                         <BasicText
-                            text={postDetail.postService}
+                            text={detail.subscribeType}
                             style={styles.headerText}
                         />
                     </View>
@@ -134,7 +121,7 @@ const OTTDetail: React.FC = () => {
                     text={'그룹 정보'}
                     style={styles.galdaeOwner}
                 />
-                <View key={postDetail.postId} style={styles.borderedListBox}>
+                <View key={detail.subscribeType} style={styles.borderedListBox}>
 
                     <View style={styles.menuContainer}>
                         <BasicText
@@ -154,66 +141,34 @@ const OTTDetail: React.FC = () => {
                             style={styles.menuText}
                         />
                         <View style={styles.tags}>
-                            {postDetail.postType === 'OTT' ? (
-                                <TextTag text="OTT"
-                                    viewStyle={styles.timePossible}
-                                    textStyle={styles.timePossibleText}
-                                />
-                            ) : postDetail.postType === 'TV' ? (
-                                <TextTag text="방송"
-                                    viewStyle={styles.timeNotPossible}
-                                    textStyle={styles.timeNotPossibleText}
-                                />
-                            ) : postDetail.postType === 'MUSIC' ? (
-                                <TextTag text="음악"
-                                    viewStyle={styles.timePossible}
-                                    textStyle={styles.timeNotPossibleText}
-                                />
-                            ) : postDetail.postType === 'PRODUCTIVITY' ? (
-                                <TextTag text="생산성"
-                                    viewStyle={styles.timePossible}
-                                    textStyle={styles.timePossibleText}
-                                />
-                            ) : postDetail.postType === 'EDUCATION' ? (
-                                <TextTag text="교육"
-                                    viewStyle={styles.timePossible}
-                                    textStyle={styles.timePossibleText}
-                                />
-                            ) : postDetail.postType === 'MEMBERSHIP' ? (
-                                <TextTag text="멤버쉽"
-                                    viewStyle={styles.timePossible}
-                                    textStyle={styles.timePossibleText}
-                                />
-                            ) : (
-                                <TextTag text="기타"
-                                    viewStyle={styles.timePossible}
-                                    textStyle={styles.timePossibleText}
-                                />
-                            )}
+                            <TextTag text={detail.subscribeType}
+                                viewStyle={styles.timePossible}
+                                textStyle={styles.timePossibleText}
+                            />
                         </View>
                     </View>
 
                     <View style={styles.menuContainer}>
                         <BasicText
-                            text={`${postDetail.userNickName}` || '작성자'}
+                            text={`${detail.userInfo?.nickname || '작성자'}`}
                             style={styles.writeUserName}
                         />
                         <View style={styles.fromContainer}>
                             <BasicText
-                                text={postDetail.postService}
+                                text={detail.subscribeType}
                                 style={styles.writeUserName}
                             />
                         </View>
 
                         <View style={styles.fromContainer}>
                             <BasicText
-                                text={postDetail.price.toLocaleString() + '원'}
+                                text={detail.onePersonFee.toLocaleString() + '원'}
                                 style={styles.writeUserName}
                             />
                         </View>
 
                         <BasicText
-                            text={`${postDetail.personCount}/${postDetail.totalPersonCount}`}
+                            text={`${detail.joinedPersonCount}/${detail.totalPersonCount}`}
                             style={styles.writeUserName}
                         />
 
@@ -225,13 +180,13 @@ const OTTDetail: React.FC = () => {
                 <BasicText text="빵장의 한마디" style={styles.galdaeOwner} />
 
                 <View style={styles.userInfoBox}>
-                    <BasicText text={postDetail.userNickName || ''} style={styles.messageText} />
+                    <BasicText text={detail.content || ''} style={styles.messageText} />
                 </View>
 
 
             </ScrollView>
             <View style={styles.participateContainer}>
-                {postDetail.isParticipated ? (
+                {detail.isParticipatedGroup || detail.isWriter ? (
                     <BasicButton
                         text="이미 참여한 N빵"
                         buttonStyle={styles.participateBtn}
@@ -278,7 +233,7 @@ const OTTDetail: React.FC = () => {
             {isParticipating && (
                 <ParticipateModal
                     visible={isParticipating}
-                    subTitle={postDetail.postService}
+                    subTitle={detail.subscribeType}
                     onCancel={() => navigation.navigate('OTTNDivide')}
                     onConfirm={handleNavigateChatRoom}
                 />

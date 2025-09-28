@@ -1,8 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable radix */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable quotes */
 // CreateGaldae.tsx
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import moment from 'moment-timezone/builds/moment-timezone-with-data';
 import { TouchableOpacity, View, ScrollView, Alert, TextInput } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
@@ -14,26 +15,15 @@ import SVGButton from '../../../components/button/SVGButton';
 import { theme } from '../../../styles/theme';
 import BasicButton from '../../../components/button/BasicButton';
 import Header from '../../../components/Header';
-import SelectTextButton from '../../../components/button/SelectTextButton';
-import FastGaldaeStartPopup, { FastGaldaeStartPopupRef } from '../../../components/popup/FastGaldaeStartPopup';
-import FastGaldaeEndPopup, { FastGaldaeEndPopupRef } from '../../../components/popup/FastGaldaeEndPopup';
-import FastGaldaeTimePopup, { FastGaldaeTimePopupRef } from '../../../components/popup/FastGaldaeTimePopup';
+
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useAppDispatch } from '../../../modules/redux/store';
-import { fetchMyGaldaeHistory } from '../../../modules/redux/slice/myGaldaeSlice';
-import { fetchHomeGaldaePosts } from '../../../modules/redux/slice/homeGaldaeSlice';
-import { fetchMyCreatedGaldae } from '../../../modules/redux/slice/myCreatedGaldaeSlice';
-import { fetchGaldaePosts } from '../../../modules/redux/slice/galdaeSlice';
-import { fetchFrequentRoutes } from '../../../modules/redux/slice/frequentRouteSlice';
-// API
-import { createPost } from '../../../api/postApi'; // ✅ 갈대 생성 API 추가
-//type
-import { GetPostsRequest } from '../../../types/postTypes';
-// ✅ 갈대 생성 요청 타입
-import { CreatePostRequest } from '../../../types/postTypes';
-import { Portal } from '@gorhom/portal';
-import ParticipateModal from '../../../components/popup/ParticipateModal';
+import { createSubscribeGroup } from '../../../modules/redux/slice/subScribeSlice';
 
+import ParticipateModal from '../../../components/popup/ParticipateModal';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../modules/redux/RootReducer';
+import { fetchSubscribeTypeService } from '../../../modules/redux/slice/subScribeSlice';
 // 내비게이션 스택 타입 정의
 type RootStackParamList = {
     CreateOTT: undefined;
@@ -51,89 +41,54 @@ const CreateOTT: React.FC = () => {
     const [dropdownVisible2, setDropdownVisible2] = useState<boolean>(false);
     const [editable, setEditable] = useState<boolean>(false);
     const [price, setPrice] = useState<string>('');
-    const [selectedGender, setSelectedGender] = useState<number>(0);
-    const [selectedTimeDiscuss, setSelectedTimeDiscuss] = useState<number>(0);
     const [passengerNumber, setPassengerNumber] = useState<number>(2);
-    const [selectedChannel, setSelectedChannel] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
-    const [departureDate, setDepartureDate] = useState<string | null>(null); // "YYYY-MM-DD" 형식
-    const [departureAmPm, setDepartureAmPm] = useState<'오전' | '오후'>('오전');
-    // 출발지 상태 (이름과 ID)
-    const [departureLargeName, setDepartureLargeName] = useState<'출발지 선택' | string>('출발지 선택');
-    const [departureLargeId, setDepartureLargeId] = useState<number | null>(null);
-    const [departureSmallName, setDepartureSmallName] = useState<'출발지 선택' | string>('-');
-    const [departureSmallId, setDepartureSmallId] = useState<number | null>(null);
-    // 도착지 상태 (이름과 ID)
-    const [destinationLargeName, setDestinationLargeName] = useState<'도착지 선택' | string>('도착지 선택');
-    const [destinationLargeId, setDestinationLargeId] = useState<number | null>(null);
-    const [destinationSmallName, setDestinationSmallName] = useState<'도착지 선택' | string>('-');
-    const [destinationSmallId, setDestinationSmallId] = useState<number | null>(null);
-    const [departureHour, setDepartureHour] = useState<number>(0);
-    const [departureMinute, setDepartureMinute] = useState<number>(0);
     const [messageLength, setMessageLength] = useState<number>(0);
     const [message, setMessage] = useState<string>('');
     const dispatch = useAppDispatch();
-    const fastGaldaeStartPopupRef = useRef<FastGaldaeStartPopupRef>(null);
-    const fastGaldaeEndPopupRef = useRef<FastGaldaeEndPopupRef>(null);
-    const fastGaldaeTimePopupRef = useRef<FastGaldaeTimePopupRef>(null);
     const [participating, setParticipating] = useState<boolean>(false);
-    const postType = [
-        {
-            name: 'OTT',
-            code: 'OTT',
-        },
-        {
-            name: '음악',
-            code: 'MUSIC',
-        },
-        {
-            name: '생산성',
-            code: 'PRODUCTIVITY',
-        },
-        {
-            name: '교육',
-            code: 'EDUCATION',
-        },
-        {
-            name: '멤버쉽',
-            code: 'MEMBERSHIP',
-        },
-        {
-            name: '기타',
-            code: 'ETC',
-        },
-    ];
-    const postService = [
-        {
-            name: '넷플릭스',
-            code: 'NETFLIX',
-        },
+    // ✅ 기존 selector 2개를 없애고 단일 소스만 가져온다
+    //    (slice 이름이 subscribeSlice인지 확인. 예시는 그대로 사용)
+    const typeService = useSelector((state: RootState) => state.subscribeSlice.typeService);
+    const [etcService, setEtcService] = useState<string>('');
+    // ✅ 드롭다운에서 재사용하기 위한 단순 옵션 타입
+    type SimpleOption = { code: string; name: string };
 
-        {
-            name: '티빙',
-            code: 'TIVING',
-        },
-        {
-            name: '디즈니',
-            code: 'DISNEY',
-        },
-        {
-            name: '왓챠',
-            code: 'WATCHA',
-        },
-        {
-            name: '웨이브',
-            code: 'WAVE',
-        },
-        {
-            name: '라프텔',
-            code: 'LAPTEAL',
-        },
-        {
-            name: '직접입력',
-            code: 'DIRECT_INPUT',
-        },
-    ];
+    /** ✨ postType: 종류 드롭다운용 (subscribeType만 추출) */
+    const postType: SimpleOption[] = React.useMemo(() => {
+        // subscribeType이 { code, name } 구조라고 가정
+        return (typeService ?? []).map(item => ({
+            code: item.subscribeType,
+            name: item.subscribeType,
+        }));
+    }, [typeService]);
+
+    /** ✨ postService: 서비스(대학) 드롭다운용
+     *  - selectedType(= subscribeType.code)에 해당하는 universityList 매핑
+     *  - 대학 항목을 { code, name }로 변환하여 UI와 맞춘다
+     */
+    const postService: SimpleOption[] = React.useMemo(() => {
+        if (!selectedType) { return []; }
+        const matched = (typeService ?? []).find(
+            item => item.subscribeType === selectedType
+        );
+        if (!matched) { return []; }
+        return matched.universityList.map(u => ({
+            code: String(u.id),
+            name: u.universityName,
+        }));
+    }, [typeService, selectedType]);
+
+    /** 🔧 UX: 종류가 바뀌면 서비스 선택을 초기화 */
+    React.useEffect(() => {
+        setSelectedService('');
+    }, [selectedType]);
+
+    useEffect(() => {
+        console.log('🚀 typeService:', typeService);
+        dispatch(fetchSubscribeTypeService());
+    }, []);
+
     const passengerNumberHandler = (type: string) => {
         if (type === 'PLUS' && passengerNumber < 4) {
             setPassengerNumber(passengerNumber + 1);
@@ -144,90 +99,23 @@ const CreateOTT: React.FC = () => {
 
     // ✅ 갈대 생성 API 호출 함수
     const handleCreateGaldaeConfirm = async () => {
+        dispatch(createSubscribeGroup({
+            subscribeType: selectedType,
+            subscribeServiceId: parseInt(selectedService),
+            etcService: etcService,
+            onePersonFee: price,
+            totalPersonCount: passengerNumber,
+            content: message,
+        }));
         setParticipating(true);
     };
-    const toggleFastGaldaeStartPopup = () => {
-        fastGaldaeStartPopupRef.current?.open();
-    };
 
-    const toggleFastGaldaeEndPopup = () => {
-        fastGaldaeEndPopupRef.current?.open();
-    };
 
-    const toggleFastGaldaeTimePopup = () => {
-        fastGaldaeTimePopupRef.current?.open();
-    };
-
-    const handleTimePopupConfirm = (
-        selectedDate: string,
-        amPm: '오전' | '오후',
-        hour: number,
-        minute: number
-    ) => {
-        setDepartureDate(selectedDate);
-        setDepartureAmPm(amPm);
-        setDepartureHour(amPm === '오후' && hour < 12 ? hour + 12 : amPm === '오전' && hour === 12 ? 0 : hour);
-        setDepartureMinute(minute);
-    };
-
-    // 출발일시 문자열 포맷 함수
-    const formatDepartureDateTime = () => {
-        if (!departureDate) {
-            // const now = moment();
-            // const formattedDate = now.format('YYYY년 M월 D일 (ddd)');
-            // const hour = now.hour();
-            // const minute = now.minute();
-            // const amPm = hour < 12 ? '오전' : '오후';
-            // let hour12 = hour % 12;
-            // if (hour12 === 0) {
-            //   hour12 = 12;
-            // }
-            // const formattedTime = `${amPm} ${hour12} : ${minute < 10 ? '0' + minute : minute}`;
-            return '출발 시간 선택';
-        }
-        const dateObj = moment(departureDate, 'YYYY-MM-DD');
-        const formattedDate = dateObj.format('YYYY년 M월 D일 (ddd)');
-        const formattedTime = `${departureHour === 0 ? '00' : departureHour} : ${departureMinute < 10 ? '0' + departureMinute : departureMinute}`;
-        return `${formattedDate} ${formattedTime}`;
-    };
-    const getFormattedDepartureTime = (): string => {
-        if (!departureDate) {
-            return '출발 시간 선택';
-        }
-
-        // 12시간 -> 24시간 변환
-        let hour24 = departureHour;
-        if (departureAmPm === '오후' && departureHour < 12) {
-            hour24 += 12;
-        } else if (departureAmPm === '오전' && departureHour === 12) {
-            hour24 = 0;
-        }
-
-        // 선택한 날짜와 시간 정보를 Asia/Seoul 타임존의 moment 객체로 생성
-        const selectedMoment = moment.utc(departureDate).set({
-            hour: hour24,
-            minute: departureMinute,
-            second: 0,
-            millisecond: 0,
-        });
-        return selectedMoment.toISOString(); // UTC 기준 ISO 문자열 반환
-    };
-    const handleSwitch = () => {
-        setDepartureLargeName(destinationLargeName);
-        setDepartureSmallName(destinationSmallName);
-        setDepartureSmallId(destinationSmallId);
-        setDepartureLargeId(destinationLargeId);
-
-        setDestinationLargeId(departureLargeId);
-        setDestinationSmallId(departureSmallId);
-        setDestinationLargeName(departureLargeName);
-        setDestinationSmallName(departureSmallName);
-    };
     const isFormValid =
         selectedType !== '' &&
         selectedService !== '' &&
         price !== '' &&
-        messageLength <= 200;
+        messageLength !== 0;
     return (
         <View>
             <Header
@@ -286,49 +174,68 @@ const CreateOTT: React.FC = () => {
                     </View>
 
                     <View style={styles.bankPickerContainer}>
-                        <TouchableOpacity
-                            style={styles.bankPickerButton}
-                            onPress={() => {
-                                setDropdownVisible2(!dropdownVisible2);
-                                setEditable(false);
-                            }
-                            }
-                        >
-                            <View style={styles.bankSVGText}>
-
-                                <BasicText
-                                    text={
-                                        selectedService
-                                            ? postService.find((service) => service.code === selectedService)?.name || '서비스 선택'
-                                            : '서비스 선택'
-                                    }
-                                    style={styles.bankPickerText}
+                        {
+                            selectedType === "ETC" ? (
+                                <TextInput
+                                    style={styles.bankPickerButton}
+                                    value={etcService}
+                                    onChangeText={(text) => {
+                                        setEtcService(text);
+                                    }}
+                                    placeholder="직접 입력해 주세요."
+                                    placeholderTextColor={theme.colors.blackV3}
                                 />
-                            </View>
-                            <SVG
-                                name={dropdownVisible2 ? 'up_line' : 'down_line'}
-                                style={styles.bankPickerIcon}
-                            />
-                        </TouchableOpacity>
-                        {dropdownVisible2 && (
-                            <View style={styles.bankDropdown}>
-                                <ScrollView>
-                                    {postService.map((service) => (
-                                        <TouchableOpacity
-                                            key={service.code}
-                                            style={styles.bankDropdownItem}
-                                            onPress={() => {
-                                                setSelectedService(service.code);
-                                                setDropdownVisible2(false);
-                                                setEditable(true);
-                                            }}
-                                        >
-                                            <BasicText text={service.name} style={styles.bankDropdownText} />
-                                        </TouchableOpacity>
-                                    ))}
-                                </ScrollView>
-                            </View>
-                        )}
+                            ) : (
+                                <>
+                                    <TouchableOpacity
+                                        style={styles.bankPickerButton}
+                                        onPress={() => {
+                                            if (!selectedType) {
+                                                Alert.alert('안내', '먼저 종류를 선택해 주세요.');
+                                                return;
+                                            }
+                                            setDropdownVisible2(!dropdownVisible2);
+                                            setEditable(false);
+                                        }
+                                        }
+                                    >
+                                        <View style={styles.bankSVGText}>
+
+                                            <BasicText
+                                                text={
+                                                    selectedService
+                                                        ? postService.find((service) => service.code === selectedService)?.name || '서비스 선택'
+                                                        : '서비스 선택'
+                                                }
+                                                style={styles.bankPickerText}
+                                            />
+                                        </View>
+                                        <SVG
+                                            name={dropdownVisible2 ? 'up_line' : 'down_line'}
+                                            style={styles.bankPickerIcon}
+                                        />
+                                    </TouchableOpacity>
+                                    {dropdownVisible2 && (
+                                        <View style={styles.bankDropdown}>
+                                            <ScrollView>
+                                                {postService.map((service) => (
+                                                    <TouchableOpacity
+                                                        key={service.code}
+                                                        style={styles.bankDropdownItem}
+                                                        onPress={() => {
+                                                            setSelectedService(service.code);
+                                                            setDropdownVisible2(false);
+                                                            setEditable(true);
+                                                        }}
+                                                    >
+                                                        <BasicText text={service.name} style={styles.bankDropdownText} />
+                                                    </TouchableOpacity>
+                                                ))}
+                                            </ScrollView>
+                                        </View>
+                                    )}</>
+                            )
+                        }
                     </View>
 
 
@@ -387,57 +294,22 @@ const CreateOTT: React.FC = () => {
                         placeholderTextColor={theme.colors.blackV3}
                     />
                     <View style={styles.generateButtonWrapper}>
-                    <BasicButton
-                        text="생성하기"
-                        buttonStyle={styles.generateButton}
-                        textStyle={styles.generateText}
-                        loading={loading}
-                        disabled={!isFormValid} // 🔒 조건 미충족 시 비활성화
-                        onPress={handleCreateGaldaeConfirm}
-                        disabledColors={{
-                            backgroundColor: theme.colors.grayV2,
-                            textColor: theme.colors.grayV0,
-                        }}
-                    />
+                        <BasicButton
+                            text="생성하기"
+                            buttonStyle={styles.generateButton}
+                            textStyle={styles.generateText}
+                            loading={loading}
+                            disabled={!isFormValid} // 🔒 조건 미충족 시 비활성화
+                            onPress={handleCreateGaldaeConfirm}
+                            disabledColors={{
+                                backgroundColor: theme.colors.grayV2,
+                                textColor: theme.colors.grayV0,
+                            }}
+                        />
                     </View>
                 </View>
             </ScrollView>
 
-            <Portal>
-                <FastGaldaeStartPopup
-                    ref={fastGaldaeStartPopupRef}
-                    onConfirm={(largeName, largeId, smallName, smallId) => {
-                        setDepartureLargeName(largeName);
-                        setDepartureLargeId(largeId);
-                        setDepartureSmallName(smallName);
-                        setDepartureSmallId(smallId);
-                    }}
-                    selectedStartPlaceId={destinationSmallId} // ✅ 출발지에서 선택한 소분류 ID 전달
-                //onClose={() => console.log('팝업 닫힘')}
-                />
-            </Portal>
-
-            <Portal>
-                <FastGaldaeEndPopup
-                    ref={fastGaldaeEndPopupRef}
-                    onConfirm={(largeName, largeId, smallName, smallId) => {
-                        setDestinationLargeName(largeName);
-                        setDestinationLargeId(largeId);
-                        setDestinationSmallName(smallName);
-                        setDestinationSmallId(smallId);
-                    }}
-                    selectedStartPlaceId={departureSmallId} // ✅ 출발지에서 선택한 소분류 ID 전달
-                //onClose={() => console.log('팝업 닫힘')}
-                />
-            </Portal>
-
-            <Portal>
-                <FastGaldaeTimePopup
-                    ref={fastGaldaeTimePopupRef}
-                    onConfirm={handleTimePopupConfirm}
-                //onClose={() => console.log('팝업 닫힘')}
-                />
-            </Portal>
             {participating && (
                 <ParticipateModal
                     title="생성 완료"

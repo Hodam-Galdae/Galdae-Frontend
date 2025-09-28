@@ -48,9 +48,14 @@ export default StyleSheet.create({
     fromContainer: {
         flexDirection: 'row',
         gap: (4),
-        width: '40%',
+        //width: '40%',
         overflow: 'hidden',
         flexWrap: 'nowrap',
+    },
+    fromContainerSearch: {
+        fontSize: theme.fontSize.size16,
+        fontWeight: '700',
+        color: theme.colors.blue,
     },
     toContainer: {
         flexDirection: 'row',

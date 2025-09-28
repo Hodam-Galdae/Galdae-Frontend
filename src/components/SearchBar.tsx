@@ -1,21 +1,22 @@
 import React from 'react';
 import {View} from 'react-native';
-import BasicInput from './BasicInput';
 import SVG from './SVG';
 import styles from '../styles/SearchBar.style';
+import BasicButton from './button/BasicButton';
 
 type SearchBarProps = {
   text: string;
   textColor: string;
+  onPress: () => void;
 };
 
-const SearchBar = ({text, textColor}: SearchBarProps) => {
+const SearchBar = ({text, onPress}: SearchBarProps) => {
   return (
     <View style={styles.searchContainer}>
-      <BasicInput
+      <BasicButton
         text={text}
-        style={styles.searchInput}
-        textColor={textColor}
+        textStyle={styles.searchInput}
+        onPress={onPress}
       />
       <SVG name="Search" style={styles.searchIcon} />
     </View>

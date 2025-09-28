@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable quotes */
 // CreateGaldae.tsx
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import moment from 'moment-timezone/builds/moment-timezone-with-data';
 import { TouchableOpacity, View, ScrollView, Alert, TextInput } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
@@ -18,19 +18,28 @@ import FastGaldaeEndPopup, { FastGaldaeEndPopupRef } from '../../../components/p
 import FastGaldaeTimePopup, { FastGaldaeTimePopupRef } from '../../../components/popup/FastGaldaeTimePopup';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useAppDispatch } from '../../../modules/redux/store';
-import { fetchMyGaldaeHistory } from '../../../modules/redux/slice/myGaldaeSlice';
-import { fetchHomeGaldaePosts } from '../../../modules/redux/slice/homeGaldaeSlice';
-import { fetchMyCreatedGaldae } from '../../../modules/redux/slice/myCreatedGaldaeSlice';
-import { fetchGaldaePosts } from '../../../modules/redux/slice/galdaeSlice';
-import { fetchFrequentRoutes } from '../../../modules/redux/slice/frequentRouteSlice';
+import EncryptedStorage from 'react-native-encrypted-storage';
+import { getUserInfo } from '../../../api/membersApi';
+// import { fetchMyGaldaeHistory } from '../../../modules/redux/slice/myGaldaeSlice';
+// import { fetchHomeGaldaePosts } from '../../../modules/redux/slice/homeGaldaeSlice';
+// import { fetchMyCreatedGaldae } from '../../../modules/redux/slice/myCreatedGaldaeSlice';
+// import { fetchGaldaePosts } from '../../../modules/redux/slice/galdaeSlice';
+// import { fetchFrequentRoutes } from '../../../modules/redux/slice/frequentRouteSlice';
 // API
-import { createPost } from '../../../api/postApi'; // ✅ 갈대 생성 API 추가
+//import { createPost } from '../../../api/postApi'; // ✅ 갈대 생성 API 추가
+import { createTaxi } from '../../../modules/redux/slice/taxiSlice';
 //type
-import { GetPostsRequest } from '../../../types/postTypes';
+// import { GetPostsRequest } from '../../../types/postTypes';
 // ✅ 갈대 생성 요청 타입
 import { CreatePostRequest } from '../../../types/postTypes';
 import { Portal } from '@gorhom/portal';
 import ParticipateModal from '../../../components/popup/ParticipateModal';
+import { PagingQuery, TaxiCreateRequest } from '../../../types/taxiType';
+// import { joinGroup } from '../../../api/groupApi';
+// import { GroupJoinResponse } from '../../../types/groupTypes';
+import { ChatroomResponse, getChatrooms } from '../../../api/chatApi';
+// import { useFocusEffect } from '@react-navigation/native';
+// import { useCallback } from 'react';
 
 // 내비게이션 스택 타입 정의
 type RootStackParamList = {
@@ -38,7 +47,18 @@ type RootStackParamList = {
   NowGaldae: undefined;
   NowGaldaeDetail: { postId: string };
   TaxiNDivide: undefined;
+  ChatRoom: { data: Readonly<ChatroomResponse>, userInfo: Readonly<User> };
 };
+
+type User = {
+  nickname: string,
+  image: string,
+  university: string,
+  bankType: string,
+  accountNumber: string,
+  depositor: string,
+  token: string,
+}
 
 const CreateGaldae: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -46,7 +66,7 @@ const CreateGaldae: React.FC = () => {
   const [selectedGender, setSelectedGender] = useState<number>(0);
   const [selectedTimeDiscuss, setSelectedTimeDiscuss] = useState<number>(0);
   const [passengerNumber, setPassengerNumber] = useState<number>(2);
-  const [selectedChannel, setSelectedChannel] = useState<boolean>(false);
+  // const [selectedChannel, setSelectedChannel] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [departureDate, setDepartureDate] = useState<string | null>(null); // "YYYY-MM-DD" 형식
   const [departureAmPm, setDepartureAmPm] = useState<'오전' | '오후'>('오전');
@@ -60,8 +80,8 @@ const CreateGaldae: React.FC = () => {
   const [destinationLargeId, setDestinationLargeId] = useState<number | null>(null);
   const [destinationSmallName, setDestinationSmallName] = useState<'도착지 선택' | string>('-');
   const [destinationSmallId, setDestinationSmallId] = useState<number | null>(null);
-  const [departureHour, setDepartureHour] = useState<number>(0);
-  const [departureMinute, setDepartureMinute] = useState<number>(0);
+  const [departureHour, setDepartureHour] = useState<number | null>(null);
+  const [departureMinute, setDepartureMinute] = useState<number | null>(null);
   const [messageLength, setMessageLength] = useState<number>(0);
   const [message, setMessage] = useState<string>('');
   const dispatch = useAppDispatch();
@@ -69,6 +89,8 @@ const CreateGaldae: React.FC = () => {
   const fastGaldaeEndPopupRef = useRef<FastGaldaeEndPopupRef>(null);
   const fastGaldaeTimePopupRef = useRef<FastGaldaeTimePopupRef>(null);
   const [participating, setParticipating] = useState<boolean>(false);
+  const [taxiId, setTaxiId] = useState<string | null>(null);
+  const [activeChatRoomData, setActiveChatRoomData] = useState<ChatroomResponse[]>([]);
   const passengerNumberHandler = (type: string) => {
     if (type === 'PLUS' && passengerNumber < 4) {
       setPassengerNumber(passengerNumber + 1);
@@ -77,6 +99,22 @@ const CreateGaldae: React.FC = () => {
     }
   };
 
+useEffect(() => {
+  // 참여중인 갈대와 완료된 갈대를 모두 가져오기
+  const fetchAllChatRooms = async () => {
+    try {
+      const [activeData] = await Promise.all([
+        getChatrooms(),
+      ]);
+      console.log('activeData',activeData);
+      setActiveChatRoomData(activeData);
+    } catch (error) {
+      console.error('채팅방 데이터 가져오기 실패:', error);
+    }
+  };
+
+  fetchAllChatRooms();
+}, []);
   // ✅ 갈대 생성 API 호출 함수
   const handleCreateGaldaeConfirm = async () => {
     if (departureLargeName === '출발지 선택' || departureSmallName === '출발지 선택' || destinationLargeName === '도착지 선택' || destinationSmallName === '도착지 선택') {
@@ -104,42 +142,43 @@ const CreateGaldae: React.FC = () => {
       return;
     }
     setLoading(true);
-    const postData: CreatePostRequest = {
+    const postData: TaxiCreateRequest = {
       majorDepartureId: departureLargeId,
       subDepartureId: departureSmallId,
       majorArrivalId: destinationLargeId,
       subArrivalId: destinationSmallId,
       departureTime: formattedDepartureTime,
-      passengerType: selectedGender === 1 ? 'SAME' : 'DONT_CARE',
+      shareGenderType: selectedGender === 1 ? 'SAME_GENDER' : 'DONT_CARE',
       arrangeTime: selectedTimeDiscuss === 0 ? 'POSSIBLE' : 'IMPOSSIBLE',
-      passengerCount: passengerNumber,
-      isFavoriteRoute: selectedChannel,
+      totalPersonCount: passengerNumber,
+      content: message,
     };
 
     // console.log('🚀 서버로 보낼 갈대 생성 데이터:', postData);
 
     try {
-      const response = await createPost(postData); // 서버에서 postId 반환
+      const response = await dispatch(createTaxi(postData)).unwrap(); // 서버에서 postId 반환
       // console.log('✅ 생성된 갈대 postId:', response.postId);
-      dispatch(fetchMyGaldaeHistory());
-      dispatch(fetchMyCreatedGaldae());
-      dispatch(fetchHomeGaldaePosts());
-      dispatch(fetchFrequentRoutes());
-      const params: GetPostsRequest = {
+      // dispatch(fetchMyGaldaeHistory());
+      // dispatch(fetchMyCreatedGaldae());
+      // dispatch(fetchHomeGaldaePosts());
+      // dispatch(fetchFrequentRoutes());
+      const params: PagingQuery = {
         pageNumber: 0,
         pageSize: 20,
         direction: 'DESC',
-        properties: ['create_at'],
+        property: 'create_at',
       };
-      dispatch(fetchGaldaePosts(params));
+      //dispatch(fetchGaldaePosts(params));
 
-      if (response.postId) {
-        // 상세 페이지로 이동하면서 postId 전달
-        //navigation.replace('NowGaldaeDetail', { postId: response.postId });
+      if (response.taxiId) {
+        setTaxiId(response.taxiId);
         setParticipating(true);
       }
-    } catch (error) {
-      // console.error('❌ 갈대 생성 실패:', error);
+    } catch (rejectedMsg: any) {
+      console.error('❌ 갈대 생성 실패:', rejectedMsg);
+
+      Alert.alert('오류', String(rejectedMsg.message));
     } finally {
       setLoading(false);
     }
@@ -185,7 +224,7 @@ const CreateGaldae: React.FC = () => {
     }
     const dateObj = moment(departureDate, 'YYYY-MM-DD');
     const formattedDate = dateObj.format('YYYY년 M월 D일 (ddd)');
-    const formattedTime = `${departureHour === 0 ? '00' : departureHour} : ${departureMinute < 10 ? '0' + departureMinute : departureMinute}`;
+    const formattedTime = `${departureHour === 0 ? '00' : departureHour} : ${departureMinute !== null && departureMinute < 10 ? '0' + departureMinute : departureMinute}`;
     return `${formattedDate} ${formattedTime}`;
   };
   const getFormattedDepartureTime = (): string => {
@@ -195,16 +234,16 @@ const CreateGaldae: React.FC = () => {
 
     // 12시간 -> 24시간 변환
     let hour24 = departureHour;
-    if (departureAmPm === '오후' && departureHour < 12) {
-      hour24 += 12;
+    if (departureAmPm === '오후' && departureHour !== null && departureHour < 12) {
+      hour24! += 12;
     } else if (departureAmPm === '오전' && departureHour === 12) {
       hour24 = 0;
     }
 
     // 선택한 날짜와 시간 정보를 Asia/Seoul 타임존의 moment 객체로 생성
     const selectedMoment = moment.utc(departureDate).set({
-      hour: hour24,
-      minute: departureMinute,
+      hour: hour24!,
+      minute: departureMinute!,
       second: 0,
       millisecond: 0,
     });
@@ -226,7 +265,46 @@ const CreateGaldae: React.FC = () => {
     departureSmallId !== null &&
     destinationLargeId !== null &&
     destinationSmallId !== null &&
+    departureHour !== null &&
+    departureMinute !== null &&
+    message !== '' &&
     departureDate !== null;
+
+  // 폼 유효성 검사 콘솔 로깅
+  console.log('=== 폼 유효성 검사 ===');
+  console.log('departureLargeId:', departureLargeId);
+  console.log('departureSmallId:', departureSmallId);
+  console.log('destinationLargeId:', destinationLargeId);
+  console.log('destinationSmallId:', destinationSmallId);
+  console.log('departureHour:', departureHour);
+  console.log('departureMinute:', departureMinute);
+  console.log('message:', message);
+  console.log('departureDate:', departureDate);
+  console.log('isFormValid:', isFormValid);
+  console.log('==================');
+  const handleNavigateChatRoom = async (id: string) => {
+    // const tagetRoom = await joinGroup(taxiId || '');
+    // console.log('tagetRoom', tagetRoom);
+    // navigation.replace('ChatRoom', { data: Object.freeze(tagetRoom) });
+
+    console.log('activeChatRoomData', activeChatRoomData, id);
+    const targetRoom = activeChatRoomData.find(item => item.chatroomId === id);
+
+    const userInfo = await getUserInfo();
+    const token = await EncryptedStorage.getItem('accessToken');
+
+    console.log('targetRoom', targetRoom);
+    console.log('userInfo', userInfo);
+    console.log('token', token);
+
+    if(targetRoom){
+      navigation.navigate('ChatRoom', { data: Object.freeze(targetRoom), userInfo: {...userInfo, token}});
+    }
+    else{
+     // console.log('error');
+      return;
+    }
+  };
   return (
     <View>
       <Header
@@ -412,8 +490,8 @@ const CreateGaldae: React.FC = () => {
         <ParticipateModal
           title="생성 완료"
           visible={participating}
-          onCancel={() => setParticipating(false)}
-          onConfirm={() => navigation.navigate('TaxiNDivide')}
+          onCancel={() => { navigation.navigate('TaxiNDivide'); setParticipating(false); }}
+          onConfirm={() => handleNavigateChatRoom(taxiId || '')}
           fromMajor={departureLargeName}
           fromSub={departureSmallName}
           toMajor={destinationLargeName}

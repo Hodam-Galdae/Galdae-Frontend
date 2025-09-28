@@ -25,7 +25,7 @@ const ParticipateModal: React.FC<ParticipateModalProps> = ({
     onCancel,
     onConfirm,
     title = '참여완료',
-    subTitle = '넷플릭스',
+    subTitle ,
     fromMajor,
     fromSub,
     toMajor,

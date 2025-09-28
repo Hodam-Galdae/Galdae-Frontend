@@ -20,7 +20,7 @@ export default StyleSheet.create({
     paddingRight: 15,
   },
   header: {
-    backgroundColor: theme.colors.white,
+    backgroundColor: theme.colors.Galdae,
   },
   generateButton: {
     width: screenWidth - 30,
@@ -57,6 +57,7 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
+    backgroundColor: theme.colors.red,
     gap: (30),
   },
 
@@ -73,6 +74,7 @@ export default StyleSheet.create({
   },
   searchContainer: {
     position: 'relative',
+    width: '100%',
     marginBottom: 20,
     // backgroundColor: theme.colors.red,   // (디버그용이었으면 제거 권장)
   },
@@ -81,6 +83,7 @@ export default StyleSheet.create({
   searchInput: {
     paddingRight: 44,           // 아이콘 너비 + 여백
     borderRadius: theme.borderRadius.size30,
+    backgroundColor: theme.colors.white,
   },
 
   // (선택) InputText 컨테이너 스타일 prop이 있다면 같이 맞춥니다.

@@ -363,7 +363,7 @@ const NowGaldae: React.FC<HomeProps> = () => {
         ) : finalFilteredData.length === 0 ? (
           <View style={styles.noData}>
             <SVG name="information_line" />
-            <BasicText text="해당 경로의 갈대가 없습니다" color={theme.colors.grayV1} />
+            <BasicText text="해당 경로의 N빵이 없습니다" color={theme.colors.grayV1} />
           </View>
         ) : (
           <FlatList

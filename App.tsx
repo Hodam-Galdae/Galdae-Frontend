@@ -13,7 +13,7 @@ import NowGaldae from './src/screens/NowGaldae';
 import NowGaldaeDetail from './src/screens/category/taxi/NowGaldaeDetail';
 import Onboarding from './src/screens/Onboarding';
 import ChatRoom from './src/screens/ChatRoom';
-import SetDestination from './src/screens/SetDestination';
+import SetDestination from './src/screens/category/taxi/SetDestination';
 import axios, {AxiosResponse, InternalAxiosRequestConfig} from 'axios';
 import {errorLogger, requestLogger, responseLogger} from 'axios-logger';
 import Settlement from './src/screens/Settlement';
@@ -50,6 +50,9 @@ import DeliveryNDivide from './src/screens/category/delivery/DeliveryNDivide';
 import DeliveryDetail from './src/screens/category/delivery/DeliveryDetail';
 import CreateDelivery from './src/screens/category/delivery/CreateDelivery';
 import SignupSuccess from './src/screens/SignupSuccess';
+import DeliverySearch from './src/screens/category/delivery/DeliverySearch';
+import Search from './src/components/Search';
+import OTTSearch from './src/screens/category/ott/OTTSearch';
 // import ContinueSignUp from './src/screens/ContinueSignUp';
 // import SetUserInfo from './src/screens/SetUserInfo';
 // import VerifySchool from './src/screens/VerifySchool';
@@ -153,6 +156,8 @@ function App() {
                     name="SetDestination"
                     component={SetDestination}
                   />
+                  <Stack.Screen name="DeliverySearch" component={DeliverySearch} />
+                  <Stack.Screen name="Search" component={Search} />
                   <Stack.Screen name="SignUp" component={SignUp} />
                   <Stack.Screen
                     name="ReviewInProgress"
@@ -197,6 +202,7 @@ function App() {
                   <Stack.Screen name="DeliveryDetail" component={DeliveryDetail} />
                   <Stack.Screen name="CreateDelivery" component={CreateDelivery} />
                   <Stack.Screen name="SignupSuccess" component={SignupSuccess} />
+                  <Stack.Screen name="OTTSearch" component={OTTSearch} />
                   {/* <Stack.Screen name="ContinueSignUp" component={ContinueSignUp} /> */}
                   {/* <Stack.Screen name="SetUserInfo" component={SetUserInfo} />
                   <Stack.Screen name="VerifySchool" component={VerifySchool} />

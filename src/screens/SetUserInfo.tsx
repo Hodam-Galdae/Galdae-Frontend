@@ -29,7 +29,7 @@ import RNFS from 'react-native-fs';
 import { banks } from '../constants/bankOptions';
 import { StepName } from './SignUp';
 import { useNavigation } from '@react-navigation/native';
-
+import EncryptedStorage from 'react-native-encrypted-storage';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 interface AgreeProps {
   setNextStep: (name: StepName) => void;
@@ -101,7 +101,10 @@ const SetUserInfo: React.FC<AgreeProps> = ({ setNextStep, setIsLoading }) => {
   
         dumpForm(formData);
   
-        await join(formData);
+        const response : any = await join(formData);
+        console.log('🚀 서버에서 받은 회원가입 데이터:', response);
+        await EncryptedStorage.setItem('accessToken', response.accessToken);
+        await EncryptedStorage.setItem('refreshToken', response.refreshToken);
         //setNextStep('SignupSuccess');
         navigation.navigate('SignupSuccess');
     } catch (e) {

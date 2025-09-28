@@ -30,7 +30,34 @@ export default StyleSheet.create({
     borderBottomLeftRadius: theme.borderRadius.size30,
     borderBottomRightRadius: theme.borderRadius.size30,
   },
-
+  search:{
+    width:'100%',
+    justifyContent:'space-between',
+  },
+  searchContent:{
+    marginLeft:20,
+    flexDirection:'row',
+    gap:4,
+    alignItems:'center',
+  },
+  searchSVG:{
+    marginRight:20,
+  },
+  searchBtn:{
+    height:42,
+    borderWidth:1,
+    borderColor:theme.colors.grayV1,
+    borderRadius:999,
+  },
+  searchPos:{
+    fontWeight:'700',
+  },
+  searchText:{
+    marginLeft:20,
+    fontSize:theme.fontSize.size16,
+    fontWeight:'500',
+    color:theme.colors.grayV0,
+  },
   backContainer: {
     width: 30,
     height: 30,

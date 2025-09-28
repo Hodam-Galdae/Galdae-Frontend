@@ -47,11 +47,10 @@ type OTTNDivideScreenNavigationProp = NativeStackNavigationProp<RootStackParamLi
 const OTTNDivide: React.FC<HomeProps> = () => {
     const reduxPosts = useSelector((state: RootState) => state.subscribeSlice.listPage);
     const reduxLoading = useSelector((state: RootState) => state.subscribeSlice.listLoading);
-    const reduxSearchResults = useSelector((state: RootState) => state.subscribeSlice.searchPage);
     const dispatch = useAppDispatch();
     const [refreshing, setRefreshing] = useState(false);
     // 출/도착지 검색 결과를 저장할 로컬 상태 (검색이 없으면 null)
-
+    const [searchResults, setSearchResults] = useState<SubscribeListItem[] | null>(null);
     const [pageNumber, setPageNumber] = useState(0);
     const [isLoadingMore, setIsLoadingMore] = useState(false);
     // 상태값 추가: hasMore (불러올 데이터가 있는지 여부)
@@ -105,7 +104,7 @@ const OTTNDivide: React.FC<HomeProps> = () => {
                 !searchKeyword
             ) {
                 // 검색 조건이 없으면 searchResults를 초기화하고 로딩 상태 해제
-
+                setSearchResults(null);
                 setIsLoadingMore(false);
                 return;
             }
@@ -121,7 +120,7 @@ const OTTNDivide: React.FC<HomeProps> = () => {
                 // setSearchResults(data);
                 // setIsLast(data.last);
                 const data = await dispatch(fetchSubscribeSearch(params));
-
+                setSearchResults(data.payload as SubscribeListItem[]);
             } catch (error) {
                 //console.error('검색 실패:', error);
             }
@@ -144,10 +143,6 @@ const OTTNDivide: React.FC<HomeProps> = () => {
                 properties: sortOrder === 'latest' ? ['create_at'] : ['departure_time'],
             };
             dispatch(fetchSubscribeList(params));
-            dispatch(fetchSubscribeSearch({
-                pageNumber: 0,
-                searchKeyword: searchKeyword!,
-            }));
         }
     }, [dispatch, searchKeyword, sortOrder]);
 
@@ -162,7 +157,7 @@ const OTTNDivide: React.FC<HomeProps> = () => {
             searchKeyword: undefined,
         });
         // 검색 결과 초기화
-
+        setSearchResults(null);
         // 필터 옵션 초기값으로 재설정
         setFilterOptions({
             selectedCategory: null, // 카테고리 초기값
@@ -176,35 +171,22 @@ const OTTNDivide: React.FC<HomeProps> = () => {
             properties: sortOrder === 'latest' ? ['create_at'] : ['departure_time'],
         };
         dispatch(fetchSubscribeList(params));
-        dispatch(fetchSubscribeSearch({
-            pageNumber: 0,
-            searchKeyword: searchKeyword!,
-        }));
     };
     const onRefresh = async () => {
         setRefreshing(true);
         // 필터 초기화 및 전체 데이터 리셋
-        dispatch(fetchSubscribeSearch({
-            pageNumber: 0,
-            searchKeyword: searchKeyword!,
-        }));
         handleCancelSearch();
         // 필요한 경우 추가 데이터 호출 로직을 넣어줍니다.
         setRefreshing(false);
     };
 
     const filteredPosts = React.useMemo(() => {
-        const all = searchKeyword ? reduxSearchResults?.content ?? [] : reduxPosts?.content ?? [];
+        const all = searchKeyword ? searchResults : reduxPosts?.content ?? [];
         if (!filterOptions.selectedCategory) {return all;}
         // subscribeType 기준 필터링 (서버 아이템에 subscribeType 필드가 있다고 가정)
         return all?.filter(item => item.subscribeType === filterOptions.selectedCategory);
-      }, [searchKeyword, reduxSearchResults?.content, reduxPosts?.content, filterOptions.selectedCategory]);
+      }, [searchKeyword, searchResults, reduxPosts?.content, filterOptions.selectedCategory]);
 
-
-    const handleNavigateOTTDetail = (subscribeId: string) => {
-        console.log('🚀 OTT 상세 정보 불러오기:', subscribeId);
-        navigation.navigate('OTTDetail', { subscribeId: subscribeId });
-    };
 
     return (
         <View style={styles.main}>
@@ -277,7 +259,12 @@ const OTTNDivide: React.FC<HomeProps> = () => {
                     <View style={styles.noData}>
                         <ActivityIndicator size="large" color={theme.colors.Galdae} />
                     </View>
-                ) : filteredPosts?.length === 0 ? (
+                ) : searchKeyword ? searchResults?.length === 0 ? (
+                    <View style={styles.noData}>
+                        <SVG name="information_line" />
+                        <BasicText text="OTT 목록이 존재하지 않습니다." color={theme.colors.grayV1} />
+                    </View>
+                ) : reduxPosts?.content.length === 0 ? (
                     <View style={styles.noData}>
                         <SVG name="information_line" />
                         <BasicText text="OTT 목록이 존재하지 않습니다." color={theme.colors.grayV1} />
@@ -299,7 +286,7 @@ const OTTNDivide: React.FC<HomeProps> = () => {
                         refreshControl={
                             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
                         }
-                        extraData={filteredPosts?.length}
+                        extraData={searchKeyword ? searchResults?.length : reduxPosts?.content.length}
                         data={filteredPosts}
                         keyExtractor={(item) => item.subscribeId}
                         //onEndReached={loadMoreData}
@@ -309,8 +296,8 @@ const OTTNDivide: React.FC<HomeProps> = () => {
                         renderItem={({ item }) => (
                             <OTTItem
                                 item={item}
-                                onPress={() => handleNavigateOTTDetail(item.subscribeId)}
-                                searchKeyword={searchKeyword}
+                                onPress={() => navigation.navigate('OTTDetail', { subscribeId: item.subscribeId })}
+                                isSearch={searchKeyword ? true : false}
                             />
                         )}
                     />

@@ -2,13 +2,17 @@ import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { getUserInfo } from '../../../api/membersApi'; // API 경로에 맞게 수정
 
 export interface UserInfo {
-  accountNumber?: string;
-  bankType?: string;
-  depositor?: string;
-  image?: string;
-  isAuthenticated?: boolean | null;
-  nickname?: string;
-  university?: string | null;
+  id: string;
+  nickname: string;
+  image: string;
+  university: string;
+  area: string;
+  bankType: string;
+  accountNumber: string;
+  depositor: string;
+  isAuthenticated: boolean;
+  gender: string;
+  nicknameCount: number;
 }
 
 interface UserState {

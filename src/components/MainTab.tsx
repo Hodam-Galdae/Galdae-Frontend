@@ -15,11 +15,13 @@ import Header from './Header';
 import { theme } from '../styles/theme';
 import SVGButton from './button/SVGButton';
 import BasicText from '../components/BasicText';
-import SearchBar from '../components/SearchBar';
+//import SearchBar from '../components/SearchBar';
 import styles from '../styles/Header.style';
+import SVGTextButton from './button/SVGTextButton';
 // 내비게이션 스택 타입 정의
 type RootStackParamList = {
   Notification: undefined;
+  Search: undefined;
 };
 
 function App(): React.JSX.Element {
@@ -36,7 +38,7 @@ function App(): React.JSX.Element {
       initialRouteName="홈"
       screenOptions={{
         // header: () => (
-        //  
+        //
         // ),
         //header: () => <Header rightButton={<SVGButton iconName="Notification" onPress={()=>navigation.navigate('Notification')}/>}/>,
         tabBarActiveTintColor: theme.colors.Galdae,
@@ -104,10 +106,20 @@ function App(): React.JSX.Element {
                 }
               />
               <View style={styles.searchContainer}>
-              <SearchBar
-                text="오늘은 누구와 절약 해볼까요?"
-                textColor={theme.colors.grayV0}
-              />
+              <SVGTextButton
+                        text={'오늘은 누구와 절약 해볼까요?'}
+                        iconName="Search"
+                        iconPosition="right"
+                        style={styles.search}
+                        buttonStyle={styles.searchBtn}
+                        textStyle={styles.searchText}
+                        SVGStyle={styles.searchSVG}
+                        enabledColors={{
+                            backgroundColor: theme.colors.white,
+                            textColor: theme.colors.grayV2,
+                        }}
+                        onPress={() => navigation.navigate('Search')}
+                    />
               </View>
             </View>
           ),

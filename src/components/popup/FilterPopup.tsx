@@ -19,7 +19,7 @@ export interface FastGaldaePopupProps {
   onClose?: () => void;
   onConfirm?: (
     formattedDepartureTime: string,
-    selectedGender: 'SAME' | 'DONT_CARE',
+    selectedGender: 'SAME_GENDER' | 'DONT_CARE',
     selectedTimeDiscuss: number,  // 0: 가능, 1: 불가능
     passengerNumber: number
   ) => void;
@@ -32,7 +32,7 @@ const FilterPopup = forwardRef<FastGaldaeTimePopupRef, FastGaldaePopupProps>(
     const [selectedAmPm, setSelectedAmPm] = useState<'오전' | '오후'>('오전');
     const [selectedHour, setSelectedHour] = useState<number>(0);
     const [selectedMinute, setSelectedMinute] = useState<number>(0);
-    const [selectedGender, setSelectedGender] = useState<'SAME'| 'DONT_CARE'>('DONT_CARE');
+    const [selectedGender, setSelectedGender] = useState<'SAME_GENDER'| 'DONT_CARE'>('DONT_CARE');
     const [selectedTimeDiscuss, setSelectedTimeDiscuss] = useState<number>(0);
     const [passengerNumber, setPassengerNumber] = useState<number>(2);
     const modalizeRef = useRef<Modalize>(null);
@@ -165,9 +165,9 @@ const FilterPopup = forwardRef<FastGaldaeTimePopupRef, FastGaldaePopupProps>(
               />
               <SelectTextButton
                 text="동성만"
-                selected={selectedGender === 'SAME'}
+                selected={selectedGender === 'SAME_GENDER'}
                 buttonStyle={styles.selectBtn}
-                onPress={() => setSelectedGender('SAME')}
+                onPress={() => setSelectedGender('SAME_GENDER')}
               />
 
             </View>

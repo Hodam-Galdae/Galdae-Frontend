@@ -1,3 +1,4 @@
+/* eslint-disable quotes */
 /* eslint-disable react-native/no-inline-styles */
 // NowGaldaeDetail.tsx
 import React, { useEffect, useState, useRef } from 'react';
@@ -15,11 +16,15 @@ import { theme } from '../../../styles/theme';
 import BasicButton from '../../../components/button/BasicButton';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
-import { fetchPostDetail } from '../../../modules/redux/slice/postDetailSlice';
+// import { fetchPostDetail } from '../../../modules/redux/slice/postDetailSlice';
+import { fetchTaxiDetail } from '../../../modules/redux/slice/taxiSlice';
 import type { RootState } from '../../../modules/redux/RootReducer';
 import { useAppDispatch } from '../../../modules/redux/store';
 import moment from 'moment';
-import { joinChatroom, ChatroomResponse } from '../../../api/chatApi';
+//import { joinChatroom, ChatroomResponse } from '../../../api/chatApi';
+import { joinGroup } from '../../../api/groupApi';
+import { GroupJoinResponse } from '../../../types/groupTypes';
+
 import { TouchableOpacity } from 'react-native';
 import ParticipateModal from '../../../components/popup/ParticipateModal';
 import TextTag from '../../../components/tag/TextTag';
@@ -28,8 +33,8 @@ import TextTag from '../../../components/tag/TextTag';
 type RootStackParamList = {
   CreateGaldae: undefined;
   NowGaldae: undefined;
-  NowGaldaeDetail: { postId: string };
-  ChatRoom: { data: Readonly<ChatroomResponse> },
+  NowGaldaeDetail: { taxiId: string };
+  ChatRoom: { chatroomId: number },
 };
 
 type NowGaldaeDetailScreenNavigationProp = NativeStackNavigationProp<
@@ -45,7 +50,8 @@ const NowGaldaeDetail: React.FC = () => {
   const navigation = useNavigation<NowGaldaeDetailScreenNavigationProp>();
   //const mapModalRef = useRef<Modalize>(null);
   const route = useRoute<NowGaldaeDetailRouteProp>();
-  const { postId } = route.params; // 전달받은 postId
+  const { taxiId } = route.params; // 전달받은 postId
+  const [tagetRoom, setTagetRoom] = useState<GroupJoinResponse | null>(null);
   //const [mapBig,setMapBig] = useState<boolean>(false);
   // ✅ 웹뷰에서 받은 예상 시간/거리 정보를 보관
   const [eta, setEta] = useState<{
@@ -59,27 +65,31 @@ const NowGaldaeDetail: React.FC = () => {
   const lastMessageIdRef = useRef<string | null>(null);
 
   const [isMapLoading, setIsMapLoading] = useState(true);
-  const { postDetail, loading, error } = useSelector(
-    (state: RootState) => state.postDetailSlice,
+  const { detail, loadingDetail, error } = useSelector(
+    (state: RootState) => state.taxiSlice,
   );
   const dispatch = useAppDispatch();
   const [isParticipating, setIsParticipating] = useState(false);
   // 컴포넌트 마운트 시 Redux를 통해 상세 정보를 불러옴
   useEffect(() => {
-    dispatch(fetchPostDetail(postId));
-  }, [dispatch, postId]);
+    console.log('🚀 택시 상세 정보 불러오기:', taxiId);
+    dispatch(fetchTaxiDetail(taxiId));
+  }, [dispatch, taxiId]);
 
   const goBack = () => navigation.goBack();
 
   const handleParticipateGaldae = async () => {
+    const joinResponse = await joinGroup(taxiId);
+    setTagetRoom(joinResponse);
     setIsParticipating(true);
-    // const tagetRoom = await joinChatroom(postId);
-    //navigation.replace('ChatRoom', { data: Object.freeze(tagetRoom) });
+  //  navigation.replace('ChatRoom', { data: Object.freeze(joinResponse) });
+  console.log('joinResponse', joinResponse);
     // 참여 로직 처리
   };
   const handleNavigateChatRoom = async () => {
-    const tagetRoom = await joinChatroom(postId);
-    navigation.replace('ChatRoom', { data: Object.freeze(tagetRoom) });
+    if (tagetRoom) {
+      navigation.replace('ChatRoom', { chatroomId: tagetRoom.chatroomId });
+    }
   };
   const formatDepartureTime = (departureTime: string): string => {
     return moment.utc(departureTime).format('YYYY년 MM월 DD일 (ddd) HH : mm');
@@ -88,7 +98,7 @@ const NowGaldaeDetail: React.FC = () => {
   //   setMapBig(true);
   //   mapModalRef.current?.open();
   // };
-  if (loading) {
+  if (loadingDetail) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <ActivityIndicator size="large" color={theme.colors.Galdae} />
@@ -104,16 +114,16 @@ const NowGaldaeDetail: React.FC = () => {
     );
   }
 
-  if (!postDetail) {
+  if (!detail) {
     return (
       <View style={{ padding: 16 }}>
         <BasicText text="상세 정보가 없습니다" />
       </View>
     );
   }
-  const isFull = postDetail.passengerCount >= postDetail.totalPassengerCount;
+  const isFull = detail.joinedPersonCount >= detail.totalPersonCount;
   // 지도 URL은 departure와 arrival의 좌표를 사용
-  const mapUrl = `https://galdae-kakao-map.vercel.app/?startLat=${postDetail.departure.latitude}&startLng=${postDetail.departure.longtitude}&endLat=${postDetail.arrival.latitude}&endLng=${postDetail.arrival.longtitude}`;
+  const mapUrl = `https://galdae-kakao-map.vercel.app/?startLat=${detail.departure.latitude}&startLng=${detail.departure.longtitude}&endLat=${detail.arrival.latitude}&endLng=${detail.arrival.longtitude}`;
   //const mapUrl = 'https://galdae-kakao-map.vercel.app/?startLat=37.5665&startLng=126.9780&endLat=37.4979&endLng=127.0276'; //테스트용
 
   // ✅ WebView 메시지 수신 처리
@@ -154,12 +164,12 @@ const NowGaldaeDetail: React.FC = () => {
           <View style={styles.headerTitle}>
             {/* <SVG name="location_line" width={22} height={22} /> */}
             <BasicText
-              text={postDetail.departure.subPlace}
+              text={detail.departure.subPlace}
               style={styles.headerText}
             />
             <SVG name="arrow_right_line" width={22} height={22} />
             <BasicText
-              text={postDetail.arrival.subPlace}
+              text={detail.arrival.subPlace}
               style={styles.headerText}
             />
           </View>
@@ -196,7 +206,7 @@ const NowGaldaeDetail: React.FC = () => {
           text={'그룹 정보'}
           style={styles.galdaeOwner}
         />
-        <View key={postDetail.departureTime} style={styles.borderedListBox}>
+        <View key={detail.departureTime} style={styles.borderedListBox}>
           <View style={styles.borderedListBoxContainer}>
             {/**postDetail.userInfo?.name || */}
             <View style={styles.menuContainer}>
@@ -229,36 +239,36 @@ const NowGaldaeDetail: React.FC = () => {
 
             <View style={styles.menuContainer}>
               <BasicText
-                text={`${postDetail.userInfo?.nickname}` || '작성자'}
+                text={`${detail.userInfo?.nickname}` || '작성자'}
                 style={styles.writeUserName}
               />
               <View style={styles.fromContainer}>
                 <BasicText
-                  text={postDetail.departure.majorPlace}
+                  text={detail.departure.majorPlace}
                   style={styles.writeUserName}
                 />
                 <BasicText
-                  text={postDetail.departure.subPlace}
+                  text={detail.departure.subPlace}
                   style={styles.writeUserName}
                 />
               </View>
 
               <View style={styles.fromContainer}>
                 <BasicText
-                  text={postDetail.arrival.majorPlace}
+                  text={detail.arrival.majorPlace}
                   style={styles.writeUserName}
                 />
                 <BasicText
-                  text={postDetail.arrival.subPlace}
+                  text={detail.arrival.subPlace}
                   style={styles.writeUserName}
                 />
               </View>
               <BasicText
-                text={formatDepartureTime(postDetail.departureTime)}
+                text={formatDepartureTime(detail.departureTime)}
                 style={styles.writeUserName}
               />
               <BasicText
-                text={`${postDetail.passengerCount}/${postDetail.totalPassengerCount}`}
+                text={`${detail.joinedPersonCount}/${detail.totalPersonCount}`}
                 style={styles.writeUserName}
               />
 
@@ -274,38 +284,38 @@ const NowGaldaeDetail: React.FC = () => {
           <View style={styles.tagsContainer}>
 
             <View style={styles.tags}>
-              {postDetail.arrangeTime === 'POSSIBLE' ? (
+              {detail.arrangeTime === 'POSSIBLE' ? (
                 <TextTag text="시간협의가능"
-                viewStyle={styles.timePossible}
-                textStyle={styles.timePossibleText}
+                  viewStyle={styles.timePossible}
+                  textStyle={styles.timePossibleText}
                 />
-              ) : postDetail.arrangeTime === 'IMPOSSIBLE' ? (
+              ) : detail.arrangeTime === 'IMPOSSIBLE' ? (
                 <TextTag text="시간협의불가"
-                viewStyle={styles.timeNotPossible}
-                textStyle={styles.timeNotPossibleText}
+                  viewStyle={styles.timeNotPossible}
+                  textStyle={styles.timeNotPossibleText}
                 />
               ) : (
                 <TextTag text="시간협의불가"
-                viewStyle={styles.timeNotPossible}
-                textStyle={styles.timeNotPossibleText}
+                  viewStyle={styles.timeNotPossible}
+                  textStyle={styles.timeNotPossibleText}
                 />
               )}
             </View>
             <View style={styles.tags}>
-              {postDetail.passengerGenderType === 'SAME' ? (
+              {detail.genderType === 'SAME_GENDER' ? (
                 <TextTag text="동성만"
-                viewStyle={styles.timePossible}
-                textStyle={styles.timePossibleText}
+                  viewStyle={styles.timePossible}
+                  textStyle={styles.timePossibleText}
                 />
-              ) : postDetail.passengerGenderType === 'DONT_CARE' ? (
+              ) : detail.genderType === 'DONT_CARE' ? (
                 <TextTag text="성별무관"
-                viewStyle={styles.timePossible}
-                textStyle={styles.timePossibleText}
+                  viewStyle={styles.timePossible}
+                  textStyle={styles.timePossibleText}
                 />
               ) : (
                 <TextTag text="상관없음"
-                viewStyle={styles.timePossible}
-                textStyle={styles.timePossibleText}
+                  viewStyle={styles.timePossible}
+                  textStyle={styles.timePossibleText}
                 />
               )}
             </View>
@@ -317,13 +327,13 @@ const NowGaldaeDetail: React.FC = () => {
         <BasicText text="빵장의 한마디" style={styles.galdaeOwner} />
 
         <View style={styles.userInfoBox}>
-          <BasicText text={postDetail.userInfo?.nickname} style={styles.messageText} />
+          <BasicText text={detail.content} style={styles.messageText} />
         </View>
 
 
       </ScrollView>
       <View style={styles.participateContainer}>
-        {postDetail.isParticipated ? (
+        {detail.isParticipatedGroup || detail.isWriter ? (
           <BasicButton
             text="이미 참여한 N빵"
             buttonStyle={styles.participateBtn}
@@ -353,11 +363,16 @@ const NowGaldaeDetail: React.FC = () => {
           />
         ) : (
           <BasicButton
-            text="참여하기"
+            text={detail.isWriter  ? "이미 참여한 N빵" : "참여하기"} //|| detail.isParticipatedGroup
             buttonStyle={styles.participateBtn}
             textStyle={styles.participateText}
             loading={false}
             onPress={handleParticipateGaldae}
+            disabled={false } //detail.isWriter|| detail.isParticipatedGroup
+            disabledColors={{
+              backgroundColor: theme.colors.grayV3,
+              textColor: theme.colors.blackV0,
+            }}
           />
         )}
       </View>
@@ -372,10 +387,10 @@ const NowGaldaeDetail: React.FC = () => {
           visible={isParticipating}
           onCancel={() => setIsParticipating(false)}
           onConfirm={handleNavigateChatRoom}
-          fromMajor={postDetail.departure.majorPlace}
-          fromSub={postDetail.departure.subPlace}
-          toMajor={postDetail.arrival.majorPlace}
-          toSub={postDetail.arrival.subPlace}
+          fromMajor={detail.departure.majorPlace}
+          fromSub={detail.departure.subPlace}
+          toMajor={detail.arrival.majorPlace}
+          toSub={detail.arrival.subPlace}
         />
       )}
     </View>

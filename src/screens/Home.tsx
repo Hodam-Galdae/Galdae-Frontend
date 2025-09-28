@@ -487,7 +487,7 @@ const Home: React.FC<HomeProps> = () => {
             ) : posts.length === 0 ? (
               <View style={styles.noData}>
                 <SVG name="information_line" />
-                <BasicText text="갈대가 없습니다" color={theme.colors.grayV1} />
+                <BasicText text="N빵이 없습니다" color={theme.colors.grayV1} />
               </View>
             ) : (
               posts.map(item => (

@@ -60,6 +60,11 @@ export default StyleSheet.create({
     overflow: 'hidden',
     flexWrap: 'nowrap',
   },
+  fromContainerSearch: {
+    fontSize: theme.fontSize.size16,
+    fontWeight: '700',
+    color: theme.colors.blue,
+  },
   fromMainLocation: {
     fontSize: theme.fontSize.size16,
     fontWeight: '700',
@@ -146,6 +151,17 @@ export default StyleSheet.create({
     backgroundColor: theme.colors.grayV2,
     borderColor: theme.colors.grayV2,
     borderWidth: 0,
+  },
+  sameGenderPossible: {
+    backgroundColor: theme.colors.Galdae3,
+    borderWidth: 0,
+    paddingHorizontal: 6,
+    paddingVertical: 4,
+  },
+  sameGenderPossibleText: {
+    color: theme.colors.blue,
+    fontSize: theme.fontSize.size12,
+    fontWeight: '500',
   },
   timeNotPossible: {
     backgroundColor: theme.colors.yellow2,

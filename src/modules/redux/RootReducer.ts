@@ -9,6 +9,9 @@ import placesSlice from './slice/placesSlice';
 import notiSlice from './slice/notificationSlice';
 import myCreatedGaldaeSlice from './slice/myCreatedGaldaeSlice';
 import homeGaldaeSlice from './slice/homeGaldaeSlice';
+import taxiSlice from './slice/taxiSlice';
+import orderSlice from './slice/orderSlice';
+import subscribeSlice from './slice/subScribeSlice';
 /**
  * 사용 목적에 따라서 Slice 단위로 분리하여서 Root Reducer를 구성합니다.
  */
@@ -23,6 +26,9 @@ const RootReducer = combineReducers({
     notiSlice:notiSlice,
     myCreatedGaldaeSlice:myCreatedGaldaeSlice,
     homeGaldaeSlice:homeGaldaeSlice,
+    taxiSlice:taxiSlice,
+    orderSlice:orderSlice,
+    subscribeSlice:subscribeSlice,
 });
 
 export type RootState = ReturnType<typeof RootReducer>;

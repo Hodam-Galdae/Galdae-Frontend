@@ -7,47 +7,49 @@ import moment from 'moment';
 import { theme } from '../../../styles/theme';
 import styles from '../../../styles/GaldaeItem.style';
 // Type
-import { GaldaeItemType } from '../../../types/getTypes';
+import { TaxiListItem } from '../../../types/taxiType';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../modules/redux/RootReducer';
 
 interface GaldaeItemProps {
-  item: GaldaeItemType;
+  item: TaxiListItem;
   onPress: () => void;
-  onLongPress?: () => void;
 }
 
-const TaxiItem: React.FC<GaldaeItemProps> = ({ item, onPress, onLongPress }) => {
+const TaxiItem: React.FC<GaldaeItemProps> = ({ item, onPress }) => {
+  const userGenderType = useSelector((state: RootState) => state.myInfoSlice.userInfo?.gender);
   const formatDepartureTime = (departureTime: string): string => {
     return moment.utc(departureTime).format('YYYY년 MM월 DD일 (ddd) HH : mm');
   };
 
   return (
-    <TouchableOpacity onPress={onPress} onLongPress={item.isWriter ? onLongPress : undefined} delayLongPress={100}>
-      <View style={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.borderedListBoxComplete : styles.borderedListBox}>
+    <TouchableOpacity onPress={onPress} >
+      <View style={item.passengerGenderType === 'SAME_GENDER' && userGenderType === item.passengerGenderType ? styles.borderedListBoxComplete : styles.borderedListBox}>
         <View>
 
           <View style={styles.fromToContainer}>
             {/* 출발지 정보 */}
             <View style={styles.fromContainer}>
-              {/* <SVG name={!item.isSameGender && item.passengerGenderType === 'SAME' ? 'Car1' : 'Car'} /> */}
-              <BasicText text={item.departure.subPlace} style={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.fromMainLocationCom : styles.fromMainLocation} />
-              <BasicText text={'안녕하세요저'} style={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.fromSubLocationCom : styles.fromSubLocation} numberOfLines={1} ellipsizeMode="tail" />
+              {/* <SVG name={!item.isSameGender && item.passengerGenderType === 'SAME_GENDER' ? 'Car1' : 'Car'} /> */}
+              <BasicText text={item.departure.subPlace} style={item.passengerGenderType === 'SAME_GENDER' && userGenderType === item.passengerGenderType ? styles.fromMainLocationCom : styles.fromMainLocation} />
+              <BasicText text={item.departure.majorPlace} style={item.passengerGenderType === 'SAME_GENDER' && userGenderType === item.passengerGenderType ? styles.fromSubLocationCom : styles.fromSubLocation} numberOfLines={1} ellipsizeMode="tail" />
             </View>
-            {/**item.departure.majorPlace */}
-            <SVG name={!item.isSameGender && item.passengerGenderType === 'SAME' ? 'arrow_forward' : 'arrow_forward'} />
+            {/** */}
+            <SVG name={item.passengerGenderType === 'SAME_GENDER' && userGenderType === item.passengerGenderType ? 'arrow_forward' : 'arrow_forward'} />
             {/* 도착지 정보 */}
             <View style={styles.toContainer}>
-              {/* <SVG name={!item.isSameGender && item.passengerGenderType === 'SAME' ? 'Location1' : 'Location'} /> */}
-              <BasicText text={item.arrival.subPlace} style={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.fromMainLocationCom : styles.fromMainLocation} />
-              <BasicText text={'안녕하세요저는'} style={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.fromSubLocationCom : styles.fromSubLocation} numberOfLines={1} ellipsizeMode="tail" />
+              {/* <SVG name={!item.isSameGender && item.passengerGenderType === 'SAME_GENDER' ? 'Location1' : 'Location'} /> */}
+              <BasicText text={item.arrival.subPlace} style={item.passengerGenderType === 'SAME_GENDER' && userGenderType === item.passengerGenderType ? styles.fromMainLocationCom : styles.fromMainLocation} />
+              <BasicText text={item.arrival.majorPlace} style={item.passengerGenderType === 'SAME_GENDER' && userGenderType === item.passengerGenderType ? styles.fromSubLocationCom : styles.fromSubLocation} numberOfLines={1} ellipsizeMode="tail" />
             </View>
-            {/**item.arrival.majorPlace */}
+            {/** */}
           </View>
 
           <View style={styles.departureTimeContainer}>
-            <BasicText text="출발 시간" style={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.departureTimeTitleCom : styles.departureTimeTitle } />
+            <BasicText text="출발 시간" style={item.passengerGenderType === 'SAME_GENDER' && userGenderType === item.passengerGenderType ? styles.departureTimeTitleCom : styles.departureTimeTitle} />
             <BasicText
               text={formatDepartureTime(item.departureTime)}
-              style={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.departureTimeCom : styles.departureTime}
+              style={item.passengerGenderType === 'SAME_GENDER' && userGenderType === item.passengerGenderType ? styles.departureTimeCom : styles.departureTime}
 
             />
           </View>
@@ -56,12 +58,12 @@ const TaxiItem: React.FC<GaldaeItemProps> = ({ item, onPress, onLongPress }) => 
             {/* 승객 수 아이콘 */}
             <View style={styles.passengerContainer}>
               <View style={styles.fromToLine}>
-                <SVG name={!item.isSameGender && item.passengerGenderType === 'SAME' ? 'person_icon' : 'person_icon'} />
+                <SVG name={item.passengerGenderType === 'SAME_GENDER' && userGenderType === item.passengerGenderType ? 'person_icon' : 'person_icon'} />
               </View>
               <BasicText
-                text={`(${item.passengerCount}/${item.totalPassengerCount})`}
+                text={`(${item.joinedPersonCount}/${item.totalGroupPersonCount})`}
                 fontSize={theme.fontSize.size14}
-                color={!item.isSameGender && item.passengerGenderType === 'SAME' ? theme.colors.blackV3 : theme.colors.blackV3}
+                color={item.passengerGenderType === 'SAME_GENDER' && userGenderType === item.passengerGenderType ? theme.colors.blackV3 : theme.colors.blackV3}
               />
 
             </View>
@@ -75,27 +77,27 @@ const TaxiItem: React.FC<GaldaeItemProps> = ({ item, onPress, onLongPress }) => 
 
             {item.passengerGenderType && (
               <View style={styles.tags}>
-                {!item.isSameGender && item.passengerGenderType === 'SAME' ? (
+                {item.passengerGenderType === 'SAME_GENDER' && userGenderType === item.passengerGenderType ? (
                   <TextTag text="동성만"
                     enabledColors={
                       {
-                        backgroundColor: theme.colors.grayV2,
-                        textColor: theme.colors.grayV1,
-                        borderColor: theme.colors.grayV1,
+                        backgroundColor: theme.colors.Galdae3,
+                        textColor: theme.colors.blue,
+                        borderColor: theme.colors.Galdae3,
                       }
                     }
-                    viewStyle={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.timePossible : styles.timePossible}
-              textStyle={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.timePossibleText : styles.timePossibleText}
+                    viewStyle={item.passengerGenderType === 'SAME_GENDER' && userGenderType === item.passengerGenderType ? styles.timePossible : styles.timePossible}
+                    textStyle={item.passengerGenderType === 'SAME_GENDER' && userGenderType === item.passengerGenderType ? styles.timePossibleText : styles.timePossibleText}
                   />
-                ) : item.passengerGenderType === 'SAME' ? (
-                  <TextTag text="동성만" viewStyle={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.timePossible : styles.timePossible}
-                  textStyle={!item.isSameGender && item.passengerGenderType === 'SAME' ? styles.timePossibleText : styles.timePossibleText}/>
+                ) : item.passengerGenderType === 'SAME_GENDER' ? (
+                  <TextTag text="동성만" viewStyle={item.passengerGenderType === 'SAME_GENDER' && userGenderType === item.passengerGenderType ? styles.sameGenderPossible : styles.sameGenderPossible}
+                    textStyle={item.passengerGenderType === 'SAME_GENDER' && userGenderType === item.passengerGenderType ? styles.sameGenderPossibleText : styles.sameGenderPossibleText} />
                 ) : item.passengerGenderType === 'DONT_CARE' ? (
-                  <TextTag text="성별무관" viewStyle={!item.isSameGender && item.passengerGenderType === 'DONT_CARE' ? styles.timePossible : styles.timePossible}
-                  textStyle={!item.isSameGender && item.passengerGenderType === 'DONT_CARE' ? styles.timePossibleText : styles.timePossibleText}/>
+                  <TextTag text="성별무관" viewStyle={item.passengerGenderType === 'DONT_CARE' && userGenderType === item.passengerGenderType ? styles.timePossible : styles.timePossible}
+                    textStyle={item.passengerGenderType === 'DONT_CARE' && userGenderType === item.passengerGenderType ? styles.timePossibleText : styles.timePossibleText} />
                 ) : (
-                  <TextTag text="상관없음" viewStyle={!item.isSameGender && item.passengerGenderType === 'DONT_CARE' ? styles.timePossible : styles.timePossible}
-                  textStyle={!item.isSameGender && item.passengerGenderType === 'DONT_CARE' ? styles.timePossibleText : styles.timePossibleText}/>
+                  <TextTag text="상관없음" viewStyle={item.passengerGenderType === 'DONT_CARE' && userGenderType === item.passengerGenderType ? styles.timePossible : styles.timePossible}
+                    textStyle={item.passengerGenderType === 'DONT_CARE' && userGenderType === item.passengerGenderType  ? styles.timePossibleText : styles.timePossibleText} />
                 )}
               </View>
             )}

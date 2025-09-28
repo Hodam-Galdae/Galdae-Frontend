@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useMemo, useRef, useState, useEffect } from 'react';
 import { View, FlatList, ActivityIndicator, RefreshControl, Alert } from 'react-native';
 import moment from 'moment';
@@ -18,17 +19,16 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { FastGaldaeTimePopupRef } from '../../../components/popup/ArrayPopup'; //ArrayPopup,
 import FilterPopup from '../../../components/popup/FilterPopup';
 //api
-import { searchPosts, deletePost } from '../../../api/postApi';
+import { searchTaxi, deleteTaxi } from '../../../api/taxiApi';
 // type
-import { GetPostsRequest } from '../../../types/postTypes';
-import { GaldaeItemType, GaldaeApiResponse } from '../../../types/getTypes';
+import { TaxiListItem, TaxiListResponsePage, TaxiSearchParams, PagingQuery } from '../../../types/taxiType';
 // redux
 import { useSelector } from 'react-redux';
 import { useAppDispatch } from '../../../modules/redux/store';
-import { fetchGaldaePosts } from '../../../modules/redux/slice/galdaeSlice';
-import { fetchMyCreatedGaldae } from '../../../modules/redux/slice/myCreatedGaldaeSlice';
-import { fetchMyGaldaeHistory } from '../../../modules/redux/slice/myGaldaeSlice';
-import { fetchHomeGaldaePosts } from '../../../modules/redux/slice/homeGaldaeSlice';
+// import { fetchMyCreatedGaldae } from '../../../modules/redux/slice/myCreatedGaldaeSlice';
+// import { fetchMyGaldaeHistory } from '../../../modules/redux/slice/myGaldaeSlice';
+// import { fetchHomeGaldaePosts } from '../../../modules/redux/slice/homeGaldaeSlice';
+import { fetchTaxiList } from '../../../modules/redux/slice/taxiSlice';
 import { RootState } from '../../../modules/redux/RootReducer';
 import SelectTextButton from '../../../components/button/SelectTextButton';
 
@@ -48,19 +48,22 @@ type RootStackParamList = {
     destinationSmallName: string,
     destinationSmallId: number,
   };
-  NowGaldaeDetail: { postId: string };
+  NowGaldaeDetail: { taxiId: string };
   SetDestination: undefined;
 };
 
 type nowGaldaeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 const TaxiNDivide: React.FC<HomeProps> = () => {
-  const reduxPosts = useSelector((state: RootState) => state.galdaeSlice.posts);
-  const reduxLoading = useSelector((state: RootState) => state.galdaeSlice.loading);
+  // const reduxPosts = useSelector((state: RootState) => state.galdaeSlice.posts);
+  // const reduxLoading = useSelector((state: RootState) => state.galdaeSlice.loading);
+  const reduxPosts = useSelector((state: RootState) => state.taxiSlice.list);
+  const reduxLoading = useSelector((state: RootState) => state.taxiSlice.loadingList);
+  const userGenderType = useSelector((state: RootState) => state.myInfoSlice.userInfo?.gender);
   const dispatch = useAppDispatch();
   const [refreshing, setRefreshing] = useState(false);
   // 출/도착지 검색 결과를 저장할 로컬 상태 (검색이 없으면 null)
-  const [searchResults, setSearchResults] = useState<GaldaeApiResponse | null>(null);
+  const [searchResults, setSearchResults] = useState<TaxiListResponsePage | null>(null);
   const [pageNumber, setPageNumber] = useState(0);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   // 상태값 추가: hasMore (불러올 데이터가 있는지 여부)
@@ -71,7 +74,7 @@ const TaxiNDivide: React.FC<HomeProps> = () => {
     // selectedHour: number;
     // selectedMinute: number;
     formattedDepartureTime: string,
-    selectedGender: 'SAME' | 'DONT_CARE' | null; // null: 필터 미적용, 0: 성별 무관 필터 적용 (즉, 'DONT_CARE'만 필터링)
+    selectedGender: 'SAME_GENDER' | 'DONT_CARE' | null; // null: 필터 미적용, 0: 성별 무관 필터 적용 (즉, 'DONT_CARE'만 필터링)
     selectedTimeDiscuss: number | null; // null: 필터 미적용, 0: 시간협의가능, 1: 시간협의불가 (여기서는 0 사용)
     passengerNumber: number;
   }>({
@@ -91,15 +94,15 @@ const TaxiNDivide: React.FC<HomeProps> = () => {
   // const arrayPopupRef = useRef<FastGaldaeTimePopupRef>(null);
   const filterRef = useRef<FastGaldaeTimePopupRef>(null);
   // 정렬 상태: 'latest' (최신순, 내림차순) 또는 'soon' (시간 임박순, 오름차순)
-  const [sortOrder, setSortOrder] = useState<'latest' | 'departureTime'>('latest');
+  const [sortOrder, setSortOrder] = useState<'latest' | 'departure_time'>('latest');
   const [arrayPopupVisible, setArrayPopupVisible] = useState(false);
   const navigation = useNavigation<nowGaldaeScreenNavigationProp>();
   const goBack = () => navigation.goBack();
   const route = useRoute<RouteProp<RootStackParamList, 'NowGaldae'>>();
   //삭제팝업
   const [deletePopupVisible, setDeletePopupVisible] = useState(false);
-  const [sameGenderPopupVisible, setSameGenderPopupVisible] = useState(false);
-  const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
+    const [sameGenderPopupVisible, setSameGenderPopupVisible] = useState(false);
+    const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
   // 전달받은 검색 조건
   const {
     departureLargeName,
@@ -112,71 +115,67 @@ const TaxiNDivide: React.FC<HomeProps> = () => {
     destinationSmallId,
   } = route.params || {};
 
+  const didFetchRef = useRef(false);
+// 🔧 추가: 검색 모드 여부 헬퍼 (이름 대신 ID 기준)
+const isSearchMode = useMemo(() => (
+  departureSmallId != null && destinationSmallId != null
+), [departureSmallId, destinationSmallId]);
   // 출/도착지 검색 조건이 있을 경우 searchPosts API 호출하여 결과 저장
-  useEffect(() => {
-    const fetchSearchResults = async () => {
-      setPageNumber(0);
-      setIsLoadingMore(true);
-      if (
-        !departureLargeName ||
-        !departureSmallName ||
-        !destinationLargeName ||
-        !destinationSmallName ||
-        departureLargeName === '출발지 선택' ||
-        departureSmallName === '출발지 선택' ||
-        destinationLargeName === '도착지 선택' ||
-        destinationSmallName === '도착지 선택'
-      ) {
-        // 검색 조건이 없으면 searchResults를 초기화하고 로딩 상태 해제
-        setSearchResults(null);
-        setIsLoadingMore(false);
-        return;
-      }
-      const params = {
-        pageNumber: 0,
-        pageSize: 20,
-        direction: sortOrder === 'latest' ? 'DESC' : 'ASC',
-        properties: sortOrder === 'latest' ? ['create_at'] : ['departure_time'],
-        majorDepartment: departureLargeId,      // 출발지 대분류 ID
-        subDepartment: departureSmallId,        // 출발지 소분류 ID
-        majorArrival: destinationLargeId,       // 도착지 대분류 ID
-        subArrival: destinationSmallId,         // 도착지 소분류 ID
-      };
-      try {
-        const data: GaldaeApiResponse = await searchPosts(params);
-        setSearchResults(data);
-        setIsLast(data.last);
-      } catch (error) {
-        //console.error('검색 실패:', error);
-      }
+  // 🔧 검색 결과 Fetch useEffect
+useEffect(() => {
+  const fetchSearchResults = async () => {
+    setPageNumber(0);
+    setIsLoadingMore(true);
+
+    if (!isSearchMode) {               // ✨ ID 기준으로 판단
+      setSearchResults(null);
       setIsLoadingMore(false);
+      return;
+    }
+
+    const params: TaxiSearchParams = { // ✨ API 스펙에 맞게 최소 파라미터만
+      pageNumber: 0,
+      pageSize: 20,
+      subDepartureId: departureSmallId!,  // ✨ 필수
+      subArrivalId: destinationSmallId!,  // ✨ 필수
     };
-    fetchSearchResults();
-  }, [
-    sortOrder,
-    departureLargeName,
-    departureSmallName,
-    destinationLargeName,
-    destinationSmallName,
-    departureLargeId,
-    departureSmallId,
-    destinationLargeId,
-    destinationSmallId,
-  ]);
+
+    try {
+      const data = await searchTaxi(params); // ✨ 바뀐 파라미터로 호출
+      setSearchResults(data);
+      setIsLast(data.last);
+    } catch (error) {
+      // 필요시 Alert/로그
+    } finally {
+      setIsLoadingMore(false);
+    }
+  };
+
+  fetchSearchResults();
+}, [
+  // ✨ 의존성: 검색 ID 기준
+  isSearchMode,
+  departureSmallId,
+  destinationSmallId,
+  // 정렬은 클라에서 처리할 거라면 여기에 안 넣어도 됨
+]);
 
   // redux posts는 검색 조건이 없을 때 불러옴
-  useEffect(() => {
-    if (!departureLargeName && !destinationLargeName) {
-      setPageNumber(0);
-      const params: GetPostsRequest = {
-        pageNumber: 0,
-        pageSize: 20,
-        direction: sortOrder === 'latest' ? 'DESC' : 'ASC',
-        properties: sortOrder === 'latest' ? ['create_at'] : ['departure_time'],
-      };
-      dispatch(fetchGaldaePosts(params));
-    }
-  }, [dispatch, departureLargeName, destinationLargeName, sortOrder]);
+// 목록 로딩 useEffect 쪽
+useEffect(() => {
+  if (departureLargeName || destinationLargeName) {return;} // 검색 모드가 아니면만 실행
+ // if (didFetchRef.current) {return;} // ← 이미 한 번 실행됐으면 막기
+ // didFetchRef.current = true;
+
+  setPageNumber(0);
+  const params: PagingQuery = {
+    pageNumber: 0,
+    pageSize: 20,
+    direction: sortOrder === 'latest' ? 'DESC' : 'ASC',
+    property: sortOrder === 'latest' ? 'create_at' : 'departure_time',
+  };
+  dispatch(fetchTaxiList(params));
+}, [dispatch, departureLargeName, destinationLargeName, sortOrder]);
 
   const handleFilterPress = () => {
     filterRef.current?.open();
@@ -215,7 +214,7 @@ const TaxiNDivide: React.FC<HomeProps> = () => {
     // selectedHour: number,
     // selectedMinute: number,
     formattedDepartureTime: string,
-    selectedGender: 'SAME' | 'DONT_CARE',
+    selectedGender: 'SAME_GENDER' | 'DONT_CARE',
     selectedTimeDiscuss: number,
     passengerNumber: number
   ) => {
@@ -239,41 +238,36 @@ const TaxiNDivide: React.FC<HomeProps> = () => {
   /**
    * 전부 초기화하는 로직
    */
-  const handleCancelSearch = () => {
-    // 네비게이션 파라미터 초기화
-    navigation.setParams({
-      departureLargeName: undefined,
-      departureSmallName: undefined,
-      destinationLargeName: undefined,
-      destinationSmallName: undefined,
-      departureLargeId: undefined,
-      departureSmallId: undefined,
-      destinationLargeId: undefined,
-      destinationSmallId: undefined,
-    });
-    // 검색 결과 초기화
-    setSearchResults(null);
-    // 필터 옵션 초기값으로 재설정
-    setFilterOptions({
-      // selectedDate: null,
-      // selectedAmPm: '오전',
-      // selectedHour: 0,
-      // selectedMinute: 0,
-      formattedDepartureTime: '', // 빈 문자열로 초기화하여 필터 조건 미적용
-      selectedGender: null,
-      selectedTimeDiscuss: null,
-      passengerNumber: 0,
-    });
-    //정렬도 최신순으로 초기화
-    setSortOrder('latest');
-    const params: GetPostsRequest = {
-      pageNumber: 0,
-      pageSize: 20,
-      direction: sortOrder === 'latest' ? 'DESC' : 'ASC',
-      properties: sortOrder === 'latest' ? ['create_at'] : ['departure_time'],
-    };
-    dispatch(fetchGaldaePosts(params));
+  // 🔧 전체 초기화
+const handleCancelSearch = () => {
+  navigation.setParams({
+    departureLargeName: undefined,
+    departureSmallName: undefined,
+    destinationLargeName: undefined,
+    destinationSmallName: undefined,
+    departureLargeId: undefined,     // ✨
+    departureSmallId: undefined,     // ✨
+    destinationLargeId: undefined,   // ✨
+    destinationSmallId: undefined,   // ✨
+  });
+
+  setSearchResults(null);
+  setFilterOptions({
+    formattedDepartureTime: '',
+    selectedGender: null,
+    selectedTimeDiscuss: null,
+    passengerNumber: 0,
+  });
+  setSortOrder('latest');
+
+  const params: PagingQuery = {
+    pageNumber: 0,
+    pageSize: 20,
+    direction: 'DESC',
+    property: 'create_at',
   };
+  dispatch(fetchTaxiList(params));
+};
   const onRefresh = async () => {
     setRefreshing(true);
     // 필터 초기화 및 전체 데이터 리셋
@@ -284,50 +278,61 @@ const TaxiNDivide: React.FC<HomeProps> = () => {
   const handleDeletePost = async () => {
     if (!selectedPostId) { return; }
     try {
-      await deletePost(selectedPostId);
+      await deleteTaxi(selectedPostId);
 
       // ✅ 검색모드일 경우 로컬 상태에서 삭제
       if (searchResults) {
         setSearchResults(prev => ({
           ...prev!,
-          content: prev!.content.filter(item => item.postId !== selectedPostId),
+          content: prev!.content.filter((item:any) => item.taxiId !== selectedPostId),
         }));
       } else {
         // ✅ 검색이 아닐 경우: redux 리스트 리패치
-        const params: GetPostsRequest = {
+        const params: PagingQuery = {
           pageNumber: 0,
           pageSize: 20,
           direction: sortOrder === 'latest' ? 'DESC' : 'ASC',
-          properties: sortOrder === 'latest' ? ['create_at'] : ['departure_time'],
+          property: sortOrder === 'latest' ? 'create_at' : 'departure_time',
         };
-        dispatch(fetchGaldaePosts(params));
-        dispatch(fetchMyGaldaeHistory());
-        dispatch(fetchMyCreatedGaldae());
-        dispatch(fetchHomeGaldaePosts());
+        dispatch(fetchTaxiList(params));
+        // dispatch(fetchMyGaldaeHistory());
+        // dispatch(fetchMyCreatedGaldae());
+        // dispatch(fetchHomeGaldaePosts());
         setPageNumber(0); // 페이지도 초기화
       }
 
       //Alert.alert('삭제 완료', '선택한 갈대가 삭제되었습니다.');
       setDeletePopupVisible(false);
       setSelectedPostId(null);
-    } catch (error) {
-      Alert.alert('삭제 실패', '글 삭제에 실패했습니다. 다시 시도해주세요.');
+    } catch (error: any) {
+      // 서버에서 받은 에러 메시지 추출
+      let errorMessage = '글 삭제에 실패했습니다. 다시 시도해주세요.';
+
+      if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.response?.data?.error) {
+        errorMessage = error.response.data.error;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+
+      Alert.alert('삭제 실패', errorMessage);
       //console.error(error);
     }
   };
 
   // 포스트 삭제를 위한 핸들러 (본인 글인 경우에만 활성화)
-  const handleLongPress = (post: GaldaeItemType) => {
+  const handleLongPress = (post: TaxiListItem) => {
     // 예시로 본인 글 여부는 post.isMine 속성으로 확인
     if (post) { //.isMine
-      setSelectedPostId(post.postId);
+      setSelectedPostId(post.taxiId);
       setDeletePopupVisible(true);
     }
   };
   // 표시할 데이터: searchResults가 있으면 searchResults.content, 없으면 reduxPosts 사용
-  const displayedPosts: GaldaeItemType[] = searchResults ? searchResults.content : reduxPosts;
-  const finalFilteredData = useMemo(() => {
-    let filtered = displayedPosts;
+  const displayedPosts = searchResults ? searchResults.content : reduxPosts;
+  const finalFilteredData: TaxiListItem[] = useMemo(() => {
+    let filtered = displayedPosts as TaxiListItem[];
 
     if (filterOptions.formattedDepartureTime) {
       filtered = filtered.filter(item => {
@@ -345,126 +350,18 @@ const TaxiNDivide: React.FC<HomeProps> = () => {
 
     if (filterOptions.selectedGender !== null) {
       filtered = filtered.filter(item =>
-        item.passengerGenderType === (filterOptions.selectedGender === 'SAME' ? 'SAME' : 'DONT_CARE')
+        item.passengerGenderType === (filterOptions.selectedGender === 'SAME_GENDER' ? 'SAME_GENDER' : 'DONT_CARE')
       );
     }
 
     if (filterOptions.passengerNumber > 0) {
       filtered = filtered.filter(item =>
-        item.totalPassengerCount === filterOptions.passengerNumber
+        item.totalGroupPersonCount === filterOptions.passengerNumber
       );
     }
 
     return filtered;
   }, [displayedPosts, filterOptions]);
-  // 추가 필터 적용 (날짜, 시간협의, 성별, 탑승인원 등)
-  // let finalFilteredData = displayedPosts;
-  // //console.log(`
-  //   ====================================
-  //   0️⃣현재 finalFilteredData 데이터: (필터적용전)
-
-  //   `,finalFilteredData);
-  //   if (filterOptions.formattedDepartureTime) {
-  //     finalFilteredData = finalFilteredData.filter((item) => {
-  //       const apiTime = moment.utc(item.departureTime).format('YYYY-MM-DDTHH:mm:ss[Z]');
-  //       const filterTime = moment.utc(filterOptions.formattedDepartureTime).format('YYYY-MM-DDTHH:mm:ss[Z]');
-  //       //console.log(apiTime, filterTime);
-  //       return apiTime === filterTime;
-  //     });
-  //   }
-
-  // //console.log(`
-  //   1️⃣현재 finalFilteredData 데이터:
-
-  //   `,finalFilteredData);
-  // if (filterOptions.selectedTimeDiscuss !== null) {
-  //   finalFilteredData = finalFilteredData.filter(
-  //     (item) => item.arrangeTime === (filterOptions.selectedTimeDiscuss === 0 ? 'POSSIBLE' : 'IMPOSSIBLE')
-  //   );
-  // }
-
-  // //console.log(`
-  //   2️⃣현재 finalFilteredData 데이터:
-
-  //   `,finalFilteredData);
-
-  // if (filterOptions.selectedGender !== null) {
-  //   finalFilteredData = finalFilteredData.filter(
-  //     (item) =>
-  //       item.passengerGenderType ===
-  //       (filterOptions.selectedGender === 'SAME' ? 'SAME' : 'DONT_CARE')
-  //   );
-  // }
-
-  // //console.log(`
-  //   3️⃣현재 finalFilteredData 데이터:
-
-  //   `,finalFilteredData);
-
-  // if (filterOptions.passengerNumber > 0) {
-  //   finalFilteredData = finalFilteredData.filter(
-  //     (item) => item.totalPassengerCount === filterOptions.passengerNumber
-  //   );
-  // }
-  // //console.log(`
-  //   4️⃣현재 finalFilteredData 데이터:
-  //   ====================================
-  //   `,finalFilteredData);
-
-  const loadMoreData = async () => {
-    if (isLoadingMore) { return; }
-    if (isLast) { return; }
-    setIsLoadingMore(true);
-    // 검색 조건이 있는 경우 (searchResults 모드)
-    if (searchResults) {
-      const nextPage = pageNumber + 1;
-      const params = {
-        pageNumber: nextPage,
-        pageSize: 20,
-        direction: sortOrder === 'latest' ? 'DESC' : 'ASC',
-        properties: sortOrder === 'latest' ? ['create_at'] : ['departure_time'],
-        department: departureLargeName,
-        arrival: destinationLargeName,
-        majorDepartment: departureLargeId,
-        subDepartment: departureSmallId,
-        majorArrival: destinationLargeId,
-        subArrival: destinationSmallId,
-      };
-
-      try {
-        const data: GaldaeApiResponse = await searchPosts(params);
-
-        setSearchResults(prev => {
-          if (!prev) { return data; }
-          return {
-            ...prev,
-            content: [...prev.content, ...data.content], // ✅ 기존 content + 새 content
-            last: data.last,
-          };
-        });
-        setPageNumber(nextPage);
-        setIsLast(data.last);
-      } catch (error) {
-        //console.error('추가 검색 실패:', error);
-      }
-
-    } else {
-
-      const nextPage = pageNumber + 1;
-      const params: GetPostsRequest = {
-        pageNumber: nextPage,
-        pageSize: 20,
-        direction: sortOrder === 'latest' ? 'DESC' : 'ASC',
-        properties: sortOrder === 'latest' ? ['create_at'] : ['departure_time'],
-      };
-
-      const resultAction = await dispatch(fetchGaldaePosts(params));
-      const response = resultAction.payload as GaldaeApiResponse;
-      setIsLast(response.last);
-      setPageNumber(nextPage);
-    }
-    setIsLoadingMore(false);
-  };
 
 
   return (
@@ -475,7 +372,7 @@ const TaxiNDivide: React.FC<HomeProps> = () => {
         title={<BasicText text="택시비 N빵" style={styles.headerText} />}
       />
       <View style={styles.galdaeList}>
-        {departureLargeName && destinationLargeName && departureSmallName && destinationSmallName ? (
+        {isSearchMode ? (
           <SVGTextButton
             iconName="Cancel"
             iconPosition="right"
@@ -491,9 +388,9 @@ const TaxiNDivide: React.FC<HomeProps> = () => {
           >
             <View style={styles.searchContent}>
               <SVG name="location_line_gray2" />
-              <BasicText text={departureSmallName} color={theme.colors.grayV2} style={styles.searchPos} />
+              <BasicText text={departureSmallName} color={theme.colors.blackV2} style={styles.searchPos} />
               <SVG name="arrow_right_line_gray2" />
-              <BasicText text={destinationSmallName} color={theme.colors.grayV2} style={styles.searchPos} />
+              <BasicText text={destinationSmallName} color={theme.colors.blackV2} style={styles.searchPos} />
             </View>
           </SVGTextButton>
         ) : (
@@ -515,7 +412,7 @@ const TaxiNDivide: React.FC<HomeProps> = () => {
 
         <View style={styles.btns}>
           <View style={styles.filters}>
-            <FilterButton onPress={handleFilterPress} />
+            {/* <FilterButton onPress={handleFilterPress} /> */}
             <SelectTextButton text="시간협의가능" selected={filterOptions.selectedTimeDiscuss !== null} unselectedColors={{
               backgroundColor: theme.colors.white,
               textColor: theme.colors.blackV3,
@@ -557,7 +454,7 @@ const TaxiNDivide: React.FC<HomeProps> = () => {
               arrayPopupVisible && (
                 <View style={styles.arrayPanel}>
                   <BasicText text="최신순" onPress={() => setSortOrder('latest')} style={sortOrder === 'latest' ? styles.arrayPanelClickText : styles.arrayPanelText} />
-                  <BasicText text="마감 임박순" onPress={() => setSortOrder('departureTime')} style={sortOrder === 'latest' ? styles.arrayPanelText : styles.arrayPanelClickText} />
+                  <BasicText text="마감 임박순" onPress={() => setSortOrder('departure_time')} style={sortOrder === 'latest' ? styles.arrayPanelText : styles.arrayPanelClickText} />
                 </View>
               )
             }
@@ -571,7 +468,7 @@ const TaxiNDivide: React.FC<HomeProps> = () => {
         ) : finalFilteredData.length === 0 ? (
           <View style={styles.noData}>
             <SVG name="information_line" />
-            <BasicText text="해당 경로의 갈대가 없습니다" color={theme.colors.grayV1} />
+            <BasicText text="해당 경로의 택시 N빵이 없습니다" color={theme.colors.grayV1} />
           </View>
         ) : (
           <FlatList
@@ -592,16 +489,16 @@ const TaxiNDivide: React.FC<HomeProps> = () => {
             }
             extraData={finalFilteredData.length}
             data={finalFilteredData}
-            keyExtractor={(item) => item.postId}
-            onEndReached={loadMoreData}
+            keyExtractor={(item) => item.taxiId}
+           // onEndReached={loadMoreData}
             //initialNumToRender={10}
             //removeClippedSubviews={true} // 렌더링 최적화
             onEndReachedThreshold={0.5} // 화면의 50% 정도 남았을 때 다음 페이지를 불러옴
             renderItem={({ item }) => (
               <TaxiItem
                 item={item}
-                onPress={!item.isSameGender && item.passengerGenderType === 'SAME' ? () => setSameGenderPopupVisible(true) : () => navigation.navigate('NowGaldaeDetail', { postId: item.postId })}
-                onLongPress={() => handleLongPress(item)}
+                onPress={item.passengerGenderType === 'SAME_GENDER' && userGenderType === item.passengerGenderType ? () => setSameGenderPopupVisible(true) : () => navigation.navigate('NowGaldaeDetail', { taxiId: item.taxiId })}
+                //onLongPress={() => handleLongPress(item)}
               />
             )}
           />
@@ -614,11 +511,11 @@ const TaxiNDivide: React.FC<HomeProps> = () => {
           setSortOrder(selectedSortOrder);
         }}
       /> */}
-      <FilterPopup
+      {/* <FilterPopup
         ref={filterRef}
         onConfirm={handleFilterPopupConfirm}
         handleFilterReset={handleFilterReset}
-      />
+      /> */}
       <DeletePopup
         visible={deletePopupVisible}
         onCancel={() => {
