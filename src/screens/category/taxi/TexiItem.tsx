@@ -8,8 +8,6 @@ import { theme } from '../../../styles/theme';
 import styles from '../../../styles/GaldaeItem.style';
 // Type
 import { TaxiListItem } from '../../../types/taxiType';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../../modules/redux/RootReducer';
 
 interface GaldaeItemProps {
   item: TaxiListItem;
@@ -17,37 +15,36 @@ interface GaldaeItemProps {
 }
 
 const TaxiItem: React.FC<GaldaeItemProps> = ({ item, onPress }) => {
-  const userGenderType = useSelector((state: RootState) => state.myInfoSlice.userInfo?.gender);
   const formatDepartureTime = (departureTime: string): string => {
     return moment.utc(departureTime).format('YYYY년 MM월 DD일 (ddd) HH : mm');
   };
 
   return (
     <TouchableOpacity onPress={onPress} >
-      <View style={item.passengerGenderType === 'SAME_GENDER' && userGenderType === item.passengerGenderType ? styles.borderedListBoxComplete : styles.borderedListBox}>
+      <View style={!item.sameGenderYN ? styles.borderedListBoxComplete : styles.borderedListBox}>
         <View>
 
           <View style={styles.fromToContainer}>
             {/* 출발지 정보 */}
             <View style={styles.fromContainer}>
               {/* <SVG name={!item.isSameGender && item.passengerGenderType === 'SAME_GENDER' ? 'Car1' : 'Car'} /> */}
-              <BasicText text={item.departure.subPlace} style={item.passengerGenderType === 'SAME_GENDER' && userGenderType === item.passengerGenderType ? styles.fromMainLocationCom : styles.fromMainLocation} />            </View>
+              <BasicText text={item.departure.subPlace} style={!item.sameGenderYN ? styles.fromMainLocationCom : styles.fromMainLocation} />            </View>
             {/** */}
-            <SVG name={item.passengerGenderType === 'SAME_GENDER' && userGenderType === item.passengerGenderType ? 'arrow_forward' : 'arrow_forward'} />
+            <SVG name={'arrow_forward'} />
             {/* 도착지 정보 */}
             <View style={styles.toContainer}>
               {/* <SVG name={!item.isSameGender && item.passengerGenderType === 'SAME_GENDER' ? 'Location1' : 'Location'} /> */}
-              <BasicText text={item.arrival.subPlace} style={item.passengerGenderType === 'SAME_GENDER' && userGenderType === item.passengerGenderType ? styles.fromMainLocationCom : styles.fromMainLocation} />
+              <BasicText text={item.arrival.subPlace} style={!item.sameGenderYN ? styles.fromMainLocationCom : styles.fromMainLocation} />
 
             </View>
             {/** */}
           </View>
 
           <View style={styles.departureTimeContainer}>
-            <BasicText text="출발 시간" style={item.passengerGenderType === 'SAME_GENDER' && userGenderType === item.passengerGenderType ? styles.departureTimeTitleCom : styles.departureTimeTitle} />
+            <BasicText text="출발 시간" style={!item.sameGenderYN ? styles.departureTimeTitleCom : styles.departureTimeTitle} />
             <BasicText
               text={formatDepartureTime(item.departureTime)}
-              style={item.passengerGenderType === 'SAME_GENDER' && userGenderType === item.passengerGenderType ? styles.departureTimeCom : styles.departureTime}
+              style={!item.sameGenderYN ? styles.departureTimeCom : styles.departureTime}
 
             />
           </View>
@@ -56,12 +53,12 @@ const TaxiItem: React.FC<GaldaeItemProps> = ({ item, onPress }) => {
             {/* 승객 수 아이콘 */}
             <View style={styles.passengerContainer}>
               <View style={styles.fromToLine}>
-                <SVG name={item.passengerGenderType === 'SAME_GENDER' && userGenderType === item.passengerGenderType ? 'person_icon' : 'person_icon'} />
+                <SVG name={'person_icon'} />
               </View>
               <BasicText
                 text={`(${item.joinedPersonCount}/${item.totalGroupPersonCount})`}
                 fontSize={theme.fontSize.size14}
-                color={item.passengerGenderType === 'SAME_GENDER' && userGenderType === item.passengerGenderType ? theme.colors.blackV3 : theme.colors.blackV3}
+                color={theme.colors.blackV3}
               />
 
             </View>
@@ -75,7 +72,7 @@ const TaxiItem: React.FC<GaldaeItemProps> = ({ item, onPress }) => {
 
             {item.passengerGenderType && (
               <View style={styles.tags}>
-                {item.passengerGenderType === 'SAME_GENDER' && userGenderType === item.passengerGenderType ? (
+                {item.passengerGenderType === 'SAME_GENDER' && item.sameGenderYN ? (
                   <TextTag text="동성만"
                     enabledColors={
                       {
@@ -84,18 +81,18 @@ const TaxiItem: React.FC<GaldaeItemProps> = ({ item, onPress }) => {
                         borderColor: theme.colors.Galdae3,
                       }
                     }
-                    viewStyle={item.passengerGenderType === 'SAME_GENDER' && userGenderType === item.passengerGenderType ? styles.timePossible : styles.timePossible}
-                    textStyle={item.passengerGenderType === 'SAME_GENDER' && userGenderType === item.passengerGenderType ? styles.timePossibleText : styles.timePossibleText}
+                    viewStyle={!item.sameGenderYN ? styles.timePossible : styles.timePossible}
+                    textStyle={!item.sameGenderYN ? styles.timePossibleText : styles.timePossibleText}
                   />
-                ) : item.passengerGenderType === 'SAME_GENDER' ? (
-                  <TextTag text="동성만" viewStyle={item.passengerGenderType === 'SAME_GENDER' && userGenderType === item.passengerGenderType ? styles.sameGenderPossible : styles.sameGenderPossible}
-                    textStyle={item.passengerGenderType === 'SAME_GENDER' && userGenderType === item.passengerGenderType ? styles.sameGenderPossibleText : styles.sameGenderPossibleText} />
+                ) : item.sameGenderYN ? (
+                  <TextTag text="동성만" viewStyle={!item.sameGenderYN ? styles.sameGenderPossible : styles.sameGenderPossible}
+                    textStyle={!item.sameGenderYN ? styles.sameGenderPossibleText : styles.sameGenderPossibleText} />
                 ) : item.passengerGenderType === 'DONT_CARE' ? (
-                  <TextTag text="성별무관" viewStyle={item.passengerGenderType === 'DONT_CARE' && userGenderType === item.passengerGenderType ? styles.timePossible : styles.timePossible}
-                    textStyle={item.passengerGenderType === 'DONT_CARE' && userGenderType === item.passengerGenderType ? styles.timePossibleText : styles.timePossibleText} />
+                  <TextTag text="성별무관" viewStyle={!item.sameGenderYN ? styles.timePossible : styles.timePossible}
+                    textStyle={!item.sameGenderYN ? styles.timePossibleText : styles.timePossibleText} />
                 ) : (
-                  <TextTag text="상관없음" viewStyle={item.passengerGenderType === 'DONT_CARE' && userGenderType === item.passengerGenderType ? styles.timePossible : styles.timePossible}
-                    textStyle={item.passengerGenderType === 'DONT_CARE' && userGenderType === item.passengerGenderType  ? styles.timePossibleText : styles.timePossibleText} />
+                  <TextTag text="상관없음" viewStyle={!item.sameGenderYN ? styles.timePossible : styles.timePossible}
+                    textStyle={!item.sameGenderYN ? styles.timePossibleText : styles.timePossibleText} />
                 )}
               </View>
             )}
@@ -107,8 +104,8 @@ const TaxiItem: React.FC<GaldaeItemProps> = ({ item, onPress }) => {
         <View style={styles.typeContainer}>
           <TextTag
             text={'택시'}
-            viewStyle={styles.typePossible}
-            textStyle={styles.typePossibleText}
+            viewStyle={styles.taxiTypePossible}
+            textStyle={styles.taxiTypePossibleText}
           />
         </View>
 

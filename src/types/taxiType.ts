@@ -30,6 +30,7 @@ export interface TaxiListItem {
     joinedPersonCount: number;
     createdAt: string; // ISO
     userNickName: string | null;
+    sameGenderYN: boolean;
 }
 
 /**

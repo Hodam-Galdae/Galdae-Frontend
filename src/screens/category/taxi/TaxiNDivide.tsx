@@ -497,7 +497,7 @@ const handleCancelSearch = () => {
             renderItem={({ item }) => (
               <TaxiItem
                 item={item}
-                onPress={item.passengerGenderType === 'SAME_GENDER' && userGenderType === item.passengerGenderType ? () => setSameGenderPopupVisible(true) : () => navigation.navigate('NowGaldaeDetail', { taxiId: item.taxiId })}
+                onPress={item.sameGenderYN ? () => navigation.navigate('NowGaldaeDetail', { taxiId: item.taxiId }) : () => setSameGenderPopupVisible(true)}
                 //onLongPress={() => handleLongPress(item)}
               />
             )}

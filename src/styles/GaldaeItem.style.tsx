@@ -202,4 +202,15 @@ export default StyleSheet.create({
     fontSize: theme.fontSize.size12,
     fontWeight: '700',
   },
+  taxiTypePossible: {
+    backgroundColor: theme.colors.yellow2,
+    borderWidth: 0,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+  },
+  taxiTypePossibleText: {
+    color: theme.colors.Galdae,
+    fontSize: theme.fontSize.size12,
+    fontWeight: '700',
+  },
 });
