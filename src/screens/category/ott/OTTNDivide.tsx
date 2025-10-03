@@ -229,8 +229,8 @@ const OTTNDivide: React.FC<HomeProps> = () => {
                         onPress={handleCancelSearch}
                     >
                         <View style={styles.searchContent}>
-                            <SVG name="location_line_gray2" />
-                            <BasicText text={searchKeyword} color={theme.colors.grayV2} style={styles.searchPos} />
+                            {/* <SVG name="location_line_gray2" /> */}
+                            <BasicText text={searchKeyword} color={theme.colors.blackV3} style={styles.searchPos} />
                         </View>
                     </SVGTextButton>
                 ) : (

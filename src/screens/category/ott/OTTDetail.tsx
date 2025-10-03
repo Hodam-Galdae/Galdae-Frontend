@@ -28,7 +28,7 @@ type RootStackParamListd = {
     CreateGaldae: undefined;
     NowGaldae: undefined;
     OTTDetail: { subscribeId: string };
-    ChatRoom: { data: Readonly<any> },
+    ChatRoom: { chatroomId: number };
     OTTNDivide: undefined,
 };
 
@@ -52,6 +52,7 @@ const OTTDetail: React.FC = () => {
 
     const dispatch = useAppDispatch();
     const [isParticipating, setIsParticipating] = useState(false);
+    const [tagetRoom, setTagetRoom] = useState<any>(null);
     // 컴포넌트 마운트 시 Redux를 통해 상세 정보를 불러옴
     useEffect(() => {
         dispatch(fetchSubscribeDetail(subscribeId));  // OTT 상세 정보 조회
@@ -62,13 +63,17 @@ const OTTDetail: React.FC = () => {
 
     const handleParticipateGaldae = async () => {
         setIsParticipating(true);
-        // const tagetRoom = await joinChatroom(postId);
+        const tagetRoom = await joinGroup(subscribeId);
+        setTagetRoom(tagetRoom);
         //navigation.replace('ChatRoom', { data: Object.freeze(tagetRoom) });
         // 참여 로직 처리
     };
     const handleNavigateChatRoom = async () => {
-        const tagetRoom = await joinGroup(subscribeId);
-       // navigation.replace('ChatRoom', { data: Object.freeze(tagetRoom.chatroomId) });
+
+        if (tagetRoom) {
+            navigation.replace('ChatRoom', { chatroomId: tagetRoom.chatroomId });
+        }
+        setIsParticipating(false);
     };
 
     // if (loading) {
@@ -234,7 +239,7 @@ console.log(`OTT 상세 정보: ${detail}`,detail);
                 <ParticipateModal
                     visible={isParticipating}
                     subTitle={detail.subscribeType}
-                    onCancel={() => navigation.navigate('OTTNDivide')}
+                    onCancel={() => { setIsParticipating(false); navigation.navigate('OTTNDivide'); }}
                     onConfirm={handleNavigateChatRoom}
                 />
             )}

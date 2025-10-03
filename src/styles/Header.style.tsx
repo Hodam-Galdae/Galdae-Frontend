@@ -5,6 +5,7 @@ export default StyleSheet.create({
 
   headerContainer: {
     height: 80,
+    position: 'relative',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -105,4 +106,18 @@ export default StyleSheet.create({
     paddingHorizontal: 8,
     paddingBottom: 2,
   },
+
+  /** ✅ 전체 너비 모드: 좌우 버튼 위에 오버레이로 title을 가득 깔기 */
+  logoContainerFull: {
+    position: 'absolute',
+    left: 35,
+    right: 0,
+    // 헤더 안쪽 수평 패딩과 동일하게 여백 적용
+    paddingHorizontal: 20,
+    // 헤더 높이 안에서 수직 정렬
+    top: Platform.select({ ios: 70, android: 70}), // header의 paddingTop 고려
+    height: '90%',
+    justifyContent: 'center',
+  },
+
 });

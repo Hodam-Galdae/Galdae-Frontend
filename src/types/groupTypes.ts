@@ -2,10 +2,11 @@
  * Types
  * ========================= */
 
-export type GroupType = 'TAXI' | 'DELIVERY' | 'ETC';
+export type GroupType = 'TAXI' | 'DELIVERY' | 'SUBSCRIBE';
 
 export interface GroupListItem {
-    title: string;
+    titleLeft: string;
+    titleRight: string;
     type: GroupType;
     maximumPerson: string;   // 서버 스웨거가 string으로 표시
     currentPerson: string;   // 서버 스웨거가 string으로 표시

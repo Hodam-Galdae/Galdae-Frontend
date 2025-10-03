@@ -77,5 +77,5 @@ export interface SubscribeDeleteRequest {
 /** 타입-서비스 목록 */
 export interface TypeServiceItem {
     subscribeType: SubscribeType;
-    universityList: Array<{ id: number; universityName: string }>;
+    subscribeServiceTypeList: Array<{ id: number; subscribeServiceTypeName: string }>;
 }

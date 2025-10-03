@@ -18,7 +18,6 @@ export const useWebSocket = ({
     const client = useRef<Client>();
     const [isConnected, setIsConnected] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
-    
     // 콜백 함수들을 ref로 저장하여 안정적인 참조 유지
     const onMessageReceivedRef = useRef(onMessageReceived);
     const onUnreadCountReceivedRef = useRef(onUnreadCountReceived);
@@ -56,7 +55,7 @@ export const useWebSocket = ({
         client.current.onConnect = () => {
             setIsLoading(false);
             setIsConnected(true);
-
+            console.log('웹소켓 연결 성공');    
             // 채팅 메시지 구독
             client.current!.subscribe(
                 SUB_ENDPOINT + '/' + chatroomId,

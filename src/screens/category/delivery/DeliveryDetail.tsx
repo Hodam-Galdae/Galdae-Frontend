@@ -24,7 +24,8 @@ type RootStackParamList = {
     CreateGaldae: undefined;
     NowGaldae: undefined;
     DeliveryDetail: { orderId: string };
-    ChatRoom: { data: Readonly<any> },
+    ChatRoom: { chatroomId: number };
+    DeliveryNDivide: undefined;
 };
 
 type DeliveryDetailScreenNavigationProp = NativeStackNavigationProp<
@@ -45,6 +46,7 @@ const DeliveryDetail: React.FC = () => {
     );
     const dispatch = useAppDispatch();
     const [isParticipating, setIsParticipating] = useState(false);
+    const [tagetRoom, setTagetRoom] = useState<any>(null);
     // 컴포넌트 마운트 시 Redux를 통해 상세 정보를 불러옴
     useEffect(() => {
         dispatch(fetchOrderDetail(orderId));
@@ -54,10 +56,14 @@ const DeliveryDetail: React.FC = () => {
 
     const handleParticipateGaldae = async () => {
         setIsParticipating(true);
+        const tagetRoom = await joinGroup(orderId);
+        setTagetRoom(tagetRoom);
     };
     const handleNavigateChatRoom = async () => {
-        const tagetRoom = await joinGroup(orderId);
-        navigation.replace('ChatRoom', { data: Object.freeze(tagetRoom.chatroomId) });
+        if (tagetRoom) {
+            navigation.replace('ChatRoom', { chatroomId: tagetRoom.chatroomId });
+        }
+        setIsParticipating(false);
     };
 
     if (detailLoading) {
@@ -244,7 +250,7 @@ const DeliveryDetail: React.FC = () => {
 
             </ScrollView>
             <View style={styles.participateContainer}>
-                {detail.canJoin ? (
+                {!detail.canJoin ? (
                     <BasicButton
                         text="이미 참여한 N빵"
                         buttonStyle={styles.participateBtn}
@@ -291,7 +297,7 @@ const DeliveryDetail: React.FC = () => {
             {isParticipating && (
                 <ParticipateModal
                     visible={isParticipating}
-                    onCancel={() => setIsParticipating(false)}
+                    onCancel={() => { setIsParticipating(false); navigation.navigate('DeliveryNDivide'); }}
                     onConfirm={handleNavigateChatRoom}
                 />
             )}

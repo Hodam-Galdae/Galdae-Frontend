@@ -10,13 +10,10 @@ import SVG from '../SVG';
 import { useNavigation } from '@react-navigation/native';
 import SettlementCostEditModal from './SettlementCostEditModal';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import {
-  ChatroomResponse,
-  MemberResponse,
-} from '../../api/chatApi';
 import { getUserInfo } from '../../api/membersApi';
 import { banks, BankOption } from '../../constants/bankOptions';
 import moment from 'moment';
+import { ChatMember } from '../../api/chatApi';
 
 export interface SettlementRequestPopupRef {
   open: () => void;
@@ -25,8 +22,9 @@ export interface SettlementRequestPopupRef {
 
 export interface SettlementRequestPopupProps {
   onClose?: () => void;
-  chatRoomData: ChatroomResponse;
-  member: MemberResponse[];
+  titleLeft: string;
+  titleRight: string;
+  member: ChatMember[];
   sendPayment: (settlementCost: string) => void;
 }
 
@@ -37,7 +35,7 @@ type RootStackParamList = {
 const SettlementRequestPopup = forwardRef<
   SettlementRequestPopupRef,
   SettlementRequestPopupProps
->(({ chatRoomData, member, sendPayment }, ref) => {
+>(({ titleLeft, titleRight, member, sendPayment }, ref) => {
   const modalizeRef = useRef<Modalize>(null);
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList, 'Payment'>>();
   // 외부에서 open/close 함수를 사용할 수 있도록 함
@@ -158,7 +156,7 @@ const SettlementRequestPopup = forwardRef<
               />
               <BasicText
                 style={styles.settlementLocationText}
-                text={chatRoomData.departPlace}
+                text={titleLeft}
               />
               <SVG
                 style={styles.settlementLocationIcon}
@@ -168,7 +166,7 @@ const SettlementRequestPopup = forwardRef<
               />
               <BasicText
                 style={styles.settlementLocationText}
-                text={chatRoomData.arrivePlace}
+                text={titleRight}
               />
             </View>
             <View style={styles.settlementLastCostContainer}>

@@ -18,8 +18,8 @@ import FastGaldaeEndPopup, { FastGaldaeEndPopupRef } from '../../../components/p
 import FastGaldaeTimePopup, { FastGaldaeTimePopupRef } from '../../../components/popup/FastGaldaeTimePopup';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useAppDispatch } from '../../../modules/redux/store';
-import EncryptedStorage from 'react-native-encrypted-storage';
-import { getUserInfo } from '../../../api/membersApi';
+
+
 // import { fetchMyGaldaeHistory } from '../../../modules/redux/slice/myGaldaeSlice';
 // import { fetchHomeGaldaePosts } from '../../../modules/redux/slice/homeGaldaeSlice';
 // import { fetchMyCreatedGaldae } from '../../../modules/redux/slice/myCreatedGaldaeSlice';
@@ -31,13 +31,13 @@ import { createTaxi } from '../../../modules/redux/slice/taxiSlice';
 //type
 // import { GetPostsRequest } from '../../../types/postTypes';
 // ✅ 갈대 생성 요청 타입
-import { CreatePostRequest } from '../../../types/postTypes';
+
 import { Portal } from '@gorhom/portal';
 import ParticipateModal from '../../../components/popup/ParticipateModal';
 import { PagingQuery, TaxiCreateRequest } from '../../../types/taxiType';
-// import { joinGroup } from '../../../api/groupApi';
+
 // import { GroupJoinResponse } from '../../../types/groupTypes';
-import { ChatroomResponse, getChatrooms } from '../../../api/chatApi';
+import { ChatroomSummary, fetchMyChatrooms } from '../../../api/chatApi';
 // import { useFocusEffect } from '@react-navigation/native';
 // import { useCallback } from 'react';
 
@@ -47,18 +47,8 @@ type RootStackParamList = {
   NowGaldae: undefined;
   NowGaldaeDetail: { postId: string };
   TaxiNDivide: undefined;
-  ChatRoom: { data: Readonly<ChatroomResponse>, userInfo: Readonly<User> };
+  ChatRoom: { chatroomId: number };
 };
-
-type User = {
-  nickname: string,
-  image: string,
-  university: string,
-  bankType: string,
-  accountNumber: string,
-  depositor: string,
-  token: string,
-}
 
 const CreateGaldae: React.FC = () => {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -89,8 +79,8 @@ const CreateGaldae: React.FC = () => {
   const fastGaldaeEndPopupRef = useRef<FastGaldaeEndPopupRef>(null);
   const fastGaldaeTimePopupRef = useRef<FastGaldaeTimePopupRef>(null);
   const [participating, setParticipating] = useState<boolean>(false);
-  const [taxiId, setTaxiId] = useState<string | null>(null);
-  const [activeChatRoomData, setActiveChatRoomData] = useState<ChatroomResponse[]>([]);
+  const [chatroomId, setChatroomId] = useState<number | null>(null);
+  const [activeChatRoomData, setActiveChatRoomData] = useState<ChatroomSummary[]>([]);
   const passengerNumberHandler = (type: string) => {
     if (type === 'PLUS' && passengerNumber < 4) {
       setPassengerNumber(passengerNumber + 1);
@@ -104,7 +94,7 @@ useEffect(() => {
   const fetchAllChatRooms = async () => {
     try {
       const [activeData] = await Promise.all([
-        getChatrooms(),
+        fetchMyChatrooms(),
       ]);
       console.log('activeData',activeData);
       setActiveChatRoomData(activeData);
@@ -172,7 +162,7 @@ useEffect(() => {
       //dispatch(fetchGaldaePosts(params));
 
       if (response.taxiId) {
-        setTaxiId(response.taxiId);
+        setChatroomId(response.chatroomId);
         setParticipating(true);
       }
     } catch (rejectedMsg: any) {
@@ -282,28 +272,10 @@ useEffect(() => {
   console.log('departureDate:', departureDate);
   console.log('isFormValid:', isFormValid);
   console.log('==================');
-  const handleNavigateChatRoom = async (id: string) => {
-    // const tagetRoom = await joinGroup(taxiId || '');
-    // console.log('tagetRoom', tagetRoom);
-    // navigation.replace('ChatRoom', { data: Object.freeze(tagetRoom) });
+  const handleNavigateChatRoom = async (id: number) => {
 
-    console.log('activeChatRoomData', activeChatRoomData, id);
-    const targetRoom = activeChatRoomData.find(item => item.chatroomId === id);
+    navigation.replace('ChatRoom', { chatroomId: id});
 
-    const userInfo = await getUserInfo();
-    const token = await EncryptedStorage.getItem('accessToken');
-
-    console.log('targetRoom', targetRoom);
-    console.log('userInfo', userInfo);
-    console.log('token', token);
-
-    if(targetRoom){
-      navigation.navigate('ChatRoom', { data: Object.freeze(targetRoom), userInfo: {...userInfo, token}});
-    }
-    else{
-     // console.log('error');
-      return;
-    }
   };
   return (
     <View>
@@ -491,7 +463,7 @@ useEffect(() => {
           title="생성 완료"
           visible={participating}
           onCancel={() => { navigation.navigate('TaxiNDivide'); setParticipating(false); }}
-          onConfirm={() => handleNavigateChatRoom(taxiId || '')}
+          onConfirm={() => handleNavigateChatRoom(chatroomId || 0)}
           fromMajor={departureLargeName}
           fromSub={departureSmallName}
           toMajor={destinationLargeName}

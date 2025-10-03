@@ -38,13 +38,13 @@ import useDidMountEffect from '../hooks/useDidMountEffect';
 import Header from '../components/Header';
 import { useWebSocket } from '../hooks/useWebSocket';
 import {
-  ChatResponse,
-  ChatroomResponse,
-  getChats,
-  getMembers,
-  MemberResponse,
-  sendImage,
-  exitChatroom,
+  ChatItem as ChatItemType,
+  fetchChatMembers,
+  fetchChatroomInfo,
+  fetchChats,
+  leaveChatroom,
+  ChatMember as MemberResponse,
+  sendChatImage,
 } from '../api/chatApi';
 import moment from 'moment';
 import { createReport } from '../api/reportApi';
@@ -53,7 +53,7 @@ import Loading from '../components/Loading';
 import { useSelector } from 'react-redux';
 import { RootState } from '../modules/redux/RootReducer';
 import SettlementCostEditModal from '../components/popup/SettlementCostEditModal';
-
+import EncryptedStorage from 'react-native-encrypted-storage';
 type SettlementType = {
   accountNumber: String;
   accountBank: String;
@@ -63,27 +63,19 @@ type SettlementType = {
 };
 
 type RenderItem = {
-  item: ChatResponse;
+  item: ChatItemType;
   index: number;
 };
 
 type RootStackParamList = {
-  ChatRoom: { data: Readonly<ChatroomResponse>, userInfo: Readonly<User> };
+  ChatRoom: { chatroomId: number };
   Settlement: { data: Readonly<SettlementType> };
 };
 
-type User = {
-  nickname: string,
-  image: string,
-  university: string,
-  bankType: string,
-  accountNumber: string,
-  depositor: string,
-  token: string,
-}
+
 
 const ChatRoom: React.FC = () => {
-  const [data, setData] = useState<ChatResponse[]>([]);
+  const [data, setData] = useState<ChatItemType[]>([]);
   const [message, setMessage] = useState<string>('');
   const [showExtraView, setShowExtraView] = useState<boolean>(false);
   const [keyboardHeight, setKeyboardHeight] = useState<number>(0);
@@ -107,18 +99,33 @@ const ChatRoom: React.FC = () => {
   const settlementRequestPopupRef = useRef<SettlementRequestPopupRef>(null);
   const translateX = useRef(new Animated.Value(SIDE_MENU_WIDTH)).current;
   const translateY = useRef(new Animated.Value(100)).current;
-  const { params } = useRoute<RouteProp<RootStackParamList, 'ChatRoom'>>();
+  const { chatroomId } = useRoute<RouteProp<RootStackParamList, 'ChatRoom'>>().params;
+  const [chatroomTitle, setChatroomTitle] = useState<{
+    titleLeft: string;
+    titleRight: string;
+    alertContent: string;
+  }>({
+    titleLeft: '',
+    titleRight: '',
+    alertContent: '',
+  });
   const [members, setMembers] = useState<MemberResponse[]>([]);
   const [reportImage, setReportImage] = useState({ uri: '', name: '' });
   const reportData = useRef({
     member: { memberId: '', memberName: '', memberImage: '' },
     reason: '',
   });
-  const chatRoomData = params.data;
-  const userInfo = params.userInfo;
-  const userInfo2 = useSelector((state: RootState) => state.user);
-  console.log('userInfo2', userInfo2?.token?.startsWith('Bearer '));
-  console.log('userInfo', userInfo?.token?.startsWith('Bearer '));
+
+   const userInfo = useSelector((state: RootState) => state.user);
+   const [token, setToken] = useState<string>('');
+
+   useEffect(() => {
+    const getToken = async () => {
+      const token = await EncryptedStorage.getItem('accessToken');
+      setToken(token ?? '');
+    };
+    getToken();
+   }, []);
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
@@ -140,41 +147,56 @@ const ChatRoom: React.FC = () => {
   ).current;
 
   const fetchMembers = useCallback(async () => {
-    const memberData = await getMembers(chatRoomData.chatroomId);
+    const memberData = await fetchChatMembers(chatroomId);
     setMembers(memberData);
-  }, [chatRoomData]);
+  }, [chatroomId]);
 
-  const exitChat = async () => {
-    await exitChatroom(chatRoomData.chatroomId);
-    navigation.pop();
-  };
+  // const exitChat = async () => {
+  //   await leaveChatroom(chatroomId);
+  //   navigation.pop();
+  // };
 
   useEffect(() => {
-    const fetchChats = async () => {
-      const chatData = await getChats(chatRoomData.chatroomId);
+    const fetchChatsFunc = async () => {
+      const chatData = await fetchChats(chatroomId);
       console.log(`
         
         
-        처음 받아온 채팅 데이터들 
+        처음 받아온 채팅 데이터들 fetchChats
         
         
         
         `, chatData);
-      setData(chatData);
+      //setData(chatData);
+
     };
+    const fetchChatroomInfos = async () => {
+      const chatroomData = await fetchChatroomInfo(chatroomId);
+      setChatroomTitle(chatroomData);
+     console.log(`
+        
+        
+      처음 받아온 채팅 데이터들 fetchChatroomInfo
+      
+      
+      
+      `, chatroomData);
+    };
+    fetchChatroomInfos();
+    fetchChatsFunc();
+  }, [chatroomId]);
 
-    fetchChats();
-  }, [chatRoomData]);
-
-  // ChatRoom 컴포넌트 안
-  useEffect(() => {
-    console.log('★ 최신 unreadCounts:', unreadCounts);
-  }, [unreadCounts]);
+  // // ChatRoom 컴포넌트 안
+  // useEffect(() => {
+  //   console.log('★ 최신 unreadCounts:', unreadCounts);
+  // }, [unreadCounts]);
 
   const { isLoading, sendMessage: wsSendMessage } = useWebSocket({
-    chatroomId: chatRoomData.chatroomId,
-    token: userInfo.token.startsWith('Bearer ') ? userInfo.token : 'Bearer ' + userInfo.token,
+    chatroomId: chatroomId.toString(),
+    token: token,
     onMessageReceived: useCallback((receiveData) => {
+
+      console.log('receiveData', receiveData);
       setData(prev => [
         ...prev,
         {
@@ -194,12 +216,12 @@ const ChatRoom: React.FC = () => {
   });
 
   const sendPayment = async (settlementCost: string) => {
-    wsSendMessage(settlementCost, 'MONEY', userInfo.nickname, userInfo.image);
+    wsSendMessage(settlementCost, 'MONEY', userInfo?.nickname || '', userInfo?.image || '');
   };
 
   const sendMessage = async () => {
     if (message.length !== 0) {
-      wsSendMessage(message, 'MESSAGE', userInfo.nickname, userInfo.image);
+      wsSendMessage(message, 'MESSAGE', userInfo?.nickname || '', userInfo?.image || '');
       setMessage('');
     }
   };
@@ -305,7 +327,7 @@ const ChatRoom: React.FC = () => {
 
   const startReportUser = (member: MemberResponse) => {
     setIsVisibleReportPopup(true);
-    reportData.current.member = member;
+    reportData.current.member = { memberId: member.memberId, memberName: member.memberName, memberImage: member.memberImage || '' };
   };
 
   const openSettlement = async () => {
@@ -360,12 +382,12 @@ const ChatRoom: React.FC = () => {
             id: item.chatId,
             content: item.chatContent,
             sender: item.sender,
-            senderImage: item.memberImage,
+            senderImage: item.memberImage || '',
             time: item.time,
             type: item.chatType.toString(),
             isShowProfile,
             isShowTime,
-            nickname: userInfo.nickname,
+            nickname: userInfo?.nickname || '',
             unreadCount: unreadCount,
           }}
         />
@@ -373,17 +395,17 @@ const ChatRoom: React.FC = () => {
         <SettlementBox
           settlement={{
             sender: item.sender,
-            senderImage: item.memberImage,
-            chatroomId: chatRoomData.chatroomId,
+            senderImage: item.memberImage || '',
+            chatroomId: chatroomId.toString(),
             time: item.time,
             isShowProfile,
             isShowTime,
-            nickname: userInfo.nickname,
+            nickname: userInfo?.nickname || '',
           }}
         />
       );
     },
-    [data, chatRoomData, userInfo, unreadCounts],
+    [data, chatroomId, userInfo, unreadCounts],
   );
 
   useDidMountEffect(() => {
@@ -393,9 +415,9 @@ const ChatRoom: React.FC = () => {
           const formData = new FormData();
           let imageFile = { uri: imageUri, type: imageType, name: imageName };
           formData.append('image', imageFile as any);
-          const url = await sendImage(formData);
+          const url = await sendChatImage(chatroomId.toString(), { imageSendCommand: { sender: userInfo?.nickname || '', senderImage: userInfo?.image || '' }, image: imageUri });
 
-          wsSendMessage(url, 'IMAGE', userInfo.nickname, userInfo.image);
+          wsSendMessage(url.toString() || '', 'IMAGE', userInfo?.nickname || '', userInfo?.image || '') as any;
         } catch (err) {
         }
       }
@@ -406,39 +428,47 @@ const ChatRoom: React.FC = () => {
 
   return (
     <KeyboardAvoidingView style={styles.rootContainer} behavior={'padding'}>
-      <Header
+    <Header
         style={styles.headerContainer}
         leftButton={
           <SVGButton onPress={() => navigation.goBack()} iconName="LeftArrow" />
         }
         title={
           <View style={styles.header}>
-            <SVG
-              width={22}
-              height={22}
-              style={styles.headerIcon}
-              name="LocationBlack"
-            />
+           {
+            chatroomTitle.titleRight && (
+              <SVG
+                width={22}
+                height={22}
+                style={styles.headerIcon}
+                name="LocationBlack"
+              />
+            )
+           }
             <BasicText
               style={styles.headerText}
-              text={chatRoomData.departPlace}
+              text={chatroomTitle.titleLeft}
             />
-            <SVG
-              width={22}
-              height={22}
-              style={styles.headerIcon}
-              name="RightArrow"
-            />
+           {
+            chatroomTitle.titleRight && (
+              <SVG
+                width={22}
+                height={22}
+                style={styles.headerIcon}
+                name="RightArrow"
+              />
+            )
+           }
             <BasicText
               style={styles.headerText}
-              text={chatRoomData.arrivePlace}
+              text={chatroomTitle.titleRight}
             />
           </View>
         }
         rightButton={<SVGButton onPress={openSideMenu} iconName="Kebab" />}
       />
-      {/* 오버레이 */}
-      {isSideMenuOpen && (
+
+{isSideMenuOpen && (
         <TouchableOpacity
           style={styles.overlay}
           activeOpacity={1}
@@ -456,32 +486,32 @@ const ChatRoom: React.FC = () => {
           {'참여자 목록 ( ' +
             members.length +
             ' / ' +
-            chatRoomData.maxMemberCount +
+           members.length +
             ' )'}
         </BasicText>
         <View style={styles.menuUserList}>
-          {members.map(e => {
+          {members.map(member => {
             return (
-              <View key={e.memberId} style={styles.menuUserContainer}>
+              <View key={member.memberId} style={styles.menuUserContainer}>
                 <View style={styles.menuUserWrapper}>
                   <SVG
                     width={46}
                     height={46}
-                    name="DefaultProfile"
+                    name={member.memberImage === null ? "DefaultProfile" : member.memberImage as any}
                     style={styles.menuUserIcon}
                   />
-                  <BasicText style={styles.menuUserText} text={e.memberName} />
-                  {e.memberName === userInfo.nickname ? (
+                  <BasicText style={styles.menuUserText} text={member.memberName} />
+                  {member.memberName === userInfo?.nickname || '' ? (
                     <View style={styles.menuUserMe}>
                       <BasicText style={styles.menuUserMeText} text="나" />
                     </View>
                   ) : null}
                 </View>
-                {e.memberName !== userInfo.nickname ? (
+                {member.memberName !== userInfo?.nickname || ''   ? (
                   <BasicButton
                     textStyle={styles.menuUserBtnText}
                     buttonStyle={styles.menuUserBtn}
-                    onPress={() => startReportUser(e)}
+                    onPress={() => startReportUser(member)}
                     text="신고하기"
                   />
                 ) : null}
@@ -512,7 +542,7 @@ const ChatRoom: React.FC = () => {
             chatListRef.current?.scrollToEnd({ animated: false })
           }
         />
-        <View>
+                <View>
           {/* 채팅창 + 사진, 정산 요청 창 */}
           <View>
             <View style={styles.inputContainer}>
@@ -560,7 +590,7 @@ const ChatRoom: React.FC = () => {
                   />
                   <BasicText text="앨범" style={styles.extraViewItemText} />
                 </View>
-                {chatRoomData.isRoomManager ? (
+                {chatroomTitle.titleRight === userInfo?.nickname || '' ? (
                   <View style={styles.extraViewContainer}>
                     <SVGButton
                       onPress={openSettlement}
@@ -580,14 +610,15 @@ const ChatRoom: React.FC = () => {
         </View>
         <SettlementRequestPopup
           member={members}
-          chatRoomData={chatRoomData}
+          titleLeft={chatroomTitle.titleLeft}
+          titleRight={chatroomTitle.titleRight}
           ref={settlementRequestPopupRef}
           sendPayment={sendPayment}
         />
 
         <ChatRoomExitModal
           visible={isVisibleExitPopup}
-          onConfirm={() => exitChat()}
+          onConfirm={() => leaveChatroom(chatroomId.toString())}
           onCancel={() => setIsVisibleExitPopup(false)}
         />
 

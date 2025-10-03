@@ -13,11 +13,115 @@ export default StyleSheet.create({
   },
   container: {
     flex: 1,
-    justifyContent: 'center',
-    backgroundColor: theme.colors.white,
+
     paddingLeft: 15,
     paddingTop: 30,
     paddingRight: 15,
+  },
+
+  title2: {
+    fontSize: theme.fontSize.size16,
+    fontWeight: '500',
+    color: theme.colors.blackV1,
+  },
+  goToRouteContainer:{
+    padding :20,
+    flexDirection:'row',
+    alignItems:'center',
+    justifyContent:'space-between',
+  },
+  goToRoute:{
+    fontSize: theme.fontSize.size16,
+    fontWeight: '500',
+    color: theme.colors.blackV2,
+  },
+  listBox: {
+    width: '100%',
+    padding: 15,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: (10),
+  },
+  emptyContainer: {
+    height:'40%',
+    justifyContent:'center',
+    alignItems:'center',
+    gap:12,
+  },
+  listBoxContent:{
+    marginBottom: 10,
+  },
+  fromToContainer: {
+    flexDirection: 'row',
+    gap: (4),
+    marginTop: (12),
+    alignItems: 'center',
+  },
+  fromContainer: {
+    flexDirection: 'row',
+    gap: (4),
+    //width: '40%',
+    overflow: 'hidden',
+    flexWrap: 'nowrap',
+  },
+  toContainer: {
+    flexDirection: 'row',
+    gap: (4),
+    alignItems: 'center',
+    //width: '40%',
+    overflow: 'hidden',
+    flexWrap: 'nowrap',
+  },
+  fromContainerSearch: {
+    fontSize: theme.fontSize.size16,
+    fontWeight: '700',
+    color: theme.colors.blue,
+  },
+  fromMainLocation: {
+    fontSize: theme.fontSize.size16,
+    fontWeight: '700',
+    color: theme.colors.blackV1,
+  },
+  fromMainLocationCom: {
+    fontSize: theme.fontSize.size16,
+    fontWeight: '700',
+    color: theme.colors.blackV3,
+  },
+  fromSubLocation: {
+    fontSize: theme.fontSize.size16,
+    fontWeight: '500',
+    color: theme.colors.blackV2,
+  },
+  fromSubLocationCom: {
+    fontSize: theme.fontSize.size16,
+    fontWeight: '500',
+    color: theme.colors.blackV3,
+  },
+  departureTimeContainer: {
+    flexDirection: 'row',
+    gap: (4),
+    marginTop: (4),
+    alignItems: 'center',
+  },
+  departureTimeTitle: {
+    color: theme.colors.GaldaeDark,
+    fontWeight: '700',
+    fontSize: theme.fontSize.size14,
+  },
+  departureTimeTitleCom:{
+    color: theme.colors.blackV3,
+    fontWeight: '500',
+    fontSize: theme.fontSize.size14,
+  },
+  departureTime: {
+    color: theme.colors.grayV0,
+    fontWeight: '500',
+    fontSize: theme.fontSize.size14,
+  },
+  departureTimeCom: {
+    color: theme.colors.grayV0,
+    fontWeight: '500',
+    fontSize: theme.fontSize.size14,
   },
   header: {
     backgroundColor: theme.colors.Galdae,
@@ -33,36 +137,64 @@ export default StyleSheet.create({
     fontSize: theme.fontSize.size16,
     fontWeight: '700',
   },
-
+  cancelBtn: {
+    width: 22,
+    height: 22,
+    position: 'absolute',
+    right: 10,
+    bottom: -3,
+    transform: [{ translateY: -11 }], // 아이콘 세로 중앙 맞춤(아이콘 높이의 절반)
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 10,     // 안드로이드에서 겹침 이슈가 있으면
+    elevation: 2,   // ✨ 추가 (안드로이드 zIndex 보조)
+  },
   searchDate: {
     marginBottom: 2,
     marginLeft: 14,
   },
   searchList: {
-    height: 500,
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 10,
+    width: '100%',
   },
   searchListWrapper: {
-    width: '100%',
-    borderRadius: 10,
-    borderWidth: 2,
-    borderColor: theme.colors.grayV3,
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start',
-    marginBottom: (12),
-    paddingBottom: 15,
-    paddingTop: 8,
+
+    alignItems: 'center',
+    justifyContent: 'center',
+
+  },
+  searchKeywordList: {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: 10,
+    flexWrap: 'wrap',
+    marginBottom: 40,
+  },
+  searchKeyword:{
+    borderRadius: 30,
+    borderWidth: 1,
+    borderColor: theme.colors.blackV3,
+    height: 26,
+    padding: 1,
+    paddingHorizontal: 6,
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 10,
   },
   searchListBox: {
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
-    backgroundColor: theme.colors.red,
+    // backgroundColor: theme.colors.red,
     gap: (30),
   },
 
-  searchKeyword: {
-    marginLeft: 14,
+  searchKeywordText: {
+    color: theme.colors.blackV3,
   },
   searchIcon: {
     width: 22,
@@ -76,9 +208,20 @@ export default StyleSheet.create({
     position: 'relative',
     width: '100%',
     marginBottom: 20,
-    // backgroundColor: theme.colors.red,   // (디버그용이었으면 제거 권장)
+    backgroundColor: theme.colors.red,   // (디버그용이었으면 제거 권장)
+    justifyContent: 'space-between',
+    
   },
-
+  searchListContainer:{
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 10,
+    width: '100%',
+  },
+  searchRight: {
+    width: 0,
+  },
   // ✨ 인풋 우측에 아이콘 공간 확보
   searchInput: {
     paddingRight: 44,           // 아이콘 너비 + 여백
@@ -116,9 +259,9 @@ export default StyleSheet.create({
     }),
   },
   title: {
-    fontSize: theme.fontSize.size18,
+    fontSize: theme.fontSize.size16,
     fontWeight: 'bold',
-    color: theme.colors.blackV0,
+    color: theme.colors.blackV1,
     marginBottom: 20,
   },
   switchBtn: {
@@ -176,5 +319,132 @@ export default StyleSheet.create({
   },
   startContainer: {
     alignSelf: 'center',
+  },
+
+  borderedListBox: {
+    width: '100%',
+    borderColor: theme.colors.grayV2,
+    borderRadius: theme.borderRadius.size12,
+    borderWidth: 1,
+    paddingStart:15,
+    paddingEnd: 15,
+    paddingBottom: 18,
+    marginBottom: 12,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  borderedListBoxComplete: {
+    width: '100%',
+    borderColor: theme.colors.grayV3,
+    borderRadius: theme.borderRadius.size10,
+    backgroundColor: theme.colors.grayV3,
+    borderWidth: 1,
+    paddingStart: 15,
+    paddingEnd: 15,
+    paddingBottom: 18,
+    marginBottom: 12,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  galdaeOwner: {
+    fontSize: theme.fontSize.size12,
+    fontWeight: '700',
+  },
+  galdaeOwnerCom: {
+    fontSize: theme.fontSize.size12,
+    fontWeight: '700',
+    color: theme.colors.grayV2,
+  },
+
+  passengerTimeContainer: {
+    flexDirection: 'row',
+    gap: (6),
+    marginTop: (6),
+    alignItems: 'center',
+
+  },
+
+  fromToLine: {
+    width: (20),
+    height: (20),
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  passengerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  tags: {
+    flexDirection: 'row',
+    gap: (4),
+    alignItems: 'center',
+  },
+
+  timeContainer: {
+    flexDirection: 'row',
+    gap: (8),
+    marginTop: (6),
+    alignItems: 'center',
+  },
+  timePossible: {
+    backgroundColor: theme.colors.blue2,
+    borderWidth: 0,
+    paddingHorizontal: 6,
+    paddingVertical: 4,
+  },
+  timePossibleCom: {
+    backgroundColor: theme.colors.grayV2,
+    borderColor: theme.colors.grayV2,
+    borderWidth: 0,
+  },
+  sameGenderPossible: {
+    backgroundColor: theme.colors.Galdae3,
+    borderWidth: 0,
+    paddingHorizontal: 6,
+    paddingVertical: 4,
+  },
+  sameGenderPossibleText: {
+    color: theme.colors.blue,
+    fontSize: theme.fontSize.size12,
+    fontWeight: '500',
+  },
+  timeNotPossible: {
+    backgroundColor: theme.colors.yellow2,
+    borderColor: theme.colors.grayV2,
+    borderWidth: 0,
+  },
+  timePossibleText: {
+    color: theme.colors.blue,
+    fontSize: theme.fontSize.size12,
+    fontWeight: '500',
+  },
+  timePossibleTextCom: {
+    color: theme.colors.white,
+    fontSize: theme.fontSize.size12,
+    fontWeight: '500',
+  },
+  timeNotPossibleText: {
+    color: theme.colors.red,
+    fontSize: theme.fontSize.size12,
+    fontWeight: '500',
+  },
+
+  typeContainer: {
+    flexDirection: 'row',
+    marginTop: (12),
+    alignItems: 'flex-start',
+    justifyContent: 'flex-end',
+    alignContent: 'flex-end',
+  },
+  typePossible: {
+    backgroundColor: theme.colors.blue2,
+    borderWidth: 0,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+  },
+  typePossibleText: {
+    color: theme.colors.blue,
+    fontSize: theme.fontSize.size12,
+    fontWeight: '700',
   },
 });

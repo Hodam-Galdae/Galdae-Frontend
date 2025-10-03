@@ -81,7 +81,7 @@ export default StyleSheet.create({
     deliveryFromContainer: {
         flexDirection: 'row',
         gap: (5),
-        width: 120,
+        //width: 120,
         overflow: 'hidden',
         flexWrap: 'nowrap',
         alignItems: 'center',

@@ -48,7 +48,7 @@ export default StyleSheet.create({
   fromContainer: {
     flexDirection: 'row',
     gap: (4),
-    width: '40%',
+    //width: '40%',
     overflow: 'hidden',
     flexWrap: 'nowrap',
   },
@@ -56,7 +56,7 @@ export default StyleSheet.create({
     flexDirection: 'row',
     gap: (4),
     alignItems: 'center',
-    width: '40%',
+    //width: '40%',
     overflow: 'hidden',
     flexWrap: 'nowrap',
   },

@@ -1,22 +1,20 @@
-import React, {useState, useCallback} from 'react';
-import {View, SectionList} from 'react-native';
+import React, { useState, useCallback } from 'react';
+import { View, SectionList } from 'react-native';
 import styles from '../styles/Chat.style';
 import ChatRoomItem from '../components/ChatRoomItem';
-import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {useNavigation} from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useNavigation } from '@react-navigation/native';
 import {
-  ChatroomResponse,
-  getActiveChatroom,
-  getInActiveChatroom,
+  fetchMyChatrooms,
+  ChatroomSummary,
 } from '../api/chatApi';
-import {useFocusEffect} from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 import BasicText from '../components/BasicText';
-import {theme} from '../styles/theme';
-import EncryptedStorage from 'react-native-encrypted-storage';
-import { getUserInfo } from '../api/membersApi';
+import { theme } from '../styles/theme';
+import { GroupType } from '../types/groupTypes';
 
 type RootStackParamList = {
-  ChatRoom: {data: Readonly<ChatroomResponse>, userInfo: Readonly<User>};
+  ChatRoom: { chatroomId: number };
 };
 
 type ChatScreenNavigationProp = NativeStackNavigationProp<
@@ -24,39 +22,27 @@ type ChatScreenNavigationProp = NativeStackNavigationProp<
   'ChatRoom'
 >;
 
-type User = {
-  nickname: string,
-  image: string,
-  university: string,
-  bankType: string,
-  accountNumber: string,
-  depositor: string,
-  token: string,
-}
+
 
 type SectionData = {
   title: string;
-  data: ChatroomResponse[];
+  data: ChatroomSummary[];
 };
 
 const Chat: React.FC = () => {
   const navigation = useNavigation<ChatScreenNavigationProp>();
-  const [activeChatRoomData, setActiveChatRoomData] = useState<ChatroomResponse[]>([]);
-  const [inactiveChatRoomData, setInactiveChatRoomData] = useState<ChatroomResponse[]>([]);
+  const [activeChatRoomData, setActiveChatRoomData] = useState<ChatroomSummary[]>([]);
 
   useFocusEffect(
     useCallback(() => {
       // 참여중인 갈대와 완료된 갈대를 모두 가져오기
       const fetchAllChatRooms = async () => {
         try {
-          const [activeData, inactiveData] = await Promise.all([
-            getActiveChatroom(),
-            getInActiveChatroom(),
+          const [activeData] = await Promise.all([
+            fetchMyChatrooms(),
           ]);
-          console.log('activeData',activeData);
-          console.log('inactiveData',inactiveData);
+          console.log('activeData', activeData);
           setActiveChatRoomData(activeData);
-          setInactiveChatRoomData(inactiveData);
         } catch (error) {
           console.error('채팅방 데이터 가져오기 실패:', error);
         }
@@ -66,59 +52,64 @@ const Chat: React.FC = () => {
     }, []),
   );
 
-  const navigate = async(id: string) => {
+  const navigate = async (id: string) => {
     // 활성 채팅방과 비활성 채팅방 모두에서 찾기
-    const targetRoom = activeChatRoomData.find(item => item.chatroomId === id) ||
-                      inactiveChatRoomData.find(item => item.chatroomId === id);
+    const targetRoom = activeChatRoomData.find(item => item.chatroomId === Number(id));
 
-    const userInfo = await getUserInfo();
-    const token = await EncryptedStorage.getItem('accessToken');
-
-    if(targetRoom){
-      navigation.navigate('ChatRoom', { data: Object.freeze(targetRoom), userInfo: {...userInfo, token}});
+    if (targetRoom) {
+      navigation.navigate('ChatRoom', { chatroomId: targetRoom.chatroomId });
     }
-    else{
-     // console.log('error');
+    else {
+      // console.log('error');
       return;
     }
   };
 
   // 섹션 데이터 구성
   const sections: SectionData[] = [];
+  let activeChatRoomData2: ChatroomSummary[] = [];
+  let inactiveChatRoomData2: ChatroomSummary[] = [];
 
-  if (activeChatRoomData.length > 0) {
-    sections.push({
-      title: '참여하고 있는 채팅',
-      data: activeChatRoomData,
-    });
+  console.log('activeChatRoomData', activeChatRoomData);
+  for (const item of activeChatRoomData) {
+    if (item.isActive === true) {
+      activeChatRoomData2.push(item);
+    } else {
+      inactiveChatRoomData2.push(item);
+    }
   }
+  console.log('activeChatRoomData2', activeChatRoomData2);
+  console.log('inactiveChatRoomData2', inactiveChatRoomData2);
+  sections.push({
+    title: '참여하고 있는 채팅',
+    data: activeChatRoomData2,
+  });
 
-  if (inactiveChatRoomData.length > 0) {
-    sections.push({
-      title: '종료된 채팅',
-      data: inactiveChatRoomData,
-    });
-  }
+  sections.push({
+    title: '종료된 채팅',
+    data: inactiveChatRoomData2,
+  });
 
-  const renderSectionHeader = ({section}: {section: SectionData}) => (
+  const renderSectionHeader = ({ section }: { section: SectionData }) => (
     <View style={styles.sectionHeader}>
       <BasicText style={styles.sectionTitle} text={section.title} />
     </View>
   );
 
-  const renderItem = ({item}: {item: ChatroomResponse}) => (
+  const renderItem = ({ item }: { item: ChatroomSummary }) => (
     <ChatRoomItem
       //type={item.type}
+      type={item.groupType as GroupType}
       onPress={navigate}
-      id={item.chatroomId}
-      time={item.departDate}
-      from={item.departPlace}
+      id={item.chatroomId.toString()}
+      time={item.lastChatDate}
+      from={item.titleLeft || ''}
       //from
-      to={item.arrivePlace}
-      currentPerson={item.currentMemberCount}
-      maxPerson={item.maxMemberCount}
-      message={item.notReadCount}
-      isActive={activeChatRoomData.some(activeItem => activeItem.chatroomId === item.chatroomId)}
+      to={item.titleRight || ''}
+      currentPerson={item.notReadCount}
+      unreadCount={item.notReadCount}
+      message={item.lastChat}
+      isActive={item.isActive}
     />
   );
 
@@ -128,7 +119,7 @@ const Chat: React.FC = () => {
       {sections.length > 0 ? (
         <SectionList
           sections={sections}
-          keyExtractor={item => item.chatroomId}
+          keyExtractor={item => item.chatroomId.toString()}
           renderItem={renderItem}
           renderSectionHeader={renderSectionHeader}
         />
@@ -145,7 +136,7 @@ const Chat: React.FC = () => {
           <BasicText
             text="서비스 이용 가이드"
             color={theme.colors.blue}
-            onPress={() => {}}// 추후 수정
+            onPress={() => { }}// 추후 수정
           />
         </View>
       )}

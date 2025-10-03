@@ -30,6 +30,7 @@ type RootStackParamList = {
     NowGaldae: undefined;
     OTTNDivide: undefined;
     TaxiNDivide: undefined;
+    ChatRoom: { chatroomId: number };
 };
 
 const CreateOTT: React.FC = () => {
@@ -42,6 +43,7 @@ const CreateOTT: React.FC = () => {
     const [editable, setEditable] = useState<boolean>(false);
     const [price, setPrice] = useState<string>('');
     const [passengerNumber, setPassengerNumber] = useState<number>(2);
+    const [chatroomId, setChatroomId] = useState<number | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [messageLength, setMessageLength] = useState<number>(0);
     const [message, setMessage] = useState<string>('');
@@ -64,18 +66,19 @@ const CreateOTT: React.FC = () => {
     }, [typeService]);
 
     /** ✨ postService: 서비스(대학) 드롭다운용
-     *  - selectedType(= subscribeType.code)에 해당하는 universityList 매핑
+     *  - selectedType(= subscribeType.code)에 해당하는 subscribeServiceTypeList 매핑
      *  - 대학 항목을 { code, name }로 변환하여 UI와 맞춘다
      */
     const postService: SimpleOption[] = React.useMemo(() => {
-        if (!selectedType) { return []; }
+        if (!selectedType) return [];
         const matched = (typeService ?? []).find(
             item => item.subscribeType === selectedType
         );
         if (!matched) { return []; }
-        return matched.universityList.map(u => ({
+        console.log('🚀 matched:', matched);
+        return matched.subscribeServiceTypeList.map(u => ({
             code: String(u.id),
-            name: u.universityName,
+            name: u.subscribeServiceTypeName,
         }));
     }, [typeService, selectedType]);
 
@@ -99,15 +102,21 @@ const CreateOTT: React.FC = () => {
 
     // ✅ 갈대 생성 API 호출 함수
     const handleCreateGaldaeConfirm = async () => {
-        dispatch(createSubscribeGroup({
+        const response = await dispatch(createSubscribeGroup({
             subscribeType: selectedType,
             subscribeServiceId: parseInt(selectedService),
             etcService: etcService,
             onePersonFee: price,
             totalPersonCount: passengerNumber,
             content: message,
-        }));
+        })).unwrap();
+        setChatroomId(response.chatroomId);
         setParticipating(true);
+    };
+
+    const handleNavigateChatRoom = async (chatroomId: number) => {
+        navigation.navigate('ChatRoom', { chatroomId: chatroomId });
+        setParticipating(false);
     };
 
 
@@ -316,7 +325,7 @@ const CreateOTT: React.FC = () => {
                     visible={participating}
                     subTitle={selectedService === 'NETFLIX' ? '넷플릭스' : selectedService === 'TIVING' ? '티빙' : selectedService === 'DISNEY' ? '디즈니' : selectedService === 'WATCHA' ? '왓챠' : selectedService === 'WAVE' ? '웨이브' : selectedService === 'LAPTEAL' ? '라프텔' : '직접입력'}
                     onCancel={() => { navigation.navigate('OTTNDivide'); setParticipating(false); }}
-                    onConfirm={() => navigation.navigate('OTTNDivide')} //구독 채팅방으로 이동해야함
+                    onConfirm={() => handleNavigateChatRoom(chatroomId || 0)} //구독 채팅방으로 이동해야함
                 />
             )}
         </View>

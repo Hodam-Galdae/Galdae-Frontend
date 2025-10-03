@@ -43,6 +43,7 @@ type RootStackParamList = {
     DeliveryDetail: { postId: string };
     TaxiNDivide: undefined;
     DeliveryNDivide: undefined;
+    ChatRoom: { chatroomId: number };
 };
 
 const CreateDelivery: React.FC = () => {
@@ -68,6 +69,7 @@ const CreateDelivery: React.FC = () => {
     const [marketName, setMarketName] = useState<string>('');
     const [placeName, setPlaceName] = useState<string>('');
     const foodTypeList = useSelector((state: RootState) => state.orderSlice.foodTypeList);
+    const [chatroomId, setChatroomId] = useState<number | null>(null);
     const passengerNumberHandler = (type: string) => {
         if (type === 'PLUS' && passengerNumber < 4) {
             setPassengerNumber(passengerNumber + 1);
@@ -114,6 +116,7 @@ const CreateDelivery: React.FC = () => {
         try {
             console.log('🚀 서버로 보낼 배달 그룹 생성 데이터:', postData);
             const created = await dispatch(createOrderGroup(postData)).unwrap();
+            setChatroomId(created.chatroomId);
             // console.log('✅ 생성된 갈대 postId:', response.postId);
             // dispatch(fetchMyGaldaeHistory());
             // dispatch(fetchMyCreatedGaldae());
@@ -208,7 +211,10 @@ const CreateDelivery: React.FC = () => {
         message !== '' &&
         departureDate !== null;
 
-        
+    const handleNavigateChatRoom = async (chatroomId: number) => {
+        navigation.navigate('ChatRoom', { chatroomId: chatroomId });
+        setParticipating(false);
+    };
     return (
         <View>
             <Header
@@ -392,7 +398,7 @@ const CreateDelivery: React.FC = () => {
                     title="생성 완료"
                     visible={participating}
                     onCancel={() => { navigation.navigate('DeliveryNDivide'); setParticipating(false); }}
-                    onConfirm={() => navigation.navigate('ChatRoom', { data: Object.freeze(created) })}
+                    onConfirm={() => handleNavigateChatRoom(chatroomId || 0)}
                 />
             )}
         </View>

@@ -20,7 +20,7 @@ export interface ChatRoomExitModalProps {
     visible,
     onCancel,
     onConfirm,
-    title = '채팅방을 나가시겠습니까?',
+    title = '해당 N빵을 나가시겠습니까?',
     // message = '정말 나가겠습니까?',
     containerStyle,
   }) => {

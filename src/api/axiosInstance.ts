@@ -1,8 +1,8 @@
 import axios from 'axios';
 import EncryptedStorage from 'react-native-encrypted-storage';
-import Config from 'react-native-config';
-export const API_BASE_URL = Config.API_BASE_URL; // 백엔드 API 주소
-export const WEB_SOCKET_URL = Config.WEB_SOCKET_URL; // 백엔드 API 주소
+//import Config from 'react-native-config';
+export const API_BASE_URL = "http://52.78.169.186"; // 백엔드 API 주소
+export const WEB_SOCKET_URL = "http://52.78.169.186:8081/ws"; // 백엔드 API 주소
 export const PUB_ENDPOINT = '/send';
 export const SUB_ENDPOINT = '/topic/chatroom';
 export const CHAT_COUNT_ENDPOINT = '/topic/chatCount';
@@ -17,7 +17,7 @@ const MULTIPART_URLS = [
   '/members/image',
   '/report',
   '/question',
-  '/chat/image',
+  '/chatroom/image',
   '/on-boarding/join',
 ];
 
@@ -49,6 +49,7 @@ axiosInstance.interceptors.request.use(
 
     try {
       const token = await EncryptedStorage.getItem('accessToken');
+      //const token = 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjMWRiODBjZS1hMmZhLTRjMDMtYmE4Yi0wYzEwZDg0YjM0ODIiLCJleHAiOjE3NTkwNTA4NzUsInJvbGVzIjpbIlVTRVIiXX0.G9y0kdyBC4LQ3PET4v9EhLQ-giA6uJZLbdBLrYPmyMCbZe-g1w6wqSkeWoNFYo0N6Bra39KrQSJs935CpnHi0A';
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
         console.log('🚀 [Axios Request] Authorization 토큰 추가됨');

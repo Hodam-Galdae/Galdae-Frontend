@@ -57,14 +57,14 @@ export default StyleSheet.create({
     locationStartWrapper: {
         flexDirection: 'row',
         alignItems: 'center',
-        width: 100,
+       // width: 100,
         overflow: 'hidden',
         flexWrap: 'nowrap',
     },
     locationEndWrapper: {
         flexDirection: 'row',
         alignItems: 'center',
-        width: 100,
+       // width: 100,
         overflow: 'hidden',
         flexWrap: 'nowrap',
     },

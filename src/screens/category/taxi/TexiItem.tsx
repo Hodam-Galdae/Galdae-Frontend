@@ -31,16 +31,14 @@ const TaxiItem: React.FC<GaldaeItemProps> = ({ item, onPress }) => {
             {/* 출발지 정보 */}
             <View style={styles.fromContainer}>
               {/* <SVG name={!item.isSameGender && item.passengerGenderType === 'SAME_GENDER' ? 'Car1' : 'Car'} /> */}
-              <BasicText text={item.departure.subPlace} style={item.passengerGenderType === 'SAME_GENDER' && userGenderType === item.passengerGenderType ? styles.fromMainLocationCom : styles.fromMainLocation} />
-              <BasicText text={item.departure.majorPlace} style={item.passengerGenderType === 'SAME_GENDER' && userGenderType === item.passengerGenderType ? styles.fromSubLocationCom : styles.fromSubLocation} numberOfLines={1} ellipsizeMode="tail" />
-            </View>
+              <BasicText text={item.departure.subPlace} style={item.passengerGenderType === 'SAME_GENDER' && userGenderType === item.passengerGenderType ? styles.fromMainLocationCom : styles.fromMainLocation} />            </View>
             {/** */}
             <SVG name={item.passengerGenderType === 'SAME_GENDER' && userGenderType === item.passengerGenderType ? 'arrow_forward' : 'arrow_forward'} />
             {/* 도착지 정보 */}
             <View style={styles.toContainer}>
               {/* <SVG name={!item.isSameGender && item.passengerGenderType === 'SAME_GENDER' ? 'Location1' : 'Location'} /> */}
               <BasicText text={item.arrival.subPlace} style={item.passengerGenderType === 'SAME_GENDER' && userGenderType === item.passengerGenderType ? styles.fromMainLocationCom : styles.fromMainLocation} />
-              <BasicText text={item.arrival.majorPlace} style={item.passengerGenderType === 'SAME_GENDER' && userGenderType === item.passengerGenderType ? styles.fromSubLocationCom : styles.fromSubLocation} numberOfLines={1} ellipsizeMode="tail" />
+
             </View>
             {/** */}
           </View>
