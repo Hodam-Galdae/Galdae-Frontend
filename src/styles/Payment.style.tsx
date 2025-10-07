@@ -14,6 +14,9 @@ export default StyleSheet.create({
           android: 40,
         }),
     },
+    header:{
+      backgroundColor: theme.colors.white,
+    },
     content:{
         paddingHorizontal:15,
         paddingTop:12,
@@ -45,11 +48,13 @@ export default StyleSheet.create({
       marginBottom:40,
     },
     hasAccountContainer:{
+      marginTop:40,
       width:282,
       height:152,
-      backgroundColor:theme.colors.sunPk,
+      backgroundColor:theme.colors.grayV3,
       borderRadius:theme.borderRadius.size10,
-      borderWidth:0,
+      borderColor:theme.colors.Galdae2,
+      borderWidth:2,
       gap:14,
       justifyContent:'center',
       alignItems:'center',
@@ -90,7 +95,7 @@ export default StyleSheet.create({
     btns:{
       flexDirection:'row',
       justifyContent:'center',
-      marginBottom:30,
+      marginTop:40,
       gap:4,
     },
     btn:{

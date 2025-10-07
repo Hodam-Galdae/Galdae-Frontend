@@ -21,6 +21,9 @@ export default StyleSheet.create({
 
         backgroundColor: theme.colors.white,
     },
+    header:{
+        backgroundColor: theme.colors.white,
+    },
     noData:{
         //height:'100%',
         height: 170,

@@ -14,6 +14,9 @@ container:{
           android: 40,
         }),
     },
+    header:{
+        backgroundColor: theme.colors.white,
+    },
     content:{
         paddingHorizontal:15,
         paddingTop:12,
@@ -40,7 +43,7 @@ container:{
       notiTitleText:{
         fontSize:theme.fontSize.size14,
         fontWeight:'500',
-        color:theme.colors.grayV2,
+        color:theme.colors.blackV3,
       },
       line:{
         borderTopWidth:1,

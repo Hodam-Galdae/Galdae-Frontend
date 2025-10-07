@@ -103,8 +103,9 @@ const ChatRoomItem = (props: Props) => {
       <ChatRoomExitModal
         visible={isVisibleExitPopup}
         onConfirm={() => {
-          leaveChatroom(props.id);
           setIsVisibleExitPopup(false);
+          leaveChatroom(props.id);
+          
         }}
         onCancel={() => {
           setIsVisibleExitPopup(false);

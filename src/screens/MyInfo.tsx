@@ -18,12 +18,10 @@ import { useSelector } from 'react-redux';
 import { useAppDispatch } from '../modules/redux/store';
 import { RootState } from '../modules/redux/RootReducer'; // RootState 타입 (store 설정에 따라 경로 수정)
 import { fetchUserInfo } from '../modules/redux/slice/myInfoSlice';
-import { fetchMyGaldaeHistory } from '../modules/redux/slice/myGaldaeSlice';
-import { fetchMyCreatedGaldae } from '../modules/redux/slice/myCreatedGaldaeSlice';
-import { fetchHomeGaldaePosts } from '../modules/redux/slice/homeGaldaeSlice';
+import LogoutPopup from '../components/popup/LogoutPopup';
 
 //API
-import { updateMemberImage } from '../api/membersApi';
+import { updateMemberImage, logoutMember } from '../api/membersApi';
 //import { deletePost } from '../api/postApi';
 //type
 // import { MyPostHistory } from '../types/getTypes';
@@ -37,21 +35,22 @@ type RootStackParamList = {
   UserGuide: undefined;
   TermsOfUse: undefined;
   FAQ: undefined;
-  Logout: undefined;
+  WithDraw: undefined;
+  Login: undefined;
   NowGaldaeDetail: { postId: string };
 };
 
 type nowGaldaeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 const MyInfo: React.FC = () => {
-
+  const [logoutPopupVisible, setLogoutPopupVisible] = useState<boolean>(false);
   const myInfoMenu = [
     { text: '결제 · 정산관리', onPress: () => { navigation.navigate('Payment'); } },
     { text: '공지 사항', onPress: () => { navigation.navigate('Announcement'); } },
     { text: '이용 가이드', onPress: () => { navigation.navigate('UserGuide'); } },
     { text: '이용약관', onPress: () => { navigation.navigate('TermsOfUse'); } },
     { text: 'FAQ/문의하기', onPress: () => { navigation.navigate('FAQ'); } },
-    { text: '로그아웃', onPress: () => { navigation.navigate('Logout'); } },
-    { text: '탈퇴', onPress: () => { navigation.navigate('Logout'); } },
+    { text: '로그아웃', onPress: () => { setLogoutPopupVisible(true); } },
+    { text: '탈퇴', onPress: () => { navigation.navigate('WithDraw'); } },
   ];
   const [refreshing, setRefreshing] = useState(false);
   const dispatch = useAppDispatch();
@@ -70,10 +69,6 @@ const MyInfo: React.FC = () => {
   //   (state: RootState) => state.myGaldaeSlice
   // );
 
-  // 내 갈대 기록 조회: Redux를 통해 관리하므로 useEffect로 thunk dispatch
-  useEffect(() => {
-    dispatch(fetchMyGaldaeHistory());
-  }, [dispatch]);
 
 
   // 초기 마운트 시 유저 정보 fetch
@@ -115,9 +110,6 @@ const MyInfo: React.FC = () => {
           //console.log('✅ 이미지 업데이트 성공:', result);
           // 이미지 업데이트 후 사용자 정보를 재갱신
           dispatch(fetchUserInfo());
-          dispatch(fetchMyGaldaeHistory());
-          dispatch(fetchMyCreatedGaldae());
-          dispatch(fetchHomeGaldaePosts());
 
         }
       } catch (error) {
@@ -134,8 +126,6 @@ const MyInfo: React.FC = () => {
   const onRefresh = async () => {
     setRefreshing(true);
     dispatch(fetchUserInfo());
-    dispatch(fetchMyGaldaeHistory());
-    dispatch(fetchMyCreatedGaldae());
     setRefreshing(false);
   };
   // const handleDeletePost = async () => {
@@ -154,6 +144,20 @@ const MyInfo: React.FC = () => {
   //     //console.error(error);
   //   }
   // };
+
+  const handleLogout = async () => {
+    setLogoutPopupVisible(false);
+    // 실제 프로젝트에서는 토큰을 Redux나 AsyncStorage 등에서 가져옵니다.
+    const token = 'Bearer your-access-token'; // 실제 엑세스 토큰으로 대체
+    try {
+      await logoutMember(token);
+      // 로그아웃 성공 시, 상태 초기화 후 로그인 화면으로 이동하거나 적절히 처리합니다.
+      Alert.alert('로그아웃', '정상적으로 로그아웃 되었습니다');
+      navigation.navigate('Login');
+    } catch (error) {
+      Alert.alert('로그아웃 실패', '로그아웃에 실패하였습니다. 다시 시도해주세요.');
+    }
+  };
   return (
     <View>
       <ScrollView
@@ -183,12 +187,12 @@ const MyInfo: React.FC = () => {
                 ) : imageUri ? (
                   <Image source={{ uri: imageUri }} style={styles.profileImg} resizeMode="cover" />
                 ) : (
-                  <SVG name="DefaultProfile" style={styles.profileImg} />
+                  <SVG name="MyInfoDefaultProfile" style={styles.profileImg} />
                 )}
                 <SVGButton iconName="camera_2_line" buttonStyle={styles.profileCamera} onPress={getImageByGallery} />
               </View>
               <View style={styles.userInfoText}>
-                <BasicText text={`${userInfo?.university}`} style={styles.universityText} />
+                <BasicText text={`${userInfo?.university} - ${userInfo?.area} `} style={styles.universityText} />
                 <View style={styles.profileName}>
                   {/* 네비게이션 시 닉네임도 함께 전달 */}
                   <BasicText
@@ -200,7 +204,7 @@ const MyInfo: React.FC = () => {
                       })
                     }
                   />
-                  <SVG name={ 'male' } style={styles.genderIcon} /> {/** 추후에는 성별에 따른 아이콘 적용해야 함 */}
+                  <SVG name={ userInfo?.gender === 'MALE' ? 'male' :  userInfo?.gender === 'FEMALE' ? 'female' : 'GenderSecret' } style={styles.genderIcon} /> {/** 추후에는 성별에 따른 아이콘 적용해야 함 */}
                   <SVGButton
                     iconName="edit_line"
                     onPress={() =>
@@ -282,17 +286,11 @@ const MyInfo: React.FC = () => {
           </View>
         </ScrollView>
       </ScrollView>
-      {/* <DeletePopup
-        visible={deletePopupVisible}
-        onCancel={() => {
-          setDeletePopupVisible(false);
-          setSelectedPostId(null);
-        }}
-        onConfirm={handleDeletePost}
-        title="선택하신 갈대를"
-        message="삭제하시겠습니까?"
-        buttonText="삭제하기"
-      /> */}
+      <LogoutPopup
+        visible={logoutPopupVisible}
+        onCancel={() => setLogoutPopupVisible(false)}
+        onConfirm={handleLogout}
+      />
     </View>
   );
 };

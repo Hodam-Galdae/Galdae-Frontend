@@ -4,7 +4,6 @@ import { View, TouchableOpacity } from 'react-native';
 import BasicText from '../components/BasicText';
 import TextTag from '../components/tag/TextTag';
 import SVGButton from '../components/button/SVGButton';
-import { theme } from '../styles/theme';
 import styles from '../styles/NoticeItem.style'; // 필요한 스타일 파일 import
 
 // 문자열 -> 실제 색상코드 매핑 함수
@@ -27,6 +26,7 @@ interface Notice {
   tag: string;
   content: string;
   color: string;
+  backgroundColor: string;
   title: string;
   important: string;
   main: string;
@@ -57,7 +57,7 @@ const NoticeItem: React.FC<NoticeItemProps> = ({ noti, isExpanded, onToggle }) =
             viewStyle={styles.notiTag}
             textStyle={styles.notiTagText}
             enabledColors={{
-              backgroundColor: theme.colors.white,
+              backgroundColor: noti.backgroundColor,
               textColor: mappedColor,
               borderColor: mappedColor,
             }}

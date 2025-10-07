@@ -119,6 +119,23 @@ export const updateNickname = async (nickname: string) => {
 };
 
 /**
+ * 성별 변경 API
+ */
+export const updateGender = async (gender: string) => {
+  //console.log('🚀 [성별 변경 요청] PATCH /members/gender');
+  //console.log('📌 요청 데이터:', { gender });
+
+  try {
+    const response = await axiosInstance.patch('/members/gender', { gender });
+    console.log('✅ [성별 변경 성공] 응답 데이터:', response.data);
+    return response.data;
+  } catch (error: any) {
+    console.error('❌ [성별 변경 실패] 오류 발생:', error.response ? error.response.data : error);
+    throw error;
+  }
+};
+
+/**
  * 결제 정보 수정 API
  */
 export const updateBankInfo = async (bankType: string, accountNumber: string, depositor: string) => {

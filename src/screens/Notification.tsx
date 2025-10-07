@@ -81,8 +81,9 @@ const Notification: React.FC<HomeProps> = () => {
     return (
       <View style={styles.container}>
             <Header
-            leftButton={<SVGButton iconName="arrow_left_line" onPress={goBack}/>}
+            leftButton={<SVGButton iconName="arrow_left_line2" onPress={goBack}/>}
             title={<BasicText text="알림" style={styles.headerText}/>}
+            style={styles.header}
             />
 
             <ScrollView style={styles.content}>

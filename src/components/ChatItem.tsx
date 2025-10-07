@@ -18,14 +18,15 @@ type Chat = {
   isShowTime?: boolean;
   nickname: string;
   unreadCount?: number;
+  alertContent?: string;
 };
 
 const ChatItem: React.FC<{ item: Chat }> = React.memo(({ item }) => {
-
+console.log('alertContent', item.alertContent);
   return (
     <View style={styles.container}>
       {item.type === 'ENTER' || item.type === 'EXIT' ? (
-        <BasicText text={item.content} style={styles.enterBox} />
+        <BasicText text={item.content } style={styles.enterBox} />
       ) : (
         <View>
           {item.sender !== item.nickname && item.isShowProfile ? (

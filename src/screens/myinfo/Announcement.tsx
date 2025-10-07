@@ -218,11 +218,29 @@ const Announcement: React.FC<HomeProps> = () => {
   const getTagColor = (tag: string): string => {
     switch (tag) {
       case '시스템 운영':
-        return '#4CAF50'; // 초록: 안정적 시스템 느낌
+        return '#2186FF'; // 초록: 안정적 시스템 느낌
       case '정산 안내':
-        return '#F44336'; // 빨강: 돈 관련은 눈에 띄게
-      case '서비스 점검':
-        return '#2196F3'; // 파랑: 알림 느낌
+        return '#FF4A4A'; // 빨강: 돈 관련은 눈에 띄게
+      case '닉네임 변경 안내':
+        return '#00D0A2'; // 파랑: 알림 느낌
+      case '공지':
+        return '#9E9E9E'; // 회색: 일반 공지
+      case '이벤트':
+        return '#FF9800'; // 주황: 활발한 느낌
+      case '업데이트':
+        return '#009688'; // 청록색: 변화 & 기능 추가 느낌
+      default:
+        return '#607D8B'; // 기본: 어두운 회색
+    }
+  };
+  const getBackgroundColor = (tag: string): string => { 
+    switch (tag) {
+      case '시스템 운영':
+        return '#E8EDFF'; // 초록: 안정적 시스템 느낌
+      case '정산 안내':
+        return '#FEE9E9'; // 빨강: 돈 관련은 눈에 띄게
+      case '닉네임 변경 안내':
+        return '#FFFDD6'; // 파랑: 알림 느낌
       case '공지':
         return '#9E9E9E'; // 회색: 일반 공지
       case '이벤트':
@@ -236,8 +254,9 @@ const Announcement: React.FC<HomeProps> = () => {
   return (
     <View style={styles.container}>
           <Header
-          leftButton={<SVGButton iconName="arrow_left_line" onPress={goBack}/>}
+          leftButton={<SVGButton iconName="arrow_left_line2" onPress={goBack}/>}
           title={<BasicText text="공지 사항" style={styles.headerText}/>}
+          style={styles.header}
           />
           <ScrollView style={styles.content}>
               <View style={styles.notiTitleContainer}>
@@ -258,6 +277,7 @@ const Announcement: React.FC<HomeProps> = () => {
                   content: noti.content,
                   // 아래는 디자인에 따라 가공하거나 placeholder로 설정 가능
                   color: getTagColor(noti.tag), // 임의 컬러 매핑 함수
+                  backgroundColor: getBackgroundColor(noti.tag),
                   important: '',
                   main: '',
                   footer: '',

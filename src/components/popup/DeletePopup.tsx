@@ -31,7 +31,7 @@ export interface DeletePopupProps {
         <View style={styles.overlay}>
           <View style={[styles.textPopUp, containerStyle]}>
             <TouchableOpacity onPress={onCancel} style={styles.cancelIconWrapper}>
-              <SVG name="Cancel" style={styles.cancelIcon} />
+              <SVG name="close" style={styles.cancelIcon} />
             </TouchableOpacity>
             <View style={styles.textPopUpcontent}>
               <BasicText

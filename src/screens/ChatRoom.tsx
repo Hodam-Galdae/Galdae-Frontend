@@ -167,7 +167,7 @@ const ChatRoom: React.FC = () => {
         
         
         `, chatData);
-      //setData(chatData);
+      setData(chatData);
 
     };
     const fetchChatroomInfos = async () => {
@@ -380,6 +380,7 @@ const ChatRoom: React.FC = () => {
         <ChatItem
           item={{
             id: item.chatId,
+            alertContent: chatroomTitle.alertContent,
             content: item.chatContent,
             sender: item.sender,
             senderImage: item.memberImage || '',
@@ -405,7 +406,7 @@ const ChatRoom: React.FC = () => {
         />
       );
     },
-    [data, chatroomId, userInfo, unreadCounts],
+    [data, chatroomId, userInfo, unreadCounts, chatroomTitle.alertContent],
   );
 
   useDidMountEffect(() => {
@@ -537,6 +538,18 @@ const ChatRoom: React.FC = () => {
           keyboardShouldPersistTaps="handled"
           keyExtractor={item => item.chatId.toString()}
           renderItem={renderItem}
+          ListHeaderComponent={
+            chatroomTitle.alertContent
+              ? () => (
+                  <View style={{ paddingHorizontal: 16, paddingTop: 8 }}>
+                    <BasicText
+                      text={chatroomTitle.alertContent}
+                      style={styles.enterBox} 
+                    />
+                  </View>
+                )
+              : null
+          }
           ListFooterComponent={<View style={{ height: 30 }} />}
           onContentSizeChange={() =>
             chatListRef.current?.scrollToEnd({ animated: false })
@@ -618,7 +631,7 @@ const ChatRoom: React.FC = () => {
 
         <ChatRoomExitModal
           visible={isVisibleExitPopup}
-          onConfirm={() => leaveChatroom(chatroomId.toString())}
+          onConfirm={() => {leaveChatroom(chatroomId.toString()); setIsVisibleExitPopup(false)}}
           onCancel={() => setIsVisibleExitPopup(false)}
         />
 

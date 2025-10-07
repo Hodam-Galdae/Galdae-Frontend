@@ -12,6 +12,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import BasicText from '../components/BasicText';
 import { theme } from '../styles/theme';
 import { GroupType } from '../types/groupTypes';
+import moment from 'moment';
 
 type RootStackParamList = {
   ChatRoom: { chatroomId: number };
@@ -32,7 +33,33 @@ type SectionData = {
 const Chat: React.FC = () => {
   const navigation = useNavigation<ChatScreenNavigationProp>();
   const [activeChatRoomData, setActiveChatRoomData] = useState<ChatroomSummary[]>([]);
+  // lastChatDate: ISO string (UTC 기준이라고 가정)
+const formatLastChatDate = (lastChatDate: string) => {
+  const now = moment();
+  const t = moment.utc(lastChatDate).local(); // UTC → 로컬
 
+  // 미래 시간이면(시계 오차 등) 절충 표시
+  if (t.isAfter(now)) {return '방금 전';}
+
+  const years  = now.diff(t, 'years');
+  if (years >= 1) {return `${years}년 전`;}
+
+  const months = now.diff(t, 'months');
+  if (months >= 1) {return `${months}달 전`;}
+
+  const weeks  = now.diff(t, 'weeks');
+  if (weeks >= 1) {return `${weeks}주 전`;}
+
+  const days   = now.diff(t, 'days');
+  if (days >= 1) {return `${days}일 전`;}
+
+  const hours  = now.diff(t, 'hours');
+  if (hours >= 1) {return `${hours}시간 전`;}
+
+  const minutes = now.diff(t, 'minutes');
+  if (minutes <= 0) {return '방금 전';}
+  return `${minutes}분 전`;
+};
   useFocusEffect(
     useCallback(() => {
       // 참여중인 갈대와 완료된 갈대를 모두 가져오기
@@ -102,7 +129,7 @@ const Chat: React.FC = () => {
       type={item.groupType as GroupType}
       onPress={navigate}
       id={item.chatroomId.toString()}
-      time={item.lastChatDate}
+      time={formatLastChatDate(item.lastChatDate)}
       from={item.titleLeft || ''}
       //from
       to={item.titleRight || ''}

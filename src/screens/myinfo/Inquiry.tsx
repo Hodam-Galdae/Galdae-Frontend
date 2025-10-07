@@ -10,7 +10,7 @@ import SVG from '../../components/SVG';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import BasicButton from '../../components/button/BasicButton';
 import useImagePicker from '../../hooks/useImagePicker';
-import BasicInput from '../../components/BasicInput';
+import { TextInput } from 'react-native';
 import Clipboard from '@react-native-clipboard/clipboard';
 import { createQuestion } from '../../api/questionApi';
 type HomeProps = {
@@ -73,70 +73,100 @@ const Inquiry: React.FC<HomeProps> = () => {
       }
     };
     return (
-      <KeyboardAvoidingView
-    style={{ flex: 1 }}
-    behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-  >
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
-            <Header
-            leftButton={<SVGButton iconName="arrow_left_line" onPress={goBack}/>}
-            title={<BasicText text="문의하기" style={styles.headerText}/>}
+        <Header
+          leftButton={<SVGButton iconName="arrow_left_line2" onPress={goBack}/>}
+          title={<BasicText text="문의하기" style={styles.headerText}/>}
+          style={styles.header}
+        />
+
+        <View style={styles.content}>
+          <BasicText text="메일로 문의해 주시면" style={styles.title}/>
+          <BasicText text="신속하게 답변해 드리겠습니다." style={styles.title}/>
+
+          <SVG name="contact" style={styles.contact}/>
+
+          <View style={styles.inputWrapper}>
+            <TextInput
+              style={styles.input}
+              value={"hodamdae@gmail.com"}
+              placeholder="예) 동동"
+              placeholderTextColor={theme.colors.gray2}
             />
 
-            <View style={styles.content}>
-                <BasicInput
-                  text="제목을 입력하세요."  // placeholder로 사용됨
-                  style={styles.input}
-                  value={title}
-                  onChangeText={setTitle}
-                  placeholderTextColor={theme.colors.grayV2} // 원하는 색상으로 지정
-                />
-                <BasicInput
-                multiline
-                  text="상세 내용을 입력해주세요."  // placeholder로 사용됨
-                  style={styles.detail}
-                  value={content}
-                  onChangeText={setContent}
-                  placeholderTextColor={theme.colors.grayV2} // 원하는 색상으로 지정
-                />
-                <View style={styles.texts}>
-                    <BasicText text="빠른 답변을 원하신다면 " style={styles.text}/>
-                    <BasicText
-                     text="갈대 채널"
-                     style={styles.importText}
-                     onPress={()=>Linking.openURL('http://pf.kakao.com/_kxlPJn')}
-                    />
-                    <BasicText text="을 이용해주세요" style={styles.text}/>
-                </View>
+            <BasicButton text="복사" onPress={copyEmailToClipboard} buttonStyle={styles.checkBtn} textStyle={styles.checkBtnText} />
+          </View>
+        </View>
 
-                <TouchableOpacity style={styles.imgContainer} onPress={getImageByGallery}>
-                    {img ? (
-                        <Image
-                          source={
-                            { uri: img }
-                          }
-                          style={styles.img}
-                          resizeMode="cover"
-                        />
-                    ) : (
-                        <SVG name="pic_line"/>
-                    )}
-                </TouchableOpacity>
-
-                <View style={styles.inquiryBtnContainer}>
-                    <BasicButton
-                      text="문의하기"
-                      buttonStyle={styles.inquiryBtn}
-                      textStyle={styles.inquiryText}
-                      loading={loading}
-                      onPress={handleInquiry}
-                    />
-                </View>
-            </View>
       </View>
-      </TouchableWithoutFeedback>
-  </KeyboardAvoidingView>
+
+
+
+
+  //     <KeyboardAvoidingView
+  //   style={{ flex: 1 }}
+  //   behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+  // >
+  //   <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+  //     <View style={styles.container}>
+  //           <Header
+  //           leftButton={<SVGButton iconName="arrow_left_line" onPress={goBack}/>}
+  //           title={<BasicText text="문의하기" style={styles.headerText}/>}
+  //           />
+
+  //           <View style={styles.content}>
+  //               <BasicInput
+  //                 text="제목을 입력하세요."  // placeholder로 사용됨
+  //                 style={styles.input}
+  //                 value={title}
+  //                 onChangeText={setTitle}
+  //                 placeholderTextColor={theme.colors.grayV2} // 원하는 색상으로 지정
+  //               />
+  //               <BasicInput
+  //               multiline
+  //                 text="상세 내용을 입력해주세요."  // placeholder로 사용됨
+  //                 style={styles.detail}
+  //                 value={content}
+  //                 onChangeText={setContent}
+  //                 placeholderTextColor={theme.colors.grayV2} // 원하는 색상으로 지정
+  //               />
+  //               <View style={styles.texts}>
+  //                   <BasicText text="빠른 답변을 원하신다면 " style={styles.text}/>
+  //                   <BasicText
+  //                    text="갈대 채널"
+  //                    style={styles.importText}
+  //                    onPress={()=>Linking.openURL('http://pf.kakao.com/_kxlPJn')}
+  //                   />
+  //                   <BasicText text="을 이용해주세요" style={styles.text}/>
+  //               </View>
+
+  //               <TouchableOpacity style={styles.imgContainer} onPress={getImageByGallery}>
+  //                   {img ? (
+  //                       <Image
+  //                         source={
+  //                           { uri: img }
+  //                         }
+  //                         style={styles.img}
+  //                         resizeMode="cover"
+  //                       />
+  //                   ) : (
+  //                       <SVG name="pic_line"/>
+  //                   )}
+  //               </TouchableOpacity>
+
+  //               <View style={styles.inquiryBtnContainer}>
+  //                   <BasicButton
+  //                     text="문의하기"
+  //                     buttonStyle={styles.inquiryBtn}
+  //                     textStyle={styles.inquiryText}
+  //                     loading={loading}
+  //                     onPress={handleInquiry}
+  //                   />
+  //               </View>
+  //           </View>
+  //     </View>
+  //     </TouchableWithoutFeedback>
+  // </KeyboardAvoidingView>
     );
 };
 

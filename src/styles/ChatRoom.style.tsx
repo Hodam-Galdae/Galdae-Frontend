@@ -28,6 +28,14 @@ export default StyleSheet.create({
     backgroundColor: theme.colors.grayV3,
     justifyContent: 'space-between',
   },
+  enterBox: {
+    borderRadius: 999,
+    backgroundColor: 'rgba(215, 215, 215, 0.50)',
+    paddingVertical: 5,
+    paddingHorizontal: 26,
+    alignSelf: 'center',
+    color: theme.colors.blackV3,
+  },
   list: {
     flex: 1,
     paddingLeft: 15,

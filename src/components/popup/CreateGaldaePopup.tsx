@@ -33,7 +33,7 @@ export interface CreateGaldaePopupProps {
         <View style={styles.overlay}>
           <View style={[styles.createGaldae, containerStyle]}>
             <TouchableOpacity onPress={onCancel} style={styles.cancelIconWrapper}>
-              <SVG name="Cancel" style={styles.cancelIcon} />
+              <SVG name="close" style={styles.cancelIcon} />
             </TouchableOpacity>
             <View style={styles.createPopUpcontent}>
               <BasicText

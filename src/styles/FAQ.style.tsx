@@ -12,11 +12,21 @@ export default StyleSheet.create({
           android: 40,
         }),
     },
+    header:{
+        backgroundColor: theme.colors.white,
+    },
     content:{
         paddingHorizontal:15,
         paddingTop:12,
         flex: 1,
         backgroundColor: theme.colors.white,
+    },
+    title:{
+      fontSize:theme.fontSize.size18,
+      fontWeight:'700',
+      marginBottom:20,
+      marginTop:20,
+      color:theme.colors.blackV0,
     },
     menuContainer: {
       flexDirection: 'row',
