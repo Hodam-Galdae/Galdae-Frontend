@@ -10,12 +10,20 @@ export default StyleSheet.create({
     paddingHorizontal: 15,
     alignItems: 'flex-start',
   },
+  header: {
+    backgroundColor: theme.colors.white,
+  },
+  headerText: {
+    fontSize: theme.fontSize.size22,
+    color: theme.colors.blackV0,
+    fontWeight: '700',
+  },
   account: {
     width: '100%',
     paddingVertical: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: theme.colors.Galdae2,
+    backgroundColor: theme.colors.blue2,
     marginBottom: 20,
     marginTop: 30,
     borderRadius: 10,
@@ -39,7 +47,7 @@ export default StyleSheet.create({
   costSubTitle: {
     fontSize: theme.fontSize.size14,
     fontWeight: '500',
-    color: theme.colors.grayV2,
+    color: theme.colors.gray2,
     marginBottom: 15,
   },
   galleryBtn: {
@@ -71,6 +79,7 @@ export default StyleSheet.create({
     color: theme.colors.Galdae,
     fontSize: theme.fontSize.size14,
     fontWeight: '700',
+    textDecorationLine: 'underline',
   },
   userContainer: {
     flexDirection: 'row',

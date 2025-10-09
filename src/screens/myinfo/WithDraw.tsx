@@ -42,7 +42,7 @@ const WithDraw: React.FC<HomeProps> = () => {
   ];
   const handleWithDraw = async () => {
     try {
-      await withdrawMember(); // 탈퇴 API 호출
+      await withdrawMember(surveyList[selectedSurvey ? selectedSurvey : 0].text); // 탈퇴 API 호출
       Alert.alert('회원탈퇴', '정상적으로 회원탈퇴 되었습니다');
       navigation.navigate('Login');
     } catch (error) {

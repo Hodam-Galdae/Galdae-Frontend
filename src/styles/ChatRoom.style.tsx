@@ -142,7 +142,7 @@ export default StyleSheet.create({
     marginRight: 10,
   },
   menuUserMe: {
-    backgroundColor: theme.colors.Galdae3,
+    backgroundColor: theme.colors.blue2,
     width: 18,
     height: 18,
     borderRadius: 999,
@@ -150,7 +150,7 @@ export default StyleSheet.create({
     alignItems: 'center',
   },
   menuUserMeText: {
-    color: theme.colors.Galdae,
+    color: theme.colors.blue,
     fontSize: theme.fontSize.size12,
     fontWeight: '700',
   },

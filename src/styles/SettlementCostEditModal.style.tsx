@@ -40,7 +40,7 @@ export default StyleSheet.create({
     textAlign: 'center',
   },
   input: {
-    width: '100%',
+    width: '70%',
     borderColor: theme.colors.grayV0,
     borderBottomWidth: 2,
     color: theme.colors.blackV0,
@@ -63,5 +63,17 @@ export default StyleSheet.create({
     fontSize: theme.fontSize.size16,
     fontWeight: '700',
     paddingVertical: 10,
+  },
+  priceText: {
+    fontSize: theme.fontSize.size16,
+    color: theme.colors.blackV0,
+    fontWeight: '700',
+    marginBottom: 20,
+  },
+  priceContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 20,
   },
 });

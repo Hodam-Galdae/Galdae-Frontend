@@ -161,10 +161,13 @@ export const fetchPayment = (chatroomId: number | string) =>
 // (만약 파일 업로드로 바뀌면 multipart/form-data 버전도 아래 주석 참조)
 export interface SendImagePayload {
   imageSendCommand: { sender: string; senderImage?: string | null };
-  image: string; // base64 (data URL 없이 순수 base64 권장)
+  image: string; // base64 (data:... 제거한 순수 base64)
 }
+
+export interface SendImageResponse { url: string } // 서버 응답 형태에 맞추세요
+
 export const sendChatImage = (chatroomId: number | string, payload: SendImagePayload) =>
-  getData<void>(
+  getData<SendImageResponse>(
     axiosInstance.post(`/chatroom/${chatroomId}/chat/image`, payload),
   );
 

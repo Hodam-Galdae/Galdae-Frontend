@@ -40,7 +40,7 @@ import { useSelector } from 'react-redux';
 type RootStackParamList = {
     CreateDelivery: undefined;
     NowGaldae: undefined;
-    DeliveryDetail: { postId: string };
+    DeliveryDetail: { orderId: string };
     TaxiNDivide: undefined;
     DeliveryNDivide: undefined;
     ChatRoom: { chatroomId: number };

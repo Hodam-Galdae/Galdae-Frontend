@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {useEffect, useState} from 'react';
 import { View, Image } from 'react-native';
 import styles from '../styles/SettlementBox.style';
@@ -6,11 +7,11 @@ import BasicButton from './button/BasicButton';
 import SVG from './SVG';
 import {useNavigation} from '@react-navigation/native';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import { getPayment, PaymentResponse } from '../api/chatApi';
+import { fetchPayment, PaymentSummary } from '../api/chatApi';
 import moment from 'moment';
 
 type RootStackParamList = {
-  Settlement: {data: PaymentResponse};
+  Settlement: {data: PaymentSummary};
 };
 
 type Settlement = {
@@ -25,7 +26,7 @@ type Settlement = {
 
 const SettlementBox: React.FC<{settlement: Settlement}> = React.memo(({settlement}) => {
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList, 'Settlement'>>();
-    const [paymentData, setPaymentData] = useState<PaymentResponse>({
+    const [paymentData, setPaymentData] = useState<PaymentSummary>({
         id: 0,
         totalCost: 0,
         personalCost: 0,
@@ -40,12 +41,20 @@ const SettlementBox: React.FC<{settlement: Settlement}> = React.memo(({settlemen
 
     useEffect(() => {
         const getSettlement = async() => {
-            const data = await getPayment(settlement.chatroomId);
+            const data = await fetchPayment(settlement.chatroomId);
+            console.log(    `data
+                
+                
+                fetchPayment
+                
+                
+                
+                `, data);
             setPaymentData(data);
         };
 
         getSettlement();
-    }, [settlement]);
+    }, [settlement.chatroomId]);
 
     return (
         <View style={styles.container}>
@@ -60,9 +69,8 @@ const SettlementBox: React.FC<{settlement: Settlement}> = React.memo(({settlemen
                     <BasicText style={styles.timeText} text={moment.utc(settlement.time).hour() + ':' + moment.utc(settlement.time).minute()}/>
                 ) : null}
                 <View style={[styles.box, {alignSelf: settlement.sender === settlement.nickname ? 'flex-end' : 'flex-start'}]}>
-                    <View style={styles.backImage}>
-
-                    </View>
+                    <View style={styles.backImage}/>
+                    <SVG name="Logo_yellow" style={styles.logo}/>
                     <BasicText style={styles.text}>{'갈대 정산을 요청합니다.\n\n' + '정산 인원 : ' + paymentData?.members.length + '명\n' + '총 금액 : ' + paymentData?.totalCost.toString() + '원\n\n' + '정산 요청 금액 (1/N)\n1인 : ' + paymentData?.personalCost.toString() + '원\n\n' + '계좌 확인 후 송금해주세요.'}</BasicText>
                     <BasicButton text="정산 상세" buttonStyle={styles.button} textStyle={styles.buttonText} onPress={()=>navigation.navigate('Settlement', { data: paymentData})}/>
                 </View>

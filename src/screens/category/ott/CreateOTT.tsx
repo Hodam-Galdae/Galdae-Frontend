@@ -104,7 +104,7 @@ const CreateOTT: React.FC = () => {
     const handleCreateGaldaeConfirm = async () => {
         const response = await dispatch(createSubscribeGroup({
             subscribeType: selectedType,
-            subscribeServiceId: parseInt(selectedService),
+            subscribeServiceId: parseInt(selectedService ? selectedService : 0),
             etcService: etcService,
             onePersonFee: price,
             totalPersonCount: passengerNumber,
@@ -122,7 +122,7 @@ const CreateOTT: React.FC = () => {
 
     const isFormValid =
         selectedType !== '' &&
-        selectedService !== '' &&
+        (selectedType === '기타' || selectedService !== '') &&
         price !== '' &&
         messageLength !== 0;
     return (
@@ -184,7 +184,7 @@ const CreateOTT: React.FC = () => {
 
                     <View style={styles.bankPickerContainer}>
                         {
-                            selectedType === "ETC" ? (
+                            selectedType === "기타" ? (
                                 <TextInput
                                     style={styles.bankPickerButton}
                                     value={etcService}

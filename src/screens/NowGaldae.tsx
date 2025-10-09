@@ -19,7 +19,7 @@ import { getGroups } from '../api/groupApi';
 type RootStackParamList = {
   NowGaldae: undefined;
   NowGaldaeDetail: { taxiId: string };
-  DeliveryDetail: { deliveryId: string };
+  DeliveryDetail: { orderId: string };
   OTTNDetail: { subscribeId: string };
 };
 
@@ -103,7 +103,7 @@ const NowGaldae: React.FC = () => {
         ? item.type === 'TAXI'
           ? navigation.navigate('NowGaldaeDetail', { taxiId: item.id })
           : item.type === 'ORDER'
-          ? navigation.navigate('DeliveryDetail', { deliveryId: item.id })
+          ? navigation.navigate('DeliveryDetail', { orderId: item.id })
           : navigation.navigate('OTTNDetail', { subscribeId: item.id })
         : setSameGenderPopupVisible(true);
 

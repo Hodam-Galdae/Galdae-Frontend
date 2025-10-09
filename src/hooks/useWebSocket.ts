@@ -55,7 +55,7 @@ export const useWebSocket = ({
         client.current.onConnect = () => {
             setIsLoading(false);
             setIsConnected(true);
-            console.log('웹소켓 연결 성공');    
+            console.log('웹소켓 연결 성공');
             // 채팅 메시지 구독
             client.current!.subscribe(
                 SUB_ENDPOINT + '/' + chatroomId,

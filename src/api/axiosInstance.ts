@@ -1,8 +1,10 @@
 import axios from 'axios';
+import {  useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import EncryptedStorage from 'react-native-encrypted-storage';
 //import Config from 'react-native-config';
-export const API_BASE_URL = "http://52.78.169.186"; // 백엔드 API 주소
-export const WEB_SOCKET_URL = "http://52.78.169.186:8081/ws"; // 백엔드 API 주소
+export const API_BASE_URL = 'http://52.78.169.186'; // 백엔드 API 주소
+export const WEB_SOCKET_URL = 'ws://52.78.169.186:8081/ws'; // 백엔드 API 주소
 export const PUB_ENDPOINT = '/send';
 export const SUB_ENDPOINT = '/topic/chatroom';
 export const CHAT_COUNT_ENDPOINT = '/topic/chatCount';
@@ -17,7 +19,7 @@ const MULTIPART_URLS = [
   '/members/image',
   '/report',
   '/question',
-  '/chatroom/image',
+ // '/chat/image',
   '/on-boarding/join',
 ];
 
@@ -25,6 +27,10 @@ const axiosInstance = axios.create({
   baseURL: API_BASE_URL,
   timeout: 5000, // 요청 제한 시간
 });
+type RootStackParamList = {
+  Login: undefined,
+};
+
 
 axiosInstance.interceptors.request.use(
   async config => {
@@ -117,6 +123,8 @@ axiosInstance.interceptors.response.use(
       } catch (refreshError) {
         console.error('❌ [Axios Response] 토큰 갱신 실패:', refreshError);
         await EncryptedStorage.removeItem('accessToken');
+        const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+        navigation.navigate('Login');
         return Promise.reject(refreshError);
       }
     }

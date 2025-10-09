@@ -20,6 +20,12 @@ export default StyleSheet.create({
         justifyContent: 'center',
         marginBottom: 14,
     },
+    logo: {
+        position: 'absolute',
+        zIndex: 999,
+        top: 27,
+        left: 73,
+    },
     text: {
         color: theme.colors.blackV0,
         fontSize: theme.fontSize.size16,
@@ -28,14 +34,15 @@ export default StyleSheet.create({
         paddingLeft: 16,
     },
     button: {
-        borderRadius: 10,
-        backgroundColor: theme.colors.grayV0,
+        borderRadius: 30,
+        backgroundColor: theme.colors.blue,
         paddingVertical: 10,
         marginHorizontal: 16,
     },
     buttonText: {
-        color: theme.colors.grayV2,
+        color: theme.colors.white,
         fontSize: theme.fontSize.size16,
+        fontWeight: '700',
     },
     userWrapper: {
         flexDirection: 'row',

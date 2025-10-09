@@ -37,7 +37,7 @@ export default StyleSheet.create({
   settlementCloseBtn: {
     width: 30,
     height: 30,
-    backgroundColor: theme.colors.Galdae2,
+    backgroundColor: theme.colors.blue,
     position: 'absolute',
     borderRadius: 999,
     right: 15,
@@ -91,6 +91,11 @@ export default StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'flex-start',
     paddingHorizontal: 20,
+    paddingVertical: 15,
+    borderWidth : 1,
+    borderColor : theme.colors.grayV2,
+    borderRadius : 12,
+
   },
   settlementBtnText: {
     fontSize: theme.fontSize.size16,
@@ -102,7 +107,7 @@ export default StyleSheet.create({
     color: theme.colors.blackV0,
     fontWeight: '700',
     paddingLeft: 10,
-    marginTop: 20,
+    marginTop: 2,
     width: 100,
   },
   settlementTime: {
@@ -110,7 +115,7 @@ export default StyleSheet.create({
     fontSize: theme.fontSize.size12,
     color: theme.colors.grayV1,
     fontWeight: '500',
-    marginTop: 8,
+    marginTop: 50,
   },
   settlementLoactionContainer: {
     paddingLeft: 10,
@@ -118,9 +123,14 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
     marginTop: 4,
+    backgroundColor: theme.colors.blue2,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 10,
+    width: 'auto',
   },
   settlementLocationIcon: {
-    marginRight: 4,
+    marginRight: 6,
   },
   settlementLastCostContainer: {
     flexDirection: 'row',
@@ -154,10 +164,23 @@ export default StyleSheet.create({
     alignItems: 'flex-end',
   },
   settlementCostEditText: {
-    color: theme.colors.grayV2,
+    color: theme.colors.gray2,
     fontSize: theme.fontSize.size12,
     fontWeight: '400',
     textDecorationLine: 'underline',
     marginTop: 4,
+  },
+  menuUserMe: {
+    backgroundColor: theme.colors.blue2,
+    width: 18,
+    height: 18,
+    borderRadius: 999,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  menuUserMeText: {
+    color: theme.colors.blue,
+    fontSize: theme.fontSize.size12,
+    fontWeight: '700',
   },
 });

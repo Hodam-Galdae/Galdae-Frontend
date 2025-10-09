@@ -1,4 +1,5 @@
-/* eslint-disable @typescript-eslint/no-shadow */
+/* eslint-disable react/no-unstable-nested-components */
+
 /* eslint-disable react-native/no-inline-styles */
 // Chat.tsx 테스트
 // 채팅 메시지 수신 시 채팅 목록 업데이트
@@ -16,6 +17,7 @@ import {
   Animated,
   Dimensions,
   TouchableOpacity,
+  Image,
 } from 'react-native';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import styles from '../styles/ChatRoom.style';
@@ -37,6 +39,8 @@ import ReportCheckModal from '../components/popup/ReportCheckModal';
 import useDidMountEffect from '../hooks/useDidMountEffect';
 import Header from '../components/Header';
 import { useWebSocket } from '../hooks/useWebSocket';
+import { getUserInfo } from '../api/membersApi';
+import RNFS from 'react-native-fs';
 import {
   ChatItem as ChatItemType,
   fetchChatMembers,
@@ -45,15 +49,14 @@ import {
   leaveChatroom,
   ChatMember as MemberResponse,
   sendChatImage,
+  createPayment,
 } from '../api/chatApi';
 import moment from 'moment';
 import { createReport } from '../api/reportApi';
-import RNFS from 'react-native-fs';
 import Loading from '../components/Loading';
-import { useSelector } from 'react-redux';
-import { RootState } from '../modules/redux/RootReducer';
 import SettlementCostEditModal from '../components/popup/SettlementCostEditModal';
 import EncryptedStorage from 'react-native-encrypted-storage';
+import { UserInfo } from '../types/getTypes';
 type SettlementType = {
   accountNumber: String;
   accountBank: String;
@@ -79,6 +82,7 @@ const ChatRoom: React.FC = () => {
   const [message, setMessage] = useState<string>('');
   const [showExtraView, setShowExtraView] = useState<boolean>(false);
   const [keyboardHeight, setKeyboardHeight] = useState<number>(0);
+  const [initialCost, setInitialCost] = useState<number>(0);  // 초기 정산 금액
   const [isSettlementRequestPopupOpen, setSettlementRequestPopupOpen] = useState<boolean>(false);
   const [isVisibleReportPopup, setIsVisibleReportPopup] =
     useState<boolean>(false);
@@ -88,7 +92,7 @@ const ChatRoom: React.FC = () => {
   const [isSideMenuOpen, setIsSideMenuOpen] = useState<boolean>(false);
   const [unreadCounts, setUnreadCounts] = useState<{ [key: number]: number }>({});
   const chatListRef = useRef<FlatList>(null);
-  const { imageUri, imageType, imageName, getImageByCamera, getImageByGallery } =
+  const { imageUri, getImageByCamera, getImageByGallery } =
     useImagePicker();
   const navigation =
     useNavigation<
@@ -115,17 +119,24 @@ const ChatRoom: React.FC = () => {
     member: { memberId: '', memberName: '', memberImage: '' },
     reason: '',
   });
+  useEffect(() => {
+    const getUserInfos = async () => {
+      const userInfo = await getUserInfo();
+      console.log('ChatRoom 118줄 userInfo', userInfo);
+      setUserInfo(userInfo);
+    };
+    getUserInfos();
 
-   const userInfo = useSelector((state: RootState) => state.user);
-   const [token, setToken] = useState<string>('');
-
-   useEffect(() => {
     const getToken = async () => {
       const token = await EncryptedStorage.getItem('accessToken');
       setToken(token ?? '');
     };
     getToken();
-   }, []);
+  }, []);
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
+  console.log('ChatRoom 120줄 userInfo', userInfo);
+  const [token, setToken] = useState<string>('');
+
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
@@ -173,7 +184,7 @@ const ChatRoom: React.FC = () => {
     const fetchChatroomInfos = async () => {
       const chatroomData = await fetchChatroomInfo(chatroomId);
       setChatroomTitle(chatroomData);
-     console.log(`
+      console.log(`
         
         
       처음 받아온 채팅 데이터들 fetchChatroomInfo
@@ -217,6 +228,7 @@ const ChatRoom: React.FC = () => {
 
   const sendPayment = async (settlementCost: string) => {
     wsSendMessage(settlementCost, 'MONEY', userInfo?.nickname || '', userInfo?.image || '');
+    await createPayment(chatroomId.toString(), Number(settlementCost));
   };
 
   const sendMessage = async () => {
@@ -307,22 +319,31 @@ const ChatRoom: React.FC = () => {
   const reportUser = async () => {
     setIsVisibleReportCheckPopup(false);
 
-    const formData = new FormData();
-    const data = {
-      reported: reportData.current.member.memberId,
-      reportContent: reportData.current.reason,
-    };
-    const fileName = `${reportData.current.member.memberId}.json`;
-    const filePath = `${RNFS.TemporaryDirectoryPath}/${fileName}`;
-    await RNFS.writeFile(filePath, JSON.stringify(data), 'utf8');
-    formData.append('reportRequestDto', `file:///${filePath}`);
+    // const formData = new FormData();
+    // const data = {
+    //   reported: reportData.current.member.memberId,
+    //   reportContent: reportData.current.reason,
+    // };
+    // console.log('data', data);
+    // const fileName = `${reportData.current.member.memberId}.json`;
+    // const filePath = `${RNFS.TemporaryDirectoryPath}/${fileName}`;
+    // await RNFS.writeFile(filePath, JSON.stringify(data), 'utf8');
+    // formData.append('reportRequestDto', `file:///${filePath}`);
 
-    if (reportImage.uri !== '') {
-      let imageFile = { uri: imageUri, type: imageType, name: imageName };
-      formData.append('profileImage', imageFile as any);
-    }
+    // if (reportImage.uri !== '') {
+    //   let imageFile = { uri: imageUri, type: imageType, name: imageName };
+    //   formData.append('profileImage', imageFile as any);
+    // }
 
-    await createReport(formData);
+    // await createReport(formData);
+    await createReport({
+      reportRequestDto: {
+        reported: reportData.current.member.memberId,
+        reportContent: reportData.current.reason,
+      },
+      // 서버 스펙이 문자열이라면: URL 또는 base64 문자열로 전달
+      image: reportImage.uri || undefined,
+    });
   };
 
   const startReportUser = (member: MemberResponse) => {
@@ -338,6 +359,7 @@ const ChatRoom: React.FC = () => {
   const closeSettlement = async (cost: number) => {
     console.log('입력된 정산금액:', cost);
     // 여기서 정산금액을 사용해서 필요한 로직을 처리할 수 있습니다
+    setInitialCost(cost);
     await fetchMembers();
     Keyboard.dismiss();
     setSettlementRequestPopupOpen(false);
@@ -411,55 +433,58 @@ const ChatRoom: React.FC = () => {
 
   useDidMountEffect(() => {
     const send = async () => {
-      if (imageUri !== '') {
-        try {
-          const formData = new FormData();
-          let imageFile = { uri: imageUri, type: imageType, name: imageName };
-          formData.append('image', imageFile as any);
-          const url = await sendChatImage(chatroomId.toString(), { imageSendCommand: { sender: userInfo?.nickname || '', senderImage: userInfo?.image || '' }, image: imageUri });
+      if (!imageUri) {return;}
+      try {
+        // file://... → base64
+        const base64 = await RNFS.readFile(imageUri.replace('file://', ''), 'base64');
 
-          wsSendMessage(url.toString() || '', 'IMAGE', userInfo?.nickname || '', userInfo?.image || '') as any;
-        } catch (err) {
-        }
+        const res = await sendChatImage(chatroomId.toString(), {
+          imageSendCommand: { sender: userInfo?.nickname || '', senderImage: userInfo?.image || '' },
+          image: base64,
+        });
+
+        // 서버가 업로드 URL을 돌려준다고 가정
+        wsSendMessage(res.url, 'IMAGE', userInfo?.nickname || '', userInfo?.image || '');
+      } catch (err) {
+        console.log('sendImage 오류', err);
       }
     };
-
     send();
   }, [imageUri]);
 
   return (
     <KeyboardAvoidingView style={styles.rootContainer} behavior={'padding'}>
-    <Header
+      <Header
         style={styles.headerContainer}
         leftButton={
           <SVGButton onPress={() => navigation.goBack()} iconName="LeftArrow" />
         }
         title={
           <View style={styles.header}>
-           {
-            chatroomTitle.titleRight && (
-              <SVG
-                width={22}
-                height={22}
-                style={styles.headerIcon}
-                name="LocationBlack"
-              />
-            )
-           }
+            {
+              chatroomTitle.titleRight && (
+                <SVG
+                  width={22}
+                  height={22}
+                  style={styles.headerIcon}
+                  name="LocationBlack"
+                />
+              )
+            }
             <BasicText
               style={styles.headerText}
               text={chatroomTitle.titleLeft}
             />
-           {
-            chatroomTitle.titleRight && (
-              <SVG
-                width={22}
-                height={22}
-                style={styles.headerIcon}
-                name="RightArrow"
-              />
-            )
-           }
+            {
+              chatroomTitle.titleRight && (
+                <SVG
+                  width={22}
+                  height={22}
+                  style={styles.headerIcon}
+                  name="RightArrow"
+                />
+              )
+            }
             <BasicText
               style={styles.headerText}
               text={chatroomTitle.titleRight}
@@ -469,7 +494,7 @@ const ChatRoom: React.FC = () => {
         rightButton={<SVGButton onPress={openSideMenu} iconName="Kebab" />}
       />
 
-{isSideMenuOpen && (
+      {isSideMenuOpen && (
         <TouchableOpacity
           style={styles.overlay}
           activeOpacity={1}
@@ -487,7 +512,7 @@ const ChatRoom: React.FC = () => {
           {'참여자 목록 ( ' +
             members.length +
             ' / ' +
-           members.length +
+            members.length +
             ' )'}
         </BasicText>
         <View style={styles.menuUserList}>
@@ -495,12 +520,9 @@ const ChatRoom: React.FC = () => {
             return (
               <View key={member.memberId} style={styles.menuUserContainer}>
                 <View style={styles.menuUserWrapper}>
-                  <SVG
-                    width={46}
-                    height={46}
-                    name={member.memberImage === null ? "DefaultProfile" : member.memberImage as any}
-                    style={styles.menuUserIcon}
-                  />
+                  {
+                    member.memberImage === null ? <SVG name="DefaultProfile" width={46} height={46} style={styles.menuUserIcon} /> : <Image source={{uri: member.memberImage}} style={styles.menuUserIcon} />
+                  }
                   <BasicText style={styles.menuUserText} text={member.memberName} />
                   {member.memberName === userInfo?.nickname || '' ? (
                     <View style={styles.menuUserMe}>
@@ -508,7 +530,7 @@ const ChatRoom: React.FC = () => {
                     </View>
                   ) : null}
                 </View>
-                {member.memberName !== userInfo?.nickname || ''   ? (
+                {member.memberName !== userInfo?.nickname || '' ? (
                   <BasicButton
                     textStyle={styles.menuUserBtnText}
                     buttonStyle={styles.menuUserBtn}
@@ -541,13 +563,13 @@ const ChatRoom: React.FC = () => {
           ListHeaderComponent={
             chatroomTitle.alertContent
               ? () => (
-                  <View style={{ paddingHorizontal: 16, paddingTop: 8 }}>
-                    <BasicText
-                      text={chatroomTitle.alertContent}
-                      style={styles.enterBox} 
-                    />
-                  </View>
-                )
+                <View style={{ paddingHorizontal: 16, paddingTop: 8 }}>
+                  <BasicText
+                    text={chatroomTitle.alertContent}
+                    style={styles.enterBox}
+                  />
+                </View>
+              )
               : null
           }
           ListFooterComponent={<View style={{ height: 30 }} />}
@@ -555,7 +577,7 @@ const ChatRoom: React.FC = () => {
             chatListRef.current?.scrollToEnd({ animated: false })
           }
         />
-                <View>
+        <View>
           {/* 채팅창 + 사진, 정산 요청 창 */}
           <View>
             <View style={styles.inputContainer}>
@@ -603,20 +625,18 @@ const ChatRoom: React.FC = () => {
                   />
                   <BasicText text="앨범" style={styles.extraViewItemText} />
                 </View>
-                {chatroomTitle.titleRight === userInfo?.nickname || '' ? (
-                  <View style={styles.extraViewContainer}>
-                    <SVGButton
-                      onPress={openSettlement}
-                      iconName="Money"
-                      SVGStyle={styles.extraViewItemIcon}
-                      buttonStyle={styles.extraViewItem}
-                    />
-                    <BasicText
-                      text="정산 요청"
-                      style={styles.extraViewItemText}
-                    />
-                  </View>
-                ) : null}
+                <View style={styles.extraViewContainer}>
+                  <SVGButton
+                    onPress={openSettlement}
+                    iconName="Money"
+                    SVGStyle={styles.extraViewItemIcon}
+                    buttonStyle={styles.extraViewItem}
+                  />
+                  <BasicText
+                    text="정산 요청"
+                    style={styles.extraViewItemText}
+                  />
+                </View>
               </View>
             ) : null}
           </View>
@@ -627,11 +647,12 @@ const ChatRoom: React.FC = () => {
           titleRight={chatroomTitle.titleRight}
           ref={settlementRequestPopupRef}
           sendPayment={sendPayment}
+          initialCost={initialCost}
         />
 
         <ChatRoomExitModal
           visible={isVisibleExitPopup}
-          onConfirm={() => {leaveChatroom(chatroomId.toString()); setIsVisibleExitPopup(false)}}
+          onConfirm={() => { leaveChatroom(chatroomId.toString()); setIsVisibleExitPopup(false); }}
           onCancel={() => setIsVisibleExitPopup(false)}
         />
 

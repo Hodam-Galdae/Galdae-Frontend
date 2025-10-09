@@ -137,14 +137,16 @@ const Login: React.FC = () => {
   };
 
   const handleGoNextPage = async (response: AuthResponse) => {
-    const user = await getUserInfo();
-    console.log('🔵 [handleGoNextPage] 성공:', user);
-    await EncryptedStorage.setItem('memberId', user.id);
-    dispatch(setUser({...user, token: 'Bearer ' + response.accessToken}));
+
     console.log('🔵 [handleGoNextPage] response:', response);
     // 학생 인증 완료
     if (response.isJoined === true) {
       console.log('🔵 [handleGoNextPage] 인증:', response.isJoined);
+      const user = await getUserInfo();
+    console.log('🔵 [handleGoNextPage] 성공:', user);
+    await EncryptedStorage.setItem('memberId', user.id);
+    console.log('🔵 [handleGoNextPage] user:', user);
+    dispatch(setUser({...user, token: 'Bearer ' + response.accessToken}));
       navigation.replace('MainTab');
       return;
     }

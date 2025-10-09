@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Modal,
   View,
@@ -24,6 +24,10 @@ const SettlementCostEditModal: React.FC<SettlementCostEditModalProps> = ({
 }) => {
   const [cost, setCost] = useState<string>('');
 
+  useEffect(() => {
+    setCost('');
+  }, []);
+
   return (
     <Modal transparent={true} visible={visible} animationType="fade">
       <View style={styles.overlay}>
@@ -33,8 +37,9 @@ const SettlementCostEditModal: React.FC<SettlementCostEditModalProps> = ({
           </TouchableOpacity>
 
           <BasicText text={title} style={styles.title} />
+          <View style={styles.priceContainer}>
           <TextInput
-            value={cost ? parseInt(cost, 10).toLocaleString() + '원' : ''}
+            value={cost ? parseInt(cost, 10).toLocaleString() : ''}
             onChangeText={(text) => {
               // 숫자만 입력 가능하도록 필터링하고 쉼표 제거
               const numericValue = text.replace(/[^0-9]/g, '');
@@ -42,11 +47,13 @@ const SettlementCostEditModal: React.FC<SettlementCostEditModalProps> = ({
             }}
             style={styles.input}
             keyboardType="numeric"
-            placeholder="금액을 입력하세요"
+            placeholder="0"
           />
+          <BasicText text="원" style={styles.priceText} />
+          </View>
 
           <TouchableOpacity
-            onPress={() => onConfirm(Number.parseInt(cost, 10))}
+            onPress={() => {onConfirm(Number.parseInt(cost, 10)); setCost('')}}
             style={styles.btn}>
             <BasicText text="완료" style={styles.btnText} />
           </TouchableOpacity>

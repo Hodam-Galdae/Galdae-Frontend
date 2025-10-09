@@ -26,6 +26,7 @@ export interface SettlementRequestPopupProps {
   titleRight: string;
   member: ChatMember[];
   sendPayment: (settlementCost: string) => void;
+  initialCost: number;
 }
 
 type RootStackParamList = {
@@ -35,7 +36,7 @@ type RootStackParamList = {
 const SettlementRequestPopup = forwardRef<
   SettlementRequestPopupRef,
   SettlementRequestPopupProps
->(({ titleLeft, titleRight, member, sendPayment }, ref) => {
+>(({ titleLeft, titleRight, member, sendPayment, initialCost }, ref) => {
   const modalizeRef = useRef<Modalize>(null);
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList, 'Payment'>>();
   // 외부에서 open/close 함수를 사용할 수 있도록 함
@@ -48,7 +49,11 @@ const SettlementRequestPopup = forwardRef<
     },
   }));
 
-  const [settlementCost, setSettlementCost] = useState<number>(0);
+  const [settlementCost, setSettlementCost] = useState<number>(initialCost);
+  useEffect(() => {
+    setSettlementCost(initialCost);
+  }, [initialCost]);
+  
   const [isLastSettlement, setIsLastSettlement] = useState(false);
   const [isVisibleCostEditPopup, setIsVisibleCostEditPopup] =
     useState<boolean>(false);
@@ -109,11 +114,11 @@ const SettlementRequestPopup = forwardRef<
         />
         {!isLastSettlement ? (
           <View>
-            <View style={[styles.settlementCostContainer, { marginTop: 70 }]}>
+            <View style={[styles.settlementCostContainer, { marginTop: 50 }]}>
               <BasicText text="결제 금액" style={styles.settlementCostText} />
               <View style={styles.settlementCostTextContainer}>
                 <BasicText style={styles.settlementCostText}>
-                  {settlementCost + '원'}
+                  {settlementCost.toLocaleString() + '원'}
                 </BasicText>
                 <TouchableOpacity
                   onPress={() => setIsVisibleCostEditPopup(true)}>
@@ -124,10 +129,10 @@ const SettlementRequestPopup = forwardRef<
                 </TouchableOpacity>
               </View>
             </View>
-            <View style={[styles.settlementCostContainer, { marginTop: 23 }]}>
+            <View style={[styles.settlementCostContainer, { marginTop: 10 }]}>
               <BasicText text="정산 금액" style={styles.settlementCostText} />
               <BasicText style={styles.settlementCostText}>
-                {Math.ceil(settlementCost / member.length) + '원'}
+                {Math.ceil(settlementCost / member.length).toLocaleString() + '원'}
               </BasicText>
             </View>
             <View style={styles.bankContainer}>
@@ -143,31 +148,40 @@ const SettlementRequestPopup = forwardRef<
           </View>
         ) : (
           <View>
-            <BasicText style={styles.settlementTitle} text="최종 확인" />
             <BasicText style={styles.settlementTime}>
               {moment.utc().format('YYYY년 MM월 DD일 (ddd) HH : mm')}
             </BasicText>
+            <BasicText style={styles.settlementTitle} text="최종 확인" />
             <View style={styles.settlementLoactionContainer}>
-              <SVG
-                style={styles.settlementLocationIcon}
-                width={16}
-                height={16}
-                name="LocationBlack"
-              />
+              {
+                titleRight && (
+                  <SVG
+                    style={styles.settlementLocationIcon}
+                    width={16}
+                    height={16}
+                    name="LocationBlack"
+                  />
+                )
+              }
               <BasicText
                 style={styles.settlementLocationText}
                 text={titleLeft}
               />
-              <SVG
-                style={styles.settlementLocationIcon}
-                width={14}
-                height={14}
-                name="RightArrow"
-              />
-              <BasicText
-                style={styles.settlementLocationText}
-                text={titleRight}
-              />
+              {
+                titleRight && (
+                  <>
+                    <SVG
+                      style={styles.settlementLocationIcon}
+                      width={14}
+                      height={14}
+                      name="RightArrow"
+                    />
+                    <BasicText
+                      style={styles.settlementLocationText}
+                      text={titleRight}
+                    /></>
+                )
+              }
             </View>
             <View style={styles.settlementLastCostContainer}>
               <View style={styles.settlementLastCostBox}>
@@ -209,6 +223,11 @@ const SettlementRequestPopup = forwardRef<
                         style={styles.settlementLastText}
                         text={e.memberName}
                       />
+                      {e.memberName === myData.nickname ? (
+                        <View style={styles.menuUserMe}>
+                          <BasicText style={styles.menuUserMeText} text="나" />
+                        </View>
+                      ) : null}
                       <BasicText style={styles.settlementLastText}>
                         {Math.ceil(settlementCost / member.length) + '원'}
                       </BasicText>

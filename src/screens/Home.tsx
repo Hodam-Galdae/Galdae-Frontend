@@ -29,8 +29,8 @@ type RootStackParamList = {
   CreateGaldae: undefined;
   NowGaldae: undefined;
   NowGaldaeDetail: { taxiId: string };
-  DeliveryDetail: { deliveryId: string };
-  OTTNDetail: { subscribeId: string };
+  DeliveryDetail: { orderId: string };
+  OTTDetail: { subscribeId: string };
   TaxiNDivide: undefined;
   OTTNDivide: undefined;
   DeliveryNDivide: undefined;
@@ -112,14 +112,7 @@ const Home: React.FC<HomeProps> = () => {
               <ActivityIndicator size="small" color={theme.colors.Galdae} />
             ) : (
               posts.map(item => {
-                const onPress = () =>
-                  item.sameGenderYN
-                    ? item.type === 'TAXI'
-                      ? navigation.navigate('NowGaldaeDetail', { taxiId: item.id })
-                      : item.type === 'ORDER'
-                        ? navigation.navigate('DeliveryDetail', { deliveryId: item.id })
-                        : navigation.navigate('OTTNDetail', { subscribeId: item.id })
-                    : setSameGenderPopupVisible(true);
+
 
                 switch (item.type) {
                   case 'TAXI':
@@ -127,7 +120,7 @@ const Home: React.FC<HomeProps> = () => {
                       <HomeTaxiItem
                         key={item.id}
                         item={item}
-                        onPress={!item.sameGenderYN ? onPress : () => setSameGenderPopupVisible(true)}
+                        onPress={item.sameGenderYN ? ()=>navigation.navigate('NowGaldaeDetail', { taxiId: item.id }) : () => setSameGenderPopupVisible(true)}
                       />
                     );
                   case 'ORDER':
@@ -135,7 +128,7 @@ const Home: React.FC<HomeProps> = () => {
                       <HomeDeliveryItem
                         key={item.id}
                         item={item}
-                        onPress={onPress}
+                        onPress={()=>navigation.navigate('DeliveryDetail', { orderId: item.id })}
                       />
                     );
                   case 'SUBSCRIBE':
@@ -143,7 +136,7 @@ const Home: React.FC<HomeProps> = () => {
                       <HomeSubscribeItem
                         key={item.id}
                         item={item}
-                        onPress={onPress}
+                        onPress={()=>navigation.navigate('OTTDetail', { subscribeId: item.id })}
                       />
                     );
                   default:

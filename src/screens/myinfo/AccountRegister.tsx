@@ -90,6 +90,11 @@ const AccountRegister: React.FC<HomeProps> = () => {
     }
   };
 
+  const handleAccountChange = (text: string) => {
+    const numericValue = text.replace(/[^0-9]/g, '');
+    setAccount(numericValue);
+  };
+
   return (
     <View style={styles.container}>
       <Header
@@ -161,7 +166,9 @@ const AccountRegister: React.FC<HomeProps> = () => {
           text="계좌 입력"
           style={styles.input}
           value={account}
-          onChangeText={setAccount}
+          onChangeText={handleAccountChange}
+          keyboardType="numeric"
+          maxLength={15}
           textColor={theme.colors.blackV0} // 원하는 색상으로 지정
         />
         <View style={styles.completeBtnContainer}>
