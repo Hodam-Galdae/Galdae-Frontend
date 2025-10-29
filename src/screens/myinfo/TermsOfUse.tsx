@@ -36,8 +36,9 @@ const TermsOfUse: React.FC<HomeProps> = () => {
     return (
       <View style={styles.container}>
             <Header
-            leftButton={<SVGButton iconName="arrow_left_line" onPress={goBack}/>}
+            leftButton={<SVGButton iconName="arrow_left_line2" onPress={goBack}/>}
             title={<BasicText text="이용약관" style={styles.headerText}/>}
+            style={styles.headerStyle}
             />
 
             <View style={styles.content}>

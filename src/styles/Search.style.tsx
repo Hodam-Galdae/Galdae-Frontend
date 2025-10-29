@@ -10,6 +10,7 @@ const screenWidth = Dimensions.get('window').width;
 export default StyleSheet.create({
   mainContainer: {
     flex: 1,
+    backgroundColor: theme.colors.white,
   },
   container: {
     flex: 1,
@@ -125,6 +126,7 @@ export default StyleSheet.create({
   },
   header: {
     backgroundColor: theme.colors.Galdae,
+    position: 'relative',
   },
   generateButton: {
     width: screenWidth - 30,
@@ -205,12 +207,10 @@ export default StyleSheet.create({
     zIndex: 1,
   },
   searchContainer: {
-    position: 'relative',
     width: '100%',
-    marginBottom: 20,
-    backgroundColor: theme.colors.red,   // (디버그용이었으면 제거 권장)
-    justifyContent: 'space-between',
-    
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingBottom: 10,
   },
   searchListContainer:{
     display: 'flex',
@@ -224,7 +224,7 @@ export default StyleSheet.create({
   },
   // ✨ 인풋 우측에 아이콘 공간 확보
   searchInput: {
-    paddingRight: 44,           // 아이콘 너비 + 여백
+    
     borderRadius: theme.borderRadius.size30,
     backgroundColor: theme.colors.white,
   },

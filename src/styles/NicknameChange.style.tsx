@@ -60,6 +60,14 @@ export default StyleSheet.create({
         fontSize: theme.fontSize.size14,
         color: theme.colors.gray2,
         fontWeight: '500',
+
+        ...Platform.select({
+          android: {
+            alignItems: 'center',
+            justifyContent: 'center',
+            paddingVertical: 10,
+          },
+        }),
     },
     redText: {
         fontWeight: '500',

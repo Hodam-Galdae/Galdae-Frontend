@@ -425,6 +425,7 @@ const Search: React.FC = () => {
                             title={
                                 <View style={styles.searchContainer}>
                                     <InputText
+                                        textColor={theme.colors.grayV0}
                                         text="검색어를 입력해 주세요."
                                         value={searchKeyword}
                                         onChangeText={setSearchKeyword}

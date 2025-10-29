@@ -143,7 +143,7 @@ const formatLastChatDate = (lastChatDate: string) => {
   return (
     <View style={styles.container}>
 
-      {sections.length > 0 ? (
+      {activeChatRoomData2.length > 0 || inactiveChatRoomData2.length > 0 ? (
         <SectionList
           sections={sections}
           keyExtractor={item => item.chatroomId.toString()}

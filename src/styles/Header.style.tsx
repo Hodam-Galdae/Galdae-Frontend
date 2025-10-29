@@ -4,8 +4,6 @@ import {theme} from '../styles/theme';
 export default StyleSheet.create({
 
   headerContainer: {
-    height: 80,
-    position: 'relative',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -19,9 +17,8 @@ export default StyleSheet.create({
     // Android 전용 그림자
     elevation: 4,
     zIndex: 999,
-    ...(Platform.OS === 'ios' && {
-      paddingTop: 20,
-    }),
+    // borderWidth:3,
+    // borderColor:theme.colors.blue,
   },
   searchContainer: {
     paddingHorizontal: 20,
@@ -60,8 +57,9 @@ export default StyleSheet.create({
     color:theme.colors.grayV0,
   },
   backContainer: {
+    // borderWidth: 1,
+    // borderColor: theme.colors.red,
     width: 30,
-    height: 30,
   },
   titleContainer: {
     flexDirection: 'row',
@@ -70,19 +68,22 @@ export default StyleSheet.create({
     justifyContent: 'center',
   },
   logoContainer: {
-    height: 30,
+    flex: 1,
+    // borderWidth: 1,
+    // borderColor: theme.colors.red,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   notificationContainer: {
     width: 30,
     height: 30,
+    // borderWidth: 1,
+    // borderColor: theme.colors.red,
   },
   mainTitle: {
     fontSize: theme.fontSize.size22,
     fontWeight: 'bold',
     color: theme.colors.white,
-    lineHeight: Platform.select({
-      android: 40,
-    }),
   },
   headerButton: {
     width: 120,
@@ -94,7 +95,7 @@ export default StyleSheet.create({
     fontSize: theme.fontSize.size22,
     fontWeight: '700',
     color: theme.colors.white,
-    paddingBottom: 4,
+
   },
   universityLocation: {
     fontSize: theme.fontSize.size14,
@@ -107,17 +108,5 @@ export default StyleSheet.create({
     paddingBottom: 2,
   },
 
-  /** ✅ 전체 너비 모드: 좌우 버튼 위에 오버레이로 title을 가득 깔기 */
-  logoContainerFull: {
-    position: 'absolute',
-    left: 35,
-    right: 0,
-    // 헤더 안쪽 수평 패딩과 동일하게 여백 적용
-    paddingHorizontal: 20,
-    // 헤더 높이 안에서 수직 정렬
-    top: Platform.select({ ios: 70, android: 70}), // header의 paddingTop 고려
-    height: '90%',
-    justifyContent: 'center',
-  },
 
 });

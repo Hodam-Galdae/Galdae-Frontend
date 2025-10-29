@@ -28,6 +28,7 @@ import useImagePicker from '../hooks/useImagePicker';
 import RNFS from 'react-native-fs';
 import { banks } from '../constants/bankOptions';
 import { StepName } from './SignUp';
+import { resizeImage } from '../utils/ImageResizer';
 import { useNavigation } from '@react-navigation/native';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -86,9 +87,30 @@ const SetUserInfo: React.FC<AgreeProps> = ({ setNextStep, setIsLoading }) => {
         } as any);
         // ✅ 프로필 이미지(선택)
         if (imageUri) {
-  //console.log('hi');
-  let imageFile = {uri: imageUri, type: imageType, name: imageName};
-  formData.append('profileImage', imageFile as any);
+          console.log('📸 원본 이미지 URI:', imageUri);
+
+          // 이미지 압축 (최대 800x800, 품질 80%)
+          try {
+            const resizedImage = await resizeImage(imageUri, 800, 800, imageName || 'profile.jpg');
+            console.log('✅ 이미지 압축 완료:', {
+              uri: resizedImage.uri,
+              size: resizedImage.size,
+              width: resizedImage.width,
+              height: resizedImage.height,
+            });
+
+            let imageFile = {
+              uri: resizedImage.uri,
+              type: imageType || 'image/jpeg',
+              name: resizedImage.name || imageName,
+            };
+            formData.append('profileImage', imageFile as any);
+          } catch (error) {
+            console.error('❌ 이미지 압축 실패, 원본 사용:', error);
+            // 압축 실패 시 원본 사용
+            let imageFile = {uri: imageUri, type: imageType, name: imageName};
+            formData.append('profileImage', imageFile as any);
+          }
         }
         // just for debug
         const dumpForm = (fd: any) => {

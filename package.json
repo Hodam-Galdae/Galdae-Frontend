@@ -9,8 +9,8 @@
     "start": "react-native start",
     "test": "jest",
     "cm": "cz",
-    "android:dev": "ENVFILE=.env.development react-native run-android --variant devDebug",
-    "android:prod": "ENVFILE=.env.production react-native run-android --variant prodRelease",
+    "android:dev": "cd android && ./gradlew app:installDevDebug -PreactNativeDevServerPort=8081",
+  "android:prod": "cd android && ./gradlew app:installProdDebug -PreactNativeDevServerPort=8081",
 
     "ios:dev": "ENVFILE=.env.development react-native run-ios --scheme Galdae-Dev",
     "ios:prod": "ENVFILE=.env.production react-native run-ios --scheme Galdae-Prod",

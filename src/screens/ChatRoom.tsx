@@ -129,7 +129,20 @@ const ChatRoom: React.FC = () => {
 
     const getToken = async () => {
       const token = await EncryptedStorage.getItem('accessToken');
-      setToken(token ?? '');
+      console.log(`
+        
+        
+        
+        
+        ChatRoom 132줄 token
+        
+        
+        
+        
+        
+        
+        `, token);
+      setToken("Bearer " + token);
     };
     getToken();
   }, []);

@@ -20,7 +20,7 @@ type RootStackParamList = {
   NowGaldae: undefined;
   NowGaldaeDetail: { taxiId: string };
   DeliveryDetail: { orderId: string };
-  OTTNDetail: { subscribeId: string };
+  OTTDetail: { subscribeId: string };
 };
 
 type NowGaldaeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -98,22 +98,22 @@ const NowGaldae: React.FC = () => {
   const keyExtractor = (item: GroupListItem) => (item.id ?? `${item.type}-${Math.random()}`);
 
   const renderItem = useCallback(({ item }: { item: GroupListItem }) => {
-    const onPress = () =>
-      item.sameGenderYN
-        ? item.type === 'TAXI'
-          ? navigation.navigate('NowGaldaeDetail', { taxiId: item.id })
-          : item.type === 'ORDER'
-          ? navigation.navigate('DeliveryDetail', { orderId: item.id })
-          : navigation.navigate('OTTNDetail', { subscribeId: item.id })
-        : setSameGenderPopupVisible(true);
+    // const onPress = () =>
+    //   item.sameGenderYN
+    //     ? item.type === 'TAXI'
+    //       ? navigation.navigate('NowGaldaeDetail', { taxiId: item.id })
+    //       : item.type === 'ORDER'
+    //       ? navigation.navigate('DeliveryDetail', { orderId: item.id })
+    //       : navigation.navigate('OTTNDetail', { subscribeId: item.id })
+    //     : setSameGenderPopupVisible(true);
 
     switch (item.type) {
       case 'TAXI':
-        return <HomeTaxiItem item={item} onPress={onPress} />;
+        return <HomeTaxiItem item={item} onPress={item.sameGenderYN ? () => navigation.navigate('NowGaldaeDetail', { taxiId: item.id }) : () => setSameGenderPopupVisible(true)} />;
       case 'ORDER':
-        return <HomeDeliveryItem item={item} onPress={onPress} />;
+        return <HomeDeliveryItem item={item} onPress={() => navigation.navigate('DeliveryDetail', { orderId: item.id })} />;
       case 'SUBSCRIBE':
-        return <HomeSubscribeItem item={item} onPress={onPress} />;
+        return <HomeSubscribeItem item={item} onPress={() => navigation.navigate('OTTDetail', { subscribeId: item.id })} />;
       default:
         return null;
     }

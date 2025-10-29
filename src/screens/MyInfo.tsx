@@ -19,7 +19,7 @@ import { useAppDispatch } from '../modules/redux/store';
 import { RootState } from '../modules/redux/RootReducer'; // RootState 타입 (store 설정에 따라 경로 수정)
 import { fetchUserInfo } from '../modules/redux/slice/myInfoSlice';
 import LogoutPopup from '../components/popup/LogoutPopup';
-
+import { resizeImage } from '../utils/ImageResizer';
 //API
 import { updateMemberImage, logoutMember } from '../api/membersApi';
 //import { deletePost } from '../api/postApi';
@@ -106,7 +106,8 @@ const MyInfo: React.FC = () => {
         if (imageUri) {
           setIsImageLoading(true);
           //console.log(`imageUri: ${imageUri}`);
-          await updateMemberImage(imageUri);
+          const resizedImage = await resizeImage(imageUri, 800, 800, 'profile.jpg');
+          await updateMemberImage(resizedImage.uri);
           //console.log('✅ 이미지 업데이트 성공:', result);
           // 이미지 업데이트 후 사용자 정보를 재갱신
           dispatch(fetchUserInfo());

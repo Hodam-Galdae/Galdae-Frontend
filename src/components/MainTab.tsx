@@ -139,9 +139,6 @@ function App(): React.JSX.Element {
         options={{
           header: () => (
             <Header
-              // rightButton={<SVGButton
-              //   iconName="Notification"
-              //   onPress={()=>navigation.navigate('Notification')}/>}
               title={<BasicText text="채팅" style={styles.mainTitle} />}
             />
           ),
