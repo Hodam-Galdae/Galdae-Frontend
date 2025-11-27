@@ -17,7 +17,7 @@ interface DeliveryItemProps {
 
 const DeliveryItem: React.FC<DeliveryItemProps> = ({ item, onPress, searchKeyword }) => {
 const renderHighlightedText = (text: string, keyword: string) => {
-        if (!keyword) return <Text style={styles.fromMainLocation}>{text}</Text>;
+        if (!keyword) {return <Text style={styles.fromMainLocation}>{text}</Text>;}
         const parts = text.split(new RegExp(`(${keyword})`, 'gi')); // 키워드 기준으로 split
         return (
             <Text style={styles.fromMainLocation}>

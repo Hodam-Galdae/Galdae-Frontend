@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "672047955996",
+    "project_id": "galdae-547a7",
+    "storage_bucket": "galdae-547a7.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:672047955996:android:3b67210821ea9c729f9fd9",
+        "android_client_info": {
+          "package_name": "com.hodam.galdae"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBSBQQGPAq3KgwlHDzWhd04hX1XvGHyDVQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:672047955996:android:13020fc3561f031c9f9fd9",
+        "android_client_info": {
+          "package_name": "com.hodam.galdae.dev"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBSBQQGPAq3KgwlHDzWhd04hX1XvGHyDVQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

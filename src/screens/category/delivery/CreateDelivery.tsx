@@ -211,8 +211,8 @@ const CreateDelivery: React.FC = () => {
         message !== '' &&
         departureDate !== null;
 
-    const handleNavigateChatRoom = async (chatroomId: number) => {
-        navigation.navigate('ChatRoom', { chatroomId: chatroomId });
+    const handleNavigateChatRoom = async (roomId: number) => {
+        navigation.replace('ChatRoom', { chatroomId: roomId });
         setParticipating(false);
     };
     return (
@@ -397,7 +397,7 @@ const CreateDelivery: React.FC = () => {
                 <ParticipateModal
                     title="생성 완료"
                     visible={participating}
-                    onCancel={() => { navigation.navigate('DeliveryNDivide'); setParticipating(false); }}
+                    onCancel={() => { navigation.replace('DeliveryNDivide'); setParticipating(false); }}
                     onConfirm={() => handleNavigateChatRoom(chatroomId || 0)}
                 />
             )}

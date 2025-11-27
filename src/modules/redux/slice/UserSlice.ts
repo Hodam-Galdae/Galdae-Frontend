@@ -43,12 +43,24 @@ const UserSlice = createSlice({
     setImage(state, action) {
       state.image = action.payload;
     },
+
+    // 로그아웃 시 상태 초기화
+    resetUser(state) {
+      state.id = '';
+      state.nickname = '';
+      state.bankType = '';
+      state.accountNumber = '';
+      state.depositor = '';
+      state.token = '';
+      state.university = '';
+      state.image = '';
+    },
   },
 });
 
 /**
  * Reducer 메서드를 정의하여 외부에서 Redux의 상태를 변경할 수 있도록 구성합니다.
  */
-export const {setUser, setToken, setUniversity} = UserSlice.actions;
+export const {setUser, setToken, setUniversity, resetUser} = UserSlice.actions;
 
 export default UserSlice.reducer;

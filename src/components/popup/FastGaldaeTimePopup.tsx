@@ -86,6 +86,7 @@ const FastGaldaeTimePopup = forwardRef<FastGaldaeTimePopupRef, FastGaldaePopupPr
         withHandle={false}  // 기본 핸들을 비활성화
         scrollViewProps={{
           keyboardShouldPersistTaps: 'always',
+          nestedScrollEnabled: true,
         }}
         {...({ swipeToClose: true, swipeThreshold: 100 } as any)}
       >
@@ -122,10 +123,10 @@ const FastGaldaeTimePopup = forwardRef<FastGaldaeTimePopupRef, FastGaldaePopupPr
                   setSelectedHour(payload.hour24 as number);
                   setSelectedMinute(payload.minute as number);
                 }}
-                onInvalidSelect={(payload) => {
-                  // setSelectedAmPm(payload.ampm as '오전' | '오후');
-                  // setSelectedHour(payload.hour24 as number);
-                  // setSelectedMinute(payload.minute as number);
+                onInvalidSelect={(_payload) => {
+                  // setSelectedAmPm(_payload.ampm as '오전' | '오후');
+                  // setSelectedHour(_payload.hour24 as number);
+                  // setSelectedMinute(_payload.minute as number);
                   setInvalidPopupVisible(true);
                 }}
                 isToday={selectedDate === moment().format('YYYY-MM-DD')}

@@ -55,7 +55,7 @@ const BasicText: React.FC<BasicTextProps> = ({
 
   return (
     <Text {...props} style={[style, computedStyle]}>
-      {children ?? text}
+      {children ?? text ?? ''}
     </Text>
   );
 };

@@ -20,6 +20,8 @@ import {sendUniversityMail} from '../api/mailApi';
 import { useSelector } from 'react-redux';
 import { RootState } from '../modules/redux/RootReducer';
 import { StepName } from './SignUp';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { selectUniversityArea } from '../api/onboardingApi';
 interface AgreeProps {
   setNextStep: (name: StepName) => void;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
@@ -56,6 +58,35 @@ const EmailVerify: React.FC<AgreeProps> = ({ setNextStep, setIsLoading, setUserI
   useEffect(() => {
     setUserInfo({email: email, schoolNumber: schoolNumber, schoolDepartment: schoolDepartment});
   }, [email, schoolNumber, schoolDepartment, setUserInfo]);
+
+  // 게스트 모드에서 복구 시 대학 정보를 서버에 다시 전송
+  useEffect(() => {
+    const resyncUniversityInfo = async () => {
+      try {
+        const savedUniversity = await AsyncStorage.getItem('selectedUniversity');
+        const savedUniversityArea = await AsyncStorage.getItem('selectedUniversityArea');
+
+        if (savedUniversity && savedUniversityArea) {
+          console.log('📤 [EmailVerify] 게스트 모드 복구 - 대학 정보 재전송:', {
+            university: savedUniversity,
+            universityArea: savedUniversityArea,
+          });
+
+          await selectUniversityArea({
+            university: savedUniversity,
+            universityArea: savedUniversityArea,
+          });
+
+          console.log('✅ [EmailVerify] 대학 정보 재전송 완료');
+        }
+      } catch (error) {
+        console.error('❌ [EmailVerify] 대학 정보 재전송 실패 (무시):', error);
+        // 실패해도 사용자는 계속 진행 가능
+      }
+    };
+
+    resyncUniversityInfo();
+  }, []);
   const sendEmail = async () => {
 
     if (emailRegex.test(email) && email.length > 0) {

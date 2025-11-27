@@ -7,7 +7,7 @@ import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import styles from '../styles/Search.style';
 import BasicText from '../components/BasicText';
 import SVGButton from '../components/button/SVGButton';
-import Header from '../components/Header';
+import SearchHeader from '../components/SearchHeader';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { theme } from '../styles/theme';
 import InputText from '../components/BasicInput';
@@ -115,7 +115,15 @@ const Search: React.FC = () => {
     useEffect(() => {
         (async () => {
             const history = await loadSearchHistory();
-            setSearchHistory(history);
+            // 중복 제거: 검색어 기준으로 최신 것만 유지
+            const uniqueHistory = history.filter((item, index, self) =>
+                index === self.findIndex((t) => t.searchKeyword.main === item.searchKeyword.main)
+            );
+            setSearchHistory(uniqueHistory);
+            // 중복 제거된 데이터를 다시 저장
+            if (uniqueHistory.length !== history.length) {
+                await saveSearchHistory(uniqueHistory);
+            }
         })();
     }, []);
 
@@ -153,9 +161,13 @@ const Search: React.FC = () => {
 
     const isKeywordExist = categoryFlags.TAXI || categoryFlags.ORDER || categoryFlags.SUBSCRIBE;
 
-    // 새로운 검색 기록 추가 함수 예시
+    // 새로운 검색 기록 추가 함수 - 중복 제거
     const addSearchHistoryItem = async (newItem: any) => {
-        const updatedHistory = [newItem, ...searchHistory];
+        // 동일한 검색어가 있으면 제거
+        const filteredHistory = searchHistory.filter(
+            item => item.searchKeyword.main !== newItem.searchKeyword.main
+        );
+        const updatedHistory = [newItem, ...filteredHistory];
         setSearchHistory(updatedHistory);
         await saveSearchHistory(updatedHistory);
     };
@@ -194,27 +206,13 @@ const Search: React.FC = () => {
             {
                 searchKeywordEnter ? (
                     <>
-                        <Header
+                        <SearchHeader
                             style={styles.header}
-                            leftButton={<SVGButton iconName="arrow_left_line" onPress={goBack} />}
-                            /** ✅ 여기만 fullWidthTitle */
-                            fullWidthTitle
-                            title={
-                                <View style={styles.searchContainer}>
-                                    <InputText
-                                        text={searchKeywordEnter}
-                                        value={searchKeyword}
-                                        onChangeText={setSearchKeyword}
-                                        style={styles.searchInput}
-                                    />
-                                    <SVGButton
-                                        iconName="Cancel"
-                                        onPress={() => { navigation.navigate('Search', { searchKeywordEnter: null }); setSearchKeyword(''); }}
-                                        buttonStyle={styles.cancelBtn}
-                                        SVGStyle={styles.searchIcon}
-                                    />
-                                </View>
-                            }
+                            onBackPress={goBack}
+                            searchValue={searchKeyword}
+                            onSearchChange={setSearchKeyword}
+                            iconName="Cancel"
+                            onIconPress={() => { navigation.navigate('Search', { searchKeywordEnter: null }); setSearchKeyword(''); }}
                         />
                         {/** 검색 결과가 있을 경우  */}
                         {
@@ -417,28 +415,14 @@ const Search: React.FC = () => {
                     </>
                 ) : (
                     <>
-                        <Header
+                        <SearchHeader
                             style={styles.header}
-                            leftButton={<SVGButton iconName="arrow_left_line" onPress={goBack} />}
-                            /** ✅ 여기만 fullWidthTitle */
-                            fullWidthTitle
-                            title={
-                                <View style={styles.searchContainer}>
-                                    <InputText
-                                        textColor={theme.colors.grayV0}
-                                        text="검색어를 입력해 주세요."
-                                        value={searchKeyword}
-                                        onChangeText={setSearchKeyword}
-                                        style={styles.searchInput}
-                                    />
-                                    <SVGButton
-                                        iconName="Search"
-                                        onPress={handleSearchGaldae}
-                                        buttonStyle={styles.searchIconBtn}
-                                        SVGStyle={styles.searchIcon}
-                                    />
-                                </View>
-                            }
+                            onBackPress={goBack}
+                            searchValue={searchKeyword}
+                            onSearchChange={setSearchKeyword}
+                            iconName="Search"
+                            onIconPress={handleSearchGaldae}
+                            onSubmit={handleSearchGaldae}
                         />
 
                         <View style={styles.container}>

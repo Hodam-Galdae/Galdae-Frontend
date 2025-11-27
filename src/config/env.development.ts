@@ -1,0 +1,5 @@
+export default {
+  ENV: 'development',
+  API_BASE_URL: 'http://52.78.169.186:8081',
+  WEB_SOCKET_URL: 'ws://52.78.169.186:8081/ws',
+};

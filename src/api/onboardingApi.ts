@@ -66,33 +66,33 @@ export const reissueToken = async (
 };
 
 /**
- * 회원 가입
+ * 회원 가입 (Presigned URL 방식)
  * POST /on-boarding/join
  * 헤더: AccessToken (자동 첨부됨)
  * 바디:
  * {
- *   joinRequestDTO: {
- *     nickname, gender, bankType, accountNumber, depositor, deviceToken
- *   },
- *   profileImage: "string"
+ *   nickname, gender, bankType, accountNumber, depositor, deviceToken, profileImageUrl
  * }
  * 응답: TokenResponse
  *
- * 만약 서버가 이미지 업로드를 multipart/form-data로 요구한다면,
- * 이 함수 대신 FormData 버전을 사용해야 함(주석 참고).
+ * profileImageUrl은 클라이언트가 S3에 직접 업로드한 후 받은 공개 URL입니다.
  */
-export const join = async (form: any): Promise<any> => {
+export interface JoinRequest {
+    nickname: string;
+    gender: 'FEMALE' | 'MALE' | 'UNKNOWN';
+    bankType: string;
+    accountNumber: string;
+    depositor: string;
+    deviceToken?: string; // 선택 사항 (FCM 토큰 획득 실패 시 undefined)
+    profileImageUrl?: string; // 선택 사항
+}
+
+export const join = async (payload: JoinRequest): Promise<TokenResponse> => {
     console.log('🔵 [회원가입] 요청 시작');
-    console.log('🔵 [회원가입] form 데이터:', form);
+    console.log('🔵 [회원가입] payload:', payload);
 
     try {
-        const response = await axiosInstance.post<TokenResponse>('/on-boarding/join', form, {
-            transformRequest: (data, headers) => {
-                console.log('🔵 [회원가입] data:', data);
-                console.log('🔵 [회원가입] headers:', headers);
-                return form;
-            },
-        });
+        const response = await axiosInstance.post<TokenResponse>('/on-boarding/join', payload);
         console.log('✅ [회원가입] 성공:', response.data);
         return response.data;
     } catch (error) {

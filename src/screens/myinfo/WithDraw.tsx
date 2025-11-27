@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Alert, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { CommonActions } from '@react-navigation/native';
 import styles from '../../styles/Logout.style';
 import Header from '../../components/Header';
 import SVGButton from '../../components/button/SVGButton';
@@ -10,6 +11,9 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { withdrawMember } from '../../api/membersApi';
 import { theme } from '../../styles/theme';
 import SVG from '../../components/SVG';
+import EncryptedStorage from 'react-native-encrypted-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAppDispatch } from '../../modules/redux/store';
 type HomeProps = {
   navigation: any; // 실제 프로젝트에서는 proper type 사용 권장 (예: StackNavigationProp)
 };
@@ -31,6 +35,7 @@ type RootStackParamList = {
 type nowGaldaeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 const WithDraw: React.FC<HomeProps> = () => {
   const navigation = useNavigation<nowGaldaeScreenNavigationProp>();
+  const dispatch = useAppDispatch();
   const [selectedSurvey, setSelectedSurvey] = useState<number | null>(null);
   const goBack = () => navigation.goBack();
   const surveyList = [
@@ -42,11 +47,54 @@ const WithDraw: React.FC<HomeProps> = () => {
   ];
   const handleWithDraw = async () => {
     try {
-      await withdrawMember(surveyList[selectedSurvey ? selectedSurvey : 0].text); // 탈퇴 API 호출
+      // 1. 백엔드에 탈퇴 요청
+      try {
+        await withdrawMember(surveyList[selectedSurvey ? selectedSurvey : 0].text);
+      } catch (apiError) {
+        // API 호출 실패 시 사용자에게 알림
+        console.error('탈퇴 API 호출 실패:', apiError);
+        Alert.alert('탈퇴 실패', '탈퇴에 실패하였습니다');
+        return; // API 실패 시 초기화하지 않고 종료
+      }
+
+      // 2. EncryptedStorage 완전히 초기화
+      try {
+        await EncryptedStorage.clear();
+        console.log('✅ [탈퇴] EncryptedStorage 완전히 초기화됨');
+      } catch (e) {
+        console.log('[탈퇴] EncryptedStorage 초기화 실패 (무시):', e);
+      }
+
+      // 3. AsyncStorage 완전히 초기화
+      try {
+        await AsyncStorage.clear();
+        console.log('✅ [탈퇴] AsyncStorage 완전히 초기화됨');
+      } catch (e) {
+        console.log('[탈퇴] AsyncStorage 초기화 실패 (무시):', e);
+      }
+
+      // 4. Redux 전체 상태 초기화
+      dispatch({type: 'RESET_ALL'});
+      console.log('✅ [탈퇴] Redux 상태 완전히 초기화됨');
+
+      // 5. 로그인 화면으로 이동 (네비게이션 스택 리셋)
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{name: 'Login'}],
+        }),
+      );
+
       Alert.alert('회원탈퇴', '정상적으로 회원탈퇴 되었습니다');
-      navigation.navigate('Login');
     } catch (error) {
-      Alert.alert('탈퇴 실패', '탈퇴에 실패하였습니다');
+      console.error('[탈퇴] 처리 중 치명적 오류:', error);
+      // 치명적 오류가 발생해도 로그인 화면으로 보냄
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{name: 'Login'}],
+        }),
+      );
     }
   };
   return (

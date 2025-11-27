@@ -1,14 +1,20 @@
 import React from 'react';
-import {  View ,Alert} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import {View, Alert} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {CommonActions} from '@react-navigation/native';
+import EncryptedStorage from 'react-native-encrypted-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useAppDispatch} from '../../modules/redux/store';
+import {resetUser} from '../../modules/redux/slice/UserSlice';
 import styles from '../../styles/Logout.style';
 import Header from '../../components/Header';
 import SVGButton from '../../components/button/SVGButton';
 import BasicText from '../../components/BasicText';
 import BasicButton from '../../components/button/BasicButton';
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { theme } from '../../styles/theme';
-import { logoutMember } from '../../api/membersApi';
+import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {theme} from '../../styles/theme';
+import {logoutMember} from '../../api/membersApi';
+
 type HomeProps = {
   navigation: any; // 실제 프로젝트에서는 proper type 사용 권장 (예: StackNavigationProp)
 };
@@ -28,25 +34,69 @@ type RootStackParamList = {
     Login: undefined;
 };
 
-type nowGaldaeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
+type nowGaldaeScreenNavigationProp =
+  NativeStackNavigationProp<RootStackParamList>;
+
 const Logout: React.FC<HomeProps> = () => {
-    const navigation = useNavigation<nowGaldaeScreenNavigationProp>();
-    const goBack = () => navigation.goBack();
-    const handleLogout = async () => {
-      // 실제 프로젝트에서는 토큰을 Redux나 AsyncStorage 등에서 가져옵니다.
-      const token = 'Bearer your-access-token'; // 실제 엑세스 토큰으로 대체
+  const navigation = useNavigation<nowGaldaeScreenNavigationProp>();
+  const dispatch = useAppDispatch();
+
+  const goBack = () => navigation.goBack();
+
+  const handleLogout = async () => {
+    try {
+      // 1. 백엔드에 로그아웃 요청 (실패해도 계속 진행)
       try {
-        await logoutMember(token);
-        // 로그아웃 성공 시, 상태 초기화 후 로그인 화면으로 이동하거나 적절히 처리합니다.
-        Alert.alert('로그아웃', '정상적으로 로그아웃 되었습니다');
-        navigation.navigate('Login');
-      } catch (error) {
-        Alert.alert('로그아웃 실패', '로그아웃에 실패하였습니다. 다시 시도해주세요.');
+        await logoutMember();
+      } catch (apiError) {
+        // API 호출 실패는 무시 (이미 토큰이 만료되었을 수 있음)
+        console.log('로그아웃 API 호출 실패 (무시하고 계속 진행):', apiError);
       }
-    };
-    const handleWithDraw = () =>{
-      navigation.navigate('WithDraw');
-    };
+
+      // 2. EncryptedStorage 완전히 초기화
+      try {
+        await EncryptedStorage.clear();
+        console.log('✅ EncryptedStorage 완전히 초기화됨');
+      } catch (e) {
+        console.log('EncryptedStorage 초기화 실패 (무시):', e);
+      }
+
+      // 3. AsyncStorage 완전히 초기화
+      try {
+        await AsyncStorage.clear();
+        console.log('✅ AsyncStorage 완전히 초기화됨');
+      } catch (e) {
+        console.log('AsyncStorage 초기화 실패 (무시):', e);
+      }
+
+      // 4. Redux 전체 상태 초기화
+      dispatch({type: 'RESET_ALL'});
+      console.log('✅ Redux 상태 완전히 초기화됨');
+
+      // 5. 로그인 화면으로 이동 (네비게이션 스택 리셋)
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{name: 'Login'}],
+        }),
+      );
+
+      Alert.alert('로그아웃', '정상적으로 로그아웃 되었습니다');
+    } catch (error) {
+      console.error('로그아웃 처리 중 치명적 오류:', error);
+      // 치명적 오류가 발생해도 로그인 화면으로 보냄
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{name: 'Login'}],
+        }),
+      );
+    }
+  };
+
+  const handleWithDraw = () => {
+    navigation.navigate('WithDraw');
+  };
     return (
       <View style={styles.container}>
         <Header

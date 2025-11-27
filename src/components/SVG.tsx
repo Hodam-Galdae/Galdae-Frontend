@@ -8,6 +8,9 @@ export type SVGIconProps = SvgProps & {
 
 const SVG = ({ name, ...props }: SVGIconProps) => {
     const Icon = svg[name ?? 'GaldaeLogo']; // 기본 아이콘 사용
+    if (!Icon) {
+        return null;
+    }
     return <Icon {...props} />;
 };
 

@@ -9,7 +9,7 @@ import SVG from '../components/SVG';
 import SVGButton from '../components/button/SVGButton';
 import useImagePicker from '../hooks/useImagePicker';
 import BigPictureModal from '../components/popup/BigPictureModal';
-import {certifyCard} from '../api/authApi';
+// import {certifyCard} from '../api/authApi';
 import {useSelector} from 'react-redux';
 import {RootState} from '../modules/redux/RootReducer';
 import RNFS from 'react-native-fs';
@@ -50,7 +50,7 @@ const SchoolCardVerify: React.FC<SchoolCardVerifyProps> = ({setNextStep, setIsLo
 
         let imageFile = {uri: imageUri, type: imageType, name: imageName};
         form.append('studentCard', imageFile as any);
-        await certifyCard(form);
+        // await certifyCard(form);
         setNextStep('SetUserInfo');
       } catch(err) {
 

@@ -139,18 +139,6 @@ export default StyleSheet.create({
     fontSize: theme.fontSize.size16,
     fontWeight: '700',
   },
-  cancelBtn: {
-    width: 22,
-    height: 22,
-    position: 'absolute',
-    right: 10,
-    bottom: -3,
-    transform: [{ translateY: -11 }], // 아이콘 세로 중앙 맞춤(아이콘 높이의 절반)
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 10,     // 안드로이드에서 겹침 이슈가 있으면
-    elevation: 2,   // ✨ 추가 (안드로이드 zIndex 보조)
-  },
   searchDate: {
     marginBottom: 2,
     marginLeft: 14,
@@ -180,8 +168,9 @@ export default StyleSheet.create({
     borderWidth: 1,
     borderColor: theme.colors.blackV3,
     height: 26,
+    minWidth: 60,
     padding: 1,
-    paddingHorizontal: 6,
+    paddingHorizontal: 10,
     justifyContent: 'center',
     alignItems: 'center',
     gap: 10,
@@ -198,58 +187,12 @@ export default StyleSheet.create({
   searchKeywordText: {
     color: theme.colors.blackV3,
   },
-  searchIcon: {
-    width: 22,
-    height: 22,
-    position: 'absolute',
-    right: 0,
-    top: 0,
-    zIndex: 1,
-  },
-  searchContainer: {
-    width: '100%',
-    paddingLeft: 20,
-    paddingRight: 20,
-    paddingBottom: 10,
-  },
   searchListContainer:{
     display: 'flex',
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 10,
     width: '100%',
-  },
-  searchRight: {
-    width: 0,
-  },
-  // ✨ 인풋 우측에 아이콘 공간 확보
-  searchInput: {
-    
-    borderRadius: theme.borderRadius.size30,
-    backgroundColor: theme.colors.white,
-  },
-
-  // (선택) InputText 컨테이너 스타일 prop이 있다면 같이 맞춥니다.
-  // searchInputContainer: { height: 44 },
-
-  // ✨ 아이콘 버튼 절대 배치
-  searchIconBtn: {
-    position: 'absolute',
-    right: 10,
-    bottom: -3,
-    transform: [{ translateY: -11 }], // 아이콘 세로 중앙 맞춤(아이콘 높이의 절반)
-    width: 22,
-    height: 22,
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 10,     // 안드로이드에서 겹침 이슈가 있으면
-    elevation: 2,   // ✨ 추가 (안드로이드 zIndex 보조)
-  },
-
-  // ✨ 아이콘 자체 크기
-  searchIconSvg: {
-    width: 22,
-    height: 22,
   },
   mainTitle: {
     fontSize: theme.fontSize.size22,

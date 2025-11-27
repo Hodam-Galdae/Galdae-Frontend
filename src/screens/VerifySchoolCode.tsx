@@ -1,7 +1,7 @@
 /* eslint-disable no-return-assign */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import axios from 'axios';
-/* eslint-disable quotes */
+
 import React, { useRef, useState } from 'react';
 import {
     Keyboard,

@@ -66,41 +66,35 @@ export default StyleSheet.create({
   searchIcon: {
     width: 22,
     height: 22,
-    position: 'absolute',
-    right: 0,
-    top: 0,
-    zIndex: 1,
   },
   searchContainer: {
-    position: 'relative',
     marginBottom: 20,
-    // backgroundColor: theme.colors.red,   // (디버그용이었으면 제거 권장)
   },
-
-  // ✨ 인풋 우측에 아이콘 공간 확보
-  searchInput: {
-    paddingRight: 44,           // 아이콘 너비 + 여백
+  searchInputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: theme.colors.white,
     borderRadius: theme.borderRadius.size30,
+    borderWidth: 2,
+    borderColor: theme.colors.grayV3,
+    paddingHorizontal: 12,
+    marginBottom: 20,
   },
 
-  // (선택) InputText 컨테이너 스타일 prop이 있다면 같이 맞춥니다.
-  // searchInputContainer: { height: 44 },
+  searchInput: {
+    flex: 1,
+    borderWidth: 0,
+    backgroundColor: 'transparent',
+  },
 
-  // ✨ 아이콘 버튼 절대 배치
-  searchIconBtn: {
-    position: 'absolute',
-    right: 10,
-    bottom: -3,
-    transform: [{ translateY: -11 }], // 아이콘 세로 중앙 맞춤(아이콘 높이의 절반)
+  searchIconInside: {
     width: 22,
     height: 22,
     justifyContent: 'center',
     alignItems: 'center',
-    zIndex: 10,     // 안드로이드에서 겹침 이슈가 있으면
-    elevation: 2,   // ✨ 추가 (안드로이드 zIndex 보조)
+    marginLeft: 8,
   },
 
-  // ✨ 아이콘 자체 크기
   searchIconSvg: {
     width: 22,
     height: 22,

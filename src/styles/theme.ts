@@ -14,6 +14,7 @@ export const theme = {
       grayV1:'#E3E5EB',
       grayV2:'#EFF1F5',
       grayV3:'#F4F7FA',
+      grayDisabled:'#C6CAD2',
       gray2:'#6C6C6C',
       blackV0:'#191919',
       blackV1:'#21232A',

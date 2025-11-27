@@ -1,5 +1,4 @@
 import {StyleSheet} from 'react-native';
-import {Platform} from 'react-native';
 import {theme} from '../styles/theme';
 export default StyleSheet.create({
 
@@ -9,6 +8,7 @@ export default StyleSheet.create({
     justifyContent: 'space-between',
     backgroundColor: theme.colors.Galdae,
     paddingHorizontal: 20,
+    paddingBottom: 12,
     // iOS 전용 그림자
     shadowColor: theme.colors.grayV1,
     shadowOffset: {width: 0, height: 2},
@@ -23,7 +23,7 @@ export default StyleSheet.create({
   searchContainer: {
     paddingHorizontal: 20,
     backgroundColor: theme.colors.Galdae,
-    paddingTop: 12,
+    // paddingTop: 12,
     paddingBottom: 20,
     borderBottomLeftRadius: theme.borderRadius.size30,
     borderBottomRightRadius: theme.borderRadius.size30,
@@ -63,9 +63,8 @@ export default StyleSheet.create({
   },
   titleContainer: {
     flexDirection: 'row',
-    gap: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
+    gap: 4,
+    alignItems: 'flex-end',
   },
   logoContainer: {
     flex: 1,
@@ -86,7 +85,6 @@ export default StyleSheet.create({
     color: theme.colors.white,
   },
   headerButton: {
-    width: 120,
     height: 30,
     alignItems: 'center',
     justifyContent: 'center',
@@ -95,17 +93,29 @@ export default StyleSheet.create({
     fontSize: theme.fontSize.size22,
     fontWeight: '700',
     color: theme.colors.white,
-
+    flexShrink: 0,
+    // borderWidth: 1
   },
   universityLocation: {
     fontSize: theme.fontSize.size14,
     fontWeight: '700',
     color: theme.colors.white,
-    borderWidth: 1,
     borderColor: theme.colors.white,
     borderRadius: theme.borderRadius.size30,
     paddingHorizontal: 8,
-    paddingBottom: 2,
+    // paddingBottom: 2,
+    flexShrink: 0,
+    borderWidth: 1,
+  },
+  // 홈 화면 전용 스타일
+  homeLeftContainer: {
+    flex: 1,
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    paddingLeft: 10,
+  },
+  homeLogoContainer: {
+    width: 30,
   },
 
 

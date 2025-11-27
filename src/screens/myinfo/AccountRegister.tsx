@@ -51,7 +51,7 @@ const AccountRegister: React.FC<HomeProps> = () => {
   const [account, setAccount] = useState<string>();
   const [selectedBank, setSelectedBank] = useState<string>(''); // 기본값 예: 'kb'
   const [dropdownVisible, setDropdownVisible] = useState<boolean>(false);
-  const [editable, setEditable] = useState<boolean>(false);
+  const [_editable, setEditable] = useState<boolean>(false);
   const dispatch = useDispatch();
   const navigation = useNavigation<nowGaldaeScreenNavigationProp>();
   const goBack = () => navigation.goBack();

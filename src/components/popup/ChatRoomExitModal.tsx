@@ -4,13 +4,13 @@ import SVG from '../../components/SVG';
 import BasicText from '../../components/BasicText';
 import BasicButton from '../../components/button/BasicButton';
 import { theme } from '../../styles/theme';
-//import {  } from '../utils/ScreenScaler';
 import styles from '../../styles/ChatRoomExitModal.style';
 
 export interface ChatRoomExitModalProps {
     visible: boolean;
     onCancel: () => void;
     onConfirm: () => void;
+    isLoading?: boolean;
     title?: string;
     message?: string;
     containerStyle?: StyleProp<ViewStyle>;
@@ -20,15 +20,19 @@ export interface ChatRoomExitModalProps {
     visible,
     onCancel,
     onConfirm,
+    isLoading = false,
     title = '해당 N빵을 나가시겠습니까?',
-    // message = '정말 나가겠습니까?',
     containerStyle,
   }) => {
     return (
       <Modal transparent={true} visible={visible} animationType="fade">
         <View style={styles.overlay}>
           <View style={[styles.textPopUp, containerStyle]}>
-            <TouchableOpacity onPress={onCancel} style={styles.cancelIconWrapper}>
+            <TouchableOpacity
+              onPress={onCancel}
+              style={styles.cancelIconWrapper}
+              disabled={isLoading}
+            >
               <SVG name="CancelBlack" style={styles.cancelIcon} />
             </TouchableOpacity>
             <View style={styles.textPopUpcontent}>
@@ -50,10 +54,12 @@ export interface ChatRoomExitModalProps {
                 textStyle={styles.cancelBtnText}
                 buttonStyle={styles.cancelBtn}
                 enabledColors={{
-                  backgroundColor: theme.colors.Galdae,
+                  backgroundColor: theme.colors.blue,
                   textColor: theme.colors.white,
                   borderColor: theme.colors.transparent,
                 }}
+                loading={isLoading}
+                disabled={isLoading}
                 onPress={onConfirm}
               />
             </View>

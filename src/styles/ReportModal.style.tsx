@@ -8,6 +8,7 @@ export default StyleSheet.create({
       backgroundColor: 'rgba(0,0,0,0.5)',
       justifyContent: 'center',
       alignItems: 'center',
+      zIndex: 1000,
   },
   textPopUp: {
     width:250,
@@ -22,8 +23,11 @@ export default StyleSheet.create({
   // 취소 아이콘은 터치 영역을 위해 wrapper로 사용합니다.
   cancelIconWrapper: {
     position: 'absolute',
-    top:20,
-    right: 20,
+    top: 10,
+    right: 10,
+    padding: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   pictureBtn: {
     width: 40,

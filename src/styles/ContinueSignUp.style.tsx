@@ -2,11 +2,15 @@ import { StyleSheet } from 'react-native';
 import { theme } from './theme';
 
 export default StyleSheet.create({
+    wrapper: {
+        flex: 1,
+        backgroundColor: theme.colors.white,
+    },
+    headerStyle: {
+        backgroundColor: theme.colors.white,
+    },
     container: {
         flex: 1,
-        // justifyContent: 'flex-start',
-        // alignItems: 'center',
-        // backgroundColor: theme.colors.white,
         paddingHorizontal: 20,
         paddingTop: 40,
     },

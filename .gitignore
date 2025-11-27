@@ -72,3 +72,17 @@ yarn-error.log
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+# CI/CD sensitive files
+google-play-service-account.json
+app_store_connect_api_key.json
+*.p12
+*.mobileprovision
+**/fastlane/*.cer
+**/fastlane/*.p12
+**/fastlane/*.mobileprovision
+keystore_base64.txt
+
+# Environment files (keep templates only)
+.env.local
+.env.*

@@ -70,7 +70,7 @@ const SVGTextButton: React.FC<SVGTextButtonProps> = React.memo(({
 
   const renderContent = () => {
     // children이 있으면 우선 children을 렌더링하고, 없으면 text를 BasicText로 표시합니다.
-    const contentNode = children ? children : <BasicText style={[styles.buttonText, { color: colors.textColor }, textStyle]}>{text}</BasicText>;
+    const contentNode = children ? children : <BasicText style={[styles.buttonText, { color: colors.textColor }, textStyle]} text={text || ''} />;
     if (iconPosition === 'left') {
       return (
         <>

@@ -16,11 +16,11 @@ const GradientSpinner = () => {
         useNativeDriver: true,
       })
     ).start();
-  }, []);
+  }, [rotateAnim]);
 
   const rotateInterpolate = rotateAnim.interpolate({
     inputRange: [0, 1],
-    outputRange: ["0deg", "360deg"],
+    outputRange: ['0deg', '360deg'],
   });
 
   return (

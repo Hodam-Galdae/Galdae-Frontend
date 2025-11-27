@@ -65,7 +65,7 @@ const LogoutPopup: React.FC<LogoutPopupProps> = ({
                                 }}
                                 onPress={onConfirm}
                             />
-                            
+
                         </View>
                     </View>
                 </View>

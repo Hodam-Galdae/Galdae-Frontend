@@ -22,16 +22,20 @@ import BasicButton from '../components/button/BasicButton';
 import { theme } from '../styles/theme';
 import ItemSelector from '../components/ItemSelector';
 import { ScrollView } from 'react-native-gesture-handler';
-import { join } from '../api/onboardingApi';
+import { join, JoinRequest } from '../api/onboardingApi';
 import { checkNickname } from '../api/onboardingApi';
 import useImagePicker from '../hooks/useImagePicker';
-import RNFS from 'react-native-fs';
 import { banks } from '../constants/bankOptions';
 import { StepName } from './SignUp';
-import { resizeImage } from '../utils/ImageResizer';
 import { useNavigation } from '@react-navigation/native';
 import EncryptedStorage from 'react-native-encrypted-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { uploadImage } from '../api/fileApi';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../modules/redux/slice/UserSlice';
+import { fetchUserInfo } from '../modules/redux/slice/myInfoSlice';
+import { AppDispatch } from '../modules/redux/store';
 interface AgreeProps {
   setNextStep: (name: StepName) => void;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
@@ -41,6 +45,7 @@ type RootStackParamList = {
 };
 const SetUserInfo: React.FC<AgreeProps> = ({ setNextStep, setIsLoading }) => {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const dispatch = useDispatch<AppDispatch>();
   const [genderSelected, setGenderSelected] = useState<number>(-1);
   const [bankSelect, setBankSelect] = useState<number>(-1);
   const [name, setName] = useState<string>('');
@@ -62,75 +67,101 @@ const SetUserInfo: React.FC<AgreeProps> = ({ setNextStep, setIsLoading }) => {
   const sortedBanks = [...englishBanks, ...koreanBanks];
 
   const clickEvent = async () => {
-
     try {
         setIsLoading(true);
-        const deviceToken = await messaging().getToken();
-        const formData = new FormData();
-        const data = {
-          nickname: checkName,
-          gender: genderSelected === 0 ? 'FEMALE' : (genderSelected === 1 ? 'MALE' : 'UNKNOWN'),
-          bankType: sortedBanks[bankSelect],
-          accountNumber: accountNumber,
-          depositor: accountName,
-          deviceToken: deviceToken,
-        };
-        
-        const fileName = `${name}.json`;
-        const filePath = `${RNFS.TemporaryDirectoryPath}/${fileName}`;
-        await RNFS.writeFile(filePath, JSON.stringify(data), 'utf8');
 
-        formData.append('joinRequestDTO', {
-          uri: `file://${filePath}`,
-          type: 'application/json',
-          name: fileName,
-        } as any);
-        // ✅ 프로필 이미지(선택)
+        // FCM 토큰 가져오기 (선택 사항 - 실패해도 회원가입 진행)
+        let deviceToken: string | undefined;
+        try {
+          deviceToken = await messaging().getToken();
+          console.log('✅ FCM 토큰 획득 성공:', deviceToken);
+        } catch (fcmError) {
+          console.warn('⚠️ FCM 토큰 획득 실패 (선택 사항이므로 회원가입은 계속 진행):', fcmError);
+          // deviceToken은 undefined로 유지
+        }
+
+        let profileImageUrl: string | undefined;
+
+        // ✅ 프로필 이미지(선택) - Presigned URL 방식으로 S3에 먼저 업로드
         if (imageUri) {
           console.log('📸 원본 이미지 URI:', imageUri);
 
-          // 이미지 압축 (최대 800x800, 품질 80%)
           try {
-            const resizedImage = await resizeImage(imageUri, 800, 800, imageName || 'profile.jpg');
-            console.log('✅ 이미지 압축 완료:', {
-              uri: resizedImage.uri,
-              size: resizedImage.size,
-              width: resizedImage.width,
-              height: resizedImage.height,
-            });
-
-            let imageFile = {
-              uri: resizedImage.uri,
+            const imageFile = {
+              uri: imageUri,
               type: imageType || 'image/jpeg',
-              name: resizedImage.name || imageName,
+              name: imageName || 'profile.jpg',
             };
-            formData.append('profileImage', imageFile as any);
+
+            // S3에 이미지 업로드하고 공개 URL 받기
+            console.log('📤 S3에 프로필 이미지 업로드 시작...');
+            profileImageUrl = await uploadImage('PROFILE', imageFile);
+            console.log('✅ S3 업로드 완료, URL:', profileImageUrl);
           } catch (error) {
-            console.error('❌ 이미지 압축 실패, 원본 사용:', error);
-            // 압축 실패 시 원본 사용
-            let imageFile = {uri: imageUri, type: imageType, name: imageName};
-            formData.append('profileImage', imageFile as any);
+            console.error('❌ 이미지 업로드 실패:', error);
+            // 이미지 업로드 실패 시에도 회원가입은 진행 (프로필 이미지 없이)
+            console.log('⚠️ 프로필 이미지 없이 회원가입 진행');
           }
         }
-        // just for debug
-        const dumpForm = (fd: any) => {
-          const parts = (fd as any)?._parts;
-          if (Array.isArray(parts)) {
-            console.log('🧩 FormData parts:');
-            parts.forEach((p, i) => console.log(i, p[0], p[1]));
-          }
+
+        // JSON 데이터로 회원가입 요청
+        const joinRequestData: JoinRequest = {
+          nickname: checkName,
+          gender: genderSelected === 0 ? 'FEMALE' : (genderSelected === 1 ? 'MALE' : 'UNKNOWN'),
+          bankType: sortedBanks[bankSelect],
+          accountNumber: accountNumber!,
+          depositor: accountName!,
+          deviceToken: deviceToken,
+          profileImageUrl: profileImageUrl, // S3에서 받은 URL 또는 undefined
         };
-  
-        dumpForm(formData);
-  
-        const response : any = await join(formData);
-        console.log('🚀 서버에서 받은 회원가입 데이터:', response);
+
+        console.log('🚀 회원가입 요청 데이터:', joinRequestData);
+        const response = await join(joinRequestData);
+        console.log('✅ 서버에서 받은 회원가입 응답:', response);
+
+        // 토큰 저장
         await EncryptedStorage.setItem('accessToken', response.accessToken);
         await EncryptedStorage.setItem('refreshToken', response.refreshToken);
-        //setNextStep('SignupSuccess');
+        console.log('✅ 토큰 저장 완료');
+
+        // 게스트 모드 플래그 제거 및 임시 백업 토큰 삭제 (회원가입 완료)
+        try {
+          await AsyncStorage.removeItem('isGuestMode');
+          await EncryptedStorage.removeItem('tempAccessToken');
+          await EncryptedStorage.removeItem('tempRefreshToken');
+          await EncryptedStorage.removeItem('tempMemberId');
+          console.log('✅ 게스트 모드 종료 및 임시 토큰 정리');
+        } catch (removeError) {
+          // iOS에서 존재하지 않는 키 삭제 시 에러 발생할 수 있음 (무시 가능)
+          console.log('⚠️ 임시 토큰 정리 실패 (무시 가능):', removeError);
+        }
+
+        // 사용자 정보 가져와서 Redux에 저장 (게스트 모드 자동 종료)
+        try {
+          console.log('📖 회원가입 완료 후 사용자 정보 가져오기...');
+          const userInfoResult = await dispatch(fetchUserInfo()).unwrap();
+          console.log('✅ 사용자 정보 가져오기 성공:', userInfoResult);
+
+          // UserSlice 업데이트 (MainTab의 인증 체크용)
+          dispatch(setUser({
+            id: userInfoResult.id,
+            nickname: userInfoResult.nickname,
+            bankType: userInfoResult.bankType,
+            accountNumber: userInfoResult.accountNumber,
+            depositor: userInfoResult.depositor,
+            token: response.accessToken,
+            image: userInfoResult.image,
+          }));
+          console.log('✅ UserSlice 업데이트 완료 - 게스트 모드 자동 종료됨');
+        } catch (userInfoError) {
+          console.warn('⚠️ 사용자 정보 가져오기 실패 (회원가입은 성공):', userInfoError);
+          // 사용자 정보 가져오기 실패 시에도 회원가입은 성공했으므로 계속 진행
+          // MainTab에서 다시 시도할 것임
+        }
+
         navigation.navigate('SignupSuccess');
     } catch (e) {
-      //console.log(e);
+      console.error('❌ 회원가입 실패:', e);
     } finally {
       setIsLoading(false);
     }
@@ -138,6 +169,14 @@ const SetUserInfo: React.FC<AgreeProps> = ({ setNextStep, setIsLoading }) => {
   useEffect(() => {
     console.log(imageUri);
   }, [imageUri]);
+
+  // 닉네임이 변경되면 검증 상태 초기화
+  useEffect(() => {
+    if (name !== checkName) {
+      setIsCheckingNickname(null);
+      setAlertNameText('');
+    }
+  }, [name]);
   const checkNicknameEvent = async () => {
     try {
       const regex = /^[가-힣0-9]{2,6}$/;
@@ -217,14 +256,28 @@ const SetUserInfo: React.FC<AgreeProps> = ({ setNextStep, setIsLoading }) => {
                     placeholder="예) 동동"
                     placeholderTextColor={theme.colors.gray2}
                   />
-                  <BasicButton text="중복 확인" onPress={checkNicknameEvent} buttonStyle={styles.checkBtn} textStyle={styles.checkBtnText} />
+                  <View style={styles.checkBtnContainer}>
+                    <BasicButton
+                      text="중복 확인"
+                      onPress={checkNicknameEvent}
+                      buttonStyle={styles.checkBtn}
+                      textStyle={styles.checkBtnText}
+                      disabled={name.length === 0 || (isCheckingNickname === true && name === checkName)}
+                      enabledColors={{
+                        backgroundColor: theme.colors.Galdae,
+                        textColor: theme.colors.white,
+                      }}
+                      disabledColors={{
+                        backgroundColor: theme.colors.grayV3,
+                        textColor: theme.colors.gray2,
+                      }}
+                    />
+                  </View>
                 </View>
-                {alertNameText.length !== 0 || isCheckingNickname === false ? (
-                  <BasicText style={styles.alertText} text={alertNameText} />
-                ) : null}
-
                 {isCheckingNickname === true ? (
                   <BasicText style={styles.alertText2} text={alertNameText} />
+                ) : isCheckingNickname === false ? (
+                  <BasicText style={styles.alertText} text={alertNameText} />
                 ) : null}
               </View>
               <View>
@@ -297,8 +350,8 @@ const SetUserInfo: React.FC<AgreeProps> = ({ setNextStep, setIsLoading }) => {
                   items={sortedBanks}
                   selected={bankSelect}
                   setSelected={setBankSelect}
-                  style={{ position: 'absolute', zIndex: 999, borderRadius: theme.borderRadius.size12, borderWidth: 1, borderColor: theme.colors.grayV2, paddingVertical: 14, paddingHorizontal: 20, marginBottom: 8 }}
-                  textStyle={{ paddingLeft: 10, fontSize: theme.fontSize.size14, fontWeight: '500', color: theme.colors.blackV0 }}
+                  style={{ position: 'absolute', zIndex: 999, borderRadius: theme.borderRadius.size12, borderWidth: 1, borderColor: theme.colors.grayV2, paddingVertical: 14, paddingHorizontal: 12, marginBottom: 8 }}
+                  textStyle={{ fontSize: theme.fontSize.size14, fontWeight: '500', color: theme.colors.blackV0 }}
                 />
               </View>
               <TextInput
@@ -323,7 +376,7 @@ const SetUserInfo: React.FC<AgreeProps> = ({ setNextStep, setIsLoading }) => {
             <BasicButton
               text="다음"
               onPress={clickEvent}
-              disabled={isCheckingNickname === false || genderSelected === -1 || bankSelect === -1 || accountNumber === undefined || accountName === undefined}
+              disabled={isCheckingNickname !== true || genderSelected === -1 || bankSelect === -1 || accountNumber === undefined || accountName === undefined}
               disabledColors={{
                 backgroundColor: theme.colors.grayV3,
                 textColor: theme.colors.blackV0,

@@ -12,10 +12,11 @@ import homeGaldaeSlice from './slice/homeGaldaeSlice';
 import taxiSlice from './slice/taxiSlice';
 import orderSlice from './slice/orderSlice';
 import subscribeSlice from './slice/subScribeSlice';
+
 /**
  * 사용 목적에 따라서 Slice 단위로 분리하여서 Root Reducer를 구성합니다.
  */
-const RootReducer = combineReducers({
+const appReducer = combineReducers({
     user: templateUserSlice,
     myInfoSlice:myInfoSlice,
     frequentSlice:frequentSlice,
@@ -31,6 +32,14 @@ const RootReducer = combineReducers({
     subscribeSlice:subscribeSlice,
 });
 
-export type RootState = ReturnType<typeof RootReducer>;
+// 로그아웃 시 모든 상태를 초기화하는 Root Reducer
+const RootReducer = (state: any, action: any) => {
+    if (action.type === 'RESET_ALL') {
+        state = undefined;
+    }
+    return appReducer(state, action);
+};
+
+export type RootState = ReturnType<typeof appReducer>;
 
 export default RootReducer;

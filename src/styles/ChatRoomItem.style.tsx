@@ -1,12 +1,11 @@
-import { StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { theme } from '../styles/theme';
-
-const width = Dimensions.get('window').width;
 
 export default StyleSheet.create({
     container: {
         flexDirection: 'row',
-        width: width - 30,
+        flex: 1,
+        marginHorizontal: 4,
         borderWidth: 1,
         borderColor: theme.colors.grayV2,
         borderRadius: 10,
@@ -21,6 +20,8 @@ export default StyleSheet.create({
         alignItems: 'center',
         gap: 12,
         height: '100%',
+        flex: 1,
+        overflow: 'hidden',
     },
     taxiIcon: {
         fontSize: 12,
@@ -50,23 +51,22 @@ export default StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'flex-start',
         alignItems: 'center',
-        marginBottom:10,
         gap: 4,
-        width:186,
+        marginBottom: 4,
     },
     locationStartWrapper: {
         flexDirection: 'row',
         alignItems: 'center',
-       // width: 100,
+        flexShrink: 1,
+        maxWidth: '45%',
         overflow: 'hidden',
-        flexWrap: 'nowrap',
     },
     locationEndWrapper: {
         flexDirection: 'row',
         alignItems: 'center',
-       // width: 100,
+        flexShrink: 1,
+        maxWidth: '45%',
         overflow: 'hidden',
-        flexWrap: 'nowrap',
     },
     locationText: {
         fontSize: 14,
@@ -95,7 +95,7 @@ export default StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        width: 230,
+        width: '100%',
     },
     lastChat: {
         fontSize: 16,
@@ -109,6 +109,8 @@ export default StyleSheet.create({
         flexDirection: 'column',
         alignItems: 'flex-start',
         justifyContent: 'center',
+        flex: 1,
+        overflow: 'hidden',
     },
     personWrapper: {
         flexDirection: 'column',

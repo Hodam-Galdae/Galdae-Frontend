@@ -3,6 +3,7 @@
 // SignUp.tsx 테스트
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { View, Animated } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import styles from '../styles/SignUp.style';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -16,12 +17,12 @@ import VerifySchool from './VerifySchool';
 import EmailVerify from './EmailVerify';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import Loading from '../components/Loading';
-import ContinueSignUp from './ContinueSignUp';
 import VerifySchoolCode from './VerifySchoolCode';
 import AlertWarning from '../components/popup/AlertWarning';
+import ChooseSignupPath from './ChooseSignupPath';
 //import SignupSuccess from './SignupSuccess';
 type RootStackParamList = {
-  SignUp: { data: Readonly<boolean> };
+  SignUp: { data: Readonly<boolean>; startStep?: StepName };
   ReviewInProgress: undefined;
   MainTab: undefined;
   Login: undefined;
@@ -41,7 +42,7 @@ export type StepName =
   | 'MainTab'
   | 'Agree'
   | 'VerifySchool'
-  | 'ContinueSignUp'
+  | 'ChooseSignupPath'
   | 'SetUserInfo'
  // | 'SchoolCardVerify'
   | 'EmailVerify'
@@ -51,10 +52,10 @@ export type StepName =
 type FlowKey = 'preference' | 'full';
 
 const FLOW_STEPS: Record<FlowKey, StepName[]> = {
-  preference: ['Agree', 'VerifySchool', 'ContinueSignUp'],
-  full: ['Agree', 'VerifySchool', 'ContinueSignUp', 'EmailVerify','VerifySchoolCode','SetUserInfo',],
+  preference: ['Agree', 'VerifySchool', 'ChooseSignupPath'],
+  full: ['Agree', 'VerifySchool', 'ChooseSignupPath', 'EmailVerify','VerifySchoolCode','SetUserInfo'],
 };
-const FULL_ONLY_STEPS: StepName[] = [  'EmailVerify', 'VerifySchoolCode','SetUserInfo',];
+const FULL_ONLY_STEPS: StepName[] = [  'EmailVerify', 'VerifySchoolCode','SetUserInfo'];
 
 const SignUp: React.FC = () => {
   const navigation = useNavigation<SignUpScreenNavigationProp>();
@@ -94,15 +95,60 @@ const SignUp: React.FC = () => {
     extrapolate: 'clamp', //extrapolate은 clamp 으로 설정한다.
   });
   useEffect(() => {
-    // 합격자 재가입 등 특정 진입 지점
-    if (isJoinedRef.current) {
-      setFlow('preference'); // or 'full' 원하는 정책에 따라
-      setNowPageName('VerifySchool');
-      setNowStep(stepsInFlow.indexOf('VerifySchool'));
-    }
-    // 이어하기 복구 (선택)
-    // const resume = await AsyncStorage.getItem('signup_resume');
-    // if (resume === 'SetUserInfo') { setFlow('full'); setNowPageName('SetUserInfo'); setNowStep(FLOW_STEPS.full.indexOf('SetUserInfo')); }
+    const checkGuestModeResume = async () => {
+      // startStep param이 있으면 해당 단계부터 시작
+      if (params.startStep) {
+        const startStep = params.startStep;
+        const nextFlow: FlowKey = FULL_ONLY_STEPS.includes(startStep) ? 'full' : 'preference';
+        const nextSteps = FLOW_STEPS[nextFlow];
+        const idx = nextSteps.indexOf(startStep);
+
+        setFlow(nextFlow);
+        setNowPageName(startStep);
+        if (idx !== -1) {
+          setNowStep(idx);
+        }
+        return;
+      }
+
+      // 합격자 재가입 등 특정 진입 지점
+      if (isJoinedRef.current) {
+        setFlow('preference'); // or 'full' 원하는 정책에 따라
+        setNowPageName('VerifySchool');
+        setNowStep(stepsInFlow.indexOf('VerifySchool'));
+        return;
+      }
+
+      // 게스트 모드에서 프로필 완성하기 복구
+      // 대학 정보가 AsyncStorage에 있으면 학교 선택을 이미 완료한 것으로 간주
+      try {
+        const savedUniversity = await AsyncStorage.getItem('selectedUniversity');
+        const savedUniversityArea = await AsyncStorage.getItem('selectedUniversityArea');
+
+        if (savedUniversity && savedUniversityArea) {
+          console.log('✅ [게스트 모드 복구] 대학 정보 발견 - EmailVerify로 스킵:', {
+            university: savedUniversity,
+            area: savedUniversityArea,
+          });
+
+          // full flow로 전환하고 EmailVerify 단계로 이동
+          setFlow('full');
+          setNowPageName('EmailVerify');
+          const idx = FLOW_STEPS.full.indexOf('EmailVerify');
+          if (idx !== -1) {
+            setNowStep(idx);
+          }
+          return;
+        }
+      } catch (error) {
+        console.log('[게스트 모드 복구] AsyncStorage 확인 실패 (무시):', error);
+      }
+
+      // 기본 시작 (Agree 단계부터)
+      // 이미 초기 상태가 Agree이므로 별도 설정 불필요
+    };
+
+    checkGuestModeResume();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const goToTermsDetail = (data: number) => {
@@ -132,7 +178,7 @@ const SignUp: React.FC = () => {
       goTermsDetailPage={goToTermsDetail}
     />,
     <VerifySchool setNextStep={setNextStepByName} />,
-    <ContinueSignUp setNextStep={setNextStepByName} />,
+    <ChooseSignupPath setNextStep={setNextStepByName} />,
     <EmailVerify
       setIsLoading={setIsLoading}
       setNextStep={setNextStepByName}
@@ -155,17 +201,13 @@ const SignUp: React.FC = () => {
     }
     else if (nowPageName === 'VerifySchool') {
       setNowPageName('Agree');
-    }
-    else if (nowPageName === 'ContinueSignUp') {
-      if (isJoinedRef.current) {
-        navigation.replace('Login');
-      }
+    } else if (nowPageName === 'ChooseSignupPath') {
       setNowPageName('VerifySchool');
     } else if (nowPageName === 'SetUserInfo') {
       setAlertWarning(true);
-      
+
     } else if (nowPageName === 'EmailVerify') {
-      setNowPageName('ContinueSignUp');
+      setNowPageName('ChooseSignupPath');
     } else if (nowPageName === 'VerifySchoolCode') {
       setNowPageName('EmailVerify');
     // } else if (nowPageName === 'SignupSuccess') {
@@ -204,10 +246,10 @@ const SignUp: React.FC = () => {
       case 'VerifySchool':
         result = 1;
         break;
-      case 'ContinueSignUp':
+      case 'ChooseSignupPath':
         result = 2;
         break;
-        case 'EmailVerify':
+      case 'EmailVerify':
         result = 3;
         break;
       case 'VerifySchoolCode':
@@ -222,8 +264,8 @@ const SignUp: React.FC = () => {
     //   case 'SignupSuccess':
     //     result = 6;
     //     break;
-    
-    
+
+
     }
 
     return result;
@@ -238,7 +280,7 @@ const SignUp: React.FC = () => {
   return (
     <View style={styles.container}>
       {isLoading && <Loading />}
-      {alertWarning && <AlertWarning visible={alertWarning} onCancel={() => setAlertWarning(false)} onConfirm={() => {setAlertWarning(false); setNowPageName('ContinueSignUp');}}/>}
+      {alertWarning && <AlertWarning visible={alertWarning} onCancel={() => setAlertWarning(false)} onConfirm={() => {setAlertWarning(false); navigation.replace('Login');}}/>}
       <Header
         style={styles.headerStyle}
         title={<SVG name="GaldaeLogo" />}

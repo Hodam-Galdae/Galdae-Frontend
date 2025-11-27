@@ -79,7 +79,6 @@ export default StyleSheet.create({
         right: 10,
         top: '50%', // 세로 중앙 정렬
         transform: [{ translateY: -14 }],
-        backgroundColor: theme.colors.grayV3,
         borderRadius: 8,
         zIndex: 999,
         width: 80,
@@ -90,7 +89,6 @@ export default StyleSheet.create({
     checkBtnText: {
         fontSize: theme.fontSize.size14,
         fontWeight: '500',
-        color: theme.colors.gray2,
     },
     alertText: {
         fontSize: theme.fontSize.size12,

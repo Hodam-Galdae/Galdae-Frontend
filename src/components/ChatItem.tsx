@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import { Image, View } from 'react-native';
+import { Image, View, TouchableOpacity } from 'react-native';
 import styles from '../styles/ChatItem.style';
 import BasicText from './BasicText';
 import SVG from './SVG';
@@ -19,6 +19,7 @@ type Chat = {
   nickname: string;
   unreadCount?: number;
   alertContent?: string;
+  onImagePress?: (imageUri: string) => void;
 };
 
 const ChatItem: React.FC<{ item: Chat }> = React.memo(({ item }) => {
@@ -31,7 +32,7 @@ console.log('alertContent', item.alertContent);
         <View>
           {item.sender !== item.nickname && item.isShowProfile ? (
             <View style={styles.userWrapper}>
-              {item.senderImage === null ? (
+              {!item.senderImage ? (
                 <SVG name="DefaultProfile" style={styles.userImage} />
               ) : (
                 <Image style={styles.userImage} source={{ uri: item.senderImage }} />
@@ -81,7 +82,9 @@ console.log('alertContent', item.alertContent);
 
               </View>
             ) : item.type === 'IMAGE' ? (
-              <Image style={styles.image} source={{ uri: item.content }} />
+              <TouchableOpacity onPress={() => item.onImagePress?.(item.content)}>
+                <Image style={styles.image} source={{ uri: item.content }} />
+              </TouchableOpacity>
             ) : null}
 
             <View style={styles.timeWrapper}>

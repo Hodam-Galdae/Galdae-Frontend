@@ -462,7 +462,7 @@ useEffect(() => {
         <ParticipateModal
           title="생성 완료"
           visible={participating}
-          onCancel={() => { navigation.navigate('TaxiNDivide'); setParticipating(false); }}
+          onCancel={() => { navigation.replace('TaxiNDivide'); setParticipating(false); }}
           onConfirm={() => handleNavigateChatRoom(chatroomId || 0)}
           fromMajor={departureLargeName}
           fromSub={departureSmallName}

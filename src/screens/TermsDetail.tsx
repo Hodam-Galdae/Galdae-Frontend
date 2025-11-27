@@ -487,7 +487,7 @@ IP Address, 쿠키, 방문 일시, 서비스 이용 기록, 불량 이용 기록
           <SVGButton
             onPress={() => navigation.goBack()}
             iconName="LeftArrow"
-            buttonStyle={{width: 30, height: 30}}
+            buttonStyle={{width: 30, height: 30}} // eslint-disable-line react-native/no-inline-styles
           />
         }
       />

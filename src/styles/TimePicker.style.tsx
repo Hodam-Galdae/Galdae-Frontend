@@ -4,6 +4,7 @@ import { theme } from './theme';
 const DEFAULT_ITEM_HEIGHT = 52;
 export default StyleSheet.create({
   container: {
+    width: '100%',
     height: DEFAULT_ITEM_HEIGHT * 5, // 위/아래 패딩 생각해서 5행 높이 확보
     flexDirection: 'row',
     alignItems: 'center',

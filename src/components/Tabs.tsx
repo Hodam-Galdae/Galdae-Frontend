@@ -25,38 +25,24 @@ const Tabs = ({ selectedIndex, onSelectHandler, menus }: Props) => {
   return (
     <View style={styles.container}>
       <Animated.View
-        style={{
-            position: 'absolute',
-            left: 0,
+        style={[styles.animatedIndicator, {
             width: width,
-            borderBottomWidth: 3,
-            borderBottomColor: theme.colors.Galdae,
             transform: [{ translateX: animatedValue }],
-            bottom: 0,
-            zIndex: 999,
-        }}
+        }]}
       />
       <View style={styles.slider}/>
       {menus.map((v, i) => (
             <Pressable
-            style={{
-                flex: 1,
-                height: 44,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
+            style={styles.tabButton}
             key={v}
             onPress={() => {
                 onSelectHandler(i);
             }}
             >
           <Text
-            style={{
-              fontSize: theme.fontSize.size18,
-              fontWeight: '700',
+            style={[styles.tabText, {
               color: selectedIndex === i ? theme.colors.Galdae : theme.colors.grayV1,
-              marginBottom: 10,
-            }}
+            }]}
           >
             {v}
           </Text>
@@ -81,5 +67,24 @@ const styles = StyleSheet.create({
         position: 'absolute',
         left: 0,
         bottom: 0,
+    },
+    animatedIndicator: {
+        position: 'absolute',
+        left: 0,
+        borderBottomWidth: 3,
+        borderBottomColor: theme.colors.Galdae,
+        bottom: 0,
+        zIndex: 999,
+    },
+    tabButton: {
+        flex: 1,
+        height: 44,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    tabText: {
+        fontSize: theme.fontSize.size18,
+        fontWeight: '700',
+        marginBottom: 10,
     },
 });

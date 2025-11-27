@@ -27,14 +27,17 @@ import { GroupJoinResponse } from '../../../types/groupTypes';
 
 import { TouchableOpacity } from 'react-native';
 import ParticipateModal from '../../../components/popup/ParticipateModal';
+import AuthRequiredModal from '../../../components/popup/AuthRequiredModal';
 import TextTag from '../../../components/tag/TextTag';
 //import BigMapModal from '../components/popup/BigMapModal';
 
 type RootStackParamList = {
   CreateGaldae: undefined;
   NowGaldae: undefined;
-  NowGaldaeDetail: { taxiId: string };
-  ChatRoom: { chatroomId: number },
+  NowGaldaeDetail: { taxiId: string; showAuthModal?: boolean };
+  ChatRoom: { chatroomId: number };
+  SignUp: { data: boolean };
+  ContinueSignUp: undefined;
 };
 
 type NowGaldaeDetailScreenNavigationProp = NativeStackNavigationProp<
@@ -50,8 +53,9 @@ const NowGaldaeDetail: React.FC = () => {
   const navigation = useNavigation<NowGaldaeDetailScreenNavigationProp>();
   //const mapModalRef = useRef<Modalize>(null);
   const route = useRoute<NowGaldaeDetailRouteProp>();
-  const { taxiId } = route.params; // 전달받은 postId
+  const { taxiId, showAuthModal } = route.params; // 전달받은 postId
   const [tagetRoom, setTagetRoom] = useState<GroupJoinResponse | null>(null);
+  const [authRequiredModalVisible, setAuthRequiredModalVisible] = useState(false);
   //const [mapBig,setMapBig] = useState<boolean>(false);
   // ✅ 웹뷰에서 받은 예상 시간/거리 정보를 보관
   const [eta, setEta] = useState<{
@@ -70,11 +74,22 @@ const NowGaldaeDetail: React.FC = () => {
   );
   const dispatch = useAppDispatch();
   const [isParticipating, setIsParticipating] = useState(false);
+
   // 컴포넌트 마운트 시 Redux를 통해 상세 정보를 불러옴
   useEffect(() => {
     console.log('🚀 택시 상세 정보 불러오기:', taxiId);
     dispatch(fetchTaxiDetail(taxiId));
   }, [dispatch, taxiId]);
+
+  // 인증 모달 표시
+  useEffect(() => {
+    if (showAuthModal) {
+      // 화면이 완전히 로드된 후 모달 표시
+      setTimeout(() => {
+        setAuthRequiredModalVisible(true);
+      }, 300);
+    }
+  }, [showAuthModal]);
 
   const goBack = () => navigation.goBack();
 
@@ -90,6 +105,16 @@ const NowGaldaeDetail: React.FC = () => {
     if (tagetRoom) {
       navigation.replace('ChatRoom', { chatroomId: tagetRoom.chatroomId });
     }
+  };
+
+  const handleAuthRequiredConfirm = () => {
+    setAuthRequiredModalVisible(false);
+    navigation.navigate('ContinueSignUp');
+  };
+
+  const handleAuthRequiredCancel = () => {
+    setAuthRequiredModalVisible(false);
+    navigation.goBack();
   };
   const formatDepartureTime = (departureTime: string): string => {
     return moment.utc(departureTime).format('YYYY년 MM월 DD일 (ddd) HH : mm');
@@ -393,6 +418,12 @@ const NowGaldaeDetail: React.FC = () => {
           toSub={detail.arrival.subPlace}
         />
       )}
+
+      <AuthRequiredModal
+        visible={authRequiredModalVisible}
+        onConfirm={handleAuthRequiredConfirm}
+        onCancel={handleAuthRequiredCancel}
+      />
     </View>
   );
 };

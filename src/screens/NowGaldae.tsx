@@ -15,12 +15,15 @@ import { theme } from '../styles/theme';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { GroupListItem } from '../types/groupTypes';
 import { getGroups } from '../api/groupApi';
+import EncryptedStorage from 'react-native-encrypted-storage';
+import { useSelector } from 'react-redux';
+import { RootState } from '../modules/redux/RootReducer';
 
 type RootStackParamList = {
   NowGaldae: undefined;
-  NowGaldaeDetail: { taxiId: string };
-  DeliveryDetail: { orderId: string };
-  OTTDetail: { subscribeId: string };
+  NowGaldaeDetail: { taxiId: string; showAuthModal?: boolean };
+  DeliveryDetail: { orderId: string; showAuthModal?: boolean };
+  OTTDetail: { subscribeId: string; showAuthModal?: boolean };
 };
 
 type NowGaldaeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
@@ -40,6 +43,23 @@ const NowGaldae: React.FC = () => {
   const [refreshing, setRefreshing] = useState(false);  // 당겨서 새로고침
   const [hasMore, setHasMore] = useState(true);         // 더 불러올 수 있는가
   const [sameGenderPopupVisible, setSameGenderPopupVisible] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const userState = useSelector((state: RootState) => state.user);
+
+  // 사용자 인증 상태 확인
+  useEffect(() => {
+    const checkAuthStatus = async () => {
+      try {
+        const accessToken = await EncryptedStorage.getItem('accessToken');
+        const hasUserInfo = userState.id !== '' && userState.nickname !== '';
+        setIsAuthenticated(!!(accessToken && hasUserInfo));
+      } catch (error) {
+        console.error('❌ [NowGaldae] 인증 상태 확인 실패:', error);
+        setIsAuthenticated(false);
+      }
+    };
+    checkAuthStatus();
+  }, [userState]);
 
   // 첫 로딩
   useEffect(() => {
@@ -49,8 +69,8 @@ const NowGaldae: React.FC = () => {
   // 페이지 로더
   const loadPage = useCallback(
     async (targetPage: number, opts?: { replace?: boolean }) => {
-      if (loading) return;                 // 중복 호출 방지
-      if (!opts?.replace && !hasMore) return; // 추가 로드인데 더 없음
+      if (loading) {return;}                 // 중복 호출 방지
+      if (!opts?.replace && !hasMore) {return;} // 추가 로드인데 더 없음
 
       setLoading(true);
       try {
@@ -89,7 +109,7 @@ const NowGaldae: React.FC = () => {
 
   // 스크롤 끝에서 다음 페이지
   const onEndReached = useCallback(() => {
-    if (loading || !hasMore) return;
+    if (loading || !hasMore) {return;}
     // 다음 페이지 요청
     loadPage(page + 1);
   }, [loading, hasMore, page, loadPage]);
@@ -97,27 +117,42 @@ const NowGaldae: React.FC = () => {
   // 키 추출기 (id와 postId 혼용 대비)
   const keyExtractor = (item: GroupListItem) => (item.id ?? `${item.type}-${Math.random()}`);
 
-  const renderItem = useCallback(({ item }: { item: GroupListItem }) => {
-    // const onPress = () =>
-    //   item.sameGenderYN
-    //     ? item.type === 'TAXI'
-    //       ? navigation.navigate('NowGaldaeDetail', { taxiId: item.id })
-    //       : item.type === 'ORDER'
-    //       ? navigation.navigate('DeliveryDetail', { orderId: item.id })
-    //       : navigation.navigate('OTTNDetail', { subscribeId: item.id })
-    //     : setSameGenderPopupVisible(true);
+  const handleItemPress = useCallback((type: 'TAXI' | 'ORDER' | 'SUBSCRIBE', id: string) => {
+    const shouldShowAuthModal = !isAuthenticated;
 
+    // 상세 화면으로 이동
+    if (type === 'TAXI') {
+      navigation.navigate('NowGaldaeDetail', { taxiId: id, showAuthModal: shouldShowAuthModal });
+    } else if (type === 'ORDER') {
+      navigation.navigate('DeliveryDetail', { orderId: id, showAuthModal: shouldShowAuthModal });
+    } else if (type === 'SUBSCRIBE') {
+      navigation.navigate('OTTDetail', { subscribeId: id, showAuthModal: shouldShowAuthModal });
+    }
+  }, [isAuthenticated, navigation]);
+
+  const renderItem = useCallback(({ item }: { item: GroupListItem }) => {
     switch (item.type) {
       case 'TAXI':
-        return <HomeTaxiItem item={item} onPress={item.sameGenderYN ? () => navigation.navigate('NowGaldaeDetail', { taxiId: item.id }) : () => setSameGenderPopupVisible(true)} />;
+        return (
+          <HomeTaxiItem
+            item={item}
+            onPress={() => {
+              if (item.sameGenderYN) {
+                handleItemPress('TAXI', item.id);
+              } else {
+                setSameGenderPopupVisible(true);
+              }
+            }}
+          />
+        );
       case 'ORDER':
-        return <HomeDeliveryItem item={item} onPress={() => navigation.navigate('DeliveryDetail', { orderId: item.id })} />;
+        return <HomeDeliveryItem item={item} onPress={() => handleItemPress('ORDER', item.id)} />;
       case 'SUBSCRIBE':
-        return <HomeSubscribeItem item={item} onPress={() => navigation.navigate('OTTDetail', { subscribeId: item.id })} />;
+        return <HomeSubscribeItem item={item} onPress={() => handleItemPress('SUBSCRIBE', item.id)} />;
       default:
         return null;
     }
-  }, [navigation]);
+  }, [handleItemPress]);
 
   return (
     <View style={styles.main}>
@@ -155,6 +190,7 @@ const NowGaldae: React.FC = () => {
             refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
             ListFooterComponent={
               loading && hasMore ? (
+                // eslint-disable-next-line react-native/no-inline-styles
                 <View style={{ paddingVertical: 16 }}>
                   <ActivityIndicator size="small" color={theme.colors.Galdae} />
                 </View>

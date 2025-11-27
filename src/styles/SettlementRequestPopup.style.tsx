@@ -50,7 +50,7 @@ export default StyleSheet.create({
     alignItems: 'center',
     marginTop: 22,
     backgroundColor: theme.colors.grayV3,
-    paddingVertical: 10,
+    paddingVertical: 16,
     borderRadius: 10,
   },
   bankIcon: {

@@ -104,14 +104,19 @@ const FilterPopup = forwardRef<FastGaldaeTimePopupRef, FastGaldaePopupProps>(
           keyboardShouldPersistTaps: 'always',
         }}
         withHandle={false}  // 기본 핸들을 비활성화
-        {...({ swipeToClose: true, swipeThreshold: 10 } as any)}
+        {...({
+          swipeToClose: true,
+          swipeThreshold: 50,
+          panGestureComponentEnabled: true,
+          closeSnapPointStraightEnabled: false
+        } as any)}
       >
-        <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
+        <KeyboardAvoidingView behavior="padding" style={styles.flexContainer}>
         {/* 팝업 안쪽에 커스텀 핸들 추가 */}
         <View style={styles.handleContainer}>
           <View style={styles.handle} />
         </View>
-      <ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
+      <ScrollView contentContainerStyle={styles.scrollPadding}>
         <View style={styles.content}>
             <BasicText
               text="검색 조건 설정"
@@ -147,10 +152,10 @@ const FilterPopup = forwardRef<FastGaldaeTimePopupRef, FastGaldaePopupProps>(
 
             {/* 시간 선택 컴포넌트 추가 */}
             <TimePicker
-                onTimeChange={(amPm, hour, minute) => {
-                  setSelectedAmPm(amPm);
-                  setSelectedHour(hour);
-                  setSelectedMinute(minute);
+                onChange={(payload) => {
+                  setSelectedAmPm(payload.ampm);
+                  setSelectedHour(payload.hour12);
+                  setSelectedMinute(payload.minute);
                 }}
                 isToday={selectedDate === moment().format('YYYY-MM-DD')}
             />

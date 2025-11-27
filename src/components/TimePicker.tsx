@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   View,
   Text,
-  StyleSheet,
   FlatList,
   NativeScrollEvent,
   NativeSyntheticEvent,
@@ -10,9 +9,15 @@ import {
   StyleProp,
   Platform,
   Vibration,
+  LogBox,
 } from 'react-native';
 import styles from '../styles/TimePicker.style';
 import moment from 'moment';
+
+// VirtualizedLists 중첩 경고 억제
+LogBox.ignoreLogs([
+  'VirtualizedLists should never be nested inside plain ScrollViews',
+]);
 
 type AmPm = '오전' | '오후';
 
@@ -280,6 +285,7 @@ export default function TimePicker({
         onMomentumScrollEnd={onEnd('ampm')}
         getItemLayout={(_, index) => ({ length: itemHeight, offset: itemHeight * index, index })}
         contentContainerStyle={{ paddingVertical: itemHeight * 2 }}
+        nestedScrollEnabled={true}
       />
 
       {/* 시 */}
@@ -295,6 +301,7 @@ export default function TimePicker({
         onMomentumScrollEnd={onEnd('hour')}
         getItemLayout={(_, index) => ({ length: itemHeight, offset: itemHeight * index, index })}
         contentContainerStyle={{ paddingVertical: itemHeight * 2 }}
+        nestedScrollEnabled={true}
       />
 
       {/* 분 */}
@@ -310,6 +317,7 @@ export default function TimePicker({
         onMomentumScrollEnd={onEnd('minute')}
         getItemLayout={(_, index) => ({ length: itemHeight, offset: itemHeight * index, index })}
         contentContainerStyle={{ paddingVertical: itemHeight * 2 }}
+        nestedScrollEnabled={true}
       />
     </View>
   );

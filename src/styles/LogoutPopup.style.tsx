@@ -44,7 +44,7 @@ export default StyleSheet.create({
     textPopUpcontent: {
         justifyContent: 'center',
         alignItems: 'center',
-        height:230,
+        height: 230,
         position: 'absolute',
         marginBottom: 50,
     },
@@ -68,15 +68,16 @@ export default StyleSheet.create({
     },
     cancelContainer: {
         width: 220,
-        height: 32,
         position: 'absolute',
-        bottom: 25,
+        bottom: 0,
+        flexDirection: 'column',
         gap: 10,
     },
     cancelBtn: {
         width: 220,
         borderRadius: theme.borderRadius.size30,
-        height: 32,
+        height: 40,
+        paddingVertical: 8,
     },
     cancelBtnText: {
         fontSize: theme.fontSize.size18,
@@ -86,6 +87,7 @@ export default StyleSheet.create({
         fontWeight: '500',
         fontSize: theme.fontSize.size18,
         color: theme.colors.blackV0,
+        marginBottom: 40,
     },
     textPopUpText: {
         marginBottom: 20,

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from 'react';
-import { Alert, View, ScrollView } from 'react-native';
+import { Alert, View, ScrollView, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import styles from '../../../styles/SetDestination.style';
@@ -50,13 +50,25 @@ const DeliverySearch: React.FC = () => {
     useEffect(() => {
         (async () => {
             const history = await loadSearchHistory();
-            setSearchHistory(history);
+            // 중복 제거: 검색어 기준으로 최신 것만 유지
+            const uniqueHistory = history.filter((item, index, self) =>
+                index === self.findIndex((t) => t.searchKeyword.main === item.searchKeyword.main)
+            );
+            setSearchHistory(uniqueHistory);
+            // 중복 제거된 데이터를 다시 저장
+            if (uniqueHistory.length !== history.length) {
+                await saveSearchHistory(uniqueHistory);
+            }
         })();
     }, []);
 
-    // 새로운 검색 기록 추가 함수 예시
+    // 새로운 검색 기록 추가 함수 - 중복 제거
     const addSearchHistoryItem = async (newItem: any) => {
-        const updatedHistory = [newItem, ...searchHistory];
+        // 동일한 검색어가 있으면 제거
+        const filteredHistory = searchHistory.filter(
+            item => item.searchKeyword.main !== newItem.searchKeyword.main
+        );
+        const updatedHistory = [newItem, ...filteredHistory];
         setSearchHistory(updatedHistory);
         await saveSearchHistory(updatedHistory);
     };
@@ -104,16 +116,32 @@ const DeliverySearch: React.FC = () => {
 
             <View style={styles.container}>
 
-                <View style={styles.searchContainer}>
-                    <InputText text="검색어를 입력해 주세요." value={searchKeyword} onChangeText={setSearchKeyword} style={styles.searchInput}/>
-                    <SVGButton iconName="Search" onPress={handleSearchGaldae} buttonStyle={styles.searchIconBtn}   SVGStyle={styles.searchIcon}/>
+                <View style={styles.searchInputContainer}>
+                    <InputText
+                        text="검색어를 입력하세요."
+                        textColor="#D2D6DE"
+                        value={searchKeyword}
+                        onChangeText={setSearchKeyword}
+                        onSubmitEditing={handleSearchGaldae}
+                        returnKeyType="search"
+                        style={styles.searchInput}
+                    />
+                    <SVGButton iconName="Search" onPress={handleSearchGaldae} buttonStyle={styles.searchIconInside}/>
                 </View>
 
                 <BasicText style={styles.title} text="최근 검색 기록" />
 
                 <ScrollView style={styles.searchList}>
                     {searchHistory.map((item) => (
-                        <View key={item.id} style={styles.searchListWrapper}>
+                        <TouchableOpacity
+                            key={item.id}
+                            style={styles.searchListWrapper}
+                            onPress={() => {
+                                setSearchKeyword(item.searchKeyword.main);
+                                handleSearchGaldae();
+                            }}
+                            activeOpacity={0.7}
+                        >
                             <BasicText
                                 text={formatRelativeTime(item.timestamp)}
                                 style={styles.searchDate}
@@ -121,7 +149,7 @@ const DeliverySearch: React.FC = () => {
                                 fontSize={theme.fontSize.size12}
                             />
                             <BasicText text={item.searchKeyword.main} style={styles.searchKeyword} />
-                        </View>
+                        </TouchableOpacity>
                     ))}
                 </ScrollView>
             </View>

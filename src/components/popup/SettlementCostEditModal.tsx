@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
   Modal,
   View,
@@ -8,6 +8,7 @@ import {
 import SVG from '../../components/SVG';
 import BasicText from '../../components/BasicText';
 import styles from '../../styles/SettlementCostEditModal.style';
+import { theme } from '../../styles/theme';
 
 export interface SettlementCostEditModalProps {
   visible: boolean;
@@ -23,10 +24,21 @@ const SettlementCostEditModal: React.FC<SettlementCostEditModalProps> = ({
   title = '정산 금액 수정',
 }) => {
   const [cost, setCost] = useState<string>('');
+  const inputRef = useRef<TextInput>(null);
 
   useEffect(() => {
-    setCost('');
-  }, []);
+    if (visible) {
+      // 모달이 열릴 때 약간의 딜레이 후 포커스
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 100);
+    } else {
+      // 모달이 닫힐 때 입력칸 초기화 (애니메이션 후)
+      setTimeout(() => {
+        setCost('');
+      }, 300);
+    }
+  }, [visible]);
 
   return (
     <Modal transparent={true} visible={visible} animationType="fade">
@@ -39,6 +51,7 @@ const SettlementCostEditModal: React.FC<SettlementCostEditModalProps> = ({
           <BasicText text={title} style={styles.title} />
           <View style={styles.priceContainer}>
           <TextInput
+            ref={inputRef}
             value={cost ? parseInt(cost, 10).toLocaleString() : ''}
             onChangeText={(text) => {
               // 숫자만 입력 가능하도록 필터링하고 쉼표 제거
@@ -47,13 +60,16 @@ const SettlementCostEditModal: React.FC<SettlementCostEditModalProps> = ({
             }}
             style={styles.input}
             keyboardType="numeric"
-            placeholder="0"
+            placeholder="금액 입력"
+            placeholderTextColor={theme.colors.grayV1}
           />
           <BasicText text="원" style={styles.priceText} />
           </View>
 
           <TouchableOpacity
-            onPress={() => {onConfirm(Number.parseInt(cost, 10)); setCost('')}}
+            onPress={() => {
+              onConfirm(Number.parseInt(cost, 10));
+            }}
             style={styles.btn}>
             <BasicText text="완료" style={styles.btnText} />
           </TouchableOpacity>

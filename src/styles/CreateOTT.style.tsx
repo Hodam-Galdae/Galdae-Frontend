@@ -27,7 +27,7 @@ export default StyleSheet.create({
         backgroundColor: theme.colors.white,
     },
     generateButtonWrapper:{
-       
+
     },
     generateButton: {
         width: screenWidth - 50,

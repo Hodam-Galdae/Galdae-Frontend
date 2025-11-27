@@ -1,5 +1,5 @@
 // src/api/searchApi.ts
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import axiosInstance from './axiosInstance';
 
 // ===== Types =====
@@ -96,11 +96,11 @@ export const splitByGroup = (items: SearchList) => {
 
     items.forEach(i => {
         const g = i.groupType;
-        if (g === 'TAXI' && i.taxiSearchResponse) taxi.push(i.taxiSearchResponse);
-        if (g === 'ORDER' && i.orderSearchResponse) order.push(i.orderSearchResponse);
+        if (g === 'TAXI' && i.taxiSearchResponse) {taxi.push(i.taxiSearchResponse);}
+        if (g === 'ORDER' && i.orderSearchResponse) {order.push(i.orderSearchResponse);}
         if (g === 'SUBSCRIBE') {
             const s = i.subscribeSearchResponse ?? i.subcribeSearchResponse ?? null;
-            if (s) subscribe.push(s);
+            if (s) {subscribe.push(s);}
         }
     });
 

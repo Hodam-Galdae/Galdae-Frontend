@@ -76,7 +76,7 @@ export default StyleSheet.create({
     borderWidth: 1,
     borderColor: theme.colors.grayV2,
     width: '100%',
-    paddingHorizontal: 20,
+    paddingHorizontal: 12,
     paddingVertical: 14,
     borderRadius: theme.borderRadius.size12,
     fontSize: theme.fontSize.size14,

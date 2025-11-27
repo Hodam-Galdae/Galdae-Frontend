@@ -8,6 +8,7 @@ import {Svg, Path, Defs, RadialGradient, Stop, Circle} from 'react-native-svg';
 const ReviewInProgress: React.FC = () => {
   return (
     <View style={styles.container}>
+      {/* eslint-disable-next-line react-native/no-inline-styles */}
       <View style={{position: 'absolute', top: -300}}>
         <Svg height="542" width="542">
           <Defs>

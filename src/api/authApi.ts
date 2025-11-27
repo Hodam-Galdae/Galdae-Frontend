@@ -62,11 +62,15 @@ export const loginWithNaver = async (
 ): Promise<AuthResponse> => {
   console.log('🔵 [네이버 로그인] 요청 시작');
   console.log('🔵 [네이버 로그인] naverToken:', naverToken);
+  console.log('🔵 [네이버 로그인] naverToken length:', naverToken.length);
 
   try {
-    const response = await axiosInstance.post<AuthResponse>('/auth/naver', {
-      token: naverToken,
-    });
+    const requestBody = {
+      token: naverToken,  // 백엔드의 NaverLoginRequestCommand.token 필드와 매칭
+    };
+    console.log('🔵 [네이버 로그인] requestBody:', JSON.stringify(requestBody));
+
+    const response = await axiosInstance.post<AuthResponse>('/auth/naver', requestBody);
     console.log('✅ [네이버 로그인] 성공:', response.data);
     return response.data;
   } catch (error) {

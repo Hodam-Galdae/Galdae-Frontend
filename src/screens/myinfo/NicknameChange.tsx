@@ -52,11 +52,20 @@ const NicknameChange: React.FC<HomeProps> = () => {
   const [nickname, setNickname] = useState<string>(initialNickname);
   const [isCheckingNickname, setIsCheckingNickname] = useState<boolean>(false);
   const [alertNameText, setAlertNameText] = useState<string>('');
-  const [selectedGender, setSelectedGender] = useState<"MALE" | "FEMALE">("FEMALE");
+  const [selectedGender, setSelectedGender] = useState<'MALE' | 'FEMALE'>('FEMALE');
   const [checkName, setCheckName] = useState<string>('');
   const [invalidPopupVisible, setInvalidPopupVisible] = useState<boolean>(false);
   const navigation = useNavigation<nowGaldaeScreenNavigationProp>();
   const goBack = () => navigation.goBack();
+
+  // 닉네임이 변경되면 검증 상태 초기화
+  React.useEffect(() => {
+    if (nickname !== checkName) {
+      setIsCheckingNickname(false);
+      setAlertNameText('');
+    }
+  }, [nickname]);
+
   const handleChangeNickname = async () => {
     try {
       // 닉네임 변경 API 호출
@@ -131,7 +140,21 @@ const NicknameChange: React.FC<HomeProps> = () => {
               placeholderTextColor={theme.colors.gray2}
             />
 
-            <BasicButton text="중복 확인" onPress={checkNicknameEvent} buttonStyle={styles.checkBtn} textStyle={styles.checkBtnText} />
+            <BasicButton
+              text="중복 확인"
+              onPress={checkNicknameEvent}
+              buttonStyle={styles.checkBtn}
+              textStyle={styles.checkBtnText}
+              disabled={nickname.length === 0 || nickname === initialNickname || (isCheckingNickname === true && nickname === checkName)}
+              enabledColors={{
+                backgroundColor: theme.colors.Galdae,
+                textColor: theme.colors.white,
+              }}
+              disabledColors={{
+                backgroundColor: theme.colors.grayV3,
+                textColor: theme.colors.gray2,
+              }}
+            />
           </View>
           <BasicText text="* 닉네임은 최초 설정 후 최대 2회까지 변경 가능합니다." style={styles.redText} />
           {alertNameText.length !== 0 && isCheckingNickname === false ? (
@@ -144,10 +167,10 @@ const NicknameChange: React.FC<HomeProps> = () => {
           <View style={styles.buttonWrapper}>
             <SelectTextButton
               text="여자"
-              selected={selectedGender === "FEMALE"}
+              selected={selectedGender === 'FEMALE'}
               buttonStyle={styles.selectBtn}
               textStyle={styles.selectText}
-              onPress={() => setSelectedGender("FEMALE")}
+              onPress={() => setSelectedGender('FEMALE')}
               unselectedColors={{
                 backgroundColor: theme.colors.white,
                 textColor: theme.colors.blackV0,
@@ -161,10 +184,10 @@ const NicknameChange: React.FC<HomeProps> = () => {
             />
             <SelectTextButton
               text="남자"
-              selected={selectedGender === "MALE"}
+              selected={selectedGender === 'MALE'}
               buttonStyle={styles.selectBtn}
               textStyle={styles.selectText}
-              onPress={() => setSelectedGender("MALE")}
+              onPress={() => setSelectedGender('MALE')}
               unselectedColors={{
                 backgroundColor: theme.colors.white,
                 textColor: theme.colors.blackV0,

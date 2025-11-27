@@ -18,14 +18,17 @@ import type { RootState } from '../../../modules/redux/RootReducer';
 import { useAppDispatch } from '../../../modules/redux/store';
 
 import ParticipateModal from '../../../components/popup/ParticipateModal';
+import AuthRequiredModal from '../../../components/popup/AuthRequiredModal';
 import { joinGroup } from '../../../api/groupApi';
 import TextTag from '../../../components/tag/TextTag';
 type RootStackParamList = {
     CreateGaldae: undefined;
     NowGaldae: undefined;
-    DeliveryDetail: { orderId: string };
+    DeliveryDetail: { orderId: string; showAuthModal?: boolean };
     ChatRoom: { chatroomId: number };
     DeliveryNDivide: undefined;
+    SignUp: { data: boolean };
+    ContinueSignUp: undefined;
 };
 
 type DeliveryDetailScreenNavigationProp = NativeStackNavigationProp<
@@ -40,30 +43,51 @@ type DeliveryDetailRouteProp = RouteProp<
 const DeliveryDetail: React.FC = () => {
     const navigation = useNavigation<DeliveryDetailScreenNavigationProp>();
     const route = useRoute<DeliveryDetailRouteProp>();
-    const { orderId } = route.params; // 전달받은 postId
+    const { orderId, showAuthModal } = route.params; // 전달받은 postId
     const { detail, detailLoading, detailError } = useSelector(
         (state: RootState) => state.orderSlice,
     );
     const dispatch = useAppDispatch();
     const [isParticipating, setIsParticipating] = useState(false);
+    const [authRequiredModalVisible, setAuthRequiredModalVisible] = useState(false);
     const [tagetRoom, setTagetRoom] = useState<any>(null);
+
     // 컴포넌트 마운트 시 Redux를 통해 상세 정보를 불러옴
     useEffect(() => {
         dispatch(fetchOrderDetail(orderId));
     }, [dispatch, orderId]);
 
+    // 인증 모달 표시
+    useEffect(() => {
+        if (showAuthModal) {
+            setTimeout(() => {
+                setAuthRequiredModalVisible(true);
+            }, 300);
+        }
+    }, [showAuthModal]);
+
     const goBack = () => navigation.goBack();
 
     const handleParticipateGaldae = async () => {
         setIsParticipating(true);
-        const tagetRoom = await joinGroup(orderId);
-        setTagetRoom(tagetRoom);
+        const joinedRoom = await joinGroup(orderId);
+        setTagetRoom(joinedRoom);
     };
     const handleNavigateChatRoom = async () => {
         if (tagetRoom) {
             navigation.replace('ChatRoom', { chatroomId: tagetRoom.chatroomId });
         }
         setIsParticipating(false);
+    };
+
+    const handleAuthRequiredConfirm = () => {
+        setAuthRequiredModalVisible(false);
+        navigation.navigate('ContinueSignUp');
+    };
+
+    const handleAuthRequiredCancel = () => {
+        setAuthRequiredModalVisible(false);
+        navigation.goBack();
     };
 
     if (detailLoading) {
@@ -116,7 +140,7 @@ const DeliveryDetail: React.FC = () => {
                     <View style={styles.locationContainer}>
                         <View style={styles.deliveryFromContainer}>
                                 <BasicText
-                                    text={detail.restaurantName}  
+                                    text={detail.restaurantName}
                                 fontSize={theme.fontSize.size16}
                                 fontWeight={'500'}
                                 color={theme.colors.blackV0}
@@ -216,7 +240,7 @@ const DeliveryDetail: React.FC = () => {
                                     viewStyle={styles.timeNotPossible}
                                     textStyle={styles.timeNotPossibleText}
                                 />
-                            )} 
+                            )}
                         </View>
                         {/* <View style={styles.tags}>
                             {detail.passengerGenderType === 'SAME_GENDER' ? (
@@ -301,6 +325,12 @@ const DeliveryDetail: React.FC = () => {
                     onConfirm={handleNavigateChatRoom}
                 />
             )}
+
+            <AuthRequiredModal
+                visible={authRequiredModalVisible}
+                onConfirm={handleAuthRequiredConfirm}
+                onCancel={handleAuthRequiredCancel}
+            />
         </View>
     );
 };

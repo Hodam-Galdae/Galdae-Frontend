@@ -1,5 +1,5 @@
 import React ,{useState,useEffect } from 'react';
-import { Keyboard,KeyboardAvoidingView,Platform, TouchableWithoutFeedback, View,Alert,TouchableOpacity,Image,Linking } from 'react-native';
+import { View,Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from '../../styles/Inquiry.style';
 import { theme } from '../../styles/theme';
@@ -35,11 +35,11 @@ type RootStackParamList = {
 type nowGaldaeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
 const Inquiry: React.FC<HomeProps> = () => {
-    const [title, setTitle] = useState<string>('');
+    const [title] = useState<string>('');
     const [img, setImg] = useState<string>('');
-    const [loading, setLoading] = useState<boolean>(false);
-    const [content, setContent] = useState<string>('');
-    const {imageUri, getImageByGallery} = useImagePicker();
+    const [_loading, setLoading] = useState<boolean>(false);
+    const [content] = useState<string>('');
+    const {imageUri} = useImagePicker();
     const navigation = useNavigation<nowGaldaeScreenNavigationProp>();
     const goBack = () => navigation.goBack();
     // 이메일 복사 함수
@@ -55,7 +55,8 @@ const Inquiry: React.FC<HomeProps> = () => {
       }
     }, [imageUri]);
 
-    const handleInquiry = async () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const _handleInquiry = async () => {
       if (!title.trim() || !content.trim()) {
         Alert.alert('입력 확인', '제목과 내용을 모두 입력해주세요.');
         return;
@@ -89,7 +90,7 @@ const Inquiry: React.FC<HomeProps> = () => {
           <View style={styles.inputWrapper}>
             <TextInput
               style={styles.input}
-              value={"hodamdae@gmail.com"}
+              value={'hodamdae@gmail.com'}
               placeholder="예) 동동"
               placeholderTextColor={theme.colors.gray2}
             />

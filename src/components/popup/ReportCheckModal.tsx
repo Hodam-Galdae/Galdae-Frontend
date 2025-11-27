@@ -6,13 +6,13 @@ import BasicText from '../../components/BasicText';
 import BasicButton from '../../components/button/BasicButton';
 import { theme } from '../../styles/theme';
 import styles from '../../styles/ReportCheckModal.style';
-import { MemberResponse } from '../../api/chatApi';
+import { ChatMember } from '../../api/chatApi';
 
 export interface ReportCheckModalProps {
     visible: boolean;
     onCancel: () => void;
     onConfirm: () => void;
-    member: MemberResponse;
+    member: ChatMember;
     containerStyle?: StyleProp<ViewStyle>;
   }
 

@@ -7,7 +7,7 @@ import styles from '../../styles/SettlementRequestPopup.style';
 import BasicButton from '../button/BasicButton';
 import SVGButton from '../button/SVGButton';
 import SVG from '../SVG';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import SettlementCostEditModal from './SettlementCostEditModal';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { getUserInfo } from '../../api/membersApi';
@@ -39,6 +39,8 @@ const SettlementRequestPopup = forwardRef<
 >(({ titleLeft, titleRight, member, sendPayment, initialCost }, ref) => {
   const modalizeRef = useRef<Modalize>(null);
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList, 'Payment'>>();
+  const [shouldReopenAfterPayment, setShouldReopenAfterPayment] = useState(false);
+
   // 외부에서 open/close 함수를 사용할 수 있도록 함
   useImperativeHandle(ref, () => ({
     open: () => {
@@ -53,7 +55,7 @@ const SettlementRequestPopup = forwardRef<
   useEffect(() => {
     setSettlementCost(initialCost);
   }, [initialCost]);
-  
+
   const [isLastSettlement, setIsLastSettlement] = useState(false);
   const [isVisibleCostEditPopup, setIsVisibleCostEditPopup] =
     useState<boolean>(false);
@@ -68,10 +70,13 @@ const SettlementRequestPopup = forwardRef<
   });
   //정산 요청 메서드
   const requestSettlement = () => {
+    console.log('requestSettlement 호출됨, isLastSettlement:', isLastSettlement);
     if (!isLastSettlement) {
+      console.log('isLastSettlement를 true로 설정');
       setIsLastSettlement(true);
       return;
     }
+    console.log('정산 요청 전송');
     modalizeRef.current?.close();
 
     sendPayment(settlementCost.toString());
@@ -83,14 +88,35 @@ const SettlementRequestPopup = forwardRef<
   };
 
   const editAccount = () => {
-    close();
+    setShouldReopenAfterPayment(true);
+    modalizeRef.current?.close();
     navigation.navigate('Payment');
   };
 
   const close = () => {
-    setIsLastSettlement(false);
+    if (!shouldReopenAfterPayment) {
+      setIsLastSettlement(false);
+    }
+    setShouldReopenAfterPayment(false);
     modalizeRef.current?.close();
   };
+
+  // Payment 화면에서 돌아올 때 drawer 다시 열기
+  useFocusEffect(
+    React.useCallback(() => {
+      if (shouldReopenAfterPayment) {
+        // 계좌 정보 다시 가져오기
+        getUserInfo().then(data => {
+          setMyData(data);
+        });
+        // drawer 다시 열기
+        setTimeout(() => {
+          modalizeRef.current?.open();
+          setShouldReopenAfterPayment(false);
+        }, 300);
+      }
+    }, [shouldReopenAfterPayment])
+  );
 
   useEffect(() => {
     getUserInfo().then(data => {
@@ -105,7 +131,12 @@ const SettlementRequestPopup = forwardRef<
       overlayStyle={styles.background}
       modalStyle={styles.container}
       withHandle={false} // 기본 핸들을 비활성화
-      {...({ swipeToClose: true, swipeThreshold: 10 } as any)}>
+      {...({
+        swipeToClose: true,
+        swipeThreshold: 50,
+        panGestureComponentEnabled: true,
+        closeSnapPointStraightEnabled: false
+      } as any)}>
       <View style={[styles.settlementContainer]}>
         <SVGButton
           iconName="CloseFill"
@@ -136,11 +167,19 @@ const SettlementRequestPopup = forwardRef<
               </BasicText>
             </View>
             <View style={styles.bankContainer}>
-              <SVG width={26} height={26} style={styles.bankIcon} name={
-                banks.find((bank: BankOption) => bank.name === myData.bankType)?.svg || 'Bank_KB'} />
-              <BasicText style={styles.bankText}>
-                {`${myData.bankType} ${myData.accountNumber}`}
-              </BasicText>
+              {myData.bankType && myData.accountNumber ? (
+                <>
+                  <SVG width={26} height={26} style={styles.bankIcon} name={
+                    banks.find((bank: BankOption) => bank.name === myData.bankType)?.svg || 'Bank_KB'} />
+                  <BasicText style={styles.bankText}>
+                    {`${myData.bankType} ${myData.accountNumber}`}
+                  </BasicText>
+                </>
+              ) : (
+                <BasicText style={styles.bankText}>
+                  계좌를 등록해주세요.
+                </BasicText>
+              )}
             </View>
             <TouchableOpacity onPress={editAccount}>
               <BasicText text="정산 계좌 변경하기" style={styles.bankEdit} />

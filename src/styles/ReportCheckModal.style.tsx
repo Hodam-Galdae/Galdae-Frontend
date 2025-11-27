@@ -51,4 +51,7 @@ export default StyleSheet.create({
         letterSpacing: -0.32,
         marginBottom: 3,
     },
+    alertIcon: {
+        marginBottom: 20,
+    },
 });

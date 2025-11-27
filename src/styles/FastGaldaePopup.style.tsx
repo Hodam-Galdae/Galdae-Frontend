@@ -302,5 +302,11 @@ export default StyleSheet.create({
       fontWeight:'500',
       marginBottom:8,
     },
+    flexContainer: {
+      flex: 1,
+    },
+    scrollPadding: {
+      paddingBottom: 50,
+    },
 
   });

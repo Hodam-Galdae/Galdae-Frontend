@@ -143,3 +143,6 @@ export { default as contact } from './contact.svg';
 export { default as close } from './close.svg';
 export { default as check_circle } from './check_circle.svg';
 export { default as Logo_yellow } from './Logo_yellow.svg';
+export { default as Bell } from './Bell.svg';
+export { default as Wallet } from './Wallet.svg';
+export { default as NeedInfo } from './NeedInfo.svg';

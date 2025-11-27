@@ -70,7 +70,7 @@ const CreateOTT: React.FC = () => {
      *  - 대학 항목을 { code, name }로 변환하여 UI와 맞춘다
      */
     const postService: SimpleOption[] = React.useMemo(() => {
-        if (!selectedType) return [];
+        if (!selectedType) {return [];}
         const matched = (typeService ?? []).find(
             item => item.subscribeType === selectedType
         );
@@ -104,7 +104,7 @@ const CreateOTT: React.FC = () => {
     const handleCreateGaldaeConfirm = async () => {
         const response = await dispatch(createSubscribeGroup({
             subscribeType: selectedType,
-            subscribeServiceId: parseInt(selectedService ? selectedService : 0),
+            subscribeServiceId: parseInt(selectedService ? selectedService : '0'),
             etcService: etcService,
             onePersonFee: price,
             totalPersonCount: passengerNumber,
@@ -114,8 +114,8 @@ const CreateOTT: React.FC = () => {
         setParticipating(true);
     };
 
-    const handleNavigateChatRoom = async (chatroomId: number) => {
-        navigation.navigate('ChatRoom', { chatroomId: chatroomId });
+    const handleNavigateChatRoom = async (roomId: number) => {
+        navigation.replace('ChatRoom', { chatroomId: roomId });
         setParticipating(false);
     };
 
@@ -324,7 +324,7 @@ const CreateOTT: React.FC = () => {
                     title="생성 완료"
                     visible={participating}
                     subTitle={selectedService === 'NETFLIX' ? '넷플릭스' : selectedService === 'TIVING' ? '티빙' : selectedService === 'DISNEY' ? '디즈니' : selectedService === 'WATCHA' ? '왓챠' : selectedService === 'WAVE' ? '웨이브' : selectedService === 'LAPTEAL' ? '라프텔' : '직접입력'}
-                    onCancel={() => { navigation.navigate('OTTNDivide'); setParticipating(false); }}
+                    onCancel={() => { navigation.replace('OTTNDivide'); setParticipating(false); }}
                     onConfirm={() => handleNavigateChatRoom(chatroomId || 0)} //구독 채팅방으로 이동해야함
                 />
             )}

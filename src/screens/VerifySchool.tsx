@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+
 /* eslint-disable react-native/no-inline-styles */
 // MyInfo.tsx 테스트
 import React, { useEffect, useState } from 'react';
@@ -13,6 +13,8 @@ import ItemSelector from '../components/ItemSelector';
 import { fetchUniversityList, selectUniversityArea } from '../api/onboardingApi';
 import { TextInput } from 'react-native-gesture-handler';
 import { StepName } from './SignUp';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 interface VerifySchoolProps {
   setNextStep: (name: StepName) => void;
 }
@@ -80,14 +82,26 @@ const VerifySchool: React.FC<VerifySchoolProps> = ({ setNextStep }) => {
       //   dispatch(setUniversity(schools[schoolSelected]));
       //   setNextStep('emailVerify');
       // }
+      const universityName = schools[schoolSelected];
+      const universityArea = region;
+
       console.log('📤 [VerifySchool] 전송할 데이터:', {
-        university: schools[schoolSelected],
-        universityArea: region,
+        university: universityName,
+        universityArea: universityArea,
       });
 
+      // 로컬에 대학교와 캠퍼스 정보 저장
+      try {
+        await AsyncStorage.setItem('selectedUniversity', universityName);
+        await AsyncStorage.setItem('selectedUniversityArea', universityArea);
+        console.log('💾 [VerifySchool] 로컬 저장 완료:', { universityName, universityArea });
+      } catch (error) {
+        console.error('❌ [VerifySchool] 로컬 저장 실패:', error);
+      }
+
       await selectUniversityArea({
-        university: schools[schoolSelected],
-        universityArea: region,
+        university: universityName,
+        universityArea: universityArea,
       });
 
       console.log('✅ [VerifySchool] API 호출 완료');
@@ -97,7 +111,7 @@ const VerifySchool: React.FC<VerifySchoolProps> = ({ setNextStep }) => {
       //   studentId: '',
       //   department: '',
       // });
-      setNextStep('ContinueSignUp');
+      setNextStep('ChooseSignupPath');
     }
   };
 
@@ -109,7 +123,7 @@ const VerifySchool: React.FC<VerifySchoolProps> = ({ setNextStep }) => {
         <View style={styles.selector}>
           <View style={styles.selectorBox}>
             <ItemSelector
-              style={{ position: 'absolute', zIndex: 999, borderRadius: theme.borderRadius.size12, borderWidth: 1, borderColor: theme.colors.grayV2, paddingVertical: 14, paddingHorizontal: 20 }}
+              style={{ position: 'absolute', zIndex: 999, borderRadius: theme.borderRadius.size12, borderWidth: 1, borderColor: theme.colors.grayV2, paddingVertical: 14, paddingHorizontal: 12 }}
               hint="학교 선택"
               items={schools}
               selected={schoolSelected}

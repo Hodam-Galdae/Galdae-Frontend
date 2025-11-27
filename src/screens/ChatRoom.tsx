@@ -18,6 +18,7 @@ import {
   Dimensions,
   TouchableOpacity,
   Image,
+  AppState,
 } from 'react-native';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import styles from '../styles/ChatRoom.style';
@@ -26,6 +27,7 @@ import ChatItem from '../components/ChatItem';
 import SVGButton from '../components/button/SVGButton';
 import BasicText from '../components/BasicText';
 import SettlementBox from '../components/SettlementBox';
+import DateSeparator from '../components/DateSeparator';
 import useImagePicker from '../hooks/useImagePicker';
 import SVG from '../components/SVG';
 import BasicButton from '../components/button/BasicButton';
@@ -36,11 +38,12 @@ import { SettlementRequestPopupRef } from '../components/popup/SettlementRequest
 import ReportModal from '../components/popup/ReportModal';
 import ChatRoomExitModal from '../components/popup/ChatRoomExitModal';
 import ReportCheckModal from '../components/popup/ReportCheckModal';
+import ImageViewerModal from '../components/popup/ImageViewerModal';
 import useDidMountEffect from '../hooks/useDidMountEffect';
 import Header from '../components/Header';
 import { useWebSocket } from '../hooks/useWebSocket';
 import { getUserInfo } from '../api/membersApi';
-import RNFS from 'react-native-fs';
+// import RNFS from 'react-native-fs'; // Unused
 import {
   ChatItem as ChatItemType,
   fetchChatMembers,
@@ -72,7 +75,7 @@ type RenderItem = {
 
 type RootStackParamList = {
   ChatRoom: { chatroomId: number };
-  Settlement: { data: Readonly<SettlementType> };
+  Settlement: { data: Readonly<SettlementType>; chatroomId: number };
 };
 
 
@@ -83,6 +86,7 @@ const ChatRoom: React.FC = () => {
   const [showExtraView, setShowExtraView] = useState<boolean>(false);
   const [keyboardHeight, setKeyboardHeight] = useState<number>(0);
   const [initialCost, setInitialCost] = useState<number>(0);  // 초기 정산 금액
+  const [isAppActive, setIsAppActive] = useState<boolean>(true); // 앱 포그라운드 상태 추적
   const [isSettlementRequestPopupOpen, setSettlementRequestPopupOpen] = useState<boolean>(false);
   const [isVisibleReportPopup, setIsVisibleReportPopup] =
     useState<boolean>(false);
@@ -91,6 +95,8 @@ const ChatRoom: React.FC = () => {
   const [isVisibleExitPopup, setIsVisibleExitPopup] = useState<boolean>(false);
   const [isSideMenuOpen, setIsSideMenuOpen] = useState<boolean>(false);
   const [unreadCounts, setUnreadCounts] = useState<{ [key: number]: number }>({});
+  const [selectedImageUri, setSelectedImageUri] = useState<string>('');
+  const [isImageViewerVisible, setIsImageViewerVisible] = useState<boolean>(false);
   const chatListRef = useRef<FlatList>(null);
   const { imageUri, getImageByCamera, getImageByGallery } =
     useImagePicker();
@@ -104,15 +110,25 @@ const ChatRoom: React.FC = () => {
   const translateX = useRef(new Animated.Value(SIDE_MENU_WIDTH)).current;
   const translateY = useRef(new Animated.Value(100)).current;
   const { chatroomId } = useRoute<RouteProp<RootStackParamList, 'ChatRoom'>>().params;
+
+  // chatroomId 유효성 검사 및 디버깅
+  console.log('🏠 [ChatRoom] 화면 로드 - chatroomId:', chatroomId, 'type:', typeof chatroomId);
+  if (!chatroomId || chatroomId === undefined) {
+    console.error('❌ [ChatRoom] chatroomId가 없습니다!');
+  }
+
   const [chatroomTitle, setChatroomTitle] = useState<{
     titleLeft: string;
-    titleRight: string;
+    titleRight: string | null;
     alertContent: string;
+    lastReadChatId: number;
   }>({
     titleLeft: '',
     titleRight: '',
     alertContent: '',
+    lastReadChatId: 0,
   });
+  const isInitialLoad = useRef(true); // 초기 로드 여부 추적
   const [members, setMembers] = useState<MemberResponse[]>([]);
   const [reportImage, setReportImage] = useState({ uri: '', name: '' });
   const reportData = useRef({
@@ -130,19 +146,19 @@ const ChatRoom: React.FC = () => {
     const getToken = async () => {
       const token = await EncryptedStorage.getItem('accessToken');
       console.log(`
-        
-        
-        
-        
+
+
+
+
         ChatRoom 132줄 token
-        
-        
-        
-        
-        
-        
+
+
+
+
+
+
         `, token);
-      setToken("Bearer " + token);
+      setToken('Bearer ' + token);
     };
     getToken();
   }, []);
@@ -150,10 +166,32 @@ const ChatRoom: React.FC = () => {
   console.log('ChatRoom 120줄 userInfo', userInfo);
   const [token, setToken] = useState<string>('');
 
+  // AppState 감지: 백그라운드로 가면 WebSocket 연결 해제
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', nextAppState => {
+      console.log('📱 [AppState] 상태 변경:', nextAppState);
+
+      if (nextAppState === 'active') {
+        console.log('✅ [AppState] 앱이 포그라운드로 전환됨 - WebSocket 연결 활성화');
+        setIsAppActive(true);
+      } else if (nextAppState === 'background' || nextAppState === 'inactive') {
+        console.log('⚠️ [AppState] 앱이 백그라운드로 전환됨 - WebSocket 연결 비활성화');
+        setIsAppActive(false);
+      }
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
+
   const panResponder = useRef(
     PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
-      onMoveShouldSetPanResponder: () => true,
+      onStartShouldSetPanResponder: () => false,
+      onMoveShouldSetPanResponder: (evt, gestureState) => {
+        // 수평으로 5px 이상 움직였을 때만 pan responder 활성화
+        return Math.abs(gestureState.dx) > 5;
+      },
       onPanResponderMove: (event, gestureState) => {
         if (gestureState.dx > 0) {
           // 오른쪽으로 스와이프하면 translateX를 업데이트
@@ -171,7 +209,11 @@ const ChatRoom: React.FC = () => {
   ).current;
 
   const fetchMembers = useCallback(async () => {
+    console.log('📥 [멤버 API] fetchChatMembers 호출 시작 - chatroomId:', chatroomId);
     const memberData = await fetchChatMembers(chatroomId);
+    console.log('✅ [멤버 API] fetchChatMembers 응답 성공');
+    console.log('👥 [멤버 API] 멤버 수:', memberData.length);
+    console.log('📋 [멤버 API] 멤버 데이터:', JSON.stringify(memberData, null, 2));
     setMembers(memberData);
   }, [chatroomId]);
 
@@ -182,29 +224,19 @@ const ChatRoom: React.FC = () => {
 
   useEffect(() => {
     const fetchChatsFunc = async () => {
+      console.log('📥 [채팅 API] fetchChats 호출 시작 - chatroomId:', chatroomId);
       const chatData = await fetchChats(chatroomId);
-      console.log(`
-        
-        
-        처음 받아온 채팅 데이터들 fetchChats
-        
-        
-        
-        `, chatData);
+      console.log('✅ [채팅 API] fetchChats 응답 성공');
+      console.log('📊 [채팅 API] 받아온 메시지 개수:', chatData.length);
+      console.log('📋 [채팅 API] 채팅 데이터 상세:', JSON.stringify(chatData, null, 2));
       setData(chatData);
-
     };
     const fetchChatroomInfos = async () => {
+      console.log('📥 [채팅방 정보 API] fetchChatroomInfo 호출 시작 - chatroomId:', chatroomId);
       const chatroomData = await fetchChatroomInfo(chatroomId);
+      console.log('✅ [채팅방 정보 API] fetchChatroomInfo 응답 성공');
+      console.log('📋 [채팅방 정보 API] 채팅방 데이터:', JSON.stringify(chatroomData, null, 2));
       setChatroomTitle(chatroomData);
-      console.log(`
-        
-        
-      처음 받아온 채팅 데이터들 fetchChatroomInfo
-      
-      
-      
-      `, chatroomData);
     };
     fetchChatroomInfos();
     fetchChatsFunc();
@@ -218,9 +250,16 @@ const ChatRoom: React.FC = () => {
   const { isLoading, sendMessage: wsSendMessage } = useWebSocket({
     chatroomId: chatroomId.toString(),
     token: token,
+    enabled: isAppActive, // 앱이 포그라운드일 때만 WebSocket 연결
     onMessageReceived: useCallback((receiveData) => {
+      console.log('🔵 [WebSocket] 새 메시지 수신');
+      console.log('📩 [WebSocket] 메시지 타입:', receiveData.type);
+      console.log('👤 [WebSocket] 발신자:', receiveData.sender);
+      console.log('💬 [WebSocket] 메시지 내용:', receiveData.message);
+      console.log('🕐 [WebSocket] 전송 시간:', receiveData.time);
+      console.log('🖼️ [WebSocket] 발신자 이미지:', receiveData.senderImage);
+      console.log('📋 [WebSocket] 전체 데이터:', JSON.stringify(receiveData, null, 2));
 
-      console.log('receiveData', receiveData);
       setData(prev => [
         ...prev,
         {
@@ -232,16 +271,31 @@ const ChatRoom: React.FC = () => {
           memberImage: receiveData.senderImage,
         },
       ]);
+
+      console.log('✅ [WebSocket] 메시지가 로컬 상태에 추가됨');
     }, []),
     onUnreadCountReceived: useCallback((unreadData) => {
-      console.log(unreadData);
+      console.log('🔢 [WebSocket] 안읽은 수 업데이트 수신');
+      console.log('📊 [WebSocket] 안읽은 수 데이터:', JSON.stringify(unreadData, null, 2));
       setUnreadCounts(unreadData);
+      console.log('✅ [WebSocket] 안읽은 수 상태 업데이트 완료');
     }, []),
   });
 
   const sendPayment = async (settlementCost: string) => {
-    wsSendMessage(settlementCost, 'MONEY', userInfo?.nickname || '', userInfo?.image || '');
-    await createPayment(chatroomId.toString(), Number(settlementCost));
+    // createPayment API가 내부적으로 WebSocket 메시지를 브로드캐스트하므로
+    // wsSendMessage를 별도로 호출하지 않음
+    try {
+      await createPayment(chatroomId.toString(), Number(settlementCost));
+    } catch (error: any) {
+      console.error('정산 요청 실패:', error);
+      const { Alert } = require('react-native');
+      Alert.alert(
+        '정산 요청 실패',
+        error?.message || '정산 요청 중 오류가 발생했습니다.',
+        [{ text: '확인' }]
+      );
+    }
   };
 
   const sendMessage = async () => {
@@ -270,13 +324,27 @@ const ChatRoom: React.FC = () => {
 
   //채팅 추가될 때 마다 자동 스크롤
   useEffect(() => {
-    if (chatListRef.current) {
-      setTimeout(
-        () => chatListRef.current?.scrollToEnd({ animated: false }),
-        100,
-      );
+    if (chatListRef.current && data.length > 0) {
+      setTimeout(() => {
+        if (isInitialLoad.current && chatroomTitle.lastReadChatId > 0) {
+          // 초기 로드 시: 마지막으로 읽은 메시지 위치로 스크롤
+          const lastReadIndex = data.findIndex(item => item.chatId === chatroomTitle.lastReadChatId);
+          if (lastReadIndex !== -1) {
+            console.log(`📍 [스크롤] 마지막으로 읽은 메시지(chatId: ${chatroomTitle.lastReadChatId})로 스크롤 (index: ${lastReadIndex})`);
+            chatListRef.current?.scrollToIndex({ index: lastReadIndex, animated: false });
+          } else {
+            // 마지막으로 읽은 메시지를 찾지 못하면 맨 아래로
+            console.log('📍 [스크롤] 마지막으로 읽은 메시지를 찾지 못함 - 맨 아래로 스크롤');
+            chatListRef.current?.scrollToEnd({ animated: false });
+          }
+          isInitialLoad.current = false;
+        } else {
+          // 새 메시지 도착 시: 맨 아래로 스크롤
+          chatListRef.current?.scrollToEnd({ animated: false });
+        }
+      }, 100);
     }
-  }, [data]);
+  }, [data, chatroomTitle.lastReadChatId]);
 
   const toggleExtraView = () => {
     if (showExtraView) {
@@ -323,7 +391,32 @@ const ChatRoom: React.FC = () => {
     }).start();
   };
 
+  // 참여자 목록이 열려있을 때만 정기적으로 폴링
+  useEffect(() => {
+    if (!isSideMenuOpen) {
+      return; // 참여자 목록이 닫혀있으면 폴링 안 함
+    }
+
+    // 10초마다 참여자 목록 갱신
+    const pollingInterval = setInterval(() => {
+      fetchMembers();
+    }, 10000); // 10초
+
+    // 컴포넌트 언마운트 또는 사이드 메뉴 닫힐 때 인터벌 정리
+    return () => {
+      clearInterval(pollingInterval);
+    };
+  }, [isSideMenuOpen, fetchMembers]);
+
   const checkReportUser = (reason: string) => {
+    // 신고 사유 검증
+    if (!reason || reason.trim() === '') {
+      console.log('❌ [신고] 신고 사유가 선택되지 않았습니다');
+      // 검증 실패 시에도 모달은 유지 (사용자가 다시 선택할 수 있도록)
+      return;
+    }
+
+    console.log('✅ [신고] 신고 사유 선택됨:', reason);
     reportData.current.reason = reason;
     setIsVisibleReportPopup(false);
     setIsVisibleReportCheckPopup(true);
@@ -332,36 +425,72 @@ const ChatRoom: React.FC = () => {
   const reportUser = async () => {
     setIsVisibleReportCheckPopup(false);
 
-    // const formData = new FormData();
-    // const data = {
-    //   reported: reportData.current.member.memberId,
-    //   reportContent: reportData.current.reason,
-    // };
-    // console.log('data', data);
-    // const fileName = `${reportData.current.member.memberId}.json`;
-    // const filePath = `${RNFS.TemporaryDirectoryPath}/${fileName}`;
-    // await RNFS.writeFile(filePath, JSON.stringify(data), 'utf8');
-    // formData.append('reportRequestDto', `file:///${filePath}`);
+    try {
+      console.log('📤 [신고] 신고 요청 시작');
+      console.log('👤 [신고] 신고 대상:', reportData.current.member.memberName);
+      console.log('📝 [신고] 신고 사유:', reportData.current.reason);
+      console.log('🖼️ [신고] 이미지 첨부:', reportImage.uri ? '있음' : '없음');
 
-    // if (reportImage.uri !== '') {
-    //   let imageFile = { uri: imageUri, type: imageType, name: imageName };
-    //   formData.append('profileImage', imageFile as any);
-    // }
+      await createReport({
+        reportRequestDto: {
+          reported: reportData.current.member.memberId,
+          reportContent: reportData.current.reason,
+        },
+        image: reportImage.uri || undefined,
+      });
 
-    // await createReport(formData);
-    await createReport({
-      reportRequestDto: {
-        reported: reportData.current.member.memberId,
-        reportContent: reportData.current.reason,
-      },
-      // 서버 스펙이 문자열이라면: URL 또는 base64 문자열로 전달
-      image: reportImage.uri || undefined,
-    });
+      console.log('✅ [신고] 신고가 성공적으로 접수되었습니다');
+
+      // 신고 성공 피드백 (Alert)
+      setTimeout(() => {
+        const { Alert } = require('react-native');
+        Alert.alert(
+          '신고 완료',
+          '신고가 성공적으로 접수되었습니다.',
+          [{ text: '확인' }]
+        );
+      }, 100);
+
+      // 신고 후 데이터 초기화
+      reportData.current = {
+        member: { memberId: '', memberName: '', memberImage: '' },
+        reason: '',
+      };
+      setReportImage({ uri: '', name: '' });
+
+    } catch (error: any) {
+      console.error('❌ [신고] 신고 요청 실패:', error);
+
+      // 에러 메시지 파싱
+      let errorMessage = '신고 처리 중 오류가 발생했습니다. 다시 시도해주세요.';
+
+      // axios 에러 응답 확인
+      if (error?.response?.status === 500 || error?.response?.status === 409) {
+        // 중복 신고 또는 DB constraint 에러
+        errorMessage = '이미 신고한 사용자입니다.';
+      } else if (error?.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      }
+
+      // 신고 실패 피드백
+      setTimeout(() => {
+        const { Alert } = require('react-native');
+        Alert.alert(
+          '신고 실패',
+          errorMessage,
+          [{ text: '확인' }]
+        );
+      }, 100);
+    }
   };
 
   const startReportUser = (member: MemberResponse) => {
+    reportData.current.member = {
+      memberId: member.memberId,
+      memberName: member.memberName,
+      memberImage: member.memberImage || ''
+    };
     setIsVisibleReportPopup(true);
-    reportData.current.member = { memberId: member.memberId, memberName: member.memberName, memberImage: member.memberImage || '' };
   };
 
   const openSettlement = async () => {
@@ -377,6 +506,16 @@ const ChatRoom: React.FC = () => {
     Keyboard.dismiss();
     setSettlementRequestPopupOpen(false);
     settlementRequestPopupRef.current?.open();
+  };
+
+  const handleImagePress = (imageUri: string) => {
+    setSelectedImageUri(imageUri);
+    setIsImageViewerVisible(true);
+  };
+
+  const closeImageViewer = () => {
+    setIsImageViewerVisible(false);
+    setSelectedImageUri('');
   };
 
   const renderItem = useCallback(
@@ -398,6 +537,12 @@ const ChatRoom: React.FC = () => {
           moment.utc(data[index - 1]?.time).hour() ===
           moment.utc(item.time).hour()
         );
+
+      // 날짜 구분선 표시 여부 확인
+      const isShowDateSeparator =
+        index === 1 || // 첫 번째 메시지 전에는 항상 날짜 표시
+        !moment.utc(data[index - 1]?.time).isSame(moment.utc(item.time), 'day');
+
       // unreadCount 계산 로직 개선
       let unreadCount = unreadCounts[item.chatId];
       if (unreadCount === undefined) {
@@ -411,7 +556,8 @@ const ChatRoom: React.FC = () => {
           unreadCount = unreadCounts[nextChatId];
         }
       }
-      return item.chatType !== 'MONEY' ? (
+
+      const chatContent = item.chatType !== 'MONEY' ? (
         <ChatItem
           item={{
             id: item.chatId,
@@ -425,6 +571,7 @@ const ChatRoom: React.FC = () => {
             isShowTime,
             nickname: userInfo?.nickname || '',
             unreadCount: unreadCount,
+            onImagePress: handleImagePress,
           }}
         />
       ) : (
@@ -440,6 +587,13 @@ const ChatRoom: React.FC = () => {
           }}
         />
       );
+
+      return (
+        <>
+          {isShowDateSeparator && <DateSeparator date={item.time} />}
+          {chatContent}
+        </>
+      );
     },
     [data, chatroomId, userInfo, unreadCounts, chatroomTitle.alertContent],
   );
@@ -448,22 +602,32 @@ const ChatRoom: React.FC = () => {
     const send = async () => {
       if (!imageUri) {return;}
       try {
-        // file://... → base64
-        const base64 = await RNFS.readFile(imageUri.replace('file://', ''), 'base64');
+        // 이미지 파일 정보 준비
+        const fileName = imageUri.split('/').pop() || 'image.jpg';
+        const fileType = fileName.endsWith('.png') ? 'image/png' : 'image/jpeg';
 
-        const res = await sendChatImage(chatroomId.toString(), {
-          imageSendCommand: { sender: userInfo?.nickname || '', senderImage: userInfo?.image || '' },
-          image: base64,
-        });
+        // multipart/form-data 형식으로 전송
+        await sendChatImage(
+          chatroomId,
+          {
+            uri: imageUri,
+            name: fileName,
+            type: fileType,
+          },
+          {
+            sender: userInfo?.nickname || '',
+            senderImage: userInfo?.image || '',
+          }
+        );
 
-        // 서버가 업로드 URL을 돌려준다고 가정
-        wsSendMessage(res.url, 'IMAGE', userInfo?.nickname || '', userInfo?.image || '');
+        // 이미지 전송 성공 - WebSocket으로 별도로 메시지 보낼 필요 없음 (Backend가 처리)
+        console.log('이미지 전송 성공');
       } catch (err) {
         console.log('sendImage 오류', err);
       }
     };
     send();
-  }, [imageUri]);
+  }, [imageUri, chatroomId, userInfo]);
 
   return (
     <KeyboardAvoidingView style={styles.rootContainer} behavior={'padding'}>
@@ -500,7 +664,7 @@ const ChatRoom: React.FC = () => {
             }
             <BasicText
               style={styles.headerText}
-              text={chatroomTitle.titleRight}
+              text={chatroomTitle.titleRight ?? ''}
             />
           </View>
         }
@@ -529,37 +693,50 @@ const ChatRoom: React.FC = () => {
             ' )'}
         </BasicText>
         <View style={styles.menuUserList}>
-          {members.map(member => {
-            return (
-              <View key={member.memberId} style={styles.menuUserContainer}>
-                <View style={styles.menuUserWrapper}>
-                  {
-                    member.memberImage === null ? <SVG name="DefaultProfile" width={46} height={46} style={styles.menuUserIcon} /> : <Image source={{uri: member.memberImage}} style={styles.menuUserIcon} />
-                  }
-                  <BasicText style={styles.menuUserText} text={member.memberName} />
-                  {member.memberName === userInfo?.nickname || '' ? (
-                    <View style={styles.menuUserMe}>
-                      <BasicText style={styles.menuUserMeText} text="나" />
-                    </View>
+          {members
+            .sort((a, b) => {
+              // 현재 사용자를 맨 위로
+              if (a.memberName === userInfo?.nickname) {return -1;}
+              if (b.memberName === userInfo?.nickname) {return 1;}
+              return 0;
+            })
+            .map(member => {
+              return (
+                <View key={member.memberId} style={styles.menuUserContainer}>
+                  <View style={styles.menuUserWrapper}>
+                    {
+                      member.memberImage === null ? <SVG name="DefaultProfile" width={40} height={40} style={styles.menuUserIcon} /> : <Image source={{uri: member.memberImage}} style={styles.menuUserIcon} />
+                    }
+                    <BasicText style={styles.menuUserText} text={member.memberName} />
+                    {member.memberName === userInfo?.nickname ? (
+                      <View style={styles.menuUserMe}>
+                        <BasicText style={styles.menuUserMeText} text="나" />
+                      </View>
+                    ) : null}
+                  </View>
+                  {member.memberName !== userInfo?.nickname ? (
+                    <BasicButton
+                      textStyle={styles.menuUserBtnText}
+                      buttonStyle={styles.menuUserBtn}
+                      onPress={() => startReportUser(member)}
+                      text="신고하기"
+                    />
                   ) : null}
                 </View>
-                {member.memberName !== userInfo?.nickname || '' ? (
-                  <BasicButton
-                    textStyle={styles.menuUserBtnText}
-                    buttonStyle={styles.menuUserBtn}
-                    onPress={() => startReportUser(member)}
-                    text="신고하기"
-                  />
-                ) : null}
-              </View>
-            );
-          })}
+              );
+            })}
         </View>
-        <SVGButton
+        <TouchableOpacity
           onPress={() => setIsVisibleExitPopup(true)}
-          iconName="Exit"
-          buttonStyle={styles.exitIcon}
-        />
+          activeOpacity={0.7}
+          style={styles.exitIconContainer}
+        >
+          <SVG
+            name="Exit"
+            width={24}
+            height={24}
+          />
+        </TouchableOpacity>
       </Animated.View>
       <View style={styles.container}>
         {isLoading && <Loading />}
@@ -573,6 +750,13 @@ const ChatRoom: React.FC = () => {
           keyboardShouldPersistTaps="handled"
           keyExtractor={item => item.chatId.toString()}
           renderItem={renderItem}
+          onScrollToIndexFailed={info => {
+            console.warn('📍 [스크롤] scrollToIndex 실패, scrollToEnd로 대체:', info);
+            // 스크롤 실패 시 맨 아래로 스크롤
+            setTimeout(() => {
+              chatListRef.current?.scrollToEnd({ animated: false });
+            }, 100);
+          }}
           ListHeaderComponent={
             chatroomTitle.alertContent
               ? () => (
@@ -657,7 +841,7 @@ const ChatRoom: React.FC = () => {
         <SettlementRequestPopup
           member={members}
           titleLeft={chatroomTitle.titleLeft}
-          titleRight={chatroomTitle.titleRight}
+          titleRight={chatroomTitle.titleRight ?? ''}
           ref={settlementRequestPopupRef}
           sendPayment={sendPayment}
           initialCost={initialCost}
@@ -665,7 +849,15 @@ const ChatRoom: React.FC = () => {
 
         <ChatRoomExitModal
           visible={isVisibleExitPopup}
-          onConfirm={() => { leaveChatroom(chatroomId.toString()); setIsVisibleExitPopup(false); }}
+          onConfirm={async () => {
+            try {
+              await leaveChatroom(chatroomId.toString());
+              setIsVisibleExitPopup(false);
+            } catch (error) {
+              console.error('채팅방 나가기 실패:', error);
+              setIsVisibleExitPopup(false);
+            }
+          }}
           onCancel={() => setIsVisibleExitPopup(false)}
         />
 
@@ -686,6 +878,11 @@ const ChatRoom: React.FC = () => {
           onConfirm={(cost) => closeSettlement(cost)}
           onCancel={() => setSettlementRequestPopupOpen(false)}
           title="정산 금액 입력"
+        />
+        <ImageViewerModal
+          visible={isImageViewerVisible}
+          imageUri={selectedImageUri}
+          onClose={closeImageViewer}
         />
       </View>
     </KeyboardAvoidingView>

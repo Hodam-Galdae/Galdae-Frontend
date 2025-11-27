@@ -43,11 +43,10 @@ export default StyleSheet.create({
         //alignSelf: 'center',
     },
     input: {
-
         borderWidth: 1,
         borderColor: theme.colors.grayV2,
         width: '100%',
-        paddingHorizontal: 20,
+        paddingHorizontal: 12,
         paddingVertical: 14,
         borderRadius: theme.borderRadius.size12,
         color: theme.colors.gray2,
@@ -121,7 +120,7 @@ export default StyleSheet.create({
     },
     againButton: {
         marginTop: 43,
-        width: 72,
+        width: 90,
         borderRadius: theme.borderRadius.size30,
         borderWidth: 1,
         borderColor: theme.colors.Galdae,

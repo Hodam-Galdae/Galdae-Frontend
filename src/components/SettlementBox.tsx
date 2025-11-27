@@ -11,7 +11,7 @@ import { fetchPayment, PaymentSummary } from '../api/chatApi';
 import moment from 'moment';
 
 type RootStackParamList = {
-  Settlement: {data: PaymentSummary};
+  Settlement: {data: PaymentSummary; chatroomId: number};
 };
 
 type Settlement = {
@@ -20,7 +20,7 @@ type Settlement = {
     time: string,
     isShowProfile: boolean,
     isShowTime: boolean,
-    chatroomId: string,
+    chatroomId: string | number,
     nickname: string,
 }
 
@@ -28,6 +28,7 @@ const SettlementBox: React.FC<{settlement: Settlement}> = React.memo(({settlemen
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList, 'Settlement'>>();
     const [paymentData, setPaymentData] = useState<PaymentSummary>({
         id: 0,
+        chatroomId: 0,
         totalCost: 0,
         personalCost: 0,
         depositor: '',
@@ -41,16 +42,20 @@ const SettlementBox: React.FC<{settlement: Settlement}> = React.memo(({settlemen
 
     useEffect(() => {
         const getSettlement = async() => {
-            const data = await fetchPayment(settlement.chatroomId);
-            console.log(    `data
-                
-                
-                fetchPayment
-                
-                
-                
-                `, data);
-            setPaymentData(data);
+            // chatroomId 유효성 검사
+            if (!settlement.chatroomId || settlement.chatroomId === 'undefined') {
+                console.error('❌ [SettlementBox] 잘못된 chatroomId:', settlement.chatroomId);
+                return;
+            }
+
+            try {
+                console.log('[SettlementBox] fetchPayment 호출 - chatroomId:', settlement.chatroomId);
+                const data = await fetchPayment(settlement.chatroomId);
+                console.log('[SettlementBox] fetchPayment 성공:', data);
+                setPaymentData(data);
+            } catch (error) {
+                console.error('❌ [SettlementBox] fetchPayment 실패:', error);
+            }
         };
 
         getSettlement();
@@ -72,7 +77,21 @@ const SettlementBox: React.FC<{settlement: Settlement}> = React.memo(({settlemen
                     <View style={styles.backImage}/>
                     <SVG name="Logo_yellow" style={styles.logo}/>
                     <BasicText style={styles.text}>{'갈대 정산을 요청합니다.\n\n' + '정산 인원 : ' + paymentData?.members.length + '명\n' + '총 금액 : ' + paymentData?.totalCost.toString() + '원\n\n' + '정산 요청 금액 (1/N)\n1인 : ' + paymentData?.personalCost.toString() + '원\n\n' + '계좌 확인 후 송금해주세요.'}</BasicText>
-                    <BasicButton text="정산 상세" buttonStyle={styles.button} textStyle={styles.buttonText} onPress={()=>navigation.navigate('Settlement', { data: paymentData})}/>
+                    <BasicButton
+                        text="정산 상세"
+                        buttonStyle={styles.button}
+                        textStyle={styles.buttonText}
+                        onPress={() => {
+                            const chatroomIdNum = typeof settlement.chatroomId === 'string'
+                                ? parseInt(settlement.chatroomId, 10)
+                                : settlement.chatroomId;
+                            console.log('[SettlementBox] 정산 상세 네비게이션 - chatroomId:', chatroomIdNum);
+                            navigation.navigate('Settlement', {
+                                data: paymentData,
+                                chatroomId: chatroomIdNum
+                            });
+                        }}
+                    />
                 </View>
                 {settlement.isShowTime && settlement.sender !== settlement.nickname ? (
                     <BasicText style={styles.timeText} text={moment.utc(settlement.time).hour() + ':' + moment.utc(settlement.time).minute()}/>

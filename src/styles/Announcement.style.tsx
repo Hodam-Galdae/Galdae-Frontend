@@ -49,4 +49,4 @@ container:{
         borderTopWidth:1,
         borderColor:theme.colors.grayV0,
       },
-})
+});

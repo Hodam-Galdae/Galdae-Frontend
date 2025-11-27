@@ -21,15 +21,18 @@ import moment from 'moment';
 import { joinGroup } from '../../../api/groupApi';
 import { GroupJoinResponse } from '../../../types/groupTypes';
 import ParticipateModal from '../../../components/popup/ParticipateModal';
+import AuthRequiredModal from '../../../components/popup/AuthRequiredModal';
 import { SubscribeDetailResponse } from '../../../types/subScribeTypes';
 import TextTag from '../../../components/tag/TextTag';
 
 type RootStackParamListd = {
     CreateGaldae: undefined;
     NowGaldae: undefined;
-    OTTDetail: { subscribeId: string };
+    OTTDetail: { subscribeId: string; showAuthModal?: boolean };
     ChatRoom: { chatroomId: number };
-    OTTNDivide: undefined,
+    OTTNDivide: undefined;
+    SignUp: { data: boolean };
+    ContinueSignUp: undefined;
 };
 
 type OTTDetailScreenNavigationProp = NativeStackNavigationProp<
@@ -44,7 +47,7 @@ type OTTDetailRouteProp = RouteProp<
 const OTTDetail: React.FC = () => {
     const navigation = useNavigation<OTTDetailScreenNavigationProp>();
     const route = useRoute<OTTDetailRouteProp>();
-    const { subscribeId } = route.params; // 전달받은 postId
+    const { subscribeId, showAuthModal } = route.params; // 전달받은 postId
 
     const { detail, detailLoading, detailError } = useSelector(
         (state: RootState) => state.subscribeSlice,
@@ -52,19 +55,30 @@ const OTTDetail: React.FC = () => {
 
     const dispatch = useAppDispatch();
     const [isParticipating, setIsParticipating] = useState(false);
+    const [authRequiredModalVisible, setAuthRequiredModalVisible] = useState(false);
     const [tagetRoom, setTagetRoom] = useState<any>(null);
+
     // 컴포넌트 마운트 시 Redux를 통해 상세 정보를 불러옴
     useEffect(() => {
         dispatch(fetchSubscribeDetail(subscribeId));  // OTT 상세 정보 조회
         console.log('🚀 OTT 상세 정보 불러오기:', subscribeId);
     }, [dispatch, subscribeId]);
 
+    // 인증 모달 표시
+    useEffect(() => {
+        if (showAuthModal) {
+            setTimeout(() => {
+                setAuthRequiredModalVisible(true);
+            }, 300);
+        }
+    }, [showAuthModal]);
+
     const goBack = () => navigation.goBack();
 
     const handleParticipateGaldae = async () => {
         setIsParticipating(true);
-        const tagetRoom = await joinGroup(subscribeId);
-        setTagetRoom(tagetRoom);
+        const joinedRoom = await joinGroup(subscribeId);
+        setTagetRoom(joinedRoom);
         //navigation.replace('ChatRoom', { data: Object.freeze(tagetRoom) });
         // 참여 로직 처리
     };
@@ -74,6 +88,16 @@ const OTTDetail: React.FC = () => {
             navigation.replace('ChatRoom', { chatroomId: tagetRoom.chatroomId });
         }
         setIsParticipating(false);
+    };
+
+    const handleAuthRequiredConfirm = () => {
+        setAuthRequiredModalVisible(false);
+        navigation.navigate('ContinueSignUp');
+    };
+
+    const handleAuthRequiredCancel = () => {
+        setAuthRequiredModalVisible(false);
+        navigation.goBack();
     };
 
     // if (loading) {
@@ -243,6 +267,12 @@ console.log(`OTT 상세 정보: ${detail}`,detail);
                     onConfirm={handleNavigateChatRoom}
                 />
             )}
+
+            <AuthRequiredModal
+                visible={authRequiredModalVisible}
+                onConfirm={handleAuthRequiredConfirm}
+                onCancel={handleAuthRequiredCancel}
+            />
         </View>
     );
 };

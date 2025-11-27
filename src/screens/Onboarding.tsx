@@ -2,6 +2,7 @@
 // Onboarding.tsx 임시 테스트
 import React, {useRef, useEffect, useState} from 'react';
 import {View, Animated, Dimensions} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import Video from 'react-native-video';
 import styles from '../styles/Onboarding.style';
 import BasicText from '../components/BasicText';
@@ -12,6 +13,10 @@ import {useDispatch} from 'react-redux';
 import {setUser} from '../modules/redux/slice/UserSlice';
 import {getUserInfo} from '../api/membersApi';
 import EncryptedStorage from 'react-native-encrypted-storage';
+import {fetchUserInfo} from '../modules/redux/slice/myInfoSlice';
+import {AppDispatch} from '../modules/redux/store';
+import {requestUserPermission} from '../utils/notification';
+import {updateFcmToken} from '../api/notiApi';
 
 type OnboardingProps = {
   navigation: any; // 실제 프로젝트에서는 proper type 사용 권장 (예: StackNavigationProp)
@@ -19,16 +24,69 @@ type OnboardingProps = {
 
 const OnboardingScreen: React.FC<OnboardingProps> = ({navigation}) => {
   const [current, setCurrent] = useState(0);
-  const dispatch = useDispatch();
+  const [isAutoLoginChecked, setIsAutoLoginChecked] = useState(false);
+  const [shouldSkipOnboarding, setShouldSkipOnboarding] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     const autoLogin = async () => {
-      const user = await getUserInfo();
-      const accessToken = await EncryptedStorage.getItem('accessToken');
+      try {
+        const accessToken = await EncryptedStorage.getItem('accessToken');
 
-      if (user.isAuthenticated === 'CERTIFIED') {
-        dispatch(setUser({...user, token: 'Bearer ' + accessToken}));
-        navigation.replace('MainTab');
+        // 토큰이 없으면 Onboarding 진행
+        if (!accessToken) {
+          setIsAutoLoginChecked(true);
+          return;
+        }
+
+        // 사용자 정보 조회 시도
+        const user = await getUserInfo();
+
+        // isAuthenticated가 true이면 자동 로그인 성공
+        if (user.isAuthenticated === true || user.isAuthenticated === 'CERTIFIED') {
+          await EncryptedStorage.setItem('memberId', user.id);
+
+          // Redux에 사용자 정보 저장 (UserSlice)
+          dispatch(setUser({...user, token: 'Bearer ' + accessToken}));
+          console.log('✅ [자동 로그인] UserSlice 업데이트 완료');
+
+          // myInfoSlice에도 사용자 정보 저장 (게스트 모드 자동 종료)
+          try {
+            await dispatch(fetchUserInfo()).unwrap();
+            console.log('✅ [자동 로그인] myInfoSlice 업데이트 완료 - 게스트 모드 자동 종료됨');
+          } catch (userInfoError) {
+            console.warn('⚠️ [자동 로그인] myInfoSlice 업데이트 실패 (UserSlice는 업데이트됨):', userInfoError);
+            // myInfoSlice 업데이트 실패 시에도 UserSlice는 업데이트되었으므로 계속 진행
+          }
+
+          // FCM 토큰 갱신 (자동 로그인 시에도 필수)
+          try {
+            const fcmToken = await requestUserPermission();
+            if (fcmToken) {
+              await updateFcmToken(fcmToken);
+              console.log('✅ [자동 로그인] FCM 토큰 갱신 성공');
+            }
+          } catch (fcmError) {
+            console.error('⚠️ [자동 로그인] FCM 토큰 갱신 실패 (앱은 정상 동작):', fcmError);
+            // FCM 토큰 갱신 실패는 치명적이지 않으므로 앱 실행은 계속 진행
+          }
+
+          setShouldSkipOnboarding(true);
+          navigation.replace('MainTab');
+        } else {
+          setIsAutoLoginChecked(true);
+        }
+      } catch (error) {
+        console.error('자동 로그인 실패:', error);
+        // 에러 발생 시 토큰 삭제하고 Onboarding 계속 진행
+        try {
+          await EncryptedStorage.removeItem('accessToken');
+          await EncryptedStorage.removeItem('refreshToken');
+          await EncryptedStorage.removeItem('memberId');
+        } catch (storageError) {
+          console.error('토큰 삭제 실패:', storageError);
+        }
+        setIsAutoLoginChecked(true);
       }
     };
 
@@ -43,6 +101,16 @@ const OnboardingScreen: React.FC<OnboardingProps> = ({navigation}) => {
   ];
 
   useEffect(() => {
+    // 자동 로그인 성공 시 애니메이션 타이머 스킵
+    if (shouldSkipOnboarding) {
+      return;
+    }
+
+    // 자동 로그인 체크가 완료된 후에만 애니메이션 시작
+    if (!isAutoLoginChecked) {
+      return;
+    }
+
     const timer = setTimeout(() => {
       if (current < pages.length - 1) {
         setCurrent(current + 1);
@@ -52,7 +120,7 @@ const OnboardingScreen: React.FC<OnboardingProps> = ({navigation}) => {
     }, 2000);
 
     return () => clearTimeout(timer);
-  }, [current, navigation, pages.length]);
+  }, [current, navigation, pages.length, isAutoLoginChecked, shouldSkipOnboarding]);
 
   return pages[current];
 };
@@ -81,7 +149,7 @@ const OnBoarding1 = () => {
   }, [height, position1, position2, width]);
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Animated.View style={[styles.hand1, position1.getLayout()]}>
         <SVG name="Hand" />
       </Animated.View>
@@ -120,16 +188,16 @@ const OnBoarding1 = () => {
           <Circle cx="271" cy="271" r="271" fill="url(#grad)" />
         </Svg>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
 const OnBoarding2 = () => {
   return (
-    <View
+    <SafeAreaView
       style={[styles.container, {backgroundColor: theme.colors.Galdae}]}>
       <SVG name="LogoYellow" />
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -224,7 +292,7 @@ const OnBoarding3 = () => {
         <SVG name="CarAni" />
       </Animated.View>
 
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <BasicText
           text={'언제 어디서든\n함께 동승자를 구하고 이동해요!'}
           style={[styles.title, {position: 'absolute', zIndex: 999, top: 132}]}
@@ -253,7 +321,7 @@ const OnBoarding3 = () => {
           <Circle cx="271" cy="271" r="271" fill="url(#grad)" />
         </Svg>
         <SVG width={72} name="GaldaeLogo" style={styles.logo} />
-      </View>
+      </SafeAreaView>
     </View>
   );
 };
@@ -271,7 +339,7 @@ const OnBoarding4 = () => {
   }, [opacity]);
 
   return (
-    <View style={styles.wrapper}>
+    <SafeAreaView style={styles.wrapper}>
       <Video
         source={require('../assets/video/onboarding.mp4')}
         style={styles.fullScreen}
@@ -312,7 +380,7 @@ const OnBoarding4 = () => {
         name="GaldaeLogo"
         style={[styles.logo, {left: '50%', transform: [{translateX: -36}]}]}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 

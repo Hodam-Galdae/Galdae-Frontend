@@ -68,13 +68,16 @@ export default StyleSheet.create({
   },
   cancelContainer:{
     width:220,
-    height: 32,
     position:'absolute',
-    bottom:25,
+    bottom: 20,
+    flexDirection: 'column',
+    gap: 10,
   },
   cancelBtn: {
     width:220,
-    height: 32,
+    height: 40,
+    paddingVertical: 8,
+    borderRadius: 999,
   },
   cancelBtnText: {
     fontSize: theme.fontSize.size16,
@@ -82,6 +85,7 @@ export default StyleSheet.create({
   },
   titleText:{
     fontWeight: '500',
+    marginBottom: 5,
   },
   textPopUpText: {
     marginBottom:20,

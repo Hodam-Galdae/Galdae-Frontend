@@ -1,6 +1,7 @@
 import axiosInstance from './axiosInstance';
 import axios from 'axios';
 import { MyCreatedPost,MyPostHistory,ImageFile } from '../types/getTypes';
+import { uploadImage } from './fileApi';
 /**
  * 사용자 정보 조회 API
  */
@@ -65,38 +66,35 @@ export const getFrequentRoutes = async () => {
   }
 };
 /**
- * 회원 이미지 변경 API 호출 함수 (Form-Data 방식)
+ * 회원 이미지 변경 API 호출 함수 (Presigned URL 방식)
  * @param imageUri 로컬 이미지 파일 경로 (예: file:///... 형식)
  * @returns API 응답 데이터
  */
 export const updateMemberImage = async (imageUri: string): Promise<unknown> => {
   const requestUrl = '/members/image';
-  const formData = new FormData();
-
-  const file: ImageFile = {
-    uri: imageUri,
-    type: 'image/jpeg', // 실제 이미지 형식에 맞게 설정 (예: image/png)
-    name: 'profile.jpg',
-  };
-
-  // React Native에서는 FormData에 { uri, type, name } 형태의 객체를 전달할 수 있음
-  // TypeScript에서는 Blob 타입과 맞지 않으므로, unknown을 통해 Blob으로 캐스팅합니다.
-  formData.append('image', file as unknown as Blob);
-
 
   try {
-    const response = await axiosInstance.post(requestUrl, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-    //console.log('✅ 이미지 변경 성공:', response.data);
+    console.log('📤 [프로필 이미지 업데이트] S3에 업로드 시작...');
+
+    // 1. S3에 이미지 업로드
+    const imageFile: ImageFile = {
+      uri: imageUri,
+      type: 'image/jpeg',
+      name: 'profile.jpg',
+    };
+
+    const imageUrl = await uploadImage('PROFILE', imageFile);
+    console.log('✅ [프로필 이미지 업데이트] S3 업로드 완료, URL:', imageUrl);
+
+    // 2. 백엔드에 이미지 URL 전달
+    const response = await axiosInstance.patch(requestUrl, { imageUrl });
+    console.log('✅ [프로필 이미지 업데이트] 성공:', response.data);
     return response.data;
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
-      //console.error('❌ 이미지 변경 실패:', error.response ? error.response.data : error);
+      console.error('❌ [프로필 이미지 업데이트] 실패:', error.response ? error.response.data : error);
     } else {
-      //console.error('❌ 이미지 변경 실패:', error);
+      console.error('❌ [프로필 이미지 업데이트] 실패:', error);
     }
     throw error;
   }
@@ -157,24 +155,16 @@ export const updateBankInfo = async (bankType: string, accountNumber: string, de
 };
 /**
  * 로그아웃 API 호출 함수
- * @param token 엑세스 토큰
  * @returns API 응답 데이터
  */
-export const logoutMember = async (token: string): Promise<any> => {
+export const logoutMember = async (): Promise<void> => {
+  console.log('🚀 [로그아웃 요청] POST /members/logout');
+
   try {
-    const response = await axiosInstance.post(
-      '/members/logout',
-      null, // 요청 본문이 필요 없으므로 null 전달
-      {
-        headers: {
-          Authorization: token, // 헤더에 엑세스 토큰 설정
-        },
-      }
-    );
-    //console.log('✅로그아웃 성공:', response.data);
-    return response.data;
+    const response = await axiosInstance.post('/members/logout');
+    console.log('✅ [로그아웃 성공] 응답 데이터:', response.data);
   } catch (error: any) {
-    //console.error('❌로그아웃 실패:', error.response ? error.response.data : error);
+    console.error('❌ [로그아웃 실패] 오류 발생:', error.response ? error.response.data : error);
     throw error;
   }
 };

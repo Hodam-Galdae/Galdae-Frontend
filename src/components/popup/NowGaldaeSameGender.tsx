@@ -22,7 +22,7 @@ export interface ReportCheckModalProps {
         <View style={styles.overlay}>
           <View style={[styles.textPopUp, containerStyle]}>
             <View style={styles.textPopUpcontent}>
-              <SVG name="Alert" style={{marginBottom: 20}}/>
+              <SVG name="Alert" style={styles.alertIcon}/>
 
               <BasicText
                 text={'동성만 입장이 가능합니다'}

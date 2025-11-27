@@ -183,7 +183,6 @@ export default StyleSheet.create({
   searchText:{
     fontSize:theme.fontSize.size16,
     fontWeight:'500',
-    color:theme.colors.blackV0,
   },
   searchSVG:{
     width:18,
@@ -194,5 +193,23 @@ export default StyleSheet.create({
   },
   more:{
     fontSize:theme.fontSize.size14,
+  },
+  guestButtonContainer:{
+    width:'100%',
+    alignItems:'center',
+    marginTop:16,
+  },
+  guestProfileButton:{
+    height:29,
+    borderRadius:50,
+    borderWidth:1,
+    paddingVertical:4,
+    paddingHorizontal:12,
+  },
+  guestProfileButtonText:{
+    fontSize:theme.fontSize.size12,
+    fontWeight:'500',
+    lineHeight:12,
+    letterSpacing:-0.5,
   },
 });

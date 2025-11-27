@@ -1,10 +1,11 @@
 import axios from 'axios';
-import {  useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import EncryptedStorage from 'react-native-encrypted-storage';
-//import Config from 'react-native-config';
-export const API_BASE_URL = 'http://52.78.169.186'; // 백엔드 API 주소
-export const WEB_SOCKET_URL = 'ws://52.78.169.186:8081/ws'; // 백엔드 API 주소
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import config from '../config/env';
+import { replace } from '../utils/navigationRef';
+
+export const API_BASE_URL = config.API_BASE_URL; // 백엔드 API 주소
+export const WEB_SOCKET_URL = config.WEB_SOCKET_URL; // WebSocket URL
 export const PUB_ENDPOINT = '/send';
 export const SUB_ENDPOINT = '/topic/chatroom';
 export const CHAT_COUNT_ENDPOINT = '/topic/chatCount';
@@ -12,30 +13,28 @@ export const CHAT_COUNT_ENDPOINT = '/topic/chatCount';
 // API 설정 정보 로그 출력
 console.log('🌐 [API Config] API_BASE_URL:', API_BASE_URL);
 console.log('🌐 [API Config] WEB_SOCKET_URL:', WEB_SOCKET_URL);
-const EXCLUDED_URLS = ['/auth/kakao', '/auth/google', '/auth/apple', '/ws'];
+console.log('🌐 [API Config] Environment:', config.ENV);
+const EXCLUDED_URLS = ['/auth/kakao', '/auth/google', '/auth/apple', '/ws', '/auth/naver'];
 const MULTIPART_URLS = [
   '/auth/join',
   '/auth/university',
-  '/members/image',
   '/report',
   '/question',
- // '/chat/image',
-  '/on-boarding/join',
+  // '/members/image', // Presigned URL 방식으로 변경됨 (PATCH /members/image는 JSON)
+  // '/chat/image', // Presigned URL 방식으로 변경됨
+  // '/on-boarding/join', // Presigned URL 방식으로 변경됨 (JSON)
 ];
 
 const axiosInstance = axios.create({
   baseURL: API_BASE_URL,
   timeout: 5000, // 요청 제한 시간
 });
-type RootStackParamList = {
-  Login: undefined,
-};
 
 
 axiosInstance.interceptors.request.use(
   async config => {
     console.log('🚀 [Axios Request] 시작');
-    console.log('🚀 [Axios Request] URL:', config?.baseURL + config?.url);
+    console.log('🚀 [Axios Request] URL:', (config?.baseURL ?? '') + config?.url);
     console.log('🚀 [Axios Request] Method:', config.method?.toUpperCase());
     console.log('🚀 [Axios Request] Headers:', config.headers);
     console.log('🚀 [Axios Request] Data:', config.data);
@@ -94,37 +93,64 @@ axiosInstance.interceptors.response.use(
     const originalRequest = error.config;
 
     if (error.response?.status === 401 && !originalRequest._retry) {
-      console.log('🔄 [Axios Response] 401 에러 - 토큰 갱신 시도');
       originalRequest._retry = true;
 
       const refreshToken = await EncryptedStorage.getItem('refreshToken');
       const memberId = await EncryptedStorage.getItem('memberId');
-      console.log('🔄 [Axios Response] refreshToken 존재:', !!refreshToken);
-      console.log('🔄 [Axios Response] memberId:', memberId);
 
-      if (!refreshToken) {
-        console.log('❌ [Axios Response] refreshToken 없음 - 로그아웃 처리');
-        await EncryptedStorage.removeItem('accessToken');
+      if (!refreshToken || !memberId) {
+        // 게스트 모드인지 확인
+        const isGuestMode = await AsyncStorage.getItem('isGuestMode');
+
+        if (isGuestMode === 'true') {
+          // 게스트 모드에서는 로그인 화면으로 리다이렉트하지 않음
+          console.log('⚠️ [Axios] 401 에러 - 게스트 모드이므로 로그인 화면으로 이동하지 않음');
+          return Promise.reject(error);
+        }
+
+        // 모든 토큰 삭제
+        try {
+          await EncryptedStorage.removeItem('accessToken');
+          await EncryptedStorage.removeItem('refreshToken');
+          await EncryptedStorage.removeItem('memberId');
+        } catch (storageError) {
+          console.error('토큰 삭제 실패:', storageError);
+        }
+        // 로그인 화면으로 리다이렉트
+        console.log('🔄 [Axios] 401 에러 - 로그인 화면으로 이동');
+        replace('Login');
         return Promise.reject(error);
       }
 
-      //refresh token 발급
+      // refresh token으로 새 토큰 발급
       try {
-        console.log('🔄 [Axios Response] 토큰 갱신 요청 시작');
         const res = await axios.post(API_BASE_URL + '/on-boarding/reissue', { refreshToken, memberId });
-        console.log('✅ [Axios Response] 토큰 갱신 성공');
 
+        // 새로운 토큰 저장
         await EncryptedStorage.setItem('accessToken', res.data.accessToken);
         await EncryptedStorage.setItem('refreshToken', res.data.refreshToken);
+
+        // 원본 요청에 새 토큰 설정
+        originalRequest.headers.Authorization = `Bearer ${res.data.accessToken}`;
+
+        // axiosInstance의 default headers에도 새 토큰 설정 (이후 요청들을 위해)
         axiosInstance.defaults.headers.Authorization = `Bearer ${res.data.accessToken}`;
 
-        console.log('🔄 [Axios Response] 원래 요청 재시도');
+        // 원래 요청 재시도
         return axiosInstance(originalRequest);
       } catch (refreshError) {
-        console.error('❌ [Axios Response] 토큰 갱신 실패:', refreshError);
-        await EncryptedStorage.removeItem('accessToken');
-        const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-        navigation.navigate('Login');
+        console.error('토큰 갱신 실패:', refreshError);
+        // 토큰 갱신 실패 시 모든 토큰 삭제
+        try {
+          await EncryptedStorage.removeItem('accessToken');
+          await EncryptedStorage.removeItem('refreshToken');
+          await EncryptedStorage.removeItem('memberId');
+        } catch (storageError) {
+          console.error('토큰 삭제 실패:', storageError);
+        }
+        // 로그인 화면으로 리다이렉트
+        console.log('🔄 [Axios] 토큰 갱신 실패 - 로그인 화면으로 이동');
+        replace('Login');
         return Promise.reject(refreshError);
       }
     }

@@ -85,9 +85,8 @@ const BasicButton: React.FC<BasicButtonProps> = React.memo(({ //리렌더링 방
               { color: colors.textColor },
               textStyle,
             ]}
-          >
-            {text}
-          </BasicText>
+            text={text || ''}
+          />
         )}
       </View>
     </TouchableOpacity>

@@ -7,7 +7,7 @@ export default StyleSheet.create({
         width: '100%',
         backgroundColor: theme.colors.white,
         alignItems: 'center',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
     },
     gradient: {
         width: 600,

@@ -22,4 +22,30 @@ export default StyleSheet.create({
     fontWeight: '700',
     color: theme.colors.blackV0,
   },
+  authRequiredContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+  },
+  needInfoIcon: {
+    marginBottom: 20,
+  },
+  authRequiredText: {
+    textAlign: 'center',
+    lineHeight: 22,
+    letterSpacing: -0.28, // -2%
+    marginBottom: 30,
+  },
+  authRequiredButton: {
+    height: 29,
+    borderRadius: 50,
+    borderWidth: 1,
+    paddingVertical: 4,
+    paddingHorizontal: 12,
+  },
+  authRequiredButtonText: {
+    fontSize: theme.fontSize.size14,
+    fontWeight: '500',
+  },
 });

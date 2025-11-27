@@ -233,7 +233,7 @@ const Announcement: React.FC<HomeProps> = () => {
         return '#607D8B'; // 기본: 어두운 회색
     }
   };
-  const getBackgroundColor = (tag: string): string => { 
+  const getBackgroundColor = (tag: string): string => {
     switch (tag) {
       case '시스템 운영':
         return '#E8EDFF'; // 초록: 안정적 시스템 느낌

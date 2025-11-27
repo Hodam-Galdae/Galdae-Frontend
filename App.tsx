@@ -5,6 +5,7 @@ import React, {useEffect} from 'react';
 import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {navigationRef} from './src/utils/navigationRef';
 import MainTab from './src/components/MainTab';
 import Login from './src/screens/Login';
 import SignUp from './src/screens/SignUp';
@@ -53,11 +54,8 @@ import SignupSuccess from './src/screens/SignupSuccess';
 import DeliverySearch from './src/screens/category/delivery/DeliverySearch';
 import Search from './src/components/Search';
 import OTTSearch from './src/screens/category/ott/OTTSearch';
-// import ContinueSignUp from './src/screens/ContinueSignUp';
-// import SetUserInfo from './src/screens/SetUserInfo';
-// import VerifySchool from './src/screens/VerifySchool';
-// import SchoolCardVerify from './src/screens/SchoolCardVerify';
-// import EmailVerify from './src/screens/EmailVerify';
+import OnboardingGuide from './src/screens/OnboardingGuide';
+import ContinueSignUp from './src/screens/ContinueSignUp';
 function App() {
   useEffect(() => {
     if (Platform.OS === 'android') {
@@ -82,6 +80,7 @@ function App() {
     setup();
     // 알림 권한 요청 및 토큰 획득
     requestUserPermission();
+
     // 포그라운드에서 수신된 알림 처리
     const unsubscribe = messaging().onMessage(async remoteMessage => {
      // console.log('🔥 포그라운드 알림 수신:', remoteMessage);
@@ -90,14 +89,75 @@ function App() {
       await notifee.displayNotification({
         title: remoteMessage.notification?.title || '알림',
         body: remoteMessage.notification?.body || '',
+        data: remoteMessage.data, // 화면 이동을 위한 데이터 추가
         android: {
           channelId: 'default',
         },
       });
     });
 
-    return unsubscribe;
+    // 앱이 백그라운드에 있을 때 알림 클릭으로 열린 경우
+    const unsubscribeNotificationOpen = messaging().onNotificationOpenedApp(
+      remoteMessage => {
+        console.log('📱 백그라운드에서 알림 클릭으로 앱 열림:', remoteMessage);
+        handleNotificationNavigation(remoteMessage.data);
+      },
+    );
+
+    // 앱이 완전히 종료된 상태에서 알림 클릭으로 열린 경우
+    messaging()
+      .getInitialNotification()
+      .then(remoteMessage => {
+        if (remoteMessage) {
+          console.log('📱 종료 상태에서 알림 클릭으로 앱 열림:', remoteMessage);
+          handleNotificationNavigation(remoteMessage.data);
+        }
+      });
+
+    // Notifee 로컬 알림 클릭 처리 (포그라운드 알림 클릭)
+    const unsubscribeNotifeeEvent = notifee.onForegroundEvent(
+      ({type, detail}) => {
+        if (
+          type === 1 && // EventType.PRESS
+          detail.notification?.data
+        ) {
+          console.log('📱 포그라운드 알림 클릭:', detail.notification.data);
+          handleNotificationNavigation(detail.notification.data);
+        }
+      },
+    );
+
+    return () => {
+      unsubscribe();
+      unsubscribeNotificationOpen();
+      unsubscribeNotifeeEvent();
+    };
   }, []);
+
+  // 알림 데이터를 기반으로 화면 이동 처리
+  const handleNotificationNavigation = (data: any) => {
+    if (!data) return;
+
+    console.log('🗺️ 알림 네비게이션 데이터:', data);
+
+    // screen과 chatroomId를 확인
+    if (data.screen === 'ChatRoom' && data.chatroomId) {
+      // chatroomId를 숫자로 변환
+      const chatroomId = parseInt(data.chatroomId, 10);
+
+      if (isNaN(chatroomId)) {
+        console.error('❌ 잘못된 chatroomId:', data.chatroomId);
+        return;
+      }
+
+      // navigationRef를 통해 ChatRoom 화면으로 이동
+      setTimeout(() => {
+        navigationRef.current?.navigate('ChatRoom', {
+          chatroomId,
+        });
+      }, 500); // 앱이 완전히 준비될 때까지 약간의 지연
+    }
+  };
 
   const Stack = createNativeStackNavigator();
 
@@ -137,7 +197,7 @@ function App() {
         <SafeAreaProvider>
           <TabBarVisibilityProvider>
             <PortalProvider>
-              <NavigationContainer theme={theme}>
+              <NavigationContainer ref={navigationRef} theme={theme}>
                 <Stack.Navigator
                   initialRouteName={'Onboarding'} //MainTab ,Onboarding,Login
                   screenOptions={{
@@ -202,12 +262,9 @@ function App() {
                   <Stack.Screen name="DeliveryDetail" component={DeliveryDetail} />
                   <Stack.Screen name="CreateDelivery" component={CreateDelivery} />
                   <Stack.Screen name="SignupSuccess" component={SignupSuccess} />
+                  <Stack.Screen name="OnboardingGuide" component={OnboardingGuide} />
                   <Stack.Screen name="OTTSearch" component={OTTSearch} />
-                  {/* <Stack.Screen name="ContinueSignUp" component={ContinueSignUp} /> */}
-                  {/* <Stack.Screen name="SetUserInfo" component={SetUserInfo} />
-                  <Stack.Screen name="VerifySchool" component={VerifySchool} />
-                  <Stack.Screen name="SchoolCardVerify" component={SchoolCardVerify} />
-                  <Stack.Screen name="EmailVerify" component={EmailVerify} /> */}
+                  <Stack.Screen name="ContinueSignUp" component={ContinueSignUp} />
                 </Stack.Navigator>
               </NavigationContainer>
             </PortalProvider>
