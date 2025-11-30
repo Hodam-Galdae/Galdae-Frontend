@@ -23,7 +23,6 @@ import NotificationPermissionModal from './popup/NotificationPermissionModal';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {
   checkNotificationPermissionStatus,
-  requestUserPermissionWithStatus,
   openAppSettings,
 } from '../utils/notification';
 import {updateFcmToken} from '../api/notiApi';
@@ -113,7 +112,7 @@ function App(): React.JSX.Element {
           userId: userState.id,
           userNickname: userState.nickname,
           hasUserInfo,
-          finalAuth: !!(accessToken && hasUserInfo)
+          finalAuth: !!(accessToken && hasUserInfo),
         });
 
         setIsAuthenticated(!!(accessToken && hasUserInfo));
@@ -196,6 +195,7 @@ function App(): React.JSX.Element {
     }, 1000);
 
     return () => clearTimeout(timer);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // 화면 포커스될 때마다 사용자 정보 갱신

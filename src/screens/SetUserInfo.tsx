@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable no-trailing-spaces */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState, useEffect } from 'react';
 import {
@@ -43,7 +41,7 @@ interface AgreeProps {
 type RootStackParamList = {
   SignupSuccess: undefined;
 };
-const SetUserInfo: React.FC<AgreeProps> = ({ setNextStep, setIsLoading }) => {
+const SetUserInfo: React.FC<AgreeProps> = ({ setNextStep: _setNextStep, setIsLoading }) => {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const dispatch = useDispatch<AppDispatch>();
   const [genderSelected, setGenderSelected] = useState<number>(-1);
@@ -176,7 +174,7 @@ const SetUserInfo: React.FC<AgreeProps> = ({ setNextStep, setIsLoading }) => {
       setIsCheckingNickname(null);
       setAlertNameText('');
     }
-  }, [name]);
+  }, [name, checkName]);
   const checkNicknameEvent = async () => {
     try {
       const regex = /^[가-힣0-9]{2,6}$/;

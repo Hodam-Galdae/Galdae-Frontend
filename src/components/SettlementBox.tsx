@@ -88,7 +88,7 @@ const SettlementBox: React.FC<{settlement: Settlement}> = React.memo(({settlemen
                             console.log('[SettlementBox] 정산 상세 네비게이션 - chatroomId:', chatroomIdNum);
                             navigation.navigate('Settlement', {
                                 data: paymentData,
-                                chatroomId: chatroomIdNum
+                                chatroomId: chatroomIdNum,
                             });
                         }}
                     />

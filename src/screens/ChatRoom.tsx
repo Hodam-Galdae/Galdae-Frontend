@@ -488,7 +488,7 @@ const ChatRoom: React.FC = () => {
     reportData.current.member = {
       memberId: member.memberId,
       memberName: member.memberName,
-      memberImage: member.memberImage || ''
+      memberImage: member.memberImage || '',
     };
     setIsVisibleReportPopup(true);
   };
@@ -508,8 +508,8 @@ const ChatRoom: React.FC = () => {
     settlementRequestPopupRef.current?.open();
   };
 
-  const handleImagePress = (imageUri: string) => {
-    setSelectedImageUri(imageUri);
+  const handleImagePress = (pressedImageUri: string) => {
+    setSelectedImageUri(pressedImageUri);
     setIsImageViewerVisible(true);
   };
 

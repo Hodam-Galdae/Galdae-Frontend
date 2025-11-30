@@ -135,7 +135,7 @@ const SettlementRequestPopup = forwardRef<
         swipeToClose: true,
         swipeThreshold: 50,
         panGestureComponentEnabled: true,
-        closeSnapPointStraightEnabled: false
+        closeSnapPointStraightEnabled: false,
       } as any)}>
       <View style={[styles.settlementContainer]}>
         <SVGButton

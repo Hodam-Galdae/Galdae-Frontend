@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, View, Image, TouchableOpacity, Dimensions } from 'react-native';
+import { Modal, View, Image, TouchableOpacity } from 'react-native';
 import styles from '../../styles/ImageViewerModal.style';
 import SVGButton from '../button/SVGButton';
 

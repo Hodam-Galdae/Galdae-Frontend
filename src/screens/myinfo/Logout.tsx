@@ -5,7 +5,6 @@ import {CommonActions} from '@react-navigation/native';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useAppDispatch} from '../../modules/redux/store';
-import {resetUser} from '../../modules/redux/slice/UserSlice';
 import styles from '../../styles/Logout.style';
 import Header from '../../components/Header';
 import SVGButton from '../../components/button/SVGButton';

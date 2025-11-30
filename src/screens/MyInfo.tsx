@@ -115,7 +115,7 @@ const MyInfo: React.FC = () => {
           userId: userState.id,
           userNickname: userState.nickname,
           hasUserInfo,
-          finalAuth: authenticated
+          finalAuth: authenticated,
         });
 
         setIsAuthenticated(authenticated);

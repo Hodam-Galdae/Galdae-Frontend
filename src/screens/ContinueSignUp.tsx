@@ -1,4 +1,4 @@
-
+/* eslint-disable react-native/no-inline-styles */
 // MyInfo.tsx 테스트
 import React from 'react';
 import { View } from 'react-native';

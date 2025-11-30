@@ -1,7 +1,5 @@
-import { NativeModules, Platform } from 'react-native';
+import { Platform } from 'react-native';
 import development from './env.development';
-import production from './env.production';
-import local from './env.local';
 
 // Android: package name으로 환경 판단 (com.hodam.galdae.dev -> dev)
 // iOS: bundle identifier로 환경 판단 (com.hodam.galdaeApp.dev -> dev)

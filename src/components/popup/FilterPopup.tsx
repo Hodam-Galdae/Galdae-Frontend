@@ -108,7 +108,7 @@ const FilterPopup = forwardRef<FastGaldaeTimePopupRef, FastGaldaePopupProps>(
           swipeToClose: true,
           swipeThreshold: 50,
           panGestureComponentEnabled: true,
-          closeSnapPointStraightEnabled: false
+          closeSnapPointStraightEnabled: false,
         } as any)}
       >
         <KeyboardAvoidingView behavior="padding" style={styles.flexContainer}>

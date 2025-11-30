@@ -64,7 +64,7 @@ const NicknameChange: React.FC<HomeProps> = () => {
       setIsCheckingNickname(false);
       setAlertNameText('');
     }
-  }, [nickname]);
+  }, [nickname, checkName]);
 
   const handleChangeNickname = async () => {
     try {

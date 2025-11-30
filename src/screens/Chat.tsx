@@ -57,7 +57,7 @@ const Chat: React.FC = () => {
           userId: userState.id,
           userNickname: userState.nickname,
           hasUserInfo,
-          finalAuth: !!(accessToken && hasUserInfo)
+          finalAuth: !!(accessToken && hasUserInfo),
         });
 
         setIsAuthenticated(!!(accessToken && hasUserInfo));

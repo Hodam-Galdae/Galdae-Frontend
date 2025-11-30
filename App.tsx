@@ -136,7 +136,9 @@ function App() {
 
   // 알림 데이터를 기반으로 화면 이동 처리
   const handleNotificationNavigation = (data: any) => {
-    if (!data) return;
+    if (!data) {
+      return;
+    }
 
     console.log('🗺️ 알림 네비게이션 데이터:', data);
 

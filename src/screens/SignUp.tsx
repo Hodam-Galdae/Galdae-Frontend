@@ -1,4 +1,3 @@
-/* eslint-disable no-trailing-spaces */
 /* eslint-disable react-native/no-inline-styles */
 // SignUp.tsx 테스트
 import React, { useRef, useState, useEffect, useCallback } from 'react';
