@@ -11,10 +11,7 @@ platform :android do
 
   desc "Build debug APK"
   lane :debug do
-    gradle(
-      task: "clean assembleDebug",
-      project_dir: "android/"
-    )
+    gradle(task: "clean assembleDebug")
   end
 
   desc "Build release APK"
@@ -22,7 +19,6 @@ platform :android do
     flavor = options[:flavor] || "prod"
     gradle(
       task: "clean assemble#{flavor.capitalize}Release",
-      project_dir: "android/",
       print_command: false
     )
   end
@@ -32,7 +28,6 @@ platform :android do
     flavor = options[:flavor] || "prod"
     gradle(
       task: "clean bundle#{flavor.capitalize}Release",
-      project_dir: "android/",
       print_command: false
     )
   end
@@ -48,7 +43,6 @@ platform :android do
     # Build the release AAB
     gradle(
       task: "clean bundle#{flavor_capitalized}Release",
-      project_dir: "android/",
       print_command: false,
       properties: {
         "android.injected.signing.store.file" => ENV["ANDROID_KEYSTORE_PATH"],
@@ -83,7 +77,6 @@ platform :android do
     # Build the release AAB
     gradle(
       task: "clean bundle#{flavor_capitalized}Release",
-      project_dir: "android/",
       print_command: false,
       properties: {
         "android.injected.signing.store.file" => ENV["ANDROID_KEYSTORE_PATH"],

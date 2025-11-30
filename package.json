@@ -7,23 +7,18 @@
     "lint": "eslint .",
     "test": "jest",
     "cm": "cz",
-
     "android:dev": "react-native run-android --appId com.hodam.galdae.dev --mode devDebug",
     "android:dev-release": "react-native run-android --appId com.hodam.galdae.dev --mode devRelease",
     "android:prod": "react-native run-android --appId com.hodam.galdae --mode prodDebug",
     "android:prod-release": "react-native run-android --appId com.hodam.galdae --mode prodRelease",
-
     "android": "npm run android:dev",
     "android:release": "npm run android:prod-release",
-
     "ios": "cp ios/GoogleService-Info.dev.plist ios/Galdae/GoogleService-Info.plist && react-native run-ios --scheme Galdae-Dev",
     "ios:release": "cp ios/GoogleService-Info.prod.plist ios/Galdae/GoogleService-Info.plist && react-native run-ios --scheme Galdae-Prod --configuration Release",
-
     "build:android:dev": "cd android && ./gradlew assembleDevRelease",
     "build:android:prod": "cd android && ./gradlew assembleProdRelease",
     "build:android:bundle:dev": "cd android && ./gradlew bundleDevRelease",
     "build:android:bundle:prod": "cd android && ./gradlew bundleProdRelease",
-
     "clean:metro": "react-native start --reset-cache",
     "clean:android": "cd android && ./gradlew clean",
     "clean:ios": "cd ios && xcodebuild clean"
@@ -68,7 +63,8 @@
     "react-native-web-swiper": "^2.2.4",
     "react-native-webview": "^13.13.2",
     "react-redux": "^9.2.0",
-    "redux-flipper": "^2.0.3"
+    "redux-flipper": "^2.0.3",
+    "text-encoding": "^0.7.0"
   },
   "devDependencies": {
     "@babel/core": "^7.26.8",
