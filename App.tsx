@@ -154,7 +154,7 @@ function App() {
 
       // navigationRef를 통해 ChatRoom 화면으로 이동
       setTimeout(() => {
-        navigationRef.current?.navigate('ChatRoom', {
+        (navigationRef.current as any)?.navigate('ChatRoom', {
           chatroomId,
         });
       }, 500); // 앱이 완전히 준비될 때까지 약간의 지연
