@@ -1,0 +1,116 @@
+# Fastfile for Android
+# Galdae Android App Deployment
+
+default_platform(:android)
+
+platform :android do
+  desc "Runs all the tests"
+  lane :test do
+    gradle(task: "test")
+  end
+
+  desc "Build debug APK"
+  lane :debug do
+    gradle(
+      task: "clean assembleDebug",
+      project_dir: "android/"
+    )
+  end
+
+  desc "Build release APK"
+  lane :build_release do |options|
+    flavor = options[:flavor] || "prod"
+    gradle(
+      task: "clean assemble#{flavor.capitalize}Release",
+      project_dir: "android/",
+      print_command: false
+    )
+  end
+
+  desc "Build release AAB (Android App Bundle)"
+  lane :build_aab do |options|
+    flavor = options[:flavor] || "prod"
+    gradle(
+      task: "clean bundle#{flavor.capitalize}Release",
+      project_dir: "android/",
+      print_command: false
+    )
+  end
+
+  desc "Deploy a new version to Google Play Internal Testing"
+  lane :beta do |options|
+    flavor = options[:flavor] || "prod"
+    flavor_capitalized = flavor.capitalize
+
+    # Set package name based on flavor
+    package_name = flavor == "dev" ? "com.hodam.galdae.dev" : "com.hodam.galdae"
+
+    # Build the release AAB
+    gradle(
+      task: "clean bundle#{flavor_capitalized}Release",
+      project_dir: "android/",
+      print_command: false,
+      properties: {
+        "android.injected.signing.store.file" => ENV["ANDROID_KEYSTORE_PATH"],
+        "android.injected.signing.store.password" => ENV["ANDROID_STORE_PASSWORD"],
+        "android.injected.signing.key.alias" => ENV["ANDROID_KEY_ALIAS"],
+        "android.injected.signing.key.password" => ENV["ANDROID_KEY_PASSWORD"],
+      }
+    )
+
+    # Upload to Google Play Internal Testing track
+    upload_to_play_store(
+      track: 'internal',
+      package_name: package_name,
+      aab: "app/build/outputs/bundle/#{flavor}Release/app-#{flavor}-release.aab",
+      skip_upload_screenshots: true,
+      skip_upload_images: true,
+      skip_upload_metadata: true,
+      json_key_data: ENV["GOOGLE_PLAY_SERVICE_ACCOUNT_JSON"]
+    )
+
+    UI.success("Successfully deployed #{flavor} build to Internal Testing!")
+  end
+
+  desc "Deploy a new version to Google Play Production"
+  lane :production do |options|
+    flavor = options[:flavor] || "prod"
+    flavor_capitalized = flavor.capitalize
+
+    # Set package name based on flavor
+    package_name = flavor == "dev" ? "com.hodam.galdae.dev" : "com.hodam.galdae"
+
+    # Build the release AAB
+    gradle(
+      task: "clean bundle#{flavor_capitalized}Release",
+      project_dir: "android/",
+      print_command: false,
+      properties: {
+        "android.injected.signing.store.file" => ENV["ANDROID_KEYSTORE_PATH"],
+        "android.injected.signing.store.password" => ENV["ANDROID_STORE_PASSWORD"],
+        "android.injected.signing.key.alias" => ENV["ANDROID_KEY_ALIAS"],
+        "android.injected.signing.key.password" => ENV["ANDROID_KEY_PASSWORD"],
+      }
+    )
+
+    # Upload to Google Play Production track
+    upload_to_play_store(
+      track: 'production',
+      package_name: package_name,
+      aab: "app/build/outputs/bundle/#{flavor}Release/app-#{flavor}-release.aab",
+      skip_upload_screenshots: true,
+      skip_upload_images: true,
+      skip_upload_metadata: true,
+      json_key_data: ENV["GOOGLE_PLAY_SERVICE_ACCOUNT_JSON"]
+    )
+
+    UI.success("Successfully deployed #{flavor} build to Production!")
+  end
+
+  desc "Increment version code"
+  lane :increment_version do
+    increment_version_code(
+      gradle_file_path: "app/build.gradle"
+    )
+  end
+end

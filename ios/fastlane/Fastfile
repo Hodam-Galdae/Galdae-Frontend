@@ -1,0 +1,216 @@
+# Fastfile for iOS
+# Galdae iOS App Deployment
+
+default_platform(:ios)
+
+platform :ios do
+  desc "Description of what the lane does"
+  lane :test do
+    run_tests(
+      workspace: "Galdae.xcworkspace",
+      scheme: "Galdae",
+      devices: ["iPhone 15"]
+    )
+  end
+
+  desc "Build debug version"
+  lane :debug do |options|
+    scheme = options[:scheme] || "Galdae-Dev"
+    build_app(
+      workspace: "Galdae.xcworkspace",
+      scheme: scheme,
+      configuration: "Debug",
+      export_method: "development",
+      output_directory: "./build",
+      output_name: "Galdae-dev.ipa",
+      clean: true
+    )
+  end
+
+  desc "Build release version (for production)"
+  lane :build_release do |options|
+    scheme = options[:scheme] || "Galdae-Prod"
+    bundle_id = scheme == "Galdae-Dev" ? "com.hodam.galdaeApp.dev" : "com.hodam.galdaeApp"
+
+    # Ensure CocoaPods are installed
+    cocoapods(
+      clean_install: true,
+      podfile: "./Podfile"
+    )
+
+    # Increment build number based on TestFlight
+    increment_build_number(
+      xcodeproj: "Galdae.xcodeproj"
+    )
+
+    # Build the app
+    build_app(
+      workspace: "Galdae.xcworkspace",
+      scheme: scheme,
+      configuration: "Release",
+      export_method: "app-store",
+      output_directory: "./build",
+      output_name: "Galdae.ipa",
+      clean: true,
+      export_options: {
+        provisioningProfiles: {
+          bundle_id => ENV["IOS_PROVISIONING_PROFILE_SPECIFIER"]
+        }
+      }
+    )
+  end
+
+  desc "Setup code signing with manual signing"
+  lane :setup_signing do |options|
+    scheme = options[:scheme] || "Galdae-Prod"
+    bundle_id = scheme == "Galdae-Dev" ? "com.hodam.galdaeApp.dev" : "com.hodam.galdaeApp"
+
+    # Create a temporary keychain
+    create_keychain(
+      name: ENV["KEYCHAIN_NAME"] || "fastlane_keychain",
+      password: ENV["KEYCHAIN_PASSWORD"] || "temp_password",
+      default_keychain: true,
+      unlock: true,
+      timeout: 3600,
+      lock_when_sleeps: false
+    )
+
+    # Import certificate
+    import_certificate(
+      certificate_path: ENV["IOS_CERTIFICATE_PATH"],
+      certificate_password: ENV["IOS_CERTIFICATE_PASSWORD"],
+      keychain_name: ENV["KEYCHAIN_NAME"] || "fastlane_keychain",
+      keychain_password: ENV["KEYCHAIN_PASSWORD"] || "temp_password"
+    )
+
+    # Install provisioning profile
+    install_provisioning_profile(
+      path: ENV["IOS_PROVISIONING_PROFILE_PATH"]
+    )
+
+    # Update project settings for manual code signing
+    update_code_signing_settings(
+      use_automatic_signing: false,
+      path: "Galdae.xcodeproj",
+      team_id: ENV["IOS_TEAM_ID"],
+      code_sign_identity: "Apple Distribution",
+      profile_name: ENV["IOS_PROVISIONING_PROFILE_SPECIFIER"],
+      bundle_identifier: bundle_id
+    )
+  end
+
+  desc "Deploy a new version to TestFlight"
+  lane :beta do |options|
+    scheme = options[:scheme] || "Galdae-Prod"
+    bundle_id = scheme == "Galdae-Dev" ? "com.hodam.galdaeApp.dev" : "com.hodam.galdaeApp"
+
+    UI.message("Building with scheme: #{scheme}, bundle_id: #{bundle_id}")
+
+    # Setup code signing
+    setup_signing(scheme: scheme)
+
+    # Ensure CocoaPods are installed
+    cocoapods(
+      clean_install: true,
+      podfile: "./Podfile"
+    )
+
+    # Increment build number
+    increment_build_number(
+      xcodeproj: "Galdae.xcodeproj"
+    )
+
+    # Build the app
+    build_app(
+      workspace: "Galdae.xcworkspace",
+      scheme: scheme,
+      configuration: "Release",
+      export_method: "app-store",
+      output_directory: "./build",
+      output_name: "Galdae.ipa",
+      clean: true,
+      export_options: {
+        provisioningProfiles: {
+          bundle_id => ENV["IOS_PROVISIONING_PROFILE_SPECIFIER"]
+        }
+      }
+    )
+
+    # Upload to TestFlight
+    upload_to_testflight(
+      api_key_path: ENV["APP_STORE_CONNECT_API_KEY_PATH"],
+      app_identifier: bundle_id,
+      skip_waiting_for_build_processing: true,
+      skip_submission: true,
+      distribute_external: false,
+      notify_external_testers: false
+    )
+
+    # Clean up keychain
+    delete_keychain(
+      name: ENV["KEYCHAIN_NAME"] || "fastlane_keychain"
+    )
+
+    UI.success("Successfully deployed #{scheme} build to TestFlight!")
+  end
+
+  desc "Deploy a new version to App Store"
+  lane :production do |options|
+    scheme = options[:scheme] || "Galdae-Prod"
+    bundle_id = scheme == "Galdae-Dev" ? "com.hodam.galdaeApp.dev" : "com.hodam.galdaeApp"
+
+    # Setup code signing
+    setup_signing(scheme: scheme)
+
+    # Ensure CocoaPods are installed
+    cocoapods(
+      clean_install: true,
+      podfile: "./Podfile"
+    )
+
+    # Increment build number
+    increment_build_number(
+      xcodeproj: "Galdae.xcodeproj"
+    )
+
+    # Build the app
+    build_app(
+      workspace: "Galdae.xcworkspace",
+      scheme: scheme,
+      configuration: "Release",
+      export_method: "app-store",
+      output_directory: "./build",
+      output_name: "Galdae.ipa",
+      clean: true,
+      export_options: {
+        provisioningProfiles: {
+          bundle_id => ENV["IOS_PROVISIONING_PROFILE_SPECIFIER"]
+        }
+      }
+    )
+
+    # Upload to App Store
+    upload_to_app_store(
+      api_key_path: ENV["APP_STORE_CONNECT_API_KEY_PATH"],
+      app_identifier: bundle_id,
+      skip_screenshots: true,
+      skip_metadata: true,
+      submit_for_review: false,
+      automatic_release: false
+    )
+
+    # Clean up keychain
+    delete_keychain(
+      name: ENV["KEYCHAIN_NAME"] || "fastlane_keychain"
+    )
+
+    UI.success("Successfully deployed #{scheme} build to App Store!")
+  end
+
+  desc "Increment version number"
+  lane :increment_version do
+    increment_version_number(
+      xcodeproj: "Galdae.xcodeproj"
+    )
+  end
+end

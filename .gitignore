@@ -86,3 +86,5 @@ keystore_base64.txt
 # Environment files (keep templates only)
 .env.local
 .env.*
+
+APP_STORE_CONNECT_API_KEY_CONTENT.json

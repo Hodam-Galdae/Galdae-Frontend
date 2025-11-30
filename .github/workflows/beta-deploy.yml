@@ -1,0 +1,263 @@
+name: Beta Deployment
+
+on:
+  push:
+    branches: ["develop", "main"]
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: 'Platform to deploy'
+        required: true
+        type: choice
+        options:
+          - android
+          - ios
+          - both
+
+jobs:
+  # 브랜치에 따라 환경 결정
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ steps.set-env.outputs.environment }}
+      flavor: ${{ steps.set-env.outputs.flavor }}
+    steps:
+      - id: set-env
+        run: |
+          if [ "${{ github.ref }}" == "refs/heads/main" ]; then
+            echo "environment=prod" >> $GITHUB_OUTPUT
+            echo "flavor=prod" >> $GITHUB_OUTPUT
+          else
+            echo "environment=dev" >> $GITHUB_OUTPUT
+            echo "flavor=dev" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Show selected environment
+        run: |
+          echo "Selected environment: ${{ steps.set-env.outputs.environment }}"
+          echo "Build flavor: ${{ steps.set-env.outputs.flavor }}"
+
+  deploy-android-beta:
+    name: Deploy Android to Internal Testing
+    needs: setup
+    runs-on: ubuntu-latest
+    environment: ${{ needs.setup.outputs.environment }}
+    if: |
+      github.event_name == 'push' ||
+      github.event.inputs.platform == 'android' ||
+      github.event.inputs.platform == 'both'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+          working-directory: android
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Install Fastlane
+        run: |
+          cd android
+          bundle install
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Decode Keystore
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        run: |
+          echo $ANDROID_KEYSTORE_BASE64 | base64 --decode > android/app/galdae-key.keystore
+
+      - name: Create Google Play Service Account JSON
+        env:
+          GOOGLE_PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+        run: |
+          echo '${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}' > android/google-play-service-account.json
+
+      - name: Make Gradlew executable
+        run: chmod +x android/gradlew
+
+      - name: Deploy to Google Play Internal Testing
+        env:
+          ANDROID_KEYSTORE_PATH: ${{ github.workspace }}/android/app/galdae-key.keystore
+          ANDROID_STORE_PASSWORD: ${{ secrets.ANDROID_STORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          GOOGLE_PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+          BUILD_FLAVOR: ${{ needs.setup.outputs.flavor }}
+        run: |
+          cd android
+          bundle exec fastlane beta flavor:$BUILD_FLAVOR
+
+      - name: Clean up sensitive files
+        if: always()
+        run: |
+          rm -f android/app/galdae-key.keystore
+          rm -f android/google-play-service-account.json
+
+      - name: Upload build artifacts
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-beta-aab-${{ needs.setup.outputs.environment }}
+          path: android/app/build/outputs/bundle/${{ needs.setup.outputs.flavor }}Release/app-${{ needs.setup.outputs.flavor }}-release.aab
+          retention-days: 30
+
+  deploy-ios-beta:
+    name: Deploy iOS to TestFlight
+    needs: setup
+    runs-on: macos-14
+    environment: ${{ needs.setup.outputs.environment }}
+    if: |
+      github.event_name == 'push' ||
+      github.event.inputs.platform == 'ios' ||
+      github.event.inputs.platform == 'both'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+          working-directory: ios
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Install Fastlane
+        run: |
+          cd ios
+          bundle install
+
+      - name: Cache CocoaPods
+        uses: actions/cache@v4
+        with:
+          path: ios/Pods
+          key: ${{ runner.os }}-pods-${{ hashFiles('ios/Podfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pods-
+
+      - name: Select Firebase config
+        run: |
+          if [ "${{ needs.setup.outputs.environment }}" == "prod" ]; then
+            cp ios/GoogleService-Info.prod.plist ios/Galdae/GoogleService-Info.plist
+          else
+            cp ios/GoogleService-Info.dev.plist ios/Galdae/GoogleService-Info.plist
+          fi
+
+      - name: Decode iOS Certificate
+        env:
+          IOS_P12_BASE64: ${{ secrets.IOS_P12_BASE64 }}
+        run: |
+          echo $IOS_P12_BASE64 | base64 --decode > ios/certificate.p12
+
+      - name: Decode Provisioning Profile
+        env:
+          IOS_MOBILEPROVISION_BASE64: ${{ secrets.IOS_MOBILEPROVISION_BASE64 }}
+        run: |
+          echo $IOS_MOBILEPROVISION_BASE64 | base64 --decode > ios/profile.mobileprovision
+
+      - name: Create App Store Connect API Key
+        env:
+          APP_STORE_CONNECT_API_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_API_KEY_CONTENT }}
+        run: |
+          mkdir -p ios/fastlane
+          echo '${{ secrets.APP_STORE_CONNECT_API_KEY_CONTENT }}' > ios/fastlane/app_store_connect_api_key.json
+
+      - name: Deploy to TestFlight
+        env:
+          IOS_CERTIFICATE_PATH: ${{ github.workspace }}/ios/certificate.p12
+          IOS_CERTIFICATE_PASSWORD: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
+          IOS_PROVISIONING_PROFILE_PATH: ${{ github.workspace }}/ios/profile.mobileprovision
+          IOS_PROVISIONING_PROFILE_SPECIFIER: ${{ secrets.IOS_PROVISIONING_PROFILE_SPECIFIER }}
+          IOS_TEAM_ID: ${{ secrets.IOS_TEAM_ID }}
+          APP_STORE_CONNECT_API_KEY_PATH: ${{ github.workspace }}/ios/fastlane/app_store_connect_api_key.json
+          KEYCHAIN_NAME: "fastlane_keychain"
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          ITC_TEAM_ID: ${{ secrets.ITC_TEAM_ID }}
+          BUILD_SCHEME: ${{ needs.setup.outputs.environment == 'prod' && 'Galdae-Prod' || 'Galdae-Dev' }}
+        run: |
+          cd ios
+          bundle exec fastlane beta scheme:$BUILD_SCHEME
+
+      - name: Clean up sensitive files
+        if: always()
+        run: |
+          rm -f ios/certificate.p12
+          rm -f ios/profile.mobileprovision
+          rm -f ios/fastlane/app_store_connect_api_key.json
+          security delete-keychain fastlane_keychain || true
+
+      - name: Upload build artifacts
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-beta-ipa-${{ needs.setup.outputs.environment }}
+          path: ios/build/Galdae.ipa
+          retention-days: 30
+
+  notify:
+    name: Send Deployment Notification
+    runs-on: ubuntu-latest
+    needs: [setup, deploy-android-beta, deploy-ios-beta]
+    if: always()
+
+    steps:
+      - name: Check deployment status
+        run: |
+          echo "================================"
+          echo "Deployment Summary"
+          echo "================================"
+          echo "Environment: ${{ needs.setup.outputs.environment }}"
+          echo "Branch: ${{ github.ref }}"
+          echo "Commit: ${{ github.sha }}"
+          echo ""
+          echo "Android deployment: ${{ needs.deploy-android-beta.result }}"
+          echo "iOS deployment: ${{ needs.deploy-ios-beta.result }}"
+          echo "================================"
+
+          # You can add Slack/Discord notification here
+          # - name: Send Slack notification
+          #   uses: 8398a7/action-slack@v3
+          #   with:
+          #     status: ${{ job.status }}
+          #     text: 'Beta deployment completed!'
+          #     webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+          #   if: always()

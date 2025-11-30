@@ -1,0 +1,2 @@
+json_key_file("") # Path to the json secret file - can be set via environment variable
+package_name("com.hodam.galdae") # e.g. com.hodam.galdae
