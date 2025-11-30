@@ -112,7 +112,9 @@ jobs:
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
           GOOGLE_PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
           BUILD_FLAVOR: ${{ needs.setup.outputs.flavor }}
+          BUILD_NUMBER: ${{ github.run_number }}
         run: |
+          echo "Build number: $BUILD_NUMBER"
           cd android
           bundle exec fastlane beta flavor:$BUILD_FLAVOR
 
@@ -216,7 +218,9 @@ jobs:
           APPLE_ID: ${{ secrets.APPLE_ID }}
           ITC_TEAM_ID: ${{ secrets.ITC_TEAM_ID }}
           BUILD_SCHEME: ${{ needs.setup.outputs.environment == 'prod' && 'Galdae-Prod' || 'Galdae-Dev' }}
+          BUILD_NUMBER: ${{ github.run_number }}
         run: |
+          echo "Build number: $BUILD_NUMBER"
           cd ios
           bundle exec fastlane beta scheme:$BUILD_SCHEME
 

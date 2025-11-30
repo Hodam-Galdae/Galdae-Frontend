@@ -115,10 +115,19 @@ platform :ios do
       podfile: "./Podfile"
     )
 
-    # Increment build number
-    increment_build_number(
-      xcodeproj: "Galdae.xcodeproj"
-    )
+    # Set build number
+    # - CI environment: Uses BUILD_NUMBER env variable (GitHub Actions run_number)
+    # - Local builds: Increments current build number by 1
+    if ENV["BUILD_NUMBER"]
+      increment_build_number(
+        xcodeproj: "Galdae.xcodeproj",
+        build_number: ENV["BUILD_NUMBER"]
+      )
+    else
+      increment_build_number(
+        xcodeproj: "Galdae.xcodeproj"
+      )
+    end
 
     # Build the app
     build_app(
@@ -168,10 +177,19 @@ platform :ios do
       podfile: "./Podfile"
     )
 
-    # Increment build number
-    increment_build_number(
-      xcodeproj: "Galdae.xcodeproj"
-    )
+    # Set build number
+    # - CI environment: Uses BUILD_NUMBER env variable (GitHub Actions run_number)
+    # - Local builds: Increments current build number by 1
+    if ENV["BUILD_NUMBER"]
+      increment_build_number(
+        xcodeproj: "Galdae.xcodeproj",
+        build_number: ENV["BUILD_NUMBER"]
+      )
+    else
+      increment_build_number(
+        xcodeproj: "Galdae.xcodeproj"
+      )
+    end
 
     # Build the app
     build_app(

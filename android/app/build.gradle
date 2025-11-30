@@ -71,6 +71,18 @@ def enableSeparateBuildPerCPUArchitecture = true
  */
 def jscFlavor = 'org.webkit:android-jsc:+'
 
+/**
+ * Version code calculation:
+ * - CI environment: Uses BUILD_NUMBER env variable (GitHub Actions run_number)
+ * - Local builds: Uses base version code (can be manually updated)
+ *
+ * Format: MAJOR * 100000 + MINOR * 1000 + PATCH * 10 + BUILD_NUMBER_OFFSET
+ * Example: 3.0.1 = 300010, with BUILD_NUMBER adds offset
+ */
+def baseVersionCode = 300010  // Base version for 3.0.1
+def buildNumber = System.getenv("BUILD_NUMBER")?.toInteger() ?: 0
+def calculatedVersionCode = baseVersionCode + buildNumber
+
 android {
     namespace "com.hodam.galdae"
     compileSdk rootProject.ext.compileSdkVersion
@@ -81,7 +93,7 @@ android {
         applicationId "com.hodam.galdae"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 300010
+        versionCode calculatedVersionCode
         versionName "3.0.1"
         multiDexEnabled true
 
